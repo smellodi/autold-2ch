@@ -1,0 +1,84 @@
+﻿<Window x:Class="Olfactory.CommMonitor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Olfactory"
+        mc:Ignorable="d"
+        Title="COM monitor" Height="450" Width="800" ShowInTaskbar="False" Closing="Window_Closing" Activated="Window_Activated">
+    <Grid Margin="8">
+        <Grid.Resources>
+            <Style TargetType="{x:Type Button}">
+                <Setter Property="Margin" Value="0,0,18,4" />
+            </Style>
+        </Grid.Resources>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="370"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,12,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"
+                   Content="Debug"/>
+            <Button Grid.Row="0" Grid.Column="1"
+                    Content="Clear"
+                    Click="OnClearDebug_Click"/>
+        </Grid>
+
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" x:Name="txbDebug"
+                 Margin="0,0,12,0" VerticalScrollBarVisibility="Visible"/>
+
+        <Grid Grid.Row="0" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"
+                   Content="MFC"/>
+            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkMFCMonitor"
+                      Content="Monitor"
+                      VerticalAlignment="Center"
+                      Checked="chkMFCMonitor_Checked"
+                      Unchecked="chkMFCMonitor_Checked"/>
+            <Button Grid.Row="0" Grid.Column="2"
+                    Content="Clear"
+                    Click="OnClearMFC_Click"/>
+        </Grid>
+        
+        <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbMFC"
+                 VerticalScrollBarVisibility="Visible"/>
+
+        <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"
+                   Content="PID"/>
+            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkPIDMonitor"
+                      Content="Monitor"
+                      VerticalAlignment="Center"
+                      Checked="chkPIDMonitor_Checked"
+                      Unchecked="chkPIDMonitor_Checked"/>
+            <Button Grid.Row="0" Grid.Column="2"
+                    Content="Clear"
+                    Click="OnClearPID_Click"/>
+        </Grid>
+
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="txbPID"
+                 VerticalScrollBarVisibility="Visible"/>
+    </Grid>
+</Window>

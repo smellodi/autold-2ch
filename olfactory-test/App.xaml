@@ -1,0 +1,27 @@
+﻿<Application x:Class="Olfactory.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Olfactory"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="PageTitle" TargetType="Label">
+                <Setter Property="FontSize" Value="20" />
+                <Setter Property="FontFamily" Value="Lucida Sans" />
+                <Setter Property="HorizontalAlignment" Value="Stretch" />
+                <Setter Property="Background" Value="#FFE0E0E0" />
+                <Setter Property="Foreground" Value="#FF00276C" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+
+            <Style x:Key="Next" TargetType="Button">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="MinWidth" Value="100" />
+                <Setter Property="Margin" Value="18" />
+                <Setter Property="Padding" Value="8" />
+            </Style>
+            
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

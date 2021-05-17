@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "olfactory-test", "olfactory-test\olfactory-test.csproj", "{D0DF8F4A-A2B4-481E-9EBA-DCD2239877BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D39C771D-F258-41DE-B6A1-01CE5CB412C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39C771D-F258-41DE-B6A1-01CE5CB412C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39C771D-F258-41DE-B6A1-01CE5CB412C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39C771D-F258-41DE-B6A1-01CE5CB412C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0DF8F4A-A2B4-481E-9EBA-DCD2239877BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0DF8F4A-A2B4-481E-9EBA-DCD2239877BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0DF8F4A-A2B4-481E-9EBA-DCD2239877BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0DF8F4A-A2B4-481E-9EBA-DCD2239877BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05478D0B-BD88-415F-B1E5-2870EA8DBBDE}
+	EndGlobalSection
+EndGlobal
