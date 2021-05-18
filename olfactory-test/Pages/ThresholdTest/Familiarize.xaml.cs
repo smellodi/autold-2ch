@@ -14,10 +14,9 @@ using System.Windows.Threading;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-
-    public partial class Familiarize : Page, IPage
+    public partial class Familiarize : Page, IPage<EventArgs>
     {
-        public event EventHandler Next = delegate { };
+        public event EventHandler<EventArgs> Next = delegate { };
 
         MFC _mfc = MFC.Instance;
 
@@ -50,21 +49,8 @@ namespace Olfactory.Pages.ThresholdTest
             };
         }
 
-        private void Page_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.F9)
-            {
-                Next(this, new EventArgs());
-            }
-        }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Focusable)
-            {
-                Focus();
-            }
-        }
+        // UI events
 
         private void btnOpenValve_Click(object sender, RoutedEventArgs e)
         {

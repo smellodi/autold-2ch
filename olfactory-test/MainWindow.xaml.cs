@@ -38,9 +38,9 @@ namespace Olfactory
                     _ => throw new NotImplementedException($"The test '{e}' logic is not implemented yet"),
                 };
 
-                _currentTest.Continue += (s, e) => Continue();
+                _currentTest.PageDone += (s, e) => Continue();
 
-                Content = _currentTest.NextPage();
+                Content = _currentTest.Start();
             };
 
             _finishedPage.Next += (s, e) => Close();

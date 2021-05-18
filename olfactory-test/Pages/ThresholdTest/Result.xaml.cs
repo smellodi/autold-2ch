@@ -1,25 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class Instructions : Page, IPage<EventArgs>
+    public partial class Result : Page, IPage<EventArgs>
     {
         public event EventHandler<EventArgs> Next = delegate { };
 
-        public Instructions()
+        public Result()
         {
             InitializeComponent();
+        }
+
+        public void SetPPM(double ppm)
+        {
+            lblContent.Content = ppm > 0 ? ppm.ToString("F2") : "unknown";
         }
 
 

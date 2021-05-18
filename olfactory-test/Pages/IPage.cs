@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Olfactory.Pages
 {
-    internal interface IPage
+    internal interface IPage<T>
     {
-        event EventHandler Next;
+        event EventHandler<T> Next;
     }
 }

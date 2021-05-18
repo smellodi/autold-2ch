@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace Olfactory.Pages
 {
-    public partial class Setup : Page
+    public partial class Setup : Page, IPage<Test.Tests>
     {
         public event EventHandler<Test.Tests> Next = delegate { };
         public event EventHandler<Result> LogResult = delegate { };

@@ -4,17 +4,17 @@ using System.Windows.Controls;
 
 namespace Olfactory.Pages
 {
-    /// <summary>
-    /// Interaction logic for Finished.xaml
-    /// </summary>
-    public partial class Finished : Page, IPage
+    public partial class Finished : Page, IPage<EventArgs>
     {
-        public event EventHandler Next = delegate { };
+        public event EventHandler<EventArgs> Next = delegate { };
 
         public Finished()
         {
             InitializeComponent();
         }
+
+
+        // UI events
 
         private void OnExit_Click(object sender, RoutedEventArgs e)
         {

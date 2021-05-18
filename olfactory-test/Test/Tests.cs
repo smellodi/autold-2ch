@@ -10,7 +10,8 @@ namespace Olfactory.Test
 
     public interface ITest
     {
-        event EventHandler Continue;
+        event EventHandler PageDone;
+        Page Start();
         Page NextPage();
     }
 }

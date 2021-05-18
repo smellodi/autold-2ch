@@ -1,4 +1,4 @@
-﻿<Page x:Class="Olfactory.Pages.ThresholdTest.Familiarize"
+﻿<Page x:Class="Olfactory.Pages.ThresholdTest.Result"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Familiarize with the odor"
+      Title="Result"
       WindowTitle="Threshold Test">
 
     <Grid>
@@ -15,29 +15,30 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0"
                Style="{StaticResource PageTitle}"
-               Content="Familiarize with the odor"/>
+               Content="Result"/>
 
         <StackPanel Grid.Row="1"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
-            <Button
-                Padding="12"
-                Content="Open the odor valve" Click="btnOpenValve_Click"/>
-            <TextBlock x:Name="txbCountdown"
-                       TextAlignment="Center"
-                       Margin="0,12"
-                       MaxWidth="150"
-                       TextWrapping="Wrap"
-                       Text="After opening the valve, please wait for few seconds before the odor reaches you, then spend some time memorizing it."/>
+                    VerticalAlignment="Center">
+            <Label
+                HorizontalAlignment="Center"
+                Content="Your odor sensitivity (ppm):"
+                FontSize="14"/>
+            <Label x:Name="lblContent"
+                   HorizontalAlignment="Center"
+                   Content="0.0"
+                   FontSize="36"
+                   Foreground="#FF1F6300"/>
         </StackPanel>
-
-        <Button Grid.Row="2" x:Name="btnNext"
+        
+        <Button Grid.Row="2"
                 Style="{StaticResource Next}"
-                Content="Start the test"
-                IsEnabled="false"
+                Content="Continue"
                 Click="OnNext_Click"/>
     </Grid>
 </Page>

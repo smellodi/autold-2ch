@@ -6,7 +6,8 @@
       xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Instructions" WindowTitle="Threshold Test">
+      Title="Instructions"
+      WindowTitle="Threshold Test">
 
     <Grid>
         <Grid.Resources>

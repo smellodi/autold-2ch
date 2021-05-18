@@ -170,14 +170,16 @@ namespace Olfactory
         /// Calculated the time in seconds for the odor to flow from the bottle to the user
         /// given the current odor and fresh air speeds
         /// </summary>
+        /// <param name="endPoint">the point for odor to reach</param>
+        /// <param name="speed">Odor speed (the current one is omitted)</param>
         /// <returns>Time the odor reaches a user in seconds</returns>
-        public double EstimateFlowDuration(FlowEndPoint endPoint)
+        public double EstimateFlowDuration(FlowEndPoint endPoint, double speed = 0)
         {
             var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
             var mixedTubeVolume = Math.PI * MIXED_TUBE_R * MIXED_TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
 
-            var odorSpeed = OdorSpeed / 60;                 // ml/s
-            var mixedSpeed = 1000 * FreshAirSpeed / 60;     // ml/s
+            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;  // ml/s
+            var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
 
             var result = odorTubeVolume / odorSpeed;
             if (endPoint == FlowEndPoint.User)
@@ -186,6 +188,16 @@ namespace Olfactory
             }
             
             return result;
+        }
+
+        /// <summary>
+        /// Converts the ppm to the corresponding odor speed
+        /// </summary>
+        /// <param name="ppm">Odor concentration in ppm</param>
+        /// <returns>Odor speed</returns>
+        public double PPM2Speed(double ppm)
+        {
+            return 4.0 * ppm;   // TODO: implement this
         }
 
         /// <summary>
@@ -330,7 +342,7 @@ namespace Olfactory
 
         Channels _channels = Channels.None;
 
-        double _freshAir = 1.0;
+        double _freshAir = 5.0;
         double _odor = 4.0;
         OdorFlow _odorDirection = OdorFlow.ToWaste;
 

@@ -1,0 +1,139 @@
+﻿<Page x:Class="Olfactory.Pages.ThresholdTest.ThreePens"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Three Pens"
+      WindowTitle="Threshold Test">
+
+    <Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0"
+               Style="{StaticResource PageTitle}"
+               Content="Three pens"/>
+
+        <Grid Grid.Row="1" Grid.Column="0"
+              HorizontalAlignment="Center"
+              Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}">
+            <Grid.Resources>
+                <Style x:Key="Pen" TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="Height" Value="100"/>
+                </Style>
+                <Style x:Key="Colorbox" TargetType="{x:Type Rectangle}">
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="Height" Value="10"/>
+                </Style>
+                <Style x:Key="Choice" TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="100"/>
+                    <Setter Property="Height" Value="36"/>
+                    <Setter Property="Margin" Value="0,30,0,0"/>
+                    <Setter Property="Content" Value="Odor was here"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" x:Name="lblInstruction"
+                       Margin="0,36"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Bottom"
+                       Text="Please wait until the odor is prepared. Click a pen button to start recognition once it is enabled"/>
+
+            <Button Grid.Row="1" Grid.Column="0" x:Name="btnPen1"
+                    Style="{StaticResource Pen}"
+                    IsEnabled="false"
+                    Content="Pen #1"
+                    Click="OnPen_Click"/>
+            <Button Grid.Row="1" Grid.Column="1" x:Name="btnPen2"
+                    Style="{StaticResource Pen}"
+                    IsEnabled="false"
+                    Content="Pen #2"
+                    Click="OnPen_Click"/>
+            <Button Grid.Row="1" Grid.Column="2" x:Name="btnPen3"
+                    Style="{StaticResource Pen}"
+                    IsEnabled="false"
+                    Content="Pen #3"
+                    Click="OnPen_Click"/>
+
+            <Rectangle Grid.Row="2" Grid.Column="0" x:Name="rctPen1"
+                       Style="{StaticResource Colorbox}"/>
+            <Rectangle Grid.Row="2" Grid.Column="1" x:Name="rctPen2"
+                       Style="{StaticResource Colorbox}"/>
+            <Rectangle Grid.Row="2" Grid.Column="2" x:Name="rctPen3"
+                       Style="{StaticResource Colorbox}"/>
+            
+            <Button Grid.Row="3" Grid.Column="0" x:Name="btnChoice1"
+                    Style="{StaticResource Choice}"
+                    IsEnabled="false"
+                    Click="OnChoice_Click"/>
+            <Button Grid.Row="3" Grid.Column="1" x:Name="btnChoice2"
+                    Style="{StaticResource Choice}"
+                    IsEnabled="false"
+                    Click="OnChoice_Click"/>
+            <Button Grid.Row="3" Grid.Column="2" x:Name="btnChoice3"
+                    Style="{StaticResource Choice}"
+                    IsEnabled="false"
+                    Click="OnChoice_Click"/>
+
+            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
+                  VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Label Content="Step #"/>
+                    <Label x:Name="lblStep"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Label Content="Direction: "/>
+                    <Label x:Name="lblDirection"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Label Content="PPM level: "/>
+                    <Label x:Name="lblPPMLevel"/>
+                </StackPanel>
+                <StackPanel Grid.Column="3"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Label Content="Recognitions in row: "/>
+                    <Label x:Name="lblRecognitionsInRow"/>
+                </StackPanel>
+                <StackPanel Grid.Column="4"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <Label Content="Turnings: "/>
+                    <Label x:Name="lblTurningCount"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
