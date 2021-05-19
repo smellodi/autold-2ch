@@ -69,9 +69,10 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void OnNext_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorSpeed = 1.0;
+            _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
 
-            Utils.DispatchOnce.Do(0.5, () => _mfc.OdorDirection = MFC.OdorFlow.ToWaste);    // just in case, make 0.5 sec delay between the requests
+            // We do not need this command as the next page immediately sets the odor speed to some other value
+            //Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.5 sec delay between the requests
 
             Next(this, new EventArgs());
         }

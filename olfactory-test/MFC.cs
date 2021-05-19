@@ -167,27 +167,42 @@ namespace Olfactory
         }
 
         /// <summary>
-        /// Calculated the time in seconds for the odor to flow from the bottle to the user
+        /// Calculated the time in seconds for the odor to flow from the bottle to 
+        /// 1 - the user
+        /// 2 - the mixer
         /// given the current odor and fresh air speeds
         /// </summary>
         /// <param name="endPoint">the point for odor to reach</param>
-        /// <param name="speed">Odor speed (the current one is omitted)</param>
+        /// <param name="speed">Odor speed (the current one if omitted)</param>
         /// <returns>Time the odor reaches a user in seconds</returns>
         public double EstimateFlowDuration(FlowEndPoint endPoint, double speed = 0)
         {
-            var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
-            var mixedTubeVolume = Math.PI * MIXED_TUBE_R * MIXED_TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
-
-            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;  // ml/s
-            var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
+            var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
+            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;      // ml/s
 
             var result = odorTubeVolume / odorSpeed;
+
             if (endPoint == FlowEndPoint.User)
             {
+                var mixedTubeVolume = Math.PI * MIXED_TUBE_R * MIXED_TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
+                var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
+
                 result += mixedTubeVolume / mixedSpeed;
             }
             
             return result;
+        }
+
+        /// <summary>
+        /// Calculates the speed in ml/min for the MFC-B (odor tube) that is required to 
+        /// fill the tube between the bottle and the mixer with the odor
+        /// </summary>
+        /// <param name="time">The time to fill the tube in seconds</param>
+        /// <returns>The speed in ml/min</returns>
+        public double PredictFlowSpeed(double time)
+        {
+            var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
+            return odorTubeVolume / time * 60;
         }
 
         /// <summary>
