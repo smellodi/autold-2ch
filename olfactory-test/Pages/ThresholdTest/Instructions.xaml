@@ -29,11 +29,19 @@
                Content="Instructions"/>
 
         <ScrollViewer Grid.Row="1"
+                      HorizontalAlignment="Center"
+                      MaxWidth="1000"
                       Padding="24,0">
             <StackPanel Orientation="Vertical">
                 <TextBlock/>
-                <TextBlock>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</TextBlock>
-                <TextBlock>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</TextBlock>
+                <TextBlock>Your sense of smell is to be tested. Repeatedly, three 
+pens will be presented to you one after another. Only one of these pens contains the odorant. 
+You have to find out the pen in which you think you have perceived the 
+odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess. 
+During the evaluation of the test it will be taken into account that you have been asked to come to a decision in any case.</TextBlock>
+                <TextBlock>The test will take approximately 30-40 minutes.
+All substances contained in the test are non-toxic and not harmful in the used concentrations.</TextBlock>
+                <TextBlock>More instruction to add here. We may collect personal data in this app as well.</TextBlock>
             </StackPanel>
         </ScrollViewer>
 

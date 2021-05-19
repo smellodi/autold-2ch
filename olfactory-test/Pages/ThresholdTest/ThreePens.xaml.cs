@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Utils;
 
 namespace Olfactory.Pages.ThresholdTest
 {
@@ -40,10 +41,11 @@ namespace Olfactory.Pages.ThresholdTest
         const double ODOR_STABILIZATION_DURATION = 5;
 
         const double PEN_PRESENTATION_DURATION = 5;
+        const double AFTERMATH_PAUSE = 3;
 
         string INSTRUCTION_SNIFF(int id) => $"Sniff the pen #{id + 1}";
-        const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odor in ready (approx. 15 seconds)";
-        const string INSTRUCTION_CHOOSE_THE_PEN = "Please select the pen with the odor";
+        const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready (approx. 15 seconds)";
+        const string INSTRUCTION_CHOOSE_THE_PEN = "Please select the pen with the odorant";
         const string INSTRUCTION_DONE = "Thank you!";
 
         // END OF VERSION 2
@@ -53,24 +55,31 @@ namespace Olfactory.Pages.ThresholdTest
 
         enum PenColor { None, Red, Green, Blue }
         enum PPMChangeDirection { Increasing, Decreasing }
+        [Flags]
+        enum Update { Step = 1, PPM = 2, Recognitions = 4, Turnings = 8, All = Step | PPM | Recognitions | Turnings }
 
+        /* VESRION 1
         readonly PenColor[][] ORDER_MATRIX = new PenColor[][]
         {
             new PenColor[PEN_COUNT] { PenColor.Red, PenColor.Green, PenColor.Blue },
             new PenColor[PEN_COUNT] { PenColor.Blue, PenColor.Red, PenColor.Green },
             new PenColor[PEN_COUNT] { PenColor.Green, PenColor.Blue, PenColor.Red },
         };
+        // END OF VERSION 1*/
+
         readonly double[] PPMS = new double[PPM_LEVEL_COUNT] {
             1, 1.5, 2, 3, 4, 6, 8, 11, 14, 17, 22, 27, 33, 40, 48, 59
         };
         readonly PenColor ODOR_PEN_COLOR = PenColor.Red;
-        readonly Button[] PENS;
+        readonly Control[] PENS;
         readonly Rectangle[] COLORBOXES;
         readonly Button[] CHOICES;
 
         // Members
 
         MFC _mfc = MFC.Instance;
+
+        Random _rnd = new Random((int)DateTime.Now.Ticks);
 
         int _stepID = -1;
         int _currentPenID = -1;
@@ -80,7 +89,10 @@ namespace Olfactory.Pages.ThresholdTest
         int _recognitionsInRowCount = 0;
         List<double> _turningPointPPMs = new List<double>();
 
-        Button CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
+        Style _penStyle;
+        Style _currentPenStyle;
+
+        Control CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
         PenColor CurrentColor => CurrentPen == null ? PenColor.None : (PenColor)CurrentPen.Tag;
 
         // Public methods
@@ -89,31 +101,57 @@ namespace Olfactory.Pages.ThresholdTest
         {
             InitializeComponent();
 
-            PENS = new Button[PEN_COUNT] { btnPen1, btnPen2, btnPen3 };
+            PENS = new Control[PEN_COUNT] { btnPen1, btnPen2, btnPen3 };
             COLORBOXES = new Rectangle[PEN_COUNT] { rctPen1, rctPen2, rctPen3 };
             CHOICES = new Button[PEN_COUNT] { btnChoice1, btnChoice2, btnChoice3 };
+
+            var penStyleBase = new Style(typeof(Label));
+            penStyleBase.Setters.Add(new Setter(WidthProperty, 120.0));
+            penStyleBase.Setters.Add(new Setter(HeightProperty, 120.0));
+            penStyleBase.Setters.Add(new Setter(Control.HorizontalContentAlignmentProperty, HorizontalAlignment.Center));
+            penStyleBase.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+            penStyleBase.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(1.0)));
+            penStyleBase.Setters.Add(new Setter(Control.BorderBrushProperty, new SolidColorBrush(Colors.Gray)));
+
+            _penStyle = new Style(typeof(Label), penStyleBase);
+            _penStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(255, 255, 255))));
+
+            _currentPenStyle = new Style(typeof(Label), penStyleBase);
+            _currentPenStyle.Setters.Add(new Setter(Control.BackgroundProperty, new SolidColorBrush(Color.FromRgb(102, 205, 255))));
+
+            EnableChoiceButtons(false);
         }
 
         public void Init()
         {
             _currentPenID = -1;
 
-            var order = ORDER_MATRIX[++_stepID % ORDER_MATRIX.Length];
+            // VERSION 1
+            // var order = ORDER_MATRIX[++_stepID % ORDER_MATRIX.Length];
+
+            // VERSION 2
+            var order = new PenColor[PEN_COUNT] { PenColor.Red, PenColor.Green, PenColor.Blue };
+            _rnd.Shuffle(order);
+            _stepID++;
+
+            System.Diagnostics.Debug.WriteLine($"{order[0]} {order[1]} {order[2]}");
+
             for (int i = 0; i < PENS.Length; i++)
             {
                 PENS[i].Tag = (int)order[i];
+                PENS[i].Style = _penStyle;
                 COLORBOXES[i].Tag = (int)order[i];
                 CHOICES[i].Tag = (int)order[i];
             }
 
-            UpdateDisplay();
+            UpdateDisplay(Update.All);
 
             // VERSION 1
             // ActivateNextPen();
 
             // VERSION 2
             lblInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
-            Utils.DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC.. lets wait a little, then continue
+            DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC.. lets wait a little, then continue
         }
 
 
@@ -191,7 +229,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             _mfc.OdorSpeed = Math.Round(odorSpeed, 1);
 
-            Utils.DispatchOnce
+            DispatchOnce
                 .Do(ODOR_TUBE_FILLING_DURATION, () => _mfc.OdorSpeed = _mfc.PPM2Speed(PPMS[_currentPPMLevel]))
                 .Then(ODOR_STABILIZATION_DURATION, () => ActivateNextPen());
         }
@@ -216,11 +254,11 @@ namespace Olfactory.Pages.ThresholdTest
                 _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
 
                 // no need to wait till the trial is over, just stop odor flow at this point already
-                Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case
+                DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case
             }
             if (CurrentPen != null)
             {
-                CurrentPen.IsEnabled = false;
+                CurrentPen.Style = _penStyle;
             }
 
             if (++_currentPenID == PENS.Length)
@@ -238,9 +276,9 @@ namespace Olfactory.Pages.ThresholdTest
                 _mfc.OdorDirection = MFC.OdorFlow.ToUser;
             }
 
-            CurrentPen.IsEnabled = true;
+            CurrentPen.Style = _currentPenStyle;
 
-            Utils.DispatchOnce.Do(PEN_PRESENTATION_DURATION, () => ActivateNextPen());
+            DispatchOnce.Do(PEN_PRESENTATION_DURATION, () => ActivateNextPen());
         }
 
         // END OF VERSION 2
@@ -251,7 +289,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             for (int i = 0; i < CHOICES.Length; i++)
             {
-                CHOICES[i].IsEnabled = enable;
+                CHOICES[i].Visibility = enable ? Visibility.Visible : Visibility.Hidden;
             }
         }
 
@@ -315,13 +353,25 @@ namespace Olfactory.Pages.ThresholdTest
             return true;
         }
 
-        private void UpdateDisplay()
+        private void UpdateDisplay(Update update)
         {
-            lblDirection.Content = _direction;
-            lblPPMLevel.Content = _currentPPMLevel + 1;
-            lblRecognitionsInRow.Content = _recognitionsInRowCount;
-            lblStep.Content = _stepID;
-            lblTurningCount.Content = _turningPointPPMs.Count;
+            if (update.HasFlag(Update.PPM))
+            {
+                lblDirection.Content = _direction;
+                lblPPMLevel.Content = _currentPPMLevel + 1;
+            }
+            if (update.HasFlag(Update.Recognitions))
+            {
+                lblRecognitionsInRow.Content = _recognitionsInRowCount;
+            }
+            if (update.HasFlag(Update.Step))
+            {
+                lblStep.Content = _stepID + 1;
+            }
+            if (update.HasFlag(Update.Turnings))
+            {
+                lblTurningCount.Content = _turningPointPPMs.Count;
+            }
         }
 
 
@@ -349,9 +399,9 @@ namespace Olfactory.Pages.ThresholdTest
 
             ColorizePens(true);
 
-            lblTurningCount.Content = _turningPointPPMs.Count;
+            UpdateDisplay(Update.Recognitions | Update.Turnings);
 
-            Utils.DispatchOnce.Do(3, () =>
+            DispatchOnce.Do(AFTERMATH_PAUSE, () =>
             {
                 ColorizePens(false);
 
