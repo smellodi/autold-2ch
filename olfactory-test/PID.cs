@@ -11,14 +11,22 @@ namespace Olfactory
 
         public double PID;                                                  // PID value in mV
         public double Loop;                                                 // Current loop input in mA
+        public double PID_PPM;                                              // PID value as ppm
+        public double Input;                                                // 10V scaled input
+        public double Light;                                                // 10V scaled input
+        public double Temperature;                                          // degrees in C
 
         public override string ToString()
         {
             return string.Join('\t',
                 new string[] {
                         Time.ToString(),
-                        PID.ToString("F0"),
+                        PID.ToString("F1"),
+                        PID_PPM.ToString("F2"),
                         Loop.ToString("F4"),
+                        Input.ToString("F2"),
+                        Light.ToString("F0"),
+                        Temperature.ToString("F1"),
             });
         }
     }
@@ -39,7 +47,7 @@ namespace Olfactory
         }
 
         public override string Name { get => "PID"; }
-        public override string[] DataColumns { get => new string[] { "Time", "PID", "Loop" }; }
+        public override string[] DataColumns { get => new string[] { "Time", "PID uV", "PID PPM", "Loop", "Input", "Light", "Temp" }; }
 
         /// <summary>
         /// Private constructor, use Instance property to get the instance.
@@ -88,7 +96,7 @@ namespace Olfactory
             Error error;
             try
             {
-                error = ReadValues(out sample.PID, out sample.Loop);
+                error = ReadValues(out sample.PID, out sample.Loop, out sample.PID_PPM, out sample.Input, out sample.Light, out sample.Temperature);
             }
             catch (Exception ex)
             {
@@ -341,11 +349,18 @@ namespace Olfactory
         /// logger. (Solution: short-circuit the SDK loop power enable MOSFET.)
         /// Well, at least the PID input works well.
         /// </summary>
-        /// <param name="pidValue">PID value</param>
+        /// <param name="piduV">PID value</param>
         /// <param name="loop">LOOP value</param>
         /// <returns></returns>
-        Error ReadValues(out double pidValue, out double loop)
+        Error ReadValues(out double piduV, out double loop, out double pidPPM, out double input, out double light, out double temperature)
         {
+            piduV = 0;
+            loop = 0;
+            pidPPM = 0;
+            input = 0;
+            light = 0;
+            temperature = 0;
+
             Error error;
 
             ModQueryReadInputRegs queryRaw = new ModQueryReadInputRegs()
@@ -366,9 +381,6 @@ namespace Olfactory
                 NRegsHi = 0x00,
                 NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort),    // Read 6 DWORD values -> twice as many registers
             };
-
-            pidValue = 0;
-            loop = 0;
 
             if ((error = SendQuery(in queryRaw)) != Error.Success ||
                 (error = ReceiveReply(out ModResponseRead12Regs responseRaw)) != Error.Success ||
@@ -404,13 +416,17 @@ namespace Olfactory
             responseScaled.RegsRTD = ModbusDWORDByteSwap(ref responseScaled.RegsRTD);
             responseScaled.RegsTemp = ModbusDWORDByteSwap(ref responseScaled.RegsTemp);
 
-            pidValue = responseRaw.RegsPID.D;
+            piduV = responseRaw.RegsPID.D;
             if (responseRaw.Regs10VRef.D != 0)                // 10000mV reference available; convert the PID value to millivolts
             {
-                pidValue = pidValue / responseRaw.Regs10VRef.D * 10000.0;
+                piduV = piduV / responseRaw.Regs10VRef.D * 10000.0;
             }
 
             loop = responseScaled.RegsCurrLoop.f;
+            pidPPM = responseScaled.RegsPID.f;
+            input = responseScaled.Regs10VRef.f;
+            light = responseScaled.RegsLight.f;
+            temperature = responseScaled.RegsRTD.f;
 
             return Error.Success;
         }
@@ -440,6 +456,10 @@ namespace Olfactory
             if (!IsDebugging)
             {
                 _port.Write(bytes, 0, length);
+            }
+            else
+            {
+                EmulateWrite(query);
             }
             if (_error != null)
             {
@@ -612,7 +632,7 @@ namespace Olfactory
         }
 
         /// <summary>
-        /// Makes a streucture out of array of bytes
+        /// Makes a structure out of array of bytes
         /// </summary>
         /// <typeparam name="T">Structure type to restore from bytes</typeparam>
         /// <param name="bytes">Array of bytes</param>
@@ -636,9 +656,22 @@ namespace Olfactory
         // Debugging
 
         Random rnd = new Random((int)DateTime.Now.Ticks);
+        ModQueryPreset1Regs presetQuery;
+        ModQueryReadInputRegs inputQuery;
 
         double e(double amplitude) => (rnd.NextDouble() - 0.5) * 2 * amplitude;
         int e(int amplitude) => rnd.Next(-amplitude, amplitude);
+        void EmulateWrite<T>(T query)
+        {
+            if (query is ModQueryPreset1Regs preset)
+            {
+                presetQuery = preset;
+            }
+            else if (query is ModQueryReadInputRegs input)
+            {
+                inputQuery = input;
+            }
+        }
         int EmulateReading(byte[] buffer, int offset, int count)
         {
             if (rnd.NextDouble() < 0.05)
@@ -659,41 +692,90 @@ namespace Olfactory
             }
             else if (count == 29) // query-input
             {
+                var addr = (inputQuery.AddressHi << 8) | inputQuery.AddressLo;
+
                 buffer[0] = MODBUS_ADDR_PID;
                 buffer[1] = MODBUS_FN_READ_INPUT_REGS;
                 buffer[2] = MODBUS_GROUP_LEN * sizeof(uint);
-                // rtd
-                buffer[3] = (byte)'T';
-                buffer[4] = (byte)'R';
-                buffer[5] = 0;
-                buffer[6] = (byte)'D';
-                // ref = 10000
-                buffer[7] = 0x27;
-                buffer[8] = 0x10;
-                buffer[9] = 0;
-                buffer[10] = 0;
-                // pid
-                buffer[11] = 0;
-                buffer[12] = (byte)(210 + e(10));
-                buffer[13] = 0;
-                buffer[14] = 0;
-                // light
-                buffer[15] = (byte)'G';
-                buffer[16] = (byte)'L';
-                buffer[17] = (byte)'T';
-                buffer[18] = (byte)'H';
-                // temp
-                buffer[19] = (byte)'E';
-                buffer[20] = (byte)'T';
-                buffer[21] = (byte)'P';
-                buffer[22] = (byte)'M';
-                // currloop
-                BtoD cl = new BtoD();
-                cl.f = 5.678f + (float)e(0.15);
-                buffer[23] = cl.B1;
-                buffer[24] = cl.B0;
-                buffer[25] = cl.B3;
-                buffer[26] = cl.B2;
+
+                if (addr == MODBUS_REG_ADCMV_GROUP)
+                {
+                    // rtd
+                    buffer[3] = (byte)'T';
+                    buffer[4] = (byte)'R';
+                    buffer[5] = 0;
+                    buffer[6] = (byte)'D';
+                    // ref = 10000
+                    buffer[7] = 0x27;
+                    buffer[8] = 0x10;
+                    buffer[9] = 0;
+                    buffer[10] = 0;
+                    // pid
+                    buffer[11] = 0;
+                    buffer[12] = (byte)(210 + e(10));
+                    buffer[13] = 0;
+                    buffer[14] = 0;
+                    // light
+                    buffer[15] = (byte)'G';
+                    buffer[16] = (byte)'L';
+                    buffer[17] = (byte)'T';
+                    buffer[18] = (byte)'H';
+                    // temp
+                    buffer[19] = (byte)'E';
+                    buffer[20] = (byte)'T';
+                    buffer[21] = (byte)'P';
+                    buffer[22] = (byte)'M';
+                    // currloop
+                    buffer[23] = (byte)'R';
+                    buffer[24] = (byte)'C';
+                    buffer[25] = (byte)'P';
+                    buffer[26] = (byte)'L';
+                }
+                else if (addr == MODBUS_REG_SIGNAL_GROUP)
+                {
+                    // rtd
+                    BtoD rtd = new BtoD();
+                    rtd.f = 25f + (float)e(0.15);
+                    buffer[3] = rtd.B1;
+                    buffer[4] = rtd.B0;
+                    buffer[5] = rtd.B3;
+                    buffer[6] = rtd.B2;
+                    // ref
+                    BtoD ref10V = new BtoD();
+                    ref10V.f = 20f;
+                    buffer[7] = ref10V.B1;
+                    buffer[8] = ref10V.B0;
+                    buffer[9] = ref10V.B3;
+                    buffer[10] = ref10V.B2;
+                    // pid
+                    BtoD pid = new BtoD();
+                    pid.f = 45f + (float)e(1.5);
+                    buffer[11] = pid.B1;
+                    buffer[12] = pid.B0;
+                    buffer[13] = pid.B3;
+                    buffer[14] = pid.B2;
+                    // light
+                    BtoD light = new BtoD();
+                    light.f = 1f;
+                    buffer[15] = light.B1;
+                    buffer[16] = light.B0;
+                    buffer[17] = light.B3;
+                    buffer[18] = light.B2;
+                    // temp
+                    BtoD temp = new BtoD();
+                    temp.f = 29f;
+                    buffer[19] = temp.B1;
+                    buffer[20] = temp.B0;
+                    buffer[21] = temp.B3;
+                    buffer[22] = temp.B2;
+                    // currloop
+                    BtoD cl = new BtoD();
+                    cl.f = 5.678f + (float)e(0.15);
+                    buffer[23] = cl.B1;
+                    buffer[24] = cl.B0;
+                    buffer[25] = cl.B3;
+                    buffer[26] = cl.B2;
+                }
                 // crc
                 BtoW crc = new BtoW();
                 crc.W = CRC16(buffer, count - sizeof(ushort));
