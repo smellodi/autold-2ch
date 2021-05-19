@@ -481,7 +481,7 @@ namespace Olfactory
                 {
                     Thread.Sleep(50);
 
-                    if (_port.BytesToRead > 0)
+                    if (_port.BytesToRead > 0)  // note: it may appear that reading is need anyway, even if the buffer is empty yet, so thsi check si to be removed
                     {
                         string response = ReadBytes();
                         if (_error != null)
@@ -576,8 +576,12 @@ namespace Olfactory
         // Debugging
 
         Random rnd = new Random((int)DateTime.Now.Ticks);
-        int basePA = 1016;
-        int basePB = 2016;
+        int pressureA = 1200;
+        int pressureB = 1800;
+        double massFlowA = 1.0;
+        double massFlowB = 0.02;
+        double volFlowA = .05;
+        double volFlowB = .05;
         double e(double amplitude) => (rnd.NextDouble() - 0.5) * 2 * amplitude;
         int e(int amplitude) => rnd.Next(-amplitude, amplitude);
         string EmulateReading(char channel)
@@ -587,14 +591,16 @@ namespace Olfactory
                 return "";
             }
 
-            var baseP = channel == 'A' ? basePA : basePB;
+            var pressure = channel == 'A' ? pressureA : pressureB;
+            var massFlow = channel == 'A' ? massFlowA : massFlowB;
+            var volFlow = channel == 'A' ? volFlowA : volFlowB;
 
             return string.Join(' ',
-                channel.ToString(),                            // channel
-                (baseP + e(15)).ToString(),                 // Absolute pressure
-                (47.74 + e(1.5)).ToString("F2"),            // Temp
-                "-0.00003",                                 // Volumentric flow
-                (-0.002 + e(0.0002)).ToString("F5"),        // Standart (Mass) Flow
+                channel.ToString(),                         // channel
+                (pressure + e(15)).ToString(),              // Absolute pressure
+                (24.74 + e(0.3)).ToString("F2"),            // Temp
+                (volFlow + e(0.05)).ToString("F5"),         // Volumentric flow
+                (massFlow + e(0.05)).ToString("F5"),        // Standart (Mass) Flow
                 "+50.000",                                  // Setpoint
                 "Air"                                       // Gas
             );
@@ -604,6 +610,23 @@ namespace Olfactory
             if (rnd.NextDouble() < 0.002)
             {
                 throw new Exception("Simulating writing fault");
+            }
+
+            var cmd = System.Text.Encoding.Default.GetString(command);
+            if (cmd.Length > 4)
+            {
+                Channel channel = (Channel)Enum.Parse(typeof(Channel), cmd[0].ToString(), true);
+                string cmdID = cmd[1].ToString();
+                if (cmdID == CMD_SET)
+                {
+                    double value = double.Parse(cmd.Substring(2, command.Length - 2));
+                    switch (channel)
+                    {
+                        case Channel.A: massFlowA = value; break;
+                        case Channel.B: massFlowB = value; break;
+                        default: break;
+                    }
+                }    
             }
         }
     }

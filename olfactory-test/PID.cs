@@ -293,21 +293,21 @@ namespace Olfactory
         Error EnableLamp(bool enable)
         {
             Error error;
-            ModQueryPreset1Regs query = new ModQueryPreset1Regs();
-            ModResponsePresetRegs response;
-
-            query.SlaveAddr = MODBUS_ADDR_PID;
-            query.Function = MODBUS_FN_PRESET_INPUT_REGS;                 // Query for setting registers
-            query.AddressLo = MODBUS_REG_PID_POWER & 0xFF;               // 16b register (start) address
-            query.AddressHi = MODBUS_REG_PID_POWER >> 8;
-            query.RegCountHi = 0x00;
-            query.RegCountLo = 0x01;                                   // Set one register ...
-            query.ByteCount = sizeof(ushort);                          // ... which is 16b long
-            query.DataHi = 0x00;
-            query.DataLo = (byte)(enable ? 0x01 : 0x00);              // LSb = PID lamp enable/disable bit
+            ModQueryPreset1Regs query = new ModQueryPreset1Regs()
+            {
+                SlaveAddr = MODBUS_ADDR_PID,
+                Function = MODBUS_FN_PRESET_INPUT_REGS,            // Query for setting registers
+                AddressLo = MODBUS_REG_PID_POWER & 0xFF,           // 16b register (start) address
+                AddressHi = MODBUS_REG_PID_POWER >> 8,
+                RegCountHi = 0x00,
+                RegCountLo = 0x01,                                 // Set one register ...
+                ByteCount = sizeof(ushort),                        // ... which is 16b long
+                DataHi = 0x00,
+                DataLo = (byte)(enable ? 0x01 : 0x00),             // LSb = PID lamp enable/disable bit
+            };
 
             if ((error = SendQuery(in query)) != Error.Success ||
-                (error = ReceiveReply(out response)) != Error.Success)
+                (error = ReceiveReply(out ModResponsePresetRegs response)) != Error.Success)
             {
                 return error;
             }
@@ -347,33 +347,33 @@ namespace Olfactory
         Error ReadValues(out double pidValue, out double loop)
         {
             Error error;
-            ModQueryReadInputRegs queryRaw = new ModQueryReadInputRegs();
-            ModQueryReadInputRegs queryScaled = new ModQueryReadInputRegs();
-            ModResponseRead12Regs responseRaw;
-            ModResponseRead12Regs responseScaled;
+
+            ModQueryReadInputRegs queryRaw = new ModQueryReadInputRegs()
+            {
+                SlaveAddr = MODBUS_ADDR_PID,                          // Query for reading multiple registers (scaled ADC values)
+                Function = MODBUS_FN_READ_INPUT_REGS,
+                AddressLo = MODBUS_REG_ADCMV_GROUP & 0xFF,
+                AddressHi = MODBUS_REG_ADCMV_GROUP >> 8,
+                NRegsHi = 0x00,
+                NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort),    // Read 6 DWORD values -> twice as many registers
+            };
+            ModQueryReadInputRegs queryScaled = new ModQueryReadInputRegs()
+            {
+                SlaveAddr = MODBUS_ADDR_PID,
+                Function = MODBUS_FN_READ_INPUT_REGS,
+                AddressLo = MODBUS_REG_SIGNAL_GROUP & 0xFF,
+                AddressHi = MODBUS_REG_SIGNAL_GROUP >> 8,
+                NRegsHi = 0x00,
+                NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort),    // Read 6 DWORD values -> twice as many registers
+            };
 
             pidValue = 0;
             loop = 0;
 
-            queryRaw.SlaveAddr = MODBUS_ADDR_PID;                          // Query for reading multiple registers (scaled ADC values)
-            queryRaw.Function = MODBUS_FN_READ_INPUT_REGS;
-            queryRaw.AddressLo = MODBUS_REG_ADCMV_GROUP & 0xFF;
-            queryRaw.AddressHi = MODBUS_REG_ADCMV_GROUP >> 8;
-            queryRaw.NRegsHi = 0x00;
-            queryRaw.NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort);    // Read 6 DWORD values -> twice as many registers
-
-            // Similar query, but for 6 DWORDs (raw ADC values)
-            queryScaled.SlaveAddr = MODBUS_ADDR_PID;
-            queryScaled.Function = MODBUS_FN_READ_INPUT_REGS;
-            queryScaled.AddressLo = MODBUS_REG_SIGNAL_GROUP & 0xFF;
-            queryScaled.AddressHi = MODBUS_REG_SIGNAL_GROUP >> 8;
-            queryScaled.NRegsHi = 0x00;
-            queryScaled.NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort);    // Read 6 DWORD values -> twice as many registers
-
             if ((error = SendQuery(in queryRaw)) != Error.Success ||
-                (error = ReceiveReply(out responseRaw)) != Error.Success ||
+                (error = ReceiveReply(out ModResponseRead12Regs responseRaw)) != Error.Success ||
                 (error = SendQuery(in queryScaled)) != Error.Success ||
-                (error = ReceiveReply(out responseScaled)) != Error.Success)
+                (error = ReceiveReply(out ModResponseRead12Regs responseScaled)) != Error.Success)
             {
                 return error;
             }
