@@ -18,6 +18,7 @@ namespace Olfactory.Tests
 
     public enum EmulationCommand
     {
-        FroceToFinishWithResult,
+        EnableEmulation,
+        ForceToFinishWithResult,
     }
 }

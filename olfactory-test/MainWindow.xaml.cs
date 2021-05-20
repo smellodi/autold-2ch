@@ -41,6 +41,11 @@ namespace Olfactory
                 _currentTest.PageDone += (s, e) => Continue();
 
                 Content = _currentTest.Start();
+
+                if (MFC.Instance.IsDebugging)
+                {
+                    _currentTest.Emulate(Tests.EmulationCommand.EnableEmulation);
+                }
             };
 
             _finishedPage.Next += (s, e) => Close();
@@ -62,7 +67,7 @@ namespace Olfactory
             }
             else if (e.Key == Key.F9)
             {
-                _currentTest?.Emulate(Tests.EmulationCommand.FroceToFinishWithResult);
+                _currentTest?.Emulate(Tests.EmulationCommand.ForceToFinishWithResult);
             }
         }
 

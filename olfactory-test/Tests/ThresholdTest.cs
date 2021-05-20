@@ -17,6 +17,7 @@ namespace Olfactory.Tests
             _resultPage.Next += (s, e) => PageDone(this, new EventArgs());
             _threePensPage.Next += (s, e) =>
             {
+                // TODO: trial result is not used now.. we could log it
                 _threePensPage.Init();
             };
             _threePensPage.Finished += (s, e) =>
@@ -55,9 +56,11 @@ namespace Olfactory.Tests
 
         public void Emulate(EmulationCommand command, params object[] args)
         {
-            if (command == EmulationCommand.FroceToFinishWithResult)
+            switch (command)
             {
-                (_current as Pages.ThresholdTest.ThreePens)?.EmulateDone();
+                case EmulationCommand.EnableEmulation: _threePensPage.Procedure.PrepareForEmulation(); break;
+                case EmulationCommand.ForceToFinishWithResult: _threePensPage.Procedure.EmulateDone(); break;
+                default: throw new NotImplementedException("This emulation command is not recognized in Threshold Test");
             }
         }
 
