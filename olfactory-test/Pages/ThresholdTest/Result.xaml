@@ -39,6 +39,6 @@
         <Button Grid.Row="2"
                 Style="{StaticResource Next}"
                 Content="Continue"
-                Click="OnNext_Click"/>
+                Click="btnNext_Click"/>
     </Grid>
 </Page>

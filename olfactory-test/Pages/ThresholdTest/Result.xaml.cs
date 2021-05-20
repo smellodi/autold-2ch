@@ -21,7 +21,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         // UI events
 
-        private void OnNext_Click(object sender, RoutedEventArgs e)
+        private void btnNext_Click(object sender, RoutedEventArgs e)
         {
             Next(this, new EventArgs());
         }

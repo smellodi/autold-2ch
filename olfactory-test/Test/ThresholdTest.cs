@@ -53,6 +53,13 @@ namespace Olfactory.Tests
             return NextPage();
         }
 
+        public void Emulate(EmulationCommand command, params object[] args)
+        {
+            if (command == EmulationCommand.FroceToFinishWithResult)
+            {
+                (_current as Pages.ThresholdTest.ThreePens)?.EmulateDone();
+            }
+        }
 
         // Internal
 

@@ -48,6 +48,6 @@ All substances contained in the test are non-toxic and not harmful in the used c
         <Button Grid.Row="2"
                 Style="{StaticResource Next}"
                 Content="Continue"
-                Click="OnNext_Click"/>
+                Click="btnNext_Click"/>
     </Grid>
 </Page>

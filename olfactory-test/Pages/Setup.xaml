@@ -8,19 +8,16 @@
       d:DesignHeight="600" d:DesignWidth="600"
       Title="Setup"
       Focusable="True"
-      KeyDown="On_KeyDown"
+      KeyDown="Page_KeyDown"
       Loaded="Page_Loaded">
 
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type Button}">
-                <Setter Property="Margin" Value="10,0,0,0" />
-            </Style>
-            <Style TargetType="{x:Type RepeatButton}">
-                <Setter Property="Margin" Value="10,0,0,0" />
+                <Setter Property="Margin" Value="10,0" />
             </Style>
             <Style x:Key="Field" TargetType="{x:Type Label}">
-                <Setter Property="Margin" Value="8,0" />
+                <Setter Property="Margin" Value="4,0" />
             </Style>
             <Style x:Key="Header" TargetType="{x:Type Label}">
                 <Setter Property="Background" Value="#FFD7EFFF"/>
@@ -29,6 +26,8 @@
             <Style x:Key="Box" TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="#80000000"/>
                 <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="4,10"/>
+                <Setter Property="Padding" Value="0,0,0,10"/>
             </Style>
         </Grid.Resources>
 
@@ -47,7 +46,6 @@
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                Style="{StaticResource PageTitle}"
-               Margin="0,0,0,12"
                Content="Setup"/>
 
         <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
@@ -79,29 +77,29 @@
                            Style="{StaticResource Field}"
                            Content="MFC"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cmbMFCPort"
-                              SelectionChanged="OnPort_SelectionChanged"/>
-                    <RepeatButton Grid.Row="2" Grid.Column="2" x:Name="btnMFCToggle"
-                            Click="OnMFCToggle_Click"/>
+                              SelectionChanged="cmbPort_SelectionChanged"/>
+                    <Button Grid.Row="2" Grid.Column="2" x:Name="btnMFCToggle"
+                            Click="btnMFCToggle_Click"/>
 
                     <Label Grid.Row="4" Grid.Column="0"
                            Style="{StaticResource Field}"
                            Content="PID"/>
                     <ComboBox Grid.Row="4" Grid.Column="1" x:Name="cmbPIDPort"
-                              SelectionChanged="OnPort_SelectionChanged"/>
-                    <RepeatButton Grid.Row="4" Grid.Column="2" x:Name="btnPIDToggle"
-                            Click="OnPIDToggle_Click"/>
+                              SelectionChanged="cmbPort_SelectionChanged"/>
+                    <Button Grid.Row="4" Grid.Column="2" x:Name="btnPIDToggle"
+                            Click="btnPIDToggle_Click"/>
 
                     <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
                            Style="{StaticResource Field}"
                            VerticalAlignment="Bottom"
+                           HorizontalAlignment="Center"
                            Content="Press F5 any time to open a debug window"/>
 
                 </Grid>
             </Border>
             
             <Border
-                Style="{StaticResource Box}"
-                Margin="0,18,0,0">
+                Style="{StaticResource Box}">
                 <Grid x:Name="grdPlayground">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -113,7 +111,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="50"/>
                     </Grid.ColumnDefinitions>
@@ -123,24 +121,46 @@
                        HorizontalContentAlignment="Center"
                        Content="MFC Playground"/>
 
-                    <Label Grid.Row="2" Grid.Column="0">Fresh air</Label>
-                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txbFreshAir"
+                    <Label Grid.Row="2" Grid.Column="0"
+                           Style="{StaticResource Field}"
+                           Content="Fresh air"/>
+                    <Grid Grid.Row="2" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="txbFreshAir"
                             VerticalContentAlignment="Center"
                             Text="5.0"/>
-                    <RepeatButton Grid.Row="2" Grid.Column="2"
+                        <Label Grid.Column="1"
+                               Content="l/min"/>
+                    </Grid>
+                    <Button Grid.Row="2" Grid.Column="2"
                         Content="Set"
                         Click="btnSetFreshAir_Click"/>
 
-                    <Label Grid.Row="4" Grid.Column="0">Odor</Label>
-                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txbOdor"
+                    <Label Grid.Row="4" Grid.Column="0"
+                           Style="{StaticResource Field}"
+                           Content="Odor"/>
+                    <Grid Grid.Row="4" Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="50"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" x:Name="txbOdor"
                             VerticalContentAlignment="Center"
-                            Text="8"/>
-                    <RepeatButton Grid.Row="4" Grid.Column="2" Height="26" Grid.RowSpan="2"
+                            Text="8.0"/>
+                        <Label Grid.Column="1"
+                               Content="ml/min"/>
+                    </Grid>
+                    <Button Grid.Row="4" Grid.Column="2" Height="26" Grid.RowSpan="2"
                         VerticalAlignment="Top"
                         Content="Set"
                         Click="btnSetOdor_Click"/>
 
-                    <Label Grid.Row="6" Grid.Column="0">Direction</Label>
+                    <Label Grid.Row="6" Grid.Column="0"
+                           Style="{StaticResource Field}"
+                           Content="Direction"/>
                     <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbDirection"
                           VerticalContentAlignment="Center"
                           IsReadOnly="True">
@@ -148,7 +168,7 @@
                         <ComboBoxItem Content="to waste" IsSelected="True"/>
                         <ComboBoxItem Content="to user"/>
                     </ComboBox>
-                    <RepeatButton Grid.Row="6" Grid.Column="2"
+                    <Button Grid.Row="6" Grid.Column="2"
                         Content="Set"
                         Click="btnSetDirection_Click"/>
                 </Grid>
@@ -158,6 +178,6 @@
         <Button Grid.Row="4" Grid.Column="2" x:Name="btnNext"
                 Style="{StaticResource Next}"
                 Content="Threshold Test"
-                Click="OnThresholdTest_Click"/>
+                Click="btnThresholdTest_Click"/>
     </Grid>
 </Page>

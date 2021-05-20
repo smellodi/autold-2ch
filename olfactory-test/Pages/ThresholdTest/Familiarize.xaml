@@ -38,6 +38,6 @@
                 Style="{StaticResource Next}"
                 Content="Start the test"
                 IsEnabled="false"
-                Click="OnNext_Click"/>
+                Click="btnNext_Click"/>
     </Grid>
 </Page>

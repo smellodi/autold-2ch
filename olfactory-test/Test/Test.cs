@@ -13,5 +13,11 @@ namespace Olfactory.Tests
         event EventHandler PageDone;
         Page Start();
         Page NextPage();
+        void Emulate(EmulationCommand command, params object[] args);
+    }
+
+    public enum EmulationCommand
+    {
+        FroceToFinishWithResult,
     }
 }

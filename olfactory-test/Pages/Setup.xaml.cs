@@ -91,10 +91,22 @@ namespace Olfactory.Pages
 
             btnNext.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
-            foreach (var child in grdPlayground.Children)
+            void EnableChildren(Panel panel, bool enable)
             {
-                (child as Control).IsEnabled = _mfc.IsOpen;
+                foreach (var child in panel.Children)
+                {
+                    if (child is Control)
+                    {
+                        (child as Control).IsEnabled = _mfc.IsOpen;
+                    }
+                    else if (child is Panel)
+                    {
+                        EnableChildren(child as Panel, enable);
+                    }
+                }
             }
+
+            EnableChildren(grdPlayground, _mfc.IsOpen);
         }
 
         private bool Toggle(CommPort port, string address)
@@ -130,7 +142,15 @@ namespace Olfactory.Pages
 
         // UI events
 
-        private void On_KeyDown(object sender, KeyEventArgs e)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Focusable)
+            {
+                Focus();
+            }
+        }
+
+        private void Page_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.F1)
             {
@@ -150,12 +170,12 @@ namespace Olfactory.Pages
             }
         }
 
-        private void OnPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void cmbPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateUI();
         }
 
-        private void OnMFCToggle_Click(object sender, RoutedEventArgs e)
+        private void btnMFCToggle_Click(object sender, RoutedEventArgs e)
         {
             if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
             {
@@ -165,7 +185,7 @@ namespace Olfactory.Pages
             UpdateUI();
         }
 
-        private void OnPIDToggle_Click(object sender, RoutedEventArgs e)
+        private void btnPIDToggle_Click(object sender, RoutedEventArgs e)
         {
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
@@ -173,19 +193,6 @@ namespace Olfactory.Pages
             }
 
             UpdateUI();
-        }
-
-        private void OnThresholdTest_Click(object sender, RoutedEventArgs e)
-        {
-            Next(this, Tests.Test.Threshold);
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (Focusable)
-            {
-                Focus();
-            }
         }
 
         private void btnSetFreshAir_Click(object sender, RoutedEventArgs e)
@@ -213,6 +220,11 @@ namespace Olfactory.Pages
                 2 => MFC.OdorFlow.ToUser,
                 _ => throw new NotImplementedException($"Direction '{cmbDirection.SelectedItem}' is not expected to be set")
             };
+        }
+
+        private void btnThresholdTest_Click(object sender, RoutedEventArgs e)
+        {
+            Next(this, Tests.Test.Threshold);
         }
     }
 }

@@ -7,6 +7,10 @@ using PenColor = Olfactory.Tests.ThresholdTest.PenColor;
 
 namespace Olfactory.Pages.ThresholdTest
 {
+    /// <summary>
+    /// TODO: test logic and test UI are mixed here,
+    /// so later these two should be separated
+    /// </summary>
     public partial class ThreePens : Page, IPage<bool>
     {
         public event EventHandler<bool> Next = delegate { };
@@ -46,10 +50,18 @@ namespace Olfactory.Pages.ThresholdTest
                                                         // lets wait a little just in case, then continue
         }
 
+        public void EmulateDone()
+        {
+            while (_turningPointPPMs.Count < TURNING_POINT_COUNT)
+            {
+                _turningPointPPMs.Add(PPMS[6]);
+            }
+        }
+
 
         // Internal
 
-        // Contants
+        // Contants / readonlies
 
         const int PEN_COUNT = 3;
         const int PPM_LEVEL_COUNT = 16;
@@ -72,23 +84,24 @@ namespace Olfactory.Pages.ThresholdTest
 
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
 
-        // Definitions
-
-        enum PPMChangeDirection { Increasing, Decreasing }
-        [Flags]
-        enum Update { Step = 1, PPM = 2, Recognitions = 4, Turnings = 8, All = Step | PPM | Recognitions | Turnings }
-
-        /* readonly PenColor[][] ORDER_MATRIX = new PenColor[][]
-        {
-            new PenColor[PEN_COUNT] { PenColor.Red, PenColor.Green, PenColor.Blue },
-            new PenColor[PEN_COUNT] { PenColor.Blue, PenColor.Red, PenColor.Green },
-            new PenColor[PEN_COUNT] { PenColor.Green, PenColor.Blue, PenColor.Red },
-        };*/
-
         readonly double[] PPMS = new double[PPM_LEVEL_COUNT] {
             1, 1.5, 2, 3, 4, 6, 8, 11, 14, 17, 22, 27, 33, 40, 48, 59
         };
         readonly Controls.Pen[] PENS;
+
+        // Definitions
+
+        enum PPMChangeDirection { Increasing, Decreasing }
+
+        [Flags]
+        enum Update
+        {
+            Step = 1,
+            PPM = 2,
+            Recognitions = 4,
+            Turnings = 8,
+            All = Step | PPM | Recognitions | Turnings
+        }
 
         // Members
 
@@ -200,7 +213,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             bool isOverflow = _currentPPMLevel < 0 || PPM_LEVEL_COUNT <= _currentPPMLevel;
 
-            if (_turningPointPPMs.Count == TURNING_POINT_COUNT)
+            if (_turningPointPPMs.Count >= TURNING_POINT_COUNT)
             {
                 return false;
             }

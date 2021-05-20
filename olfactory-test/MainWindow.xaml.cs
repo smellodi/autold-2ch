@@ -60,13 +60,10 @@ namespace Olfactory
             {
                 _debug.Show();
             }
-            /*else if (e.Key == Key.Space)
+            else if (e.Key == Key.F9)
             {
-                if (_currentTest != null)
-                {
-                    Continue();
-                }
-            }*/
+                _currentTest?.Emulate(Tests.EmulationCommand.FroceToFinishWithResult);
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
