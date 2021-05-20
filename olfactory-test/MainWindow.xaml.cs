@@ -21,7 +21,7 @@ namespace Olfactory
         Pages.Finished _finishedPage = new Pages.Finished();
 
         CommMonitor _debug = new CommMonitor();
-        Test.ITest _currentTest = null;
+        Tests.ITest _currentTest = null;
 
         public MainWindow()
         {
@@ -34,7 +34,7 @@ namespace Olfactory
             {
                 _currentTest = e switch
                 {
-                    Test.Tests.Threshold => new Test.ThresholdTest(),
+                    Tests.Test.Threshold => new Tests.ThresholdTest(),
                     _ => throw new NotImplementedException($"The test '{e}' logic is not implemented yet"),
                 };
 

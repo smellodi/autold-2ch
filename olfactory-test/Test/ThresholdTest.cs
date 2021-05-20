@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 
-namespace Olfactory.Test
+namespace Olfactory.Tests
 {
     /// <summary>
-    /// Implements the order of pages in the Threshold Test 
+    /// Manages the order of pages in the Threshold Test 
     /// </summary>
-    internal class ThresholdTest : ITest
+    public partial class ThresholdTest : ITest
     {
         public event EventHandler PageDone = delegate { };
 

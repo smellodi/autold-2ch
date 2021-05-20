@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace Olfactory.Test
+namespace Olfactory.Tests
 {
-    public enum Tests
+    public enum Test
     {
         Threshold
     }

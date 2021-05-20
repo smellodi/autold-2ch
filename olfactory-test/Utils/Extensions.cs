@@ -18,7 +18,7 @@ namespace Utils
                 }
             }
 
-            int repetitions = rng.Next(10) + 1;  // max 10 repetitions
+            int repetitions = rng.Next(8) + 3;  // 3..10 repetitions
             for (int i = 0; i < repetitions; i++)
             {
                 Shuffle();

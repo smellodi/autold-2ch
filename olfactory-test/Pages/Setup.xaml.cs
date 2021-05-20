@@ -5,9 +5,9 @@ using System.Windows.Input;
 
 namespace Olfactory.Pages
 {
-    public partial class Setup : Page, IPage<Test.Tests>
+    public partial class Setup : Page, IPage<Tests.Test>
     {
-        public event EventHandler<Test.Tests> Next = delegate { };
+        public event EventHandler<Tests.Test> Next = delegate { };
         public event EventHandler<Result> LogResult = delegate { };
 
         USB _usb = new USB();
@@ -177,7 +177,7 @@ namespace Olfactory.Pages
 
         private void OnThresholdTest_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, Test.Tests.Threshold);
+            Next(this, Tests.Test.Threshold);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
