@@ -10,8 +10,8 @@ namespace Olfactory
         public long Time;                                                   // Sample time; milliseconds from start
 
         public double PID;                                                  // PID value in mV
-        public double Loop;                                                 // Current loop input in mA
         public double PID_PPM;                                              // PID value as ppm
+        public double Loop;                                                 // Current loop input in mA
         public double Input;                                                // 10V scaled input
         public double Light;                                                // 10V scaled input
         public double Temperature;                                          // degrees in C
@@ -119,7 +119,7 @@ namespace Olfactory
             }
             else
             {
-                sample.Time = Timestamp;
+                sample.Time = Utils.Timestamp.Value;
             }
 
             _error = null;

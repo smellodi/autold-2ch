@@ -2,7 +2,7 @@
 
 namespace Utils
 {
-    static class RandomExtensions
+    internal static class RandomExtensions
     {
         public static Random Shuffle<T>(this Random rng, T[] array)
         {
@@ -25,6 +25,16 @@ namespace Utils
             }
 
             return rng;
+        }
+    }
+
+    internal static class StringExtensions
+    {
+        public static string ToPath(this string s, string replacement = "-")
+        {
+            var invalidChars = System.IO.Path.GetInvalidFileNameChars();
+            string[] temp = s.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(replacement, temp);
         }
     }
 }

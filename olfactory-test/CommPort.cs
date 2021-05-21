@@ -166,12 +166,6 @@ namespace Olfactory
             return result;
         }
 
-        /// <summary>
-        /// Current timestamp to be used everywhere to get syncronized records
-        /// </summary>
-        public static long Timestamp => (DateTime.Now.Ticks - StartTimestamp) / 10000;
-
-
         // To be overriden
 
         /// <summary>
@@ -195,8 +189,6 @@ namespace Olfactory
         protected const int POLL_PERIOD = 20;                // Polling period in ms for reception
 
         const byte PORT_MAX_ID = 255;                        // Highest possible serial port number
-
-        static long StartTimestamp = DateTime.Now.Ticks;
 
         /// <summary>
         /// Creates and opens a serial port

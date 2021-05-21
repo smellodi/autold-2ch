@@ -8,7 +8,7 @@ using PenColor = Olfactory.Tests.ThresholdTest.PenColor;
 
 namespace Olfactory.Tests
 {
-    public class ThresholdTestProcedure
+    public class ThresholdTestProcedure : ITestEmulator
     {
         public const int PEN_COUNT = 3;
         public enum PPMChangeDirection { Increasing, Decreasing }
@@ -36,7 +36,13 @@ namespace Olfactory.Tests
         public int RecognitionsInRow => _recognitionsInRow;
         public int TurningPointCount => _turningPointPPMs.Count;
 
-        bool _inProgress = false;
+        public string[] State => new string[] {
+            Step.ToString(),
+            Direction.ToString(),
+            PPMLevel.ToString(),
+            RecognitionsInRow.ToString(),
+            TurningPointCount.ToString()
+        };
 
         public ThresholdTestProcedure()
         {
@@ -100,7 +106,9 @@ namespace Olfactory.Tests
             });
         }
 
-        public void PrepareForEmulation()
+        // ITestEmulation
+
+        public void EmulationInit()
         {
             ODOR_TUBE_FILLING_DURATION = 1;
             ODOR_STABILIZATION_DURATION = 1;
@@ -108,7 +116,7 @@ namespace Olfactory.Tests
             AFTERMATH_PAUSE = 1;
         }
 
-        public void EmulateDone()
+        public void EmulationFinilize()
         {
             while (_inProgress && _turningPointPPMs.Count < TURNING_POINT_COUNT)
             {
@@ -152,6 +160,8 @@ namespace Olfactory.Tests
         // Members
 
         MFC _mfc = MFC.Instance;
+
+        bool _inProgress = false;
 
         Random _rnd = new Random((int)DateTime.Now.Ticks);
 

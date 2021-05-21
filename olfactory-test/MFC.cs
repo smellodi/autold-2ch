@@ -268,7 +268,7 @@ namespace Olfactory
                 }
                 else
                 {
-                    sample.Time = Timestamp;
+                    sample.Time = Utils.Timestamp.Value;
                 }
 
                 _error = null;
@@ -309,10 +309,12 @@ namespace Olfactory
                 if ((error = ReadChannelValues(Channel.A, out sample.A)) == Error.Success)
                 {
                     _channels |= Channels.A;
+                    _freshAir = sample.A.MassFlow;
                 }
                 if ((error = ReadChannelValues(Channel.B, out sample.B)) == Error.Success)
                 {
                     _channels |= Channels.B;
+                    _odor = sample.B.MassFlow;
                 }
             }
             catch (Exception ex)

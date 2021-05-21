@@ -9,6 +9,7 @@ namespace Olfactory.Pages.ThresholdTest
         public event EventHandler<bool> Next = delegate { };
         public event EventHandler<double> Finished = delegate { };
 
+        public Tests.ITestEmulator Emulator => _procedure;
         public Procedure Procedure => _procedure;
 
         public ThreePens()

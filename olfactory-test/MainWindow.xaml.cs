@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Utils;
 
 namespace Olfactory
 {
@@ -20,16 +21,16 @@ namespace Olfactory
         Pages.Setup _setupPage = new Pages.Setup();
         Pages.Finished _finishedPage = new Pages.Finished();
 
-        CommMonitor _debug = new CommMonitor();
+        CommMonitor _monitor = new CommMonitor();
         Tests.ITest _currentTest = null;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            _debug.Hide();
+            _monitor.Hide();
 
-            _setupPage.LogResult += (s, e) => _debug.LogResult(s as string, e);
+            _setupPage.LogResult += (s, e) => _monitor.LogResult(e.Source, e.Result);
             _setupPage.Next += (s, e) =>
             {
                 _currentTest = e switch
@@ -63,7 +64,7 @@ namespace Olfactory
         {
             if (e.Key == Key.F5)
             {
-                _debug.Show();
+                _monitor.Show();
             }
             else if (e.Key == Key.F9)
             {
@@ -73,6 +74,12 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            Logger logger = Logger.Instance;
+            if (logger.HasAnyRecord)
+            {
+                logger.SaveTo($"olfactory_log_{DateTime.Now:u}.txt".ToPath());
+            }
+
             Application.Current.Shutdown();
         }
     }

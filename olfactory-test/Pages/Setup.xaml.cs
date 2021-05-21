@@ -7,8 +7,14 @@ namespace Olfactory.Pages
 {
     public partial class Setup : Page, IPage<Tests.Test>
     {
+        public class LogCOMResult
+        {
+            public LogSource Source;
+            public Result Result;
+        }
+
         public event EventHandler<Tests.Test> Next = delegate { };
-        public event EventHandler<Result> LogResult = delegate { };
+        public event EventHandler<LogCOMResult> LogResult = delegate { };
 
         USB _usb = new USB();
         MFC _mfc = MFC.Instance;
@@ -117,7 +123,9 @@ namespace Olfactory.Pages
             {
                 var result = port.Start(address);
                 success = result.Error == Error.Success;
-                LogResult(port.Name, result);
+
+                LogSource source = port.Name == "PID" ? LogSource.PID : LogSource.MFC;
+                LogResult(this, new LogCOMResult() { Source = source, Result = result });
             }
             else
             {

@@ -13,19 +13,26 @@ namespace Olfactory.Tests
         public ThresholdTest()
         {
             _instructionsPage.Next += (s, e) => PageDone(this, new EventArgs());
-            _familiarizePage.Next += (s, e) => PageDone(this, new EventArgs());
-            _resultPage.Next += (s, e) => PageDone(this, new EventArgs());
+            _familiarizePage.Next += (s, e) =>
+            {
+                _logger.Add(LogSource.ThresholdTest, "familiarization", e.ToString());
+                PageDone(this, new EventArgs());
+            };
             _threePensPage.Next += (s, e) =>
             {
-                // TODO: trial result is not used now.. we could log it
+                _logger.Add(LogSource.ThresholdTest, "trial-result", e.ToString());
                 _threePensPage.Init();
+                _logger.Add(LogSource.ThresholdTest, "trial-condition", _threePensPage.Procedure.State);
             };
             _threePensPage.Finished += (s, e) =>
             {
-                // TODO: e is the resulting level, we should log it here
+                _logger.Add(LogSource.ThresholdTest, "trial-result", true.ToString());
+                _logger.Add(LogSource.ThresholdTest, "finished", e.ToString("F1"));
+
                 _resultPage.SetPPM(e);
                 PageDone(this, new EventArgs());
             };
+            _resultPage.Next += (s, e) => PageDone(this, new EventArgs());
         }
 
         public Page NextPage()
@@ -40,9 +47,15 @@ namespace Olfactory.Tests
                 _ => throw new NotImplementedException("Unhandled page in the Threhold Test"),
             };
 
+            if (_current != null)
+            {
+                _logger.Add(LogSource.ThresholdTest, "page", _current.Title);
+            }
+
             if (_current is Pages.ThresholdTest.ThreePens page)
             {
                 page.Init();
+                _logger.Add(LogSource.ThresholdTest, "trial", _threePensPage.Procedure.State);
             }
 
             return _current;
@@ -56,10 +69,12 @@ namespace Olfactory.Tests
 
         public void Emulate(EmulationCommand command, params object[] args)
         {
+            ITestEmulator emulator = _threePensPage.Emulator;
+
             switch (command)
             {
-                case EmulationCommand.EnableEmulation: _threePensPage.Procedure.PrepareForEmulation(); break;
-                case EmulationCommand.ForceToFinishWithResult: _threePensPage.Procedure.EmulateDone(); break;
+                case EmulationCommand.EnableEmulation: emulator.EmulationInit(); break;
+                case EmulationCommand.ForceToFinishWithResult: emulator.EmulationFinilize(); break;
                 default: throw new NotImplementedException("This emulation command is not recognized in Threshold Test");
             }
         }
@@ -72,5 +87,7 @@ namespace Olfactory.Tests
         Pages.ThresholdTest.Result _resultPage = new Pages.ThresholdTest.Result();
 
         Page _current = null;
+
+        Logger _logger = Logger.Instance;
     }
 }

@@ -5,15 +5,16 @@ using System.Windows.Threading;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class Familiarize : Page, IPage<EventArgs>
+    public partial class Familiarize : Page, IPage<long>
     {
-        public event EventHandler<EventArgs> Next = delegate { };
+        public event EventHandler<long> Next = delegate { };    // passes duration of sniffing in milliseconds
 
         MFC _mfc = MFC.Instance;
 
         DispatcherTimer _countdownTimer = new DispatcherTimer();
         DispatcherTimer _directionChangeTimer = new DispatcherTimer();
         int _waitingCountdown = 0;
+        long _sniffingStartTimestamp;
 
         public Familiarize()
         {
@@ -31,6 +32,8 @@ namespace Olfactory.Pages.ThresholdTest
                     txbCountdown.Text = $"Odor is flowing now. Click 'Continue' when it is enough.";
                     btnNext.IsEnabled = true;
                     _countdownTimer.Stop();
+
+                    _sniffingStartTimestamp = Utils.Timestamp.Value;
                 }
             };
 
@@ -65,7 +68,7 @@ namespace Olfactory.Pages.ThresholdTest
             // We do not need this command as the next page immediately sets the odor speed to some other value
             //Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.5 sec delay between the requests
 
-            Next(this, new EventArgs());
+            Next(this, Utils.Timestamp.Value - _sniffingStartTimestamp);
         }
     }
 }
