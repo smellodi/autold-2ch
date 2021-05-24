@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Utils
+namespace Olfactory.Utils
 {
     internal static class RandomExtensions
     {

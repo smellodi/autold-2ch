@@ -49,13 +49,14 @@ namespace Olfactory
             }
         }
 
-        public static Logger Instance => _instance switch { null => _instance = new Logger(), _ => _instance }; // is this line too complex? it simply return the instance is it exists, otherwise it creates a new instance and returns it
+
+        public static Logger Instance => _instance = _instance ?? new();
+
 
         public bool IsEnabled { get; set; } = true;
         public bool HasAnyRecord => _records.Count > 0;
         public bool HasTestRecords => _records.Any(r => (int)r.Source >= (int)LogSource.__MIN_TEST_ID);
 
-        private Logger() { }
 
         public void Add(LogSource source, string type, params string[] data)
         {
@@ -101,6 +102,8 @@ namespace Olfactory
         readonly List<Record> _records = new List<Record>();
 
         string Title => "Olfactory data logger";
+
+        private Logger() { }
 
         private string AskFileName(string defaultFileName)
         {

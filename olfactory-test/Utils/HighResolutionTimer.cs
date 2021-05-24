@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 
 
-namespace Utils
+namespace Olfactory.Utils
 {
     /// <summary>
     /// Hight precision non overlapping timer

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.IO.Ports;
 using System.Threading;
 
-namespace Olfactory
+namespace Olfactory.Comm
 {
     public struct PIDSample                                                 // Sample record/vector; all the measured values for one second
     {
@@ -33,24 +33,19 @@ namespace Olfactory
 
     internal class PID : CommPort<PIDSample>
     {
-        static PID _instance;
-        public static PID Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new PID();
-                }
-                return _instance;
-            }
-        }
+        public static PID Instance => _instance = _instance ?? new();
 
         public override string Name { get => "PID"; }
         public override string[] DataColumns
         {
             get => new string[] {
-                "Time", "PID uV", "PID PPM", "Loop mA", "Input", "Light", "Temp C"
+                "Time",
+                "PID uV",
+                "PID PPM",
+                "loop mA",
+                "Input",
+                "Light",
+                "Temp C"
             };
         }
 
@@ -174,6 +169,9 @@ namespace Olfactory
 
 
         // Internal
+
+        static PID _instance;
+
 
         [StructLayout(LayoutKind.Explicit)]
         struct BtoW                                                             // For convenient byte-level manipulation of 16b integers,

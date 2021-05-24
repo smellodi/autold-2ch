@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
-using Procedure = Olfactory.Tests.ThresholdTestProcedure;
+using Procedure = Olfactory.Tests.ThresholdTest.Procedure;
 
 namespace Olfactory.Pages.ThresholdTest
 {

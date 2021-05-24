@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace Olfactory.Tests
+namespace Olfactory.Tests.ThresholdTest
 {
     /// <summary>
     /// Manages the order of pages in the Threshold Test 
     /// </summary>
-    public partial class ThresholdTest : ITest
+    public class Manager : ITestManager
     {
         public event EventHandler PageDone = delegate { };
 
-        public ThresholdTest()
+        public Manager()
         {
             _instructionsPage.Next += (s, e) => PageDone(this, new EventArgs());
             _familiarizePage.Next += (s, e) =>

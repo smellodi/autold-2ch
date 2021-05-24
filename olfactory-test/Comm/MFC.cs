@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.IO.Ports;
 using System.Threading;
 
-namespace Olfactory
+namespace Olfactory.Comm
 {
     public struct MFCChannel
     {
@@ -25,7 +25,7 @@ namespace Olfactory
         }
 
         public static string[] Header => new string[] {
-            "MF ml/m",
+            "M ml/m",
             "Pr PSIA",
             "Temp C",
         };
@@ -53,7 +53,7 @@ namespace Olfactory
             get
             {
                 var list = new System.Collections.Generic.List<string>();
-                list.Add("\t|\tA\t\t|\tB");
+                list.AddRange(new string[] { "", "|", "A", "", "|", "B" });
                 list.Add("\r\nTime");
                 list.AddRange(MFCChannel.Header);       // A
                 list.AddRange(MFCChannel.Header);       // B
@@ -64,18 +64,7 @@ namespace Olfactory
 
     internal class MFC : CommPort<MFCSample>
     {
-        static MFC _instance;
-        public static MFC Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new MFC();
-                }
-                return _instance;
-            }
-        }
+        public static MFC Instance => _instance = _instance ?? new();
 
         public enum Channel
         {
@@ -356,6 +345,7 @@ namespace Olfactory
             Both = A | B,
         }
 
+        static MFC _instance;
 
         Channels _channels = Channels.None;
 

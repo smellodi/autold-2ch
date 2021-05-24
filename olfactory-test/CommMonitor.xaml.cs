@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Olfactory.Comm;
 
 namespace Olfactory
 {

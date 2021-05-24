@@ -8,7 +8,7 @@ namespace Olfactory.Tests
         Threshold
     }
 
-    public interface ITest
+    public interface ITestManager
     {
         event EventHandler PageDone;
         Page Start();

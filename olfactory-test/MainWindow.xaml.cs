@@ -1,18 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Utils;
+using Olfactory.Utils;
 
 namespace Olfactory
 {
@@ -22,7 +16,7 @@ namespace Olfactory
         Pages.Finished _finishedPage = new Pages.Finished();
 
         CommMonitor _monitor = new CommMonitor();
-        Tests.ITest _currentTest = null;
+        Tests.ITestManager _currentTest = null;
 
         public MainWindow()
         {
@@ -35,7 +29,7 @@ namespace Olfactory
             {
                 _currentTest = e switch
                 {
-                    Tests.Test.Threshold => new Tests.ThresholdTest(),
+                    Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
                     _ => throw new NotImplementedException($"The test '{e}' logic is not implemented yet"),
                 };
 
@@ -43,7 +37,7 @@ namespace Olfactory
 
                 Content = _currentTest.Start();
 
-                if (MFC.Instance.IsDebugging)
+                if (Comm.MFC.Instance.IsDebugging)
                 {
                     _currentTest.Emulate(Tests.EmulationCommand.EnableEmulation);
                 }
@@ -75,7 +69,7 @@ namespace Olfactory
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Logger logger = Logger.Instance;
-            if (logger.HasAnyRecord)
+            if (logger.HasTestRecords)
             {
                 logger.SaveTo($"olfactory_log_{DateTime.Now:u}.txt".ToPath());
             }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows.Threading;
 
-namespace Utils
+namespace Olfactory.Utils
 {
     public class DispatchOnce : DispatcherTimer
     {

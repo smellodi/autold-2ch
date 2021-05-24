@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using Utils;
-using Pen = Olfactory.Tests.ThresholdTest.Pen;
-using PenColor = Olfactory.Tests.ThresholdTest.PenColor;
+using Olfactory.Utils;
+using OdorController = Olfactory.Comm.OdorController;
 
-namespace Olfactory.Tests
+namespace Olfactory.Tests.ThresholdTest
 {
-    public class ThresholdTestProcedure : ITestEmulator
+    public class Procedure : ITestEmulator
     {
         public const int PEN_COUNT = 3;
         public enum PPMChangeDirection { Increasing, Decreasing }
@@ -44,7 +43,7 @@ namespace Olfactory.Tests
             TurningPointCount.ToString()
         };
 
-        public ThresholdTestProcedure()
+        public Procedure()
         {
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += (s, e) =>
@@ -54,7 +53,7 @@ namespace Olfactory.Tests
 
             // If the test is in progress, display warning message and quit the app:
             // Or can we recover here by trying to open the COM port again?
-            _mfc.Closed += (s, e) =>
+            Comm.MFC.Instance.Closed += (s, e) =>
             {
                 if (_inProgress)
                 {
@@ -114,7 +113,7 @@ namespace Olfactory.Tests
         public void EmulationInit()
         {
             ODOR_TUBE_FILLING_DURATION = 1;
-            ODOR_STABILIZATION_DURATION = 1;
+            ODOR_PREPARATION_DURATION = 2;
             PEN_PRESENTATION_DURATION = 1;
             AFTERMATH_PAUSE = 1;
         }
@@ -138,10 +137,9 @@ namespace Olfactory.Tests
         const int TURNING_POINT_COUNT = 7;
         const int TURNING_POINTS_TO_USE_IN_ESTIMATION = 4;
 
-        // Next for value are nto costs for emulation purposes
-        // the sum of these 2 durations must be 15 seconds
+        // Next for value are not constants for emulation purposes.
         double ODOR_TUBE_FILLING_DURATION = 10;
-        double ODOR_STABILIZATION_DURATION = 5;
+        double ODOR_PREPARATION_DURATION = 15;      // Must be greater than ODOR_TUBE_FILLING_DURATION
 
         double PEN_PRESENTATION_DURATION = 5;
         double AFTERMATH_PAUSE = 3;
@@ -162,7 +160,7 @@ namespace Olfactory.Tests
 
         // Members
 
-        MFC _mfc = MFC.Instance;
+        OdorController _odorController = OdorController.Instance;
         Logger _logger = Logger.Instance;
 
         bool _inProgress = false;
@@ -185,13 +183,9 @@ namespace Olfactory.Tests
         /// </summary>
         private void PrepareOdor()
         {
-            var odorSpeed = _mfc.PredictFlowSpeed(ODOR_TUBE_FILLING_DURATION);
+            _odorController.GetReady(ODOR_TUBE_FILLING_DURATION, PPMS[_currentPPMLevel]);
 
-            _mfc.OdorSpeed = Math.Round(odorSpeed, 1);
-
-            DispatchOnce
-                .Do(ODOR_TUBE_FILLING_DURATION, () => _mfc.OdorSpeed = _mfc.PPM2Speed(PPMS[_currentPPMLevel]))
-                .Then(ODOR_STABILIZATION_DURATION, () => ActivateNextPen());
+            DispatchOnce.Do(ODOR_PREPARATION_DURATION, () => ActivateNextPen());
         }
 
         /// <summary>
@@ -210,10 +204,7 @@ namespace Olfactory.Tests
         {
             if (CurrentColor == ODOR_PEN_COLOR)     // previous pen was with the odor - switch the mixer back to the fresh air
             {
-                _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
-
-                // no need to wait till the trial is over, just stop odor flow at this point already
-                DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case
+                _odorController.CloseFlow();
             }
 
             if (++_currentPenID == _pens.Length)
@@ -229,7 +220,7 @@ namespace Olfactory.Tests
 
             if (CurrentColor == ODOR_PEN_COLOR)
             {
-                _mfc.OdorDirection = MFC.OdorFlow.ToUser;
+                _odorController.OpenFlow();
             }
 
             DispatchOnce.Do(PEN_PRESENTATION_DURATION, () => ActivateNextPen());
