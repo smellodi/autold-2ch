@@ -5,7 +5,8 @@ namespace Olfactory.Tests
 {
     public enum Test
     {
-        Threshold
+        Threshold,
+        OdorProduction,
     }
 
     public interface ITestManager

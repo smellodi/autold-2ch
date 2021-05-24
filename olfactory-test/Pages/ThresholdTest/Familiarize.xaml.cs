@@ -10,13 +10,6 @@ namespace Olfactory.Pages.ThresholdTest
     {
         public event EventHandler<long> Next = delegate { };    // passes duration of sniffing in milliseconds
 
-        MFC _mfc = MFC.Instance;
-
-        DispatcherTimer _countdownTimer = new DispatcherTimer();
-        DispatcherTimer _directionChangeTimer = new DispatcherTimer();
-        int _waitingCountdown = 0;
-        long _sniffingStartTimestamp;
-
         public Familiarize()
         {
             InitializeComponent();
@@ -43,6 +36,16 @@ namespace Olfactory.Pages.ThresholdTest
                 _mfc.OdorDirection = MFC.OdorFlow.ToUser;
             };
         }
+
+
+        // Internal
+
+        MFC _mfc = MFC.Instance;
+
+        DispatcherTimer _countdownTimer = new DispatcherTimer();
+        DispatcherTimer _directionChangeTimer = new DispatcherTimer();
+        int _waitingCountdown = 0;
+        long _sniffingStartTimestamp;
 
 
         // UI events

@@ -30,6 +30,7 @@ namespace Olfactory
                 _currentTest = e switch
                 {
                     Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
+                    Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
                     _ => throw new NotImplementedException($"The test '{e}' logic is not implemented yet"),
                 };
 
@@ -51,8 +52,27 @@ namespace Olfactory
         private void Continue()
         {
             var page = _currentTest.NextPage();
-            Content = page != null ? page : _finishedPage;
+            if (page == null)
+            {
+                CheckLogger();
+                Content = _finishedPage;
+            }
+            else
+            {
+                Content = page;
+            }
         }
+
+        private void CheckLogger()
+        {
+            Logger logger = Logger.Instance;
+            if (logger.HasTestRecords)
+            {
+                logger.SaveTo($"olfactory_log_{DateTime.Now:u}.txt".ToPath());
+            }
+        }
+
+        // UI events
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -68,11 +88,7 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Logger logger = Logger.Instance;
-            if (logger.HasTestRecords)
-            {
-                logger.SaveTo($"olfactory_log_{DateTime.Now:u}.txt".ToPath());
-            }
+            CheckLogger();
 
             Application.Current.Shutdown();
         }

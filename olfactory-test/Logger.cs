@@ -15,6 +15,7 @@ namespace Olfactory
 
         __MIN_TEST_ID = 4,
         ThTest = 4,
+        OdProd = 8,
     }
 
     public class Logger
@@ -80,6 +81,7 @@ namespace Olfactory
 
             if (dialogResult == MessageBoxResult.Cancel)
             {
+                _records.Clear();
                 return;
             }
             else if (dialogResult == MessageBoxResult.No)
@@ -92,6 +94,8 @@ namespace Olfactory
             }
 
             Save(filename);
+
+            _records.Clear();
         }
 
 

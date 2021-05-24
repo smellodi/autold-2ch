@@ -1,0 +1,84 @@
+﻿<Page x:Class="Olfactory.Pages.OdorProduction.Production"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Odor production"
+      WindowTitle="Odor Production">
+    <Page.Resources>
+        <Style x:Key="Setting" TargetType="Label">
+            <Setter Property="Margin" Value="20,0"/>
+        </Style>
+        <Style x:Key="Status" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="#FF004581"/>
+        </Style>
+        <Style x:Key="Interval" TargetType="StackPanel">
+            <Setter Property="Background" Value="#FFFFF3CB"/>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0"
+               Style="{StaticResource PageTitle}"
+               Content="Odor production"/>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <WrapPanel Margin="0,12"
+                       HorizontalAlignment="Center">
+                <Label Content="Status: "
+                       Style="{StaticResource Status}"/>
+                <Label x:Name="lblOdorStatus"
+                       Style="{StaticResource Status}"
+                       Content="XX"/>
+                <Label Content="ml/min"
+                       Style="{StaticResource Status}"/>
+            </WrapPanel>
+            <WrapPanel>
+                <StackPanel x:Name="stpInitialPause"
+                            Style="{StaticResource Interval}">
+                    <Label Grid.Row="0" Grid.Column="0"
+                       Style="{StaticResource Setting}"
+                       Content="Initial pause"/>
+                    <Label Grid.Row="1" Grid.Column="0" x:Name="lblInitialPause"
+                       HorizontalAlignment="Center"
+                       Content="500"/>
+                </StackPanel>
+                <StackPanel x:Name="stpOdorFlowDuration"
+                            Style="{StaticResource Interval}">
+                    <Label Grid.Row="0" Grid.Column="1"
+                       Style="{StaticResource Setting}"
+                       Content="Odor flow"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="lblOdorFlowDuration"
+                       HorizontalAlignment="Center"
+                       Content="500"/>
+                </StackPanel>
+                <StackPanel x:Name="stpFinalPause"
+                            Style="{StaticResource Interval}">
+                    <Label Grid.Row="0" Grid.Column="2"
+                       Style="{StaticResource Setting}"
+                       Content="Final pause"/>
+                    <Label Grid.Row="1" Grid.Column="2" x:Name="lblFinalPause"
+                       HorizontalAlignment="Center"
+                       Content="500"/>
+                </StackPanel>
+            </WrapPanel>
+            <WrapPanel HorizontalAlignment="Center"
+                       Margin="0,12">
+                <Label Content="Time left:"/>
+                <Label x:Name="lblCountdown"
+                      Content="300"/>
+                <Label Content="sec"/>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using Olfactory.Pages.ThresholdTest;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -40,10 +41,10 @@ namespace Olfactory.Tests.ThresholdTest
             _current = _current switch
             {
                 null => _instructionsPage,
-                Pages.ThresholdTest.Instructions _ => _familiarizePage,
-                Pages.ThresholdTest.Familiarize _ => _threePensPage,
-                Pages.ThresholdTest.ThreePens _ => _resultPage,
-                Pages.ThresholdTest.Result _ => null,
+                Instructions _ => _familiarizePage,
+                Familiarize _ => _threePensPage,
+                ThreePens _ => _resultPage,
+                Result _ => null,
                 _ => throw new NotImplementedException("Unhandled page in the Threhold Test"),
             };
 
@@ -52,7 +53,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _logger.Add(LogSource.ThTest, "page", _current.Title);
             }
 
-            if (_current is Pages.ThresholdTest.ThreePens page)
+            if (_current is ThreePens page)
             {
                 page.Init();
                 _logger.Add(LogSource.ThTest, "trial", _threePensPage.Procedure.State);
@@ -81,10 +82,10 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Internal
 
-        Pages.ThresholdTest.Instructions _instructionsPage = new Pages.ThresholdTest.Instructions();
-        Pages.ThresholdTest.Familiarize _familiarizePage = new Pages.ThresholdTest.Familiarize();
-        Pages.ThresholdTest.ThreePens _threePensPage = new Pages.ThresholdTest.ThreePens();
-        Pages.ThresholdTest.Result _resultPage = new Pages.ThresholdTest.Result();
+        Instructions _instructionsPage = new Instructions();
+        Familiarize _familiarizePage = new Familiarize();
+        ThreePens _threePensPage = new ThreePens();
+        Result _resultPage = new Result();
 
         Page _current = null;
 

@@ -96,6 +96,7 @@ namespace Olfactory.Pages
             btnMFCToggle.IsEnabled = cmbMFCPort.SelectedIndex >= 0;
             btnMFCToggle.Content = _mfc.IsOpen ? "Close" : "Open";
 
+            btnOdorProduction.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
             btnThresholdTest.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             void EnableChildren(Panel panel, bool enable)
@@ -229,6 +230,11 @@ namespace Olfactory.Pages
                 2 => MFC.OdorFlow.ToUser,
                 _ => throw new NotImplementedException($"Direction '{cmbDirection.SelectedItem}' is not expected to be set")
             };
+        }
+
+        private void btnOdorProduction_Click(object sender, RoutedEventArgs e)
+        {
+            Next(this, Tests.Test.OdorProduction);
         }
 
         private void btnThresholdTest_Click(object sender, RoutedEventArgs e)

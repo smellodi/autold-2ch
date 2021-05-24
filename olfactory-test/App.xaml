@@ -6,26 +6,45 @@
     <Application.Resources>
         <ResourceDictionary>
 
+            <!-- Each page elements -->
             <Style x:Key="PageTitle" TargetType="Label">
-                <Setter Property="FontSize" Value="20" />
-                <Setter Property="FontFamily" Value="Lucida Sans" />
-                <Setter Property="HorizontalAlignment" Value="Stretch" />
-                <Setter Property="Background" Value="#FFE0E0E0" />
-                <Setter Property="Foreground" Value="#FF00276C" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontFamily" Value="Lucida Sans"/>
+                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                <Setter Property="Background" Value="#FFE0E0E0"/>
+                <Setter Property="Foreground" Value="#FF00276C"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
-
             <Style x:Key="Next" TargetType="Button">
-                <Setter Property="HorizontalAlignment" Value="Right" />
-                <Setter Property="MinWidth" Value="100" />
-                <Setter Property="Margin" Value="12" />
-                <Setter Property="Padding" Value="8" />
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="Margin" Value="12"/>
+                <Setter Property="Padding" Value="8"/>
             </Style>
-
             <Style x:Key="Buttons" TargetType="WrapPanel">
-                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="Grid.ColumnSpan" Value="10"/>
             </Style>
+
+            <!-- Setup page elements -->
+            <Style x:Key="Field" TargetType="{x:Type Label}">
+                <Setter Property="Margin" Value="4,0"/>
+            </Style>
+            <Style x:Key="Label" TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="8,4"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
+            </Style>
+            <Style x:Key="Header" TargetType="{x:Type Label}">
+                <Setter Property="Background" Value="#FFD7EFFF"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="Box" TargetType="{x:Type Border}">
+                <Setter Property="BorderBrush" Value="#80000000"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="4,10"/>
+                <Setter Property="Padding" Value="0,0,0,10"/>
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
