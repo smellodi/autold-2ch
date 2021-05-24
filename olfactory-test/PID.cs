@@ -47,7 +47,12 @@ namespace Olfactory
         }
 
         public override string Name { get => "PID"; }
-        public override string[] DataColumns { get => new string[] { "Time", "PID uV", "PID PPM", "Loop", "Input", "Light", "Temp" }; }
+        public override string[] DataColumns
+        {
+            get => new string[] {
+                "Time", "PID uV", "PID PPM", "Loop mA", "Input", "Light", "Temp C"
+            };
+        }
 
         /// <summary>
         /// Private constructor, use Instance property to get the instance.
@@ -674,7 +679,7 @@ namespace Olfactory
         }
         int EmulateReading(byte[] buffer, int offset, int count)
         {
-            if (rnd.NextDouble() < 0.05)
+            if (rnd.NextDouble() < 0.005)
             {
                 throw new Exception("Simulating reading fault");
             }

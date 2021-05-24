@@ -79,6 +79,9 @@ namespace Olfactory.Tests
                 new Pen(PenColor.Blue)
             };
             _rnd.Shuffle(_pens);
+
+            _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
+
             _stepID++;
 
             DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC..
@@ -160,6 +163,7 @@ namespace Olfactory.Tests
         // Members
 
         MFC _mfc = MFC.Instance;
+        Logger _logger = Logger.Instance;
 
         bool _inProgress = false;
 
@@ -215,10 +219,13 @@ namespace Olfactory.Tests
             if (++_currentPenID == _pens.Length)
             {
                 _currentPenID = -1;
+                _logger.Add(LogSource.ThTest, "awaiting");
 
                 WaitingForPenSelection(this, new EventArgs());
                 return;
             }
+
+            _logger.Add(LogSource.ThTest, "pen", CurrentColor.ToString());
 
             if (CurrentColor == ODOR_PEN_COLOR)
             {

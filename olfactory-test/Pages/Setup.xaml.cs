@@ -95,7 +95,7 @@ namespace Olfactory.Pages
             btnMFCToggle.IsEnabled = cmbMFCPort.SelectedIndex >= 0;
             btnMFCToggle.Content = _mfc.IsOpen ? "Close" : "Open";
 
-            btnNext.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
+            btnThresholdTest.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             void EnableChildren(Panel panel, bool enable)
             {

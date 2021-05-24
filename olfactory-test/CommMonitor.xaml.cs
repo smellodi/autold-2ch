@@ -59,7 +59,7 @@ namespace Olfactory
 
         public void LogResult(LogSource source, Result result)
         {
-            _logger.Add(source, "cmmd", result.ToString());
+            _logger.Add(source, "cmnd", result.ToString());
             txbDebug.AppendText($"{Utils.Timestamp.Value} [{source}] {result}\r\n");
             txbDebug.ScrollToEnd();
         }

@@ -174,10 +174,13 @@
                 </Grid>
             </Border>
         </StackPanel>
-        
-        <Button Grid.Row="4" Grid.Column="2" x:Name="btnNext"
+
+        <WrapPanel Grid.Row="4" Grid.Column="0"
+                   Style="{StaticResource Buttons}">
+            <Button x:Name="btnThresholdTest"
                 Style="{StaticResource Next}"
                 Content="Threshold Test"
                 Click="btnThresholdTest_Click"/>
+        </WrapPanel>
     </Grid>
 </Page>

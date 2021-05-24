@@ -15,19 +15,19 @@ namespace Olfactory.Tests
             _instructionsPage.Next += (s, e) => PageDone(this, new EventArgs());
             _familiarizePage.Next += (s, e) =>
             {
-                _logger.Add(LogSource.ThresholdTest, "familiarization", e.ToString());
+                _logger.Add(LogSource.ThTest, "familiarization", e.ToString());
                 PageDone(this, new EventArgs());
             };
             _threePensPage.Next += (s, e) =>
             {
-                _logger.Add(LogSource.ThresholdTest, "trial-result", e.ToString());
+                _logger.Add(LogSource.ThTest, "result", e.ToString());
                 _threePensPage.Init();
-                _logger.Add(LogSource.ThresholdTest, "trial-condition", _threePensPage.Procedure.State);
+                _logger.Add(LogSource.ThTest, "trial", _threePensPage.Procedure.State);
             };
             _threePensPage.Finished += (s, e) =>
             {
-                _logger.Add(LogSource.ThresholdTest, "trial-result", true.ToString());
-                _logger.Add(LogSource.ThresholdTest, "finished", e.ToString("F1"));
+                _logger.Add(LogSource.ThTest, "result", true.ToString());
+                _logger.Add(LogSource.ThTest, "finished", e.ToString("F1"));
 
                 _resultPage.SetPPM(e);
                 PageDone(this, new EventArgs());
@@ -49,13 +49,13 @@ namespace Olfactory.Tests
 
             if (_current != null)
             {
-                _logger.Add(LogSource.ThresholdTest, "page", _current.Title);
+                _logger.Add(LogSource.ThTest, "page", _current.Title);
             }
 
             if (_current is Pages.ThresholdTest.ThreePens page)
             {
                 page.Init();
-                _logger.Add(LogSource.ThresholdTest, "trial", _threePensPage.Procedure.State);
+                _logger.Add(LogSource.ThTest, "trial", _threePensPage.Procedure.State);
             }
 
             return _current;

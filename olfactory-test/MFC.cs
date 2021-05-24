@@ -25,9 +25,9 @@ namespace Olfactory
         }
 
         public static string[] Header => new string[] {
-            "MassFlw",
-            "Pressr",
-            "Temp",
+            "MF ml/m",
+            "Pr PSIA",
+            "Temp C",
         };
     }
 

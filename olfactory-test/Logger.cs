@@ -14,7 +14,7 @@ namespace Olfactory
         COM = MFC | PID,
 
         __MIN_TEST_ID = 4,
-        ThresholdTest = 4,
+        ThTest = 4,
     }
 
     public class Logger
@@ -39,15 +39,13 @@ namespace Olfactory
 
             public override string ToString()
             {
+                var result = $"{Timestamp}{DELIM}{Source}{DELIM}{Type}";
                 if (Data != null && Data.Length > 0)
                 {
-                    var data = string.Join(DELIM, Data);
-                    return $"{Timestamp}{DELIM}{Source}{DELIM}{Type}{DELIM}{data}";
+                    result += DELIM + string.Join(DELIM, Data);
                 }
-                else
-                {
-                    return $"{Timestamp}{DELIM}{Type}";
-                }
+
+                return result;
             }
         }
 
