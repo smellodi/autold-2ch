@@ -54,7 +54,7 @@ namespace Olfactory
             var page = _currentTest.NextPage();
             if (page == null)
             {
-                CheckLogger();
+                DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
                 Content = _finishedPage;
             }
             else
@@ -63,7 +63,7 @@ namespace Olfactory
             }
         }
 
-        private void CheckLogger()
+        private void SaveLoggingData()
         {
             Logger logger = Logger.Instance;
             if (logger.HasTestRecords)
@@ -88,7 +88,7 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            CheckLogger();
+            SaveLoggingData();
 
             Application.Current.Shutdown();
         }

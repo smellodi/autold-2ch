@@ -58,8 +58,7 @@ namespace Olfactory.Pages.OdorProduction
 
             var timer = Utils.DispatchOnce.Do(0.1, () => 
             {
-                _waitingCountdown = _settings.InitialPause > 0 ? _settings.InitialPause : _settings.OdorFlowDuration;
-                _countdownTimer.Start();
+                InitiateCountdownTimer(_settings.InitialPause);
 
                 _mfc.OdorSpeed = _settings.OdorQuantities[step];
                 lblOdorStatus.Content = _settings.OdorQuantities[step];
@@ -96,8 +95,7 @@ namespace Olfactory.Pages.OdorProduction
 
         private void StartOdorFlow()
         {
-            _waitingCountdown = _settings.OdorFlowDuration;
-            _countdownTimer.Start();
+            InitiateCountdownTimer(_settings.OdorFlowDuration);
 
             _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
 
@@ -109,11 +107,7 @@ namespace Olfactory.Pages.OdorProduction
 
         private void StopOdorFlow()
         {
-            if (_settings.FinalPause > 0)
-            {
-                _waitingCountdown = _settings.FinalPause;
-                _countdownTimer.Start();
-            }
+            InitiateCountdownTimer(_settings.FinalPause);
 
             _mfc.OdorDirection = MFC.OdorFlow.None;
 
@@ -135,6 +129,18 @@ namespace Olfactory.Pages.OdorProduction
             else
             {
                 Next(this, _step);
+            }
+        }
+
+        private void InitiateCountdownTimer(int value)
+        {
+            _countdownTimer.Stop();
+            _waitingCountdown = value;
+            lblCountdown.Content = _waitingCountdown;
+
+            if (value > 0)
+            {
+                _countdownTimer.Start();
             }
         }
     }

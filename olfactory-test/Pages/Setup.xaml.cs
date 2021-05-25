@@ -162,21 +162,18 @@ namespace Olfactory.Pages
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.F1)
-            {
-                cmbPIDPort.Items.Clear();
-                cmbPIDPort.Items.Add("COM4");
-                cmbPIDPort.SelectedIndex = 0;
-
-                _pid.IsDebugging = true;
-            }
-            else if (e.Key == Key.F2)
+            if (e.Key == Key.F2)
             {
                 cmbMFCPort.Items.Clear();
                 cmbMFCPort.Items.Add("COM3");
                 cmbMFCPort.SelectedIndex = 0;
 
+                cmbPIDPort.Items.Clear();
+                cmbPIDPort.Items.Add("COM4");
+                cmbPIDPort.SelectedIndex = 0;
+
                 _mfc.IsDebugging = true;
+                _pid.IsDebugging = true;
             }
         }
 

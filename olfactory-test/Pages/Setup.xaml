@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="600"
+      d:DesignHeight="450" d:DesignWidth="600"
       Title="Setup"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -51,8 +51,6 @@
                         <RowDefinition Height="8"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="8"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="*"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
@@ -76,11 +74,10 @@
                     <Button Grid.Row="4" Grid.Column="2" x:Name="btnPIDToggle"
                             Click="btnPIDToggle_Click"/>
 
-                    <Label Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
-                           Style="{StaticResource Field}"
-                           VerticalAlignment="Bottom"
-                           HorizontalAlignment="Center"
-                           Content="Press F5 any time to open a debug window"/>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
+                               Margin="8,0,0,0"
+                               TextWrapping="Wrap"
+                               Text="Press F5 any time to show the logging window. Press F2 to simulate COM ports."/>
 
                 </Grid>
             </Border>
@@ -106,7 +103,7 @@
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                        Background="#FFD7EFFF"
                        HorizontalContentAlignment="Center"
-                       Content="MFC Playground"/>
+                       Content="MFC"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
                            Style="{StaticResource Field}"
@@ -166,7 +163,7 @@
                    Style="{StaticResource Buttons}">
             <Button x:Name="btnOdorProduction"
                 Style="{StaticResource Next}"
-                Content="Odor production"
+                Content="Odor Production"
                 Click="btnOdorProduction_Click"/>
             <Button x:Name="btnThresholdTest"
                 Style="{StaticResource Next}"

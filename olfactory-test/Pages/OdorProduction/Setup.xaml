@@ -5,14 +5,15 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
       mc:Ignorable="d" 
-      d:DesignHeight="320" d:DesignWidth="600"
+      d:DesignHeight="340" d:DesignWidth="600"
       Title="Setup"
       WindowTitle="Odor Production">
 
     <Grid>
         <Grid.Resources>
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Margin" Value="10,0" />
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="0,0,8,0" />
             </Style>
         </Grid.Resources>
 
@@ -64,9 +65,8 @@
                         <ColumnDefinition Width="50"/>
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" x:Name="txbFreshAir"
-                             VerticalContentAlignment="Center"
                              Text="5"
-                             ToolTip="a single floating-point value"/>
+                             ToolTip="a single positive floating-point value"/>
                     <Label Grid.Column="1"
                            Content="l/min"/>
                 </Grid>
@@ -84,13 +84,13 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBox Grid.Row="0" Grid.Column="0" x:Name="txbOdorQuantities"
-                             VerticalContentAlignment="Center"
                              Text="4, 8, 16, 32, 64, 128"
-                             ToolTip="comma-separated floating-point values"/>
+                             ToolTip="comma-separated positive floating-point values or expressions in a form 'VALUExCOUNT'"/>
                     <Label Grid.Row="0" Grid.Column="1"
-                            Content="ml/min"/>
-                    <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
-                            Content="a list of comma-separated values"/>
+                           Content="ml/min"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                               TextWrapping="Wrap"
+                               Text="A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'"/>
                 </Grid>
 
                 <TextBlock Grid.Row="6" Grid.Column="0"
@@ -110,21 +110,18 @@
                     <Label Grid.Row="0" Grid.Column="0"
                            Content="Initial pause"/>
                     <TextBox Grid.Row="1" Grid.Column="0" x:Name="txbInitialPause"
-                             VerticalContentAlignment="Center"
                              Text="3"
-                             ToolTip="an integer value"/>
+                             ToolTip="a non-negative integer"/>
                     <Label Grid.Row="0" Grid.Column="1"
                            Content="Odor flow"/>
                     <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbOdorFlowDuration"
-                             VerticalContentAlignment="Center"
                              Text="3"
-                             ToolTip="an integer value"/>
+                             ToolTip="a positive integer"/>
                     <Label Grid.Row="0" Grid.Column="2"
                             Content="Final pause"/>
                     <TextBox Grid.Row="1" Grid.Column="2" x:Name="txbFinalPause"
-                             VerticalContentAlignment="Center"
                              Text="3"
-                             ToolTip="an integer value"/>
+                             ToolTip="a non-negative integer"/>
                 </Grid>
             </Grid>
         </Border>
