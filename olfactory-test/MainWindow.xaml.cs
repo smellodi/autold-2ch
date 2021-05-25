@@ -54,8 +54,8 @@ namespace Olfactory
             var page = _currentTest.NextPage();
             if (page == null)
             {
-                DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
                 Content = _finishedPage;
+                DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
             }
             else
             {

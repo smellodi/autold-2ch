@@ -8,7 +8,11 @@ using MFC = Olfactory.Comm.MFC;
 
 namespace Olfactory.Pages.OdorProduction
 {
-    public partial class Production : Page, IPage<int>
+    /// <summary>
+    /// The procedure of the test is so simple that I did not extracted it into a separate class,
+    /// and implemented all logic here
+    /// </summary>
+    public partial class Production : Page, IPage<int>, Tests.ITestEmulator
     {
         public event EventHandler<int> Next = delegate { };    // passes the step ID that is awaited next to run
         public event EventHandler Finished = delegate { };
@@ -17,11 +21,9 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitializeComponent();
 
-            var intervalStyle = FindResource("Interval") as Style;
+            _inactiveIntervalStyle = FindResource("Interval") as Style;
 
-            _inactiveIntervalStyle = new Style(typeof(StackPanel), intervalStyle);
-
-            _activeIntervalStyle = new Style(typeof(StackPanel), intervalStyle);
+            _activeIntervalStyle = new Style(typeof(StackPanel), _inactiveIntervalStyle);
             _activeIntervalStyle.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(102, 205, 255))));
             _activeIntervalStyle.Setters.Add(new Setter(ForegroundProperty, new SolidColorBrush(Color.FromRgb(255, 255, 255))));
 
@@ -38,6 +40,13 @@ namespace Olfactory.Pages.OdorProduction
                     _countdownTimer.Stop();
                 }
             };
+        }
+
+        public void EmulationInit() { }
+
+        public void EmulationFinilize()
+        {
+            _step = _settings.OdorQuantities.Length - 1;
         }
 
         public void Init(Settings settings)
@@ -97,7 +106,7 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitiateCountdownTimer(_settings.OdorFlowDuration);
 
-            _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
+            _mfc.OdorDirection = _settings.Direction;
 
             stpInitialPause.Style = _inactiveIntervalStyle;
             stpOdorFlowDuration.Style = _activeIntervalStyle;

@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Olfactory.Pages.OdorProduction
 {
-    public partial class Setup : Page, IPage<Tests.OdorProduction.Settings>
+    public partial class Setup : Page, IPage<Tests.OdorProduction.Settings>, Tests.ITestEmulator
     {
         public event EventHandler<Tests.OdorProduction.Settings> Next = delegate { };
 
@@ -15,6 +15,16 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitializeComponent();
         }
+
+        public void EmulationInit()
+        {
+            txbOdorQuantities.Text = "4, 8, 16";
+            txbInitialPause.Text = "3";
+            txbOdorFlowDuration.Text = "3";
+            txbFinalPause.Text = "3";
+        }
+
+        public void EmulationFinilize() { }
 
 
         // Internal
@@ -117,6 +127,12 @@ namespace Olfactory.Pages.OdorProduction
                     InitialPause = int.Parse(txbInitialPause.Text),
                     OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text),
                     FinalPause = int.Parse(txbFinalPause.Text),
+                    Direction = cmbDirection.SelectedIndex switch
+                    {
+                        0 => Comm.MFC.OdorFlow.ToWaste,
+                        1 => Comm.MFC.OdorFlow.ToUser,
+                        _ => throw new NotImplementedException($"Direction '{cmbDirection.SelectedItem}' is not expected to be set")
+                    }
                 };
                 Next(this, settings);
             }

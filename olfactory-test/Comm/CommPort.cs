@@ -41,7 +41,7 @@ namespace Olfactory.Comm
     /// MFC and PID inherit this class that declares the reading method
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal abstract class CommPort<T> : CommPort where T : struct
+    public abstract class CommPort<T> : CommPort where T : struct
     {
         /// <summary>
         /// Retrieving data sample from port
@@ -54,7 +54,7 @@ namespace Olfactory.Comm
     /// <summary>
     /// COM port functionality common for both MFC and PID
     /// </summary>
-    internal abstract class CommPort
+    public abstract class CommPort
     {
         /// <summary>
         /// Fires when COM port is closed

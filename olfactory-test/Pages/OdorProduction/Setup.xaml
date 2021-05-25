@@ -45,6 +45,8 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="8"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="80"/>
@@ -93,10 +95,20 @@
                                Text="A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'"/>
                 </Grid>
 
-                <TextBlock Grid.Row="6" Grid.Column="0"
+                <Label Grid.Row="6" Grid.Column="0"
+                       Style="{StaticResource Field}"
+                       Content="Odor flows"/>
+                <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbDirection"
+                          VerticalContentAlignment="Center"
+                          IsReadOnly="True">
+                    <ComboBoxItem Content="to waste" IsSelected="True"/>
+                    <ComboBoxItem Content="to user"/>
+                </ComboBox>
+
+                <TextBlock Grid.Row="8" Grid.Column="0"
                            Style="{StaticResource Label}"
                            Text="Durations in seconds"/>
-                <Grid Grid.Row="6" Grid.Column="1">
+                <Grid Grid.Row="8" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
@@ -110,17 +122,17 @@
                     <Label Grid.Row="0" Grid.Column="0"
                            Content="Initial pause"/>
                     <TextBox Grid.Row="1" Grid.Column="0" x:Name="txbInitialPause"
-                             Text="3"
+                             Text="60"
                              ToolTip="a non-negative integer"/>
                     <Label Grid.Row="0" Grid.Column="1"
                            Content="Odor flow"/>
                     <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbOdorFlowDuration"
-                             Text="3"
+                             Text="10"
                              ToolTip="a positive integer"/>
                     <Label Grid.Row="0" Grid.Column="2"
                             Content="Final pause"/>
                     <TextBox Grid.Row="1" Grid.Column="2" x:Name="txbFinalPause"
-                             Text="3"
+                             Text="30"
                              ToolTip="a non-negative integer"/>
                 </Grid>
             </Grid>

@@ -5,7 +5,7 @@ using Olfactory.Pages.OdorProduction;
 namespace Olfactory.Tests.OdorProduction
 {
     /// <summary>
-    /// Manages the order of pages in the Threshold Test 
+    /// Manages the order of pages in the Odor Production
     /// </summary>
     public class Manager : ITestManager
     {
@@ -32,11 +32,6 @@ namespace Olfactory.Tests.OdorProduction
                 _ => throw new NotImplementedException("Unhandled page in Odor Production"),
             };
 
-            if (_current != null)
-            {
-                _logger.Add(LogSource.OdProd, "page", _current.Title);
-            }
-
             if (_current is Production page)
             {
                 page.Init(_setting);
@@ -53,15 +48,13 @@ namespace Olfactory.Tests.OdorProduction
         }
 
         public void Emulate(EmulationCommand command, params object[] args)
-        {/* TODO
-            ITestEmulator emulator = _productionPage.Emulator;
-
+        {
             switch (command)
             {
-                case EmulationCommand.EnableEmulation: emulator.EmulationInit(); break;
-                case EmulationCommand.ForceToFinishWithResult: emulator.EmulationFinilize(); break;
+                case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
+                case EmulationCommand.ForceToFinishWithResult: (_productionPage as ITestEmulator).EmulationFinilize(); break;
                 default: throw new NotImplementedException("This emulation command is not recognized in Odor Production");
-            }*/
+            }
         }
 
         // Internal
@@ -72,7 +65,5 @@ namespace Olfactory.Tests.OdorProduction
         Page _current = null;
 
         Settings _setting;
-
-        Logger _logger = Logger.Instance;
     }
 }

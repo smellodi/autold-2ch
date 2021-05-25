@@ -31,7 +31,7 @@ namespace Olfactory.Comm
         }
     }
 
-    internal class PID : CommPort<PIDSample>
+    public class PID : CommPort<PIDSample>
     {
         public static PID Instance => _instance = _instance ?? new();
 

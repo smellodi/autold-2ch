@@ -62,7 +62,7 @@ namespace Olfactory.Comm
         }
     }
 
-    internal class MFC : CommPort<MFCSample>
+    public class MFC : CommPort<MFCSample>
     {
         public static MFC Instance => _instance = _instance ?? new();
 
