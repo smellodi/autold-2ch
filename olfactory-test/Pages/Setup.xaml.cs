@@ -220,11 +220,12 @@ namespace Olfactory.Pages
 
         private void btnSetDirection_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorDirection = cmbDirection.SelectedIndex switch
+            _mfc.OdorDirection = (cmbDirection.SelectedIndex, chkFlowToPID.IsChecked) switch
             {
-                0 => MFC.OdorFlow.None,
-                1 => MFC.OdorFlow.ToWaste,
-                2 => MFC.OdorFlow.ToUser,
+                (0, false) => MFC.OdorFlow.ToWasteNoPID,
+                (0, true) => MFC.OdorFlow.ToWaste,
+                (1, false) => MFC.OdorFlow.ToUserNoPID,
+                (1, true) => MFC.OdorFlow.ToUser,
                 _ => throw new NotImplementedException($"Direction '{cmbDirection.SelectedItem}' is not expected to be set")
             };
         }

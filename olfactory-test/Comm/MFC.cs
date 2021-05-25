@@ -73,9 +73,15 @@ namespace Olfactory.Comm
             Z = 'z',
         }
 
+        /// <summary>
+        /// These are actualy two bits to control two output valves bound to the MFC 'z' channel
+        /// The lower bit controls the odored air flow output: 0 - to waste, 1 - to user
+        /// The higher bit controls the odored air flow to the PID: 0 - closed, 1 - opened
+        /// </summary>
         public enum OdorFlow
         { 
-            None = 0,
+            ToWasteNoPID = 00,
+            ToUserNoPID = 01,
             ToWaste = 10,
             ToUser = 11,
         }

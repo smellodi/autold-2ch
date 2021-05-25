@@ -58,7 +58,7 @@ namespace Olfactory.Pages.OdorProduction
             lblFinalPause.Content = _settings.FinalPause;
 
             _mfc.FreshAirSpeed = _settings.FreshAir;
-            _mfc.OdorDirection = MFC.OdorFlow.None; // should I add delay here?
+            _mfc.OdorDirection = MFC.OdorFlow.ToWasteNoPID; // should I add delay here?
         }
 
         public void Run(int step)
@@ -118,7 +118,7 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitiateCountdownTimer(_settings.FinalPause);
 
-            _mfc.OdorDirection = MFC.OdorFlow.None;
+            _mfc.OdorDirection = _settings.Direction == MFC.OdorFlow.ToWaste ? MFC.OdorFlow.ToWasteNoPID : MFC.OdorFlow.ToUserNoPID;
 
             stpOdorFlowDuration.Style = _inactiveIntervalStyle;
             stpFinalPause.Style = _activeIntervalStyle;
