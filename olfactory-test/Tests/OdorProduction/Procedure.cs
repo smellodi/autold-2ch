@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using MFC = Olfactory.Comm.MFC;
-using PID = Olfactory.Comm.PID;
+using Olfactory.Comm;
 
 namespace Olfactory.Tests.OdorProduction
 {
@@ -23,6 +22,12 @@ namespace Olfactory.Tests.OdorProduction
 
         public Procedure()
         {
+            // catch window closing event, so we do not display termination message due to MFC comm closed
+            Application.Current.MainWindow.Closing += (s, e) =>
+            {
+                _pidTimer.Stop();
+            };
+
             // If the test is in progress, display warning message and quit the app:
             // Or can we recover here by trying to open the COM port again?
             _mfc.Closed += (s, e) =>
@@ -78,7 +83,7 @@ namespace Olfactory.Tests.OdorProduction
 
         public void Next()
         {
-            _logger.Add(LogSource.OdProd, "trial", _settings.OdorQuantities[_step].ToString());
+            _logger.Add(LogSource.OdProd, "trial", "start", _settings.OdorQuantities[_step].ToString());
 
             _runner = Utils.DispatchOnce
                 .Do(0.1, () =>
@@ -124,7 +129,7 @@ namespace Olfactory.Tests.OdorProduction
 
         private void Finilize()
         {
-            _logger.Add(LogSource.OdProd, "finished");
+            _logger.Add(LogSource.OdProd, "trial", "finished");
 
             var noMoreTrials = ++_step >= _settings.OdorQuantities.Length;
             if (noMoreTrials)
