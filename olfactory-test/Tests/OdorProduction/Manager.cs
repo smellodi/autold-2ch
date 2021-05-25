@@ -18,8 +18,7 @@ namespace Olfactory.Tests.OdorProduction
                 _setting = e;
                 PageDone(this, new EventArgs());
             };
-            _productionPage.Next += (s, e) => _productionPage.Run(e);
-            _productionPage.Finished += (s, e) => PageDone(this, new EventArgs());
+            _productionPage.Next += (s, e) => PageDone(this, new EventArgs());
         }
 
         public Page NextPage()
@@ -35,7 +34,6 @@ namespace Olfactory.Tests.OdorProduction
             if (_current is Production page)
             {
                 page.Init(_setting);
-                page.Run(0);
             }
 
             return _current;
@@ -52,7 +50,7 @@ namespace Olfactory.Tests.OdorProduction
             switch (command)
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
-                case EmulationCommand.ForceToFinishWithResult: (_productionPage as ITestEmulator).EmulationFinilize(); break;
+                case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
                 default: throw new NotImplementedException("This emulation command is not recognized in Odor Production");
             }
         }

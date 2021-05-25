@@ -23,7 +23,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// <summary>
         /// Fires when the trial is finished and the next should follow, passes the trial result
         /// </summary>
-        public event EventHandler<bool> TrialDone = delegate { };
+        public event EventHandler<bool> Next = delegate { };
         /// <summary>
         /// Fires when all trials are finished, passes the test result
         /// </summary>
@@ -35,7 +35,7 @@ namespace Olfactory.Tests.ThresholdTest
         public int RecognitionsInRow => _recognitionsInRow;
         public int TurningPointCount => _turningPointPPMs.Count;
 
-        public string[] State => new string[] {
+        private string[] State => new string[] {
             Step.ToString(),
             Direction.ToString(),
             PPMLevel.ToString(),
@@ -79,6 +79,7 @@ namespace Olfactory.Tests.ThresholdTest
             };
             _rnd.Shuffle(_pens);
 
+            _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
 
             _stepID++;
@@ -93,6 +94,8 @@ namespace Olfactory.Tests.ThresholdTest
             var isCorrectChoice = pen.Color == ODOR_PEN_COLOR;
             var canContinue = AdjustPPM(isCorrectChoice);
 
+            _logger.Add(LogSource.ThTest, "result", isCorrectChoice.ToString());
+
             DispatchOnce.Do(AFTERMATH_PAUSE, () =>
             {
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
@@ -103,7 +106,7 @@ namespace Olfactory.Tests.ThresholdTest
                 }
                 else
                 {
-                    TrialDone(this, isCorrectChoice);
+                    Next(this, isCorrectChoice);
                 }
             });
         }

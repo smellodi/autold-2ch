@@ -8,6 +8,8 @@ namespace Olfactory
 {
     public partial class CommMonitor : Window
     {
+        public static CommMonitor Instance { get; private set; }
+
         DispatcherTimer _mfcTimer = new DispatcherTimer();
         DispatcherTimer _pidTimer = new DispatcherTimer();
 
@@ -22,6 +24,8 @@ namespace Olfactory
         public CommMonitor()
         {
             InitializeComponent();
+
+            Instance = this;
 
             Application.Current.Exit += (s, e) => _preventClosing = false;
 
@@ -70,6 +74,18 @@ namespace Olfactory
             _logger.Add(source, "fdbk", message);
             txbDebug.AppendText($"{Utils.Timestamp.Value} [{source}] {message}\r\n");
             txbDebug.ScrollToEnd();
+        }
+
+        public void LogData(LogSource source, object data)
+        {
+            TextBox output = source switch
+            {
+                LogSource.MFC => txbMFC,
+                LogSource.PID => txbPID,
+                _ => txbDebug
+            };
+            output.AppendText(data.ToString() + "\r\n");
+            output.ScrollToEnd();
         }
 
 

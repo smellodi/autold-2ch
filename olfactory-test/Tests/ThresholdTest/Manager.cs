@@ -21,13 +21,6 @@ namespace Olfactory.Tests.ThresholdTest
             };
             _threePensPage.Next += (s, e) =>
             {
-                _logger.Add(LogSource.ThTest, "result", e.ToString());
-                _threePensPage.Init();
-                _logger.Add(LogSource.ThTest, "trial", _threePensPage.Procedure.State);
-            };
-            _threePensPage.Finished += (s, e) =>
-            {
-                _logger.Add(LogSource.ThTest, "result", true.ToString());
                 _logger.Add(LogSource.ThTest, "finished", e.ToString("F1"));
 
                 _resultPage.SetPPM(e);
@@ -56,7 +49,6 @@ namespace Olfactory.Tests.ThresholdTest
             if (_current is ThreePens page)
             {
                 page.Init();
-                _logger.Add(LogSource.ThTest, "trial", _threePensPage.Procedure.State);
             }
 
             return _current;

@@ -4,13 +4,11 @@ using Procedure = Olfactory.Tests.ThresholdTest.Procedure;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class ThreePens : Page, IPage<bool>
+    public partial class ThreePens : Page, IPage<double>
     {
-        public event EventHandler<bool> Next = delegate { };
-        public event EventHandler<double> Finished = delegate { };
+        public event EventHandler<double> Next = delegate { };
 
         public Tests.ITestEmulator Emulator => _procedure;
-        public Procedure Procedure => _procedure;
 
         public ThreePens()
         {
@@ -28,7 +26,6 @@ namespace Olfactory.Pages.ThresholdTest
                 lblInstruction.Text = INSTRUCTION_SNIFF_THE_PEN(_currentPenID);
 
                 CurrentPen.IsActive = true;
-
             };
 
             _procedure.WaitingForPenSelection += (s, e) => {
@@ -39,14 +36,14 @@ namespace Olfactory.Pages.ThresholdTest
                 EnableChoiceButtons(true);
             };
 
-            _procedure.TrialDone += (s, e) => {
+            _procedure.Next += (s, e) => {
                 ColorizePens(false);
-                Next(this, e);
+                Utils.DispatchOnce.Do(0.1, () => Init());
             };
 
             _procedure.Finished += (s, e) => {
                 ColorizePens(false);
-                Finished(this, e);
+                Next(this, e);
             };
         }
 

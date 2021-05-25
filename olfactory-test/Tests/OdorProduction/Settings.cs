@@ -7,6 +7,6 @@
         public int InitialPause;
         public int OdorFlowDuration;
         public int FinalPause;
-        public Comm.MFC.OdorFlow Direction;
+        public int PIDReadingInterval;
     }
 }

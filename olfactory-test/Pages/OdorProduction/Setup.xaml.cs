@@ -66,6 +66,11 @@ namespace Olfactory.Pages.OdorProduction
                 return txbFinalPause;
             }
 
+            if (!int.TryParse(txbPIDSamplingInterval.Text, INTEGER, null, out iVal) || iVal < 100 || iVal > 5000)
+            {
+                return txbFinalPause;
+            }
+
             return null;
         }
 
@@ -127,12 +132,7 @@ namespace Olfactory.Pages.OdorProduction
                     InitialPause = int.Parse(txbInitialPause.Text),
                     OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text),
                     FinalPause = int.Parse(txbFinalPause.Text),
-                    Direction = cmbDirection.SelectedIndex switch
-                    {
-                        0 => Comm.MFC.OdorFlow.ToWaste,
-                        1 => Comm.MFC.OdorFlow.ToUser,
-                        _ => throw new NotImplementedException($"Direction '{cmbDirection.SelectedItem}' is not expected to be set")
-                    }
+                    PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text),
                 };
                 Next(this, settings);
             }
