@@ -8,8 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="600"
       Title="Setup"
       Focusable="True"
-      KeyDown="Page_KeyDown"
-      Loaded="Page_Loaded">
+      Loaded="Page_Loaded"
+      KeyDown="Page_KeyDown">
 
     <Grid>
         <Grid.Resources>
@@ -38,7 +38,7 @@
                Style="{StaticResource PageTitle}"
                Content="Setup"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Orientation="Vertical">
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
             <Border
                 Style="{StaticResource Box}">
                 <Grid>
@@ -58,31 +58,31 @@
                     </Grid.RowDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                           Style="{StaticResource Header}"
-                           Content="Serial ports"/>
+                            Style="{StaticResource Header}"
+                            Content="Serial ports"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="MFC"/>
+                            Style="{StaticResource Field}"
+                            Content="MFC"/>
                     <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cmbMFCPort"
-                              VerticalContentAlignment="Center"
-                              SelectionChanged="cmbPort_SelectionChanged"/>
+                                VerticalContentAlignment="Center"
+                                SelectionChanged="cmbPort_SelectionChanged"/>
                     <Button Grid.Row="2" Grid.Column="2" x:Name="btnMFCToggle"
                             Click="btnMFCToggle_Click"/>
 
                     <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="PID"/>
+                            Style="{StaticResource Field}"
+                            Content="PID"/>
                     <ComboBox Grid.Row="4" Grid.Column="1" x:Name="cmbPIDPort"
-                              VerticalContentAlignment="Center"
-                              SelectionChanged="cmbPort_SelectionChanged"/>
+                                VerticalContentAlignment="Center"
+                                SelectionChanged="cmbPort_SelectionChanged"/>
                     <Button Grid.Row="4" Grid.Column="2" x:Name="btnPIDToggle"
                             Click="btnPIDToggle_Click"/>
 
                     <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
-                               Margin="8,0,0,0"
-                               TextWrapping="Wrap"
-                               Text="Press F5 any time to show the logging window. Press F2 to simulate COM ports."/>
+                                Margin="8,0,0,0"
+                                TextWrapping="Wrap"
+                                Text="Press F5 any time to show the logging window. Press F2 to simulate COM ports."/>
 
                 </Grid>
             </Border>
@@ -107,50 +107,50 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                       Background="#FFD7EFFF"
-                       HorizontalContentAlignment="Center"
-                       Content="Flow"/>
+                        Background="#FFD7EFFF"
+                        HorizontalContentAlignment="Center"
+                        Content="Flow"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="Fresh air"/>
+                            Style="{StaticResource Field}"
+                            Content="Fresh air"/>
                     <TextBox Grid.Row="2" Grid.Column="1" x:Name="txbFreshAir"
-                             VerticalContentAlignment="Center"
-                             Text="5.0"
-                             ToolTip="a single positive floating-point value"/>
+                                VerticalContentAlignment="Center"
+                                Text="5.0"
+                                ToolTip="a single positive floating-point value"/>
                     <Label Grid.Row="2" Grid.Column="2"
-                           Content="l/min"/>
+                            Content="l/min"/>
                     <Button Grid.Row="2" Grid.Column="3"
                             Content="Set"
                             Click="btnSetFreshAir_Click"/>
 
                     <Label Grid.Row="4" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="Odor"/>
+                            Style="{StaticResource Field}"
+                            Content="Odor"/>
                     <TextBox Grid.Row="4" Grid.Column="1" x:Name="txbOdor"
-                             VerticalContentAlignment="Center"
-                             Text="8.0"
-                             ToolTip="a single positive floating-point value"/>
+                                VerticalContentAlignment="Center"
+                                Text="8.0"
+                                ToolTip="a single positive floating-point value"/>
                     <Label Grid.Row="4" Grid.Column="2"
-                           Content="ml/min"/>
+                            Content="ml/min"/>
                     <Button Grid.Row="4" Grid.Column="3"
                             Content="Set"
                             Click="btnSetOdor_Click"/>
 
                     <Label Grid.Row="6" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="Valves"/>
+                            Style="{StaticResource Field}"
+                            Content="Valves"/>
                     <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbDirection"
-                              VerticalContentAlignment="Center"
-                              IsReadOnly="True">
+                                VerticalContentAlignment="Center"
+                                IsReadOnly="True">
                         <ComboBoxItem Content="to waste" IsSelected="True"/>
                         <ComboBoxItem Content="to user"/>
                     </ComboBox>
                     <CheckBox Grid.Row="6" Grid.Column="2" x:Name="chkFlowToPID"
-                              VerticalContentAlignment="Center"
-                              Margin="8,0,0,0"
-                              IsChecked="True"
-                              Content="to PID"/>
+                                VerticalContentAlignment="Center"
+                                Margin="8,0,0,0"
+                                IsChecked="True"
+                                Content="to PID"/>
                     <Button Grid.Row="6" Grid.Column="3"
                             Content="Set"
                             Click="btnSetDirection_Click"/>

@@ -45,8 +45,6 @@ namespace Olfactory
             };
 
             _finishedPage.Next += (s, e) => Close();
-
-            Content = _setupPage;
         }
 
         private void Continue()
@@ -72,7 +70,23 @@ namespace Olfactory
             }
         }
 
+
         // UI events
+
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            /* Unfortunatelly, Page cannot be a child of Viewbox, thus zooming functionality can be implemented on individual pages only
+            SizeToContent = SizeToContent.WidthAndHeight;
+
+            View.Width = Width;
+            View.Height = Height;
+
+            View.Child = _setupPage;
+
+            */
+            Content = _setupPage;
+        }
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -84,6 +98,17 @@ namespace Olfactory
             {
                 _currentTest?.Emulate(Tests.EmulationCommand.ForceToFinishWithResult);
             }
+        }
+
+        private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            /*
+            const int ZOOM_RATE = 20;
+            var delta = e.Delta > 0 ? ZOOM_RATE : Math.Max(-ZOOM_RATE, -Math.Min(View.ActualWidth, View.ActualHeight));
+
+            View.Width += delta;
+            View.Height += delta;
+            */
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

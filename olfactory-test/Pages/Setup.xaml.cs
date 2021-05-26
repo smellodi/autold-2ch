@@ -17,10 +17,6 @@ namespace Olfactory.Pages
         public event EventHandler<Tests.Test> Next = delegate { };
         public event EventHandler<LogCOMResult> LogResult = delegate { };
 
-        USB _usb = new USB();
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
-
         public Setup()
         {
             InitializeComponent();
@@ -59,6 +55,11 @@ namespace Olfactory.Pages
 
 
         // Internal
+
+        USB _usb = new USB();
+        MFC _mfc = MFC.Instance;
+        PID _pid = PID.Instance;
+
 
         private void UpdatePortList(ComboBox cmb)
         {
