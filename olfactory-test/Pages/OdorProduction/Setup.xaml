@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
       mc:Ignorable="d" 
-      d:DesignHeight="380" d:DesignWidth="600"
+      d:DesignHeight="410" d:DesignWidth="600"
       Title="Setup"
       WindowTitle="Odor Production">
 
@@ -48,6 +48,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="8"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="8"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
@@ -56,9 +57,9 @@
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
-                    Background="#FFD7EFFF"
-                    HorizontalContentAlignment="Center"
-                    Content="MFC"/>
+                       Background="#FFD7EFFF"
+                       HorizontalContentAlignment="Center"
+                       Content="MFC"/>
 
                 <Label Grid.Row="2" Grid.Column="0"
                        Style="{StaticResource Field}"
@@ -77,7 +78,7 @@
 
                 <Label Grid.Row="4" Grid.Column="0"
                        Style="{StaticResource Field}"
-                       Content="Odor"/>
+                       Content="Odor flow"/>
                 <Grid Grid.Row="4" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="230"/>
@@ -121,16 +122,32 @@
                              Text="10"
                              ToolTip="a positive integer"/>
                     <Label Grid.Row="0" Grid.Column="2"
-                            Content="Final pause"/>
+                           Content="Final pause"/>
                     <TextBox Grid.Row="1" Grid.Column="2" x:Name="txbFinalPause"
                              Text="30"
                              ToolTip="a non-negative integer"/>
                 </Grid>
 
                 <Label Grid.Row="8" Grid.Column="0"
+                       Style="{StaticResource Field}"
+                       Content="Valve #2"/>
+                <StackPanel Grid.Row="8" Grid.Column="1" >
+                    <ComboBox x:Name="cmbValve2"
+                              VerticalContentAlignment="Center"
+                              Margin="0,0,8,0"
+                              IsReadOnly="True">
+                        <ComboBoxItem Content="to waste" IsSelected="True"/>
+                        <ComboBoxItem Content="to user"/>
+                    </ComboBox>
+                    <TextBlock TextWrapping="Wrap"
+                               Text="Controls the Valve #2 during odor flow. This valve is directed to waste during both pauses."/>
+
+                </StackPanel>
+
+                <Label Grid.Row="10" Grid.Column="0"
                            Style="{StaticResource Field}"
                            Content="PID sampling"/>
-                <Grid Grid.Row="8" Grid.Column="1">
+                <Grid Grid.Row="10" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="50"/>
@@ -145,8 +162,8 @@
         </Border>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10" x:Name="btnStart"
-            Style="{StaticResource Next}"
-            Content="Start"
-            Click="btnStart_Click"/>
+                Style="{StaticResource Next}"
+                Content="Start"
+                Click="btnStart_Click"/>
     </Grid>
 </Page>

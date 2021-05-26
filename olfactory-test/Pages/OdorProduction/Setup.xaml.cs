@@ -133,6 +133,7 @@ namespace Olfactory.Pages.OdorProduction
                     OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text),
                     FinalPause = int.Parse(txbFinalPause.Text),
                     PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text),
+                    Valve2ToUser = cmbValve2.SelectedIndex == 1,
                 };
                 Next(this, settings);
             }

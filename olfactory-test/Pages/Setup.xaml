@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="600"
+      d:DesignHeight="470" d:DesignWidth="600"
       Title="Setup"
       Focusable="True"
       Loaded="Page_Loaded"
@@ -98,18 +98,20 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="8"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="75"/>
-                        <ColumnDefinition Width="65"/>
+                        <ColumnDefinition Width="80"/>
                         <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
 
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
                         Background="#FFD7EFFF"
                         HorizontalContentAlignment="Center"
-                        Content="Flow"/>
+                        Content="MFC Playgound"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
                             Style="{StaticResource Field}"
@@ -139,21 +141,26 @@
 
                     <Label Grid.Row="6" Grid.Column="0"
                             Style="{StaticResource Field}"
-                            Content="Valves"/>
-                    <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbDirection"
+                            Content="Valve #1"/>
+                    <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbValve1"
+                                VerticalContentAlignment="Center"
+                                IsReadOnly="True">
+                        <ComboBoxItem Content="to waste"/>
+                        <ComboBoxItem Content="to system" IsSelected="True"/>
+                    </ComboBox>
+                    <Button Grid.Row="6" Grid.Column="3" Grid.RowSpan="3"
+                            Content="Set"
+                            Click="btnSetDirection_Click"/>
+                    
+                    <Label Grid.Row="8" Grid.Column="0"
+                            Style="{StaticResource Field}"
+                            Content="Valve #2"/>
+                    <ComboBox Grid.Row="8" Grid.Column="1" x:Name="cmbValve2"
                                 VerticalContentAlignment="Center"
                                 IsReadOnly="True">
                         <ComboBoxItem Content="to waste" IsSelected="True"/>
                         <ComboBoxItem Content="to user"/>
                     </ComboBox>
-                    <CheckBox Grid.Row="6" Grid.Column="2" x:Name="chkFlowToPID"
-                                VerticalContentAlignment="Center"
-                                Margin="8,0,0,0"
-                                IsChecked="True"
-                                Content="to PID"/>
-                    <Button Grid.Row="6" Grid.Column="3"
-                            Content="Set"
-                            Click="btnSetDirection_Click"/>
                 </Grid>
             </Border>
         </StackPanel>

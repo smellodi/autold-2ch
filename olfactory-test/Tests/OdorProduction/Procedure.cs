@@ -113,8 +113,8 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToUser;
-            _logger.Add(LogSource.OdProd, "valve", "open");
+            _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlow.ToSystemAndUser : MFC.OdorFlow.ToSystemAndWaste;
+            _logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
 
             StageChanged(this, Stage.OdorFlow);
         }
@@ -122,7 +122,7 @@ namespace Olfactory.Tests.OdorProduction
         private void StopOdorFlow()
         {
             _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
-            _logger.Add(LogSource.OdProd, "valve", "close");
+            _logger.Add(LogSource.OdProd, "valves", "close");
 
             StageChanged(this, Stage.FinalWait);
         }
@@ -135,7 +135,6 @@ namespace Olfactory.Tests.OdorProduction
             if (noMoreTrials)
             {
                 _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
-                _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
                 _pidTimer.Stop();
             }
 

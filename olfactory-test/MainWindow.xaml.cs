@@ -83,7 +83,6 @@ namespace Olfactory
             View.Height = Height;
 
             View.Child = _setupPage;
-
             */
             Content = _setupPage;
         }

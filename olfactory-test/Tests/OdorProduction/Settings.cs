@@ -8,5 +8,6 @@
         public int OdorFlowDuration;
         public int FinalPause;
         public int PIDReadingInterval;
+        public bool Valve2ToUser;
     }
 }

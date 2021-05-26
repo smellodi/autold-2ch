@@ -33,7 +33,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             _directionChangeTimer.Tick += (s, e) => {
                 _directionChangeTimer.Stop();
-                _mfc.OdorDirection = MFC.OdorFlow.ToUser;
+                _mfc.OdorDirection = MFC.OdorFlow.ToSystemAndUser;
             };
         }
 
@@ -67,7 +67,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
+            _mfc.OdorDirection = MFC.OdorFlow.ToSystemAndWaste;
 
             // We do not need this command as the next page immediately sets the odor speed to some other value
             //Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.5 sec delay between the requests

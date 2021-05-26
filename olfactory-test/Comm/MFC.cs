@@ -75,15 +75,15 @@ namespace Olfactory.Comm
 
         /// <summary>
         /// These are actualy two bits to control two output valves bound to the MFC 'z' channel
-        /// The lower bit controls the odored air flow output: 0 - to waste, 1 - to user
-        /// The higher bit controls the odored air flow to the PID: 0 - closed, 1 - opened
+        /// The lower bit controls the Valve #2: 0 - to waste, 1 - to user
+        /// The higher bit controls the Valve #1: 0 - to waste, 1 - to system
         /// </summary>
         public enum OdorFlow
         { 
-            ToWasteNoPID = 00,
-            ToUserNoPID = 01,
-            ToWaste = 10,
-            ToUser = 11,
+            ToWaste = 00,
+            ToWasteAndUser = 01,        // probably, makes no sense
+            ToSystemAndWaste = 10,
+            ToSystemAndUser = 11,
         }
 
         public enum FlowEndPoint
@@ -357,7 +357,7 @@ namespace Olfactory.Comm
 
         double _freshAir = 5.0;
         double _odor = 4.0;
-        OdorFlow _odorDirection = OdorFlow.ToWaste;
+        OdorFlow _odorDirection = OdorFlow.ToSystemAndWaste;
 
         Mutex _mutex = new Mutex();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
 
