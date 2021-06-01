@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Olfactory.Comm;
 
@@ -45,7 +46,7 @@ namespace Olfactory
                 if (_mfc.IsOpen)
                 {
                     var result = _mfc.GetSample(out MFCSample sample);
-                    Log(txbMFC, LogSource.MFC, result, sample.ToString('\t'));
+                    Log(txbMFC, LogSource.MFC, result, sample);
                 }
             };
 
@@ -86,10 +87,28 @@ namespace Olfactory
             };
             output.AppendText(data.ToString() + "\r\n");
             output.ScrollToEnd();
+
+            AddToList(source, data);
         }
 
 
         // Internal
+
+        private void AddToList(LogSource source, object data)
+        {
+            var list = source switch
+            {
+                LogSource.MFC => lsvMFC,
+                LogSource.PID => lsvPID,
+                _ => null
+            };
+
+            if (list != null)
+            {
+                list.Items.Add(data);
+                list.ScrollIntoView(data);
+            }
+        }
 
         private void ToggleMonitoring(CheckBox chk, DispatcherTimer timer)
         {
@@ -109,6 +128,8 @@ namespace Olfactory
             {
                 _logger.Add(source, "data", data.ToString());
                 output.AppendText(data.ToString() + "\r\n");
+
+                AddToList(source, data);
             }
             else
             {
@@ -130,12 +151,14 @@ namespace Olfactory
         {
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
+            lsvMFC.Items.Clear();
         }
 
         private void OnClearPID_Click(object sender, RoutedEventArgs e)
         {
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
+            lsvPID.Items.Clear();
         }
 
         private void chkMFCMonitor_Checked(object sender, RoutedEventArgs e)
@@ -143,9 +166,21 @@ namespace Olfactory
             ToggleMonitoring(e.Source as CheckBox, _mfcTimer);
         }
 
+        private void chkMFCAsText_Checked(object sender, RoutedEventArgs e)
+        {
+            lsvMFC.Visibility = chkMFCAsText.IsChecked ?? false ? Visibility.Hidden : Visibility.Visible;
+            txbMFC.Visibility = chkMFCAsText.IsChecked ?? false ? Visibility.Visible : Visibility.Hidden;
+        }
+
         private void chkPIDMonitor_Checked(object sender, RoutedEventArgs e)
         {
             ToggleMonitoring(e.Source as CheckBox, _pidTimer);
+        }
+
+        private void chkPIDAsText_Checked(object sender, RoutedEventArgs e)
+        {
+            lsvPID.Visibility = chkPIDAsText.IsChecked ?? false ? Visibility.Hidden : Visibility.Visible;
+            txbPID.Visibility = chkPIDAsText.IsChecked ?? false ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

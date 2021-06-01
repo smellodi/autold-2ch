@@ -7,12 +7,12 @@ namespace Olfactory.Comm
 {
     public struct MFCChannel
     {
-        public double Pressure;
-        public double Temperature;
-        public double VolumeFlow;
-        public double MassFlow;
-        public double Setpoint;
-        public string Gas;
+        public double Pressure { get; set; }
+        public double Temperature { get; set; }
+        public double VolumeFlow { get; set; }
+        public double MassFlow { get; set; }
+        public double Setpoint { get; set; }
+        public string Gas { get; set; }
 
         public string ToString(char separator)
         {
@@ -31,20 +31,20 @@ namespace Olfactory.Comm
         };
     }
 
-    public struct MFCSample                                                 // Sample record/vector; all the measured values for one second
+    public struct MFCSample                     // Sample record/vector; all the measured values for one second
     {
-        public long Time;                                                   // Sample time; milliseconds from start
+        public long Time { get; set; }         // Sample time; milliseconds from start
 
-        public MFCChannel A;                                                // Device A: fresh air tube
-        public MFCChannel B;                                                // Device B: odor tube
+        public MFCChannel A { get; set; }      // Device A: fresh air tube
+        public MFCChannel B { get; set; }      // Device B: odor tube
 
-        public string ToString(char separator = ' ')
+        public override string ToString()
         {
-            return string.Join(separator,
+            return string.Join('\t',
                 new string[] {
                         Time.ToString(),
-                        A.ToString(separator),
-                        B.ToString(separator),
+                        A.ToString('\t'),
+                        B.ToString('\t'),
             });
         }
 
@@ -237,12 +237,14 @@ namespace Olfactory.Comm
                 {
                     if (error == Error.Success && _channels.HasFlag(Channels.A))
                     {
-                        error = ReadChannelValues(Channel.A, out sample.A);
+                        error = ReadChannelValues(Channel.A, out MFCChannel freshAir);
+                        sample.A = freshAir;
                     }
 
                     if (error == Error.Success && _channels.HasFlag(Channels.B))
                     {
-                        error = ReadChannelValues(Channel.B, out sample.B);
+                        error = ReadChannelValues(Channel.B, out MFCChannel odor);
+                        sample.B = odor;
                     }
 
                     if (error != Error.Success)
@@ -301,13 +303,15 @@ namespace Olfactory.Comm
 
             try
             {
-                if ((error = ReadChannelValues(Channel.A, out sample.A)) == Error.Success)
+                if ((error = ReadChannelValues(Channel.A, out MFCChannel freshAir)) == Error.Success)
                 {
+                    sample.A = freshAir;
                     _channels |= Channels.A;
                     _freshAir = sample.A.MassFlow;
                 }
-                if ((error = ReadChannelValues(Channel.B, out sample.B)) == Error.Success)
+                if ((error = ReadChannelValues(Channel.B, out MFCChannel odor)) == Error.Success)
                 {
+                    sample.B = odor;
                     _channels |= Channels.B;
                     _odor = sample.B.MassFlow;
                 }

@@ -5,16 +5,16 @@ using System.Threading;
 
 namespace Olfactory.Comm
 {
-    public struct PIDSample                                                 // Sample record/vector; all the measured values for one second
+    public struct PIDSample                       // Sample record/vector; all the measured values for one second
     {
-        public long Time;                                                   // Sample time; milliseconds from start
+        public long Time { get; set; }            // Sample time; milliseconds from start
 
-        public double PID;                                                  // PID value in mV
-        public double PID_PPM;                                              // PID value as ppm
-        public double Loop;                                                 // Current loop input in mA
-        public double Input;                                                // 10V scaled input
-        public double Light;                                                // 10V scaled input
-        public double Temperature;                                          // degrees in C
+        public double PID { get; set; }           // PID value in mV
+        public double PID_PPM { get; set; }       // PID value as ppm
+        public double Loop { get; set; }          // Current loop input in mA
+        public double Input { get; set; }         // 10V scaled input
+        public double Light { get; set; }         // 10V scaled input
+        public double Temperature { get; set; }   // degrees in C
 
         public override string ToString()
         {
@@ -96,7 +96,7 @@ namespace Olfactory.Comm
             Error error;
             try
             {
-                error = ReadValues(out sample.PID, out sample.Loop, out sample.PID_PPM, out sample.Input, out sample.Light, out sample.Temperature);
+                error = ReadValues(out sample);
             }
             catch (Exception ex)
             {
@@ -352,17 +352,11 @@ namespace Olfactory.Comm
         /// logger. (Solution: short-circuit the SDK loop power enable MOSFET.)
         /// Well, at least the PID input works well.
         /// </summary>
-        /// <param name="piduV">PID value</param>
-        /// <param name="loop">LOOP value</param>
-        /// <returns></returns>
-        Error ReadValues(out double piduV, out double loop, out double pidPPM, out double input, out double light, out double temperature)
+        /// <param name="sample">sample</param>
+        /// <returns>Reading result</returns>
+        Error ReadValues(out PIDSample sample)
         {
-            piduV = 0;
-            loop = 0;
-            pidPPM = 0;
-            input = 0;
-            light = 0;
-            temperature = 0;
+            sample = new PIDSample();
 
             Error error;
 
@@ -419,17 +413,17 @@ namespace Olfactory.Comm
             responseScaled.RegsRTD = ModbusDWORDByteSwap(ref responseScaled.RegsRTD);
             responseScaled.RegsTemp = ModbusDWORDByteSwap(ref responseScaled.RegsTemp);
 
-            piduV = responseRaw.RegsPID.D;
+            sample.PID = responseRaw.RegsPID.D;
             if (responseRaw.Regs10VRef.D != 0)                // 10000mV reference available; convert the PID value to millivolts
             {
-                piduV = piduV / responseRaw.Regs10VRef.D * 10000.0;
+                sample.PID = sample.PID / responseRaw.Regs10VRef.D * 10000.0;
             }
 
-            loop = responseScaled.RegsCurrLoop.f;
-            pidPPM = responseScaled.RegsPID.f;
-            input = responseScaled.Regs10VRef.f;
-            light = responseScaled.RegsLight.f;
-            temperature = responseScaled.RegsRTD.f;
+            sample.Loop = responseScaled.RegsCurrLoop.f;
+            sample.PID_PPM = responseScaled.RegsPID.f;
+            sample.Input = responseScaled.Regs10VRef.f;
+            sample.Light = responseScaled.RegsLight.f;
+            sample.Temperature = responseScaled.RegsRTD.f;
 
             return Error.Success;
         }

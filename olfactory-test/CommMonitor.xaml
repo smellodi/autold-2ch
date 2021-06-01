@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Olfactory"
         mc:Ignorable="d"
-        Title="COM monitor" Height="450" Width="800" ShowInTaskbar="False" Closing="Window_Closing" Activated="Window_Activated">
+        Title="COM monitor"
+        Height="450" Width="900" 
+        Closing="Window_Closing"
+        Activated="Window_Activated">
     <Grid Margin="8">
         <Grid.Resources>
             <Style TargetType="{x:Type Button}">
@@ -15,7 +18,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="370"/>
+            <ColumnDefinition Width="460"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -43,6 +46,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
+                <ColumnDefinition/>
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
@@ -52,16 +56,37 @@
                       VerticalAlignment="Center"
                       Checked="chkMFCMonitor_Checked"
                       Unchecked="chkMFCMonitor_Checked"/>
-            <Button Grid.Row="0" Grid.Column="2"
+            <CheckBox Grid.Row="0" Grid.Column="2" x:Name="chkMFCAsText"
+                      Content="As text"
+                      VerticalAlignment="Center"
+                      Checked="chkMFCAsText_Checked"
+                      Unchecked="chkMFCAsText_Checked"/>
+            <Button Grid.Row="0" Grid.Column="3"
                     Content="Clear"
                     Click="OnClearMFC_Click"/>
         </Grid>
         
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbMFC"
                  VerticalScrollBarVisibility="Visible"/>
+        <ListView Grid.Row="1" Grid.Column="1" Name="lsvMFC">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
+                    <GridViewColumn Header="A:" Width="20" DisplayMemberBinding="{x:Null}" />
+                    <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=A.MassFlow}" />
+                    <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=A.Pressure}" />
+                    <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=A.Temperature}" />
+                    <GridViewColumn Header="B:" Width="20" DisplayMemberBinding="{x:Null}" />
+                    <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=B.MassFlow}" />
+                    <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=B.Pressure}" />
+                    <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=B.Temperature}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="100"/>
@@ -73,12 +98,30 @@
                       VerticalAlignment="Center"
                       Checked="chkPIDMonitor_Checked"
                       Unchecked="chkPIDMonitor_Checked"/>
-            <Button Grid.Row="0" Grid.Column="2"
+            <CheckBox Grid.Row="0" Grid.Column="2" x:Name="chkPIDAsText"
+                      Content="As text"
+                      VerticalAlignment="Center"
+                      Checked="chkPIDAsText_Checked"
+                      Unchecked="chkPIDAsText_Checked"/>
+            <Button Grid.Row="0" Grid.Column="3"
                     Content="Clear"
                     Click="OnClearPID_Click"/>
         </Grid>
 
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="txbPID"
                  VerticalScrollBarVisibility="Visible"/>
+        <ListView Grid.Row="3" Grid.Column="1" Name="lsvPID">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
+                    <GridViewColumn Header="PID (uV)" Width="60" DisplayMemberBinding="{Binding Path=PID}" />
+                    <GridViewColumn Header="PID (ppm)" Width="65" DisplayMemberBinding="{Binding Path=PID_PPM}" />
+                    <GridViewColumn Header="Loop (mA)" Width="60" DisplayMemberBinding="{Binding Path=Loop}" />
+                    <GridViewColumn Header="Input" Width="60" DisplayMemberBinding="{Binding Path=Input}" />
+                    <GridViewColumn Header="Light" Width="60" DisplayMemberBinding="{Binding Path=Light}" />
+                    <GridViewColumn Header="Temp (C)" Width="50" DisplayMemberBinding="{Binding Path=Temperature}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
