@@ -12,8 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\icons\monitor.png" />
+    <None Remove="Assets\main.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Management" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\icons\main.png" />
+    <Resource Include="Assets\icons\monitor.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +33,18 @@
     <Compile Update="Pages\OdorProduction\Setup.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

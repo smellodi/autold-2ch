@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using Procedure = Olfactory.Tests.ThresholdTest.Procedure;
 
@@ -13,6 +14,7 @@ namespace Olfactory.Pages.ThresholdTest
         public ThreePens()
         {
             InitializeComponent();
+            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
 
             PENS = new Controls.Pen[Procedure.PEN_COUNT] { pen1, pen2, pen3 };
 

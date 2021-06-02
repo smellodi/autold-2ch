@@ -14,15 +14,18 @@ namespace Olfactory.Pages.OdorProduction
         public Setup()
         {
             InitializeComponent();
+            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
+
+            txbFreshAir.Text = _settings.FreshAir.ToString("F1");
+            txbOdorQuantities.Text = string.Join(LIST_DELIM + " ", _settings.OdorQuantities);
+            txbInitialPause.Text = _settings.InitialPause.ToString();
+            txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
+            txbFinalPause.Text = _settings.FinalPause.ToString();
+            txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
+            cmbValve2.SelectedIndex = _settings.Valve2ToUser ? 1 : 0;
         }
 
-        public void EmulationInit()
-        {
-            txbOdorQuantities.Text = "4, 8, 16";
-            txbInitialPause.Text = "3";
-            txbOdorFlowDuration.Text = "3";
-            txbFinalPause.Text = "3";
-        }
+        public void EmulationInit() { }
 
         public void EmulationFinilize() { }
 
@@ -34,6 +37,8 @@ namespace Olfactory.Pages.OdorProduction
 
         const NumberStyles INTEGER = NumberStyles.Integer | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
         const NumberStyles FLOAT = NumberStyles.Float;
+
+        Tests.OdorProduction.Settings _settings = new Tests.OdorProduction.Settings();
 
         private TextBox CheckInput()
         {
@@ -119,23 +124,26 @@ namespace Olfactory.Pages.OdorProduction
             var improperInput = CheckInput();
             if (improperInput != null)
             {
-                MessageBox.Show($"The value '{improperInput.Text}' is not valid, it must be {improperInput.ToolTip}. Please correct and try again", Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(
+                    $"The value '{improperInput.Text}' is not valid, it must be {improperInput.ToolTip}. Please correct and try again",
+                    Title,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 improperInput.Focus();
                 improperInput.SelectAll();
             }
             else
             {
-                var settings = new Tests.OdorProduction.Settings()
-                {
-                    FreshAir = double.Parse(txbFreshAir.Text),
-                    OdorQuantities = AsValues(txbOdorQuantities.Text.Split(LIST_DELIM)),
-                    InitialPause = int.Parse(txbInitialPause.Text),
-                    OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text),
-                    FinalPause = int.Parse(txbFinalPause.Text),
-                    PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text),
-                    Valve2ToUser = cmbValve2.SelectedIndex == 1,
-                };
-                Next(this, settings);
+                _settings.FreshAir = double.Parse(txbFreshAir.Text);
+                _settings.OdorQuantities = AsValues(txbOdorQuantities.Text.Split(LIST_DELIM));
+                _settings.InitialPause = int.Parse(txbInitialPause.Text);
+                _settings.OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text);
+                _settings.FinalPause = int.Parse(txbFinalPause.Text);
+                _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
+                _settings.Valve2ToUser = cmbValve2.SelectedIndex == 1;
+
+                _settings.Save();
+                Next(this, _settings);
             }
         }
     }

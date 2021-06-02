@@ -26,6 +26,8 @@ namespace Olfactory.Pages
 
             Application.Current.Exit += (s, e) => Close();
 
+            LoadSettings();
+
             _usb.Inserted += (s, e) =>
             {
                 Dispatcher.Invoke(() =>
@@ -148,8 +150,52 @@ namespace Olfactory.Pages
             {
                 _mfc.Stop();
             }
+
+            SaveSettings();
         }
 
+        private void LoadSettings()
+        {
+            var settings = Properties.Settings.Default;
+            txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
+            txbOdor.Text = settings.Setup_MFC_Odor.ToString();
+            cmbValve1.SelectedIndex = settings.Setup_MFC_Valve1;
+            cmbValve2.SelectedIndex = settings.Setup_MFC_Valve2;
+
+            foreach (string item in cmbMFCPort.Items)
+            {
+                if (item == settings.Setup_MFCPort)
+                {
+                    cmbMFCPort.SelectedItem = item;
+                    break;
+                }
+            }
+
+            foreach (string item in cmbPIDPort.Items)
+            {
+                if (item == settings.Setup_PIDPort)
+                {
+                    cmbPIDPort.SelectedItem = item;
+                    break;
+                }
+            }
+        }
+
+        private void SaveSettings()
+        {
+            var settings = Properties.Settings.Default;
+            try
+            {
+                settings.Setup_MFC_FreshAir = double.Parse(txbFreshAir.Text);
+                settings.Setup_MFC_Odor = double.Parse(txbOdor.Text);
+                settings.Setup_MFC_Valve1 = cmbValve1.SelectedIndex;
+                settings.Setup_MFC_Valve2 = cmbValve2.SelectedIndex;
+                settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
+                settings.Setup_PIDPort = cmbPIDPort.SelectedItem?.ToString() ?? "";
+            }
+            catch { }
+            settings.Save();
+        }
 
         // UI events
 
@@ -175,6 +221,9 @@ namespace Olfactory.Pages
 
                 _mfc.IsDebugging = true;
                 _pid.IsDebugging = true;
+
+                Storage.Instance.IsDebugging = true;
+                lblDebug.Visibility = Visibility.Visible;
             }
         }
 
@@ -223,7 +272,7 @@ namespace Olfactory.Pages
         {
             _mfc.OdorDirection = (cmbValve1.SelectedIndex, cmbValve2.SelectedIndex) switch
             {
-                (0, 0) => MFC.OdorFlow.ToWaste,
+                (0, 0) => MFC.OdorFlow.ToWasteAll,
                 (0, 1) => MFC.OdorFlow.ToWasteAndUser,
                 (1, 0) => MFC.OdorFlow.ToSystemAndWaste,
                 (1, 1) => MFC.OdorFlow.ToSystemAndUser,

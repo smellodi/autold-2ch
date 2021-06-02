@@ -176,5 +176,7 @@
                 Content="Threshold Test"
                 Click="btnThresholdTest_Click"/>
         </WrapPanel>
+
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>
 </Page>

@@ -87,5 +87,7 @@
                 </WrapPanel>
             </Grid>
         </Grid>
+
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>
 </Page>

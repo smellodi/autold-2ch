@@ -31,9 +31,17 @@
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center" FontSize="16"/>
 
-        <Button Grid.Row="2"
+        <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button
                 Style="{StaticResource Next}"
                 Click="OnExit_Click"
                 Content="Exit"/>
+            <Button
+                Style="{StaticResource Next}"
+                Click="OnReturn_Click"
+                Content="Return"/>
+        </StackPanel>
+
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>
 </Page>

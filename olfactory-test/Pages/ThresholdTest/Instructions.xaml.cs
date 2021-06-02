@@ -11,6 +11,7 @@ namespace Olfactory.Pages.ThresholdTest
         public Instructions()
         {
             InitializeComponent();
+            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
         }
 
 

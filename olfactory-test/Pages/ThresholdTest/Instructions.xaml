@@ -49,5 +49,7 @@ All substances contained in the test are non-toxic and not harmful in the used c
                 Style="{StaticResource Next}"
                 Content="Continue"
                 Click="btnNext_Click"/>
+
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>
 </Page>

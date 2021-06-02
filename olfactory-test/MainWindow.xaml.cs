@@ -24,14 +24,14 @@ namespace Olfactory
 
             _monitor.Hide();
 
-            _setupPage.LogResult += (s, e) => _monitor.LogResult(e.Source, e.Result);
-            _setupPage.Next += (s, e) =>
+            _setupPage.LogResult += (s, comResult) => _monitor.LogResult(comResult.Source, comResult.Result);
+            _setupPage.Next += (s, test) =>
             {
-                _currentTest = e switch
+                _currentTest = test switch
                 {
                     Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
                     Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
-                    _ => throw new NotImplementedException($"The test '{e}' logic is not implemented yet"),
+                    _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
                 };
 
                 _currentTest.PageDone += (s, e) => Continue();
@@ -44,7 +44,17 @@ namespace Olfactory
                 }
             };
 
-            _finishedPage.Next += (s, e) => Close();
+            _finishedPage.Next += (s, exit) =>
+            {
+                if (exit)
+                {
+                    Close();
+                }
+                else
+                {
+                    Content = _setupPage;
+                }
+            };
         }
 
         private void Continue()
@@ -66,7 +76,14 @@ namespace Olfactory
             Logger logger = Logger.Instance;
             if (logger.HasTestRecords)
             {
-                logger.SaveTo($"olfactory_log_{DateTime.Now:u}.txt".ToPath());
+                logger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+            }
+
+            SyncLogger syncLogger = SyncLogger.Instance;
+            syncLogger.Finilize();
+            if (syncLogger.HasRecords)
+            {
+                syncLogger.SaveTo($"olfactory_sync_{DateTime.Now:u}.txt".ToPath());
             }
         }
 

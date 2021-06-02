@@ -11,6 +11,7 @@ namespace Olfactory.Pages.ThresholdTest
         public Result()
         {
             InitializeComponent();
+            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
         }
 
         public void SetPPM(double ppm)

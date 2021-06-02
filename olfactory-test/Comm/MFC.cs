@@ -33,10 +33,20 @@ namespace Olfactory.Comm
 
     public struct MFCSample                     // Sample record/vector; all the measured values for one second
     {
-        public long Time { get; set; }         // Sample time; milliseconds from start
+        /// <summary>
+        /// Sample time; milliseconds from start
+        /// </summary>
+        public long Time { get; set; }
 
-        public MFCChannel A { get; set; }      // Device A: fresh air tube
-        public MFCChannel B { get; set; }      // Device B: odor tube
+        /// <summary>
+        /// Fresh air channel
+        /// </summary>
+        public MFCChannel A { get; set; }
+
+        /// <summary>
+        /// Odored air channel
+        /// </summary>
+        public MFCChannel B { get; set; }
 
         public override string ToString()
         {
@@ -80,7 +90,7 @@ namespace Olfactory.Comm
         /// </summary>
         public enum OdorFlow
         { 
-            ToWaste = 00,
+            ToWasteAll = 00,
             ToWasteAndUser = 01,        // probably, makes no sense
             ToSystemAndWaste = 10,
             ToSystemAndUser = 11,

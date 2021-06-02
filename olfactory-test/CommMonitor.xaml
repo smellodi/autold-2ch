@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:Olfactory"
         mc:Ignorable="d"
         Title="COM monitor"
-        Height="450" Width="900" 
+        Icon="/Assets/icons/monitor.png"
+        Height="450" Width="900"
         Closing="Window_Closing"
         Activated="Window_Activated">
     <Grid Margin="8">

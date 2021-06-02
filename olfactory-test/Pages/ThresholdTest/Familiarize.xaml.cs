@@ -13,6 +13,7 @@ namespace Olfactory.Pages.ThresholdTest
         public Familiarize()
         {
             InitializeComponent();
+            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
 
             _countdownTimer.Interval = TimeSpan.FromSeconds(1);
             _countdownTimer.Tick += (s, e) =>

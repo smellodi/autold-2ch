@@ -16,6 +16,7 @@ namespace Olfactory.Tests.OdorProduction
 
         public int Step => _step;
 
+        public event EventHandler<double> Data = delegate { };
         public event EventHandler<Stage> StageChanged = delegate { };
         public event EventHandler<bool> Finished = delegate { };         // provides 'true' if there is no more trials to run
 
@@ -25,14 +26,14 @@ namespace Olfactory.Tests.OdorProduction
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += (s, e) =>
             {
-                _pidTimer.Stop();
+                _timer.Stop();
             };
 
             // If the test is in progress, display warning message and quit the app:
             // Or can we recover here by trying to open the COM port again?
             _mfc.Closed += (s, e) =>
             {
-                if (_pidTimer.IsEnabled)
+                if (_timer.IsEnabled)
                 {
                     MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.");
                     Application.Current.Shutdown();
@@ -40,9 +41,9 @@ namespace Olfactory.Tests.OdorProduction
             };
             _pid.Closed += (s, e) =>
             {
-                if (_pidTimer.IsEnabled)
+                if (_timer.IsEnabled)
                 {
-                    _pidTimer.Stop();
+                    _timer.Stop();
                     _runner?.Stop();
 
                     MessageBox.Show("Connection with the PID device was shut down. The application is terminated.");
@@ -51,12 +52,18 @@ namespace Olfactory.Tests.OdorProduction
                 }
             };
 
-            _pidTimer.Tick += (s, e) =>
+            _timer.Tick += (s, e) =>
             {
-                if (_pid.GetSample(out Comm.PIDSample sample).Error == Comm.Error.Success)
+                if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
-                    _logger.Add(LogSource.PID, "data", sample.ToString());
-                    CommMonitor.Instance.LogData(LogSource.PID, sample);
+                    //_logger.Add(LogSource.PID, "data", sample.ToString());
+                    _logger.Add(pidSample);
+                    CommMonitor.Instance.LogData(LogSource.PID, pidSample);
+                    Data(this, pidSample.Loop);
+                }
+                if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
+                {
+                    _logger.Add(mfcSample);
                 }
             };
         }
@@ -73,17 +80,18 @@ namespace Olfactory.Tests.OdorProduction
             _settings = settings;
 
             _mfc.FreshAirSpeed = _settings.FreshAir;
-            _mfc.OdorDirection = MFC.OdorFlow.ToWaste; // should I add delay here?
+            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll; // should I add delay here?
 
-            _pidTimer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
-            _pidTimer.Start();
+            _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
+            _timer.Start();
 
             Next();
         }
 
         public void Next()
         {
-            _logger.Add(LogSource.OdProd, "trial", "start", _settings.OdorQuantities[_step].ToString());
+            //_logger.Add(LogSource.OdProd, "trial", "start", _settings.OdorQuantities[_step].ToString());
+            _logger.Add("S" + _settings.OdorQuantities[_step].ToString());
 
             _runner = Utils.DispatchOnce
                 .Do(0.1, () =>
@@ -105,37 +113,39 @@ namespace Olfactory.Tests.OdorProduction
 
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
-        Logger _logger = Logger.Instance;
+        SyncLogger _logger = SyncLogger.Instance;
 
-        DispatcherTimer _pidTimer = new DispatcherTimer();
+        DispatcherTimer _timer = new DispatcherTimer();
         Utils.DispatchOnce _runner;
 
 
         private void StartOdorFlow()
         {
             _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlow.ToSystemAndUser : MFC.OdorFlow.ToSystemAndWaste;
-            _logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
+            //_logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
+            _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
 
             StageChanged(this, Stage.OdorFlow);
         }
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToWaste;
-            _logger.Add(LogSource.OdProd, "valves", "close");
+            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll;
+            //_logger.Add(LogSource.OdProd, "valves", "close");
+            _logger.Add("V00");
 
             StageChanged(this, Stage.FinalWait);
         }
 
         private void Finilize()
         {
-            _logger.Add(LogSource.OdProd, "trial", "finished");
+            //_logger.Add(LogSource.OdProd, "trial", "finished");
 
             var noMoreTrials = ++_step >= _settings.OdorQuantities.Length;
             if (noMoreTrials)
             {
                 _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
-                _pidTimer.Stop();
+                _timer.Stop();
             }
 
             Finished(this, noMoreTrials);
