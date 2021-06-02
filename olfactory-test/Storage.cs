@@ -1,5 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Olfactory
 {
@@ -60,6 +64,26 @@ namespace Olfactory
         {
             ZoomLevel = Utils.MathExt.Limit(_zoomLevel - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
         }
+
+        // Helpers
+
+        public void BindVisibilityToDebug(DependencyObject obj)
+        {
+            var isDebuggingBinding = new Binding("IsDebugging");
+            isDebuggingBinding.Source = this;
+            isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
+            BindingOperations.SetBinding(obj, UIElement.VisibilityProperty, isDebuggingBinding);
+        }
+
+        public void BindScaleToZoomLevel(DependencyObject obj)
+        {
+            var zoomLevelBinding = new Binding("ZoomLevel");
+            zoomLevelBinding.Source = this;
+            BindingOperations.SetBinding(obj, ScaleTransform.ScaleXProperty, zoomLevelBinding);
+            BindingOperations.SetBinding(obj, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+        }
+
+        // Other
 
         public void Dispose()
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace Olfactory.Pages
 {
@@ -13,10 +12,8 @@ namespace Olfactory.Pages
         {
             InitializeComponent();
 
-            var isDebuggingBinding = new Binding("IsDebugging");
-            isDebuggingBinding.Source = Storage.Instance;
-            isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
-            BindingOperations.SetBinding(lblDebug, VisibilityProperty, isDebuggingBinding);
+            Storage.Instance.BindScaleToZoomLevel(sctScale);
+            Storage.Instance.BindVisibilityToDebug(lblDebug);
         }
 
 

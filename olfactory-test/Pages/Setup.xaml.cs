@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using Olfactory.Comm;
 
 namespace Olfactory.Pages
@@ -25,15 +23,8 @@ namespace Olfactory.Pages
         {
             InitializeComponent();
 
-            var zoomLevelBinding = new Binding("ZoomLevel");
-            zoomLevelBinding.Source = Storage.Instance;
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleXProperty, zoomLevelBinding);
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleYProperty, zoomLevelBinding);
-
-            var isDebuggingBinding = new Binding("IsDebugging");
-            isDebuggingBinding.Source = Storage.Instance;
-            isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
-            BindingOperations.SetBinding(lblDebug, VisibilityProperty, isDebuggingBinding);
+            Storage.Instance.BindScaleToZoomLevel(sctScale);
+            Storage.Instance.BindVisibilityToDebug(lblDebug);
 
             UpdatePortList(cmbPIDPort);
             UpdatePortList(cmbMFCPort);

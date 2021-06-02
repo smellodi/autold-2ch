@@ -4,8 +4,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Globalization;
-using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Olfactory.Pages.OdorProduction
 {
@@ -17,12 +15,8 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitializeComponent();
 
-            lblDebug.Visibility = Storage.Instance.IsDebugging ? Visibility.Visible : Visibility.Collapsed;
-
-            var zoomLevelBinding = new Binding("ZoomLevel");
-            zoomLevelBinding.Source = Storage.Instance;
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleXProperty, zoomLevelBinding);
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+            Storage.Instance.BindScaleToZoomLevel(sctScale);
+            Storage.Instance.BindVisibilityToDebug(lblDebug);
 
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");
             txbOdorQuantities.Text = string.Join(LIST_DELIM + " ", _settings.OdorQuantities);

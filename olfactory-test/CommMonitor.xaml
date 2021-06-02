@@ -17,6 +17,10 @@
             </Style>
         </Grid.Resources>
 
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="460"/>

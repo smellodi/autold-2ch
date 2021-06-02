@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
 
 namespace Olfactory.Pages.ThresholdTest
 {
@@ -14,12 +12,8 @@ namespace Olfactory.Pages.ThresholdTest
         {
             InitializeComponent();
 
-            lblDebug.Visibility = Storage.Instance.IsDebugging ? Visibility.Visible : Visibility.Collapsed;
-
-            var zoomLevelBinding = new Binding("ZoomLevel");
-            zoomLevelBinding.Source = Storage.Instance;
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleXProperty, zoomLevelBinding);
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+            Storage.Instance.BindScaleToZoomLevel(sctScale);
+            Storage.Instance.BindVisibilityToDebug(lblDebug);
         }
 
         public void SetPPM(double ppm)

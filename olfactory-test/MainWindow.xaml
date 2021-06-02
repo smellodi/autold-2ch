@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Olfactory test tool"
         Icon="/Assets/icons/main.png"
-        Height="520" Width="800"
+        Height="620" Width="800"
         MinHeight="520" MinWidth="480"
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"

@@ -26,10 +26,17 @@
                Style="{StaticResource PageTitle}"
                Content="Finished"/>
 
-        <TextBlock Grid.Row="1"
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </StackPanel.LayoutTransform>
+
+            <TextBlock
                    Text="Thank you!"
                    HorizontalAlignment="Center"
-                   VerticalAlignment="Center" FontSize="16"/>
+                   FontSize="16"/>
+        </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button

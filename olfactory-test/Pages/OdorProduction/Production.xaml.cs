@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Olfactory.Tests.OdorProduction;
@@ -18,12 +17,8 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitializeComponent();
 
-            lblDebug.Visibility = Storage.Instance.IsDebugging ? Visibility.Visible : Visibility.Collapsed;
-
-            var zoomLevelBinding = new Binding("ZoomLevel");
-            zoomLevelBinding.Source = Storage.Instance;
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleXProperty, zoomLevelBinding);
-            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+            Storage.Instance.BindScaleToZoomLevel(sctScale);
+            Storage.Instance.BindVisibilityToDebug(lblDebug);
 
             _inactiveIntervalStyle = FindResource("Interval") as Style;
 
