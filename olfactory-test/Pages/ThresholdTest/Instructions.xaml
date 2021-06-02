@@ -33,6 +33,9 @@
                       MaxWidth="1000"
                       Padding="24,0">
             <StackPanel Orientation="Vertical">
+                <StackPanel.LayoutTransform>
+                    <ScaleTransform x:Name="sctScale"/>
+                </StackPanel.LayoutTransform>
                 <TextBlock/>
                 <TextBlock>Your sense of smell is to be tested. Repeatedly, three 
 pens will be presented to you one after another. Only one of these pens contains the odorant. 

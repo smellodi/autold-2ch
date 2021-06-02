@@ -25,6 +25,9 @@
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </StackPanel.LayoutTransform>
             <Label
                 HorizontalAlignment="Center"
                 Content="Your odor sensitivity (ppm):"

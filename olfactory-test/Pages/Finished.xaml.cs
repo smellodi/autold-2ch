@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Olfactory.Pages
 {
@@ -11,10 +12,11 @@ namespace Olfactory.Pages
         public Finished()
         {
             InitializeComponent();
-            Storage.Instance.Changed += (s, e) =>
-            {
-                if (e == Storage.Data.IsDebugging) lblDebug.Visibility = Visibility.Visible;
-            };
+
+            var isDebuggingBinding = new Binding("IsDebugging");
+            isDebuggingBinding.Source = Storage.Instance;
+            isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
+            BindingOperations.SetBinding(lblDebug, VisibilityProperty, isDebuggingBinding);
         }
 
 

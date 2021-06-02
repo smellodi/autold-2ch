@@ -23,6 +23,10 @@
               HorizontalAlignment="Center"
               MaxWidth="1000"
               Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}">
+            <Grid.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </Grid.LayoutTransform>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

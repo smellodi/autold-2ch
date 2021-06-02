@@ -1,11 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Olfactory
 {
     /// <summary>
     /// Cross-app storage, mainly used to share the app state
     /// </summary>
-    public class Storage
+    public class Storage : INotifyPropertyChanged, IDisposable
     {
         // Instance
         public static Storage Instance => _instance = _instance ?? new();
@@ -15,28 +16,76 @@ namespace Olfactory
         public enum Data
         {
             IsDebugging,
+            ZoomLevel,
         }
 
-        public event EventHandler<Data> Changed = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        // Variable
+        // Variables
 
         public bool IsDebugging
         {
             get => _isDebugging;
             set
             {
-                _isDebugging = value;
-                Changed(this, Data.IsDebugging);
+                if (_isDebugging != value)
+                {
+                    _isDebugging = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(IsDebugging)));
+                }
             }
+        }
+
+        public double ZoomLevel
+        {
+            get => _zoomLevel;
+            set
+            {
+                if (_zoomLevel != value)
+                {
+                    _zoomLevel = value;
+                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ZoomLevel)));
+                }
+            }
+        }
+
+        // Actions
+
+        public void ZoomIn()
+        {
+            ZoomLevel = Utils.MathExt.Limit(_zoomLevel + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
+        }
+
+        public void ZoomOut()
+        {
+            ZoomLevel = Utils.MathExt.Limit(_zoomLevel - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
+        }
+
+        public void Dispose()
+        {
+            var settings = Properties.Settings.Default;
+
+            settings.App_ZoomLevel = _zoomLevel;
+
+            settings.Save();
         }
 
         // Internal data
 
         static Storage _instance;
 
-        bool _isDebugging = false;
+        const double ZOOM_MIN = 0.8;
+        const double ZOOM_MAX = 2.0;
+        const double ZOOM_STEP = 0.1;
 
-        private Storage() { }
+        bool _isDebugging = false;
+        double _zoomLevel = 1;
+
+        private Storage() 
+        {
+            var settings = Properties.Settings.Default;
+
+            _zoomLevel = settings.App_ZoomLevel;
+        }
     }
 }

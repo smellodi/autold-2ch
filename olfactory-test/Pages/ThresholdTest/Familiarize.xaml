@@ -23,6 +23,9 @@
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </StackPanel.LayoutTransform>
             <Button
                 Padding="12"
                 Content="Open the odor valve" Click="btnOpenValve_Click"/>

@@ -192,5 +192,17 @@ namespace Olfactory.Properties {
                 this["Setup_PIDPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double App_ZoomLevel {
+            get {
+                return ((double)(this["App_ZoomLevel"]));
+            }
+            set {
+                this["App_ZoomLevel"] = value;
+            }
+        }
     }
 }

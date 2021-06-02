@@ -20,7 +20,7 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
         </Grid.Resources>
-
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="auto"/>
@@ -38,7 +38,10 @@
                Style="{StaticResource PageTitle}"
                Content="Setup"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </StackPanel.LayoutTransform>
             <Border
                 Style="{StaticResource Box}">
                 <Grid>

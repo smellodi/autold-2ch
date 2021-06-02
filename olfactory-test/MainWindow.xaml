@@ -13,5 +13,4 @@
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewMouseWheel="Window_PreviewMouseWheel" 
         Closing="Window_Closing">
-    <!--Viewbox x:Name="View"/-->
 </Window>

@@ -1,12 +1,7 @@
-﻿using System;
+﻿using Olfactory.Utils;
+using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Olfactory.Utils;
 
 namespace Olfactory
 {
@@ -17,6 +12,8 @@ namespace Olfactory
 
         CommMonitor _monitor = new CommMonitor();
         Tests.ITestManager _currentTest = null;
+
+        Storage _storage = Storage.Instance;
 
         public MainWindow()
         {
@@ -93,14 +90,6 @@ namespace Olfactory
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            /* Unfortunatelly, Page cannot be a child of Viewbox, thus zooming functionality can be implemented on individual pages only
-            SizeToContent = SizeToContent.WidthAndHeight;
-
-            View.Width = Width;
-            View.Height = Height;
-
-            View.Child = _setupPage;
-            */
             Content = _setupPage;
         }
 
@@ -118,18 +107,24 @@ namespace Olfactory
 
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            /*
-            const int ZOOM_RATE = 20;
-            var delta = e.Delta > 0 ? ZOOM_RATE : Math.Max(-ZOOM_RATE, -Math.Min(View.ActualWidth, View.ActualHeight));
-
-            View.Width += delta;
-            View.Height += delta;
-            */
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                if (e.Delta > 0)
+                {
+                    _storage.ZoomIn();
+                }
+                else
+                {
+                    _storage.ZoomOut();
+                }
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveLoggingData();
+
+            _storage.Dispose();
 
             Application.Current.Shutdown();
         }

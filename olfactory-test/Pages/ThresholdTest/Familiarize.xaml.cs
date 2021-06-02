@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Threading;
 using MFC = Olfactory.Comm.MFC;
 
@@ -13,7 +15,13 @@ namespace Olfactory.Pages.ThresholdTest
         public Familiarize()
         {
             InitializeComponent();
-            if (Storage.Instance.IsDebugging) lblDebug.Visibility = Visibility.Visible;
+
+            lblDebug.Visibility = Storage.Instance.IsDebugging ? Visibility.Visible : Visibility.Collapsed;
+
+            var zoomLevelBinding = new Binding("ZoomLevel");
+            zoomLevelBinding.Source = Storage.Instance;
+            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleXProperty, zoomLevelBinding);
+            BindingOperations.SetBinding(sctScale, ScaleTransform.ScaleYProperty, zoomLevelBinding);
 
             _countdownTimer.Interval = TimeSpan.FromSeconds(1);
             _countdownTimer.Tick += (s, e) =>

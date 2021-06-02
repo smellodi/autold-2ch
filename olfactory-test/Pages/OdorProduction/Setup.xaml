@@ -37,6 +37,9 @@
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Box}">
+            <Border.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </Border.LayoutTransform>
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>

@@ -49,5 +49,8 @@
     <Setting Name="Setup_PIDPort" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="App_ZoomLevel" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

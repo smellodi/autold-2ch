@@ -33,6 +33,10 @@
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale"/>
+            </StackPanel.LayoutTransform>
+            
             <WrapPanel Margin="0,12"
                        HorizontalAlignment="Center">
                 <Label Content="Status: "
@@ -43,6 +47,7 @@
                 <Label Content="ml/min"
                        Style="{StaticResource Status}"/>
             </WrapPanel>
+            
             <WrapPanel>
                 <StackPanel x:Name="stpInitialPause"
                             Style="{StaticResource Interval}">
@@ -72,6 +77,7 @@
                        Content="500"/>
                 </StackPanel>
             </WrapPanel>
+            
             <WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
                 <Label Content="Time left:"/>
@@ -79,6 +85,7 @@
                       Content="300"/>
                 <Label Content="sec"/>
             </WrapPanel>
+            
             <WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
                 <Label
