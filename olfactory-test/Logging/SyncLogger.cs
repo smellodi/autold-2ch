@@ -6,7 +6,7 @@ using Olfactory.Comm;
 
 namespace Olfactory
 {
-    public class SyncLogger : LoggerBase<SyncLogger.Record>
+    public class SyncLogger : Logger<SyncLogger.Record>
     {
         public class Record
         {

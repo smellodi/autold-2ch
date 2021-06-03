@@ -14,15 +14,11 @@ namespace Olfactory.Comm
         public double Setpoint { get; set; }
         public string Gas { get; set; }
 
-        public string ToString(char separator)
-        {
-            return string.Join(separator,
-               new string[] {
-                        MassFlow.ToString("F4"),
-                        Pressure.ToString("F1"),
-                        Temperature.ToString("F2"),
-           });
-        }
+        public string ToString(char separator) => string.Join(separator, new string[] {
+            MassFlow.ToString("F4"),
+            Pressure.ToString("F1"),
+            Temperature.ToString("F2"),
+        });
 
         public static string[] Header => new string[] {
             "M ml/m",
@@ -48,23 +44,18 @@ namespace Olfactory.Comm
         /// </summary>
         public MFCChannel B { get; set; }
 
-        public override string ToString()
-        {
-            return string.Join('\t',
-                new string[] {
-                        Time.ToString(),
-                        A.ToString('\t'),
-                        B.ToString('\t'),
-            });
-        }
+        public override string ToString() => string.Join('\t', new string[] {
+            Time.ToString(),
+            A.ToString('\t'),
+            B.ToString('\t'),
+        });
 
         public static string[] Header
         {
             get
             {
                 var list = new System.Collections.Generic.List<string>();
-                list.AddRange(new string[] { "", "|", "A", "", "|", "B" });
-                list.Add("\r\nTime");
+                list.AddRange(new string[] { "", "|", "A", "", "|", "B", "", "|\r\nTime" });
                 list.AddRange(MFCChannel.Header);       // A
                 list.AddRange(MFCChannel.Header);       // B
                 return list.ToArray();
@@ -105,8 +96,8 @@ namespace Olfactory.Comm
         public override event EventHandler<Result> RequestResult = delegate { };
         public event EventHandler<string> Message = delegate { };
 
-        public override string Name { get => "MFC"; }
-        public override string[] DataColumns { get => MFCSample.Header; }
+        public override string Name => "MFC";
+        public override string[] DataColumns => MFCSample.Header;
 
         public const double ODOR_MAX_SPEED = 128.0;
         public const double ODOR_MIN_SPEED = 1.0;
@@ -431,13 +422,11 @@ namespace Olfactory.Comm
 
             try
             {
-                var culture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
-
-                buffer.Pressure = double.Parse(values[1], culture);
-                buffer.Temperature = double.Parse(values[2], culture);
-                buffer.VolumeFlow = double.Parse(values[3], culture);
-                buffer.MassFlow = double.Parse(values[4], culture);
-                buffer.Setpoint = double.Parse(values[5], culture);
+                buffer.Pressure = double.Parse(values[1]);
+                buffer.Temperature = double.Parse(values[2]);
+                buffer.VolumeFlow = double.Parse(values[3]);
+                buffer.MassFlow = double.Parse(values[4]);
+                buffer.Setpoint = double.Parse(values[5]);
                 buffer.Gas = values[6];
             }
             catch

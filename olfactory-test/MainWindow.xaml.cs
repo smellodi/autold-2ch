@@ -23,11 +23,20 @@ namespace Olfactory
 
             _setupPage.Next += OnSetupPage_Next;
             _finishedPage.Next += OnFinishedPage_Next;
+
+            var settings = Properties.Settings.Default;
+            if (settings.MainWindow_Width > 0)
+            {
+                Left = settings.MainWindow_X;
+                Top = settings.MainWindow_Y;
+                Width = settings.MainWindow_Width;
+                Height = settings.MainWindow_Height;
+            }
         }
 
         private void SaveLoggingData()
         {
-            Logger logger = Logger.Instance;
+            FlowLogger logger = FlowLogger.Instance;
             if (logger.HasTestRecords)
             {
                 logger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
@@ -127,6 +136,13 @@ namespace Olfactory
             SaveLoggingData();
 
             _storage.Dispose();
+
+            var settings = Properties.Settings.Default;
+            settings.MainWindow_X = Left;
+            settings.MainWindow_Y = Top;
+            settings.MainWindow_Width = Width;
+            settings.MainWindow_Height = Height;
+            settings.Save();
 
             Application.Current.Shutdown();
         }

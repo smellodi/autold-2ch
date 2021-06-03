@@ -204,5 +204,101 @@ namespace Olfactory.Properties {
                 this["App_ZoomLevel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_Width {
+            get {
+                return ((double)(this["MainWindow_Width"]));
+            }
+            set {
+                this["MainWindow_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_Height {
+            get {
+                return ((double)(this["MainWindow_Height"]));
+            }
+            set {
+                this["MainWindow_Height"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MonitorWindow_Width {
+            get {
+                return ((double)(this["MonitorWindow_Width"]));
+            }
+            set {
+                this["MonitorWindow_Width"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MonitorWindow_Height {
+            get {
+                return ((double)(this["MonitorWindow_Height"]));
+            }
+            set {
+                this["MonitorWindow_Height"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_X {
+            get {
+                return ((double)(this["MainWindow_X"]));
+            }
+            set {
+                this["MainWindow_X"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_Y {
+            get {
+                return ((double)(this["MainWindow_Y"]));
+            }
+            set {
+                this["MainWindow_Y"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MonitorWindow_X {
+            get {
+                return ((double)(this["MonitorWindow_X"]));
+            }
+            set {
+                this["MonitorWindow_X"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MonitorWindow_Y {
+            get {
+                return ((double)(this["MonitorWindow_Y"]));
+            }
+            set {
+                this["MonitorWindow_Y"] = value;
+            }
+        }
     }
 }

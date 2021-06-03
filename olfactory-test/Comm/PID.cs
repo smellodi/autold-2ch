@@ -16,38 +16,33 @@ namespace Olfactory.Comm
         public double Light { get; set; }         // 10V scaled input
         public double Temperature { get; set; }   // degrees in C
 
-        public override string ToString()
-        {
-            return string.Join('\t',
-                new string[] {
-                        Time.ToString(),
-                        PID.ToString("F1"),
-                        PID_PPM.ToString("F2"),
-                        Loop.ToString("F4"),
-                        Input.ToString("F2"),
-                        Light.ToString("F0"),
-                        Temperature.ToString("F1"),
-            });
-        }
+        public override string ToString() => string.Join('\t', new string[] {
+            Time.ToString(),
+            PID.ToString("F1"),
+            PID_PPM.ToString("F2"),
+            Loop.ToString("F4"),
+            Input.ToString("F2"),
+            Light.ToString("F0"),
+            Temperature.ToString("F1"),
+        });
+
+        public static string[] Header => new string[] {
+            "Time",
+            "PID mV",
+            "PID PPM",
+            "loop mA",
+            "Input",
+            "Light",
+            "Temp C"
+        };
     }
 
     public class PID : CommPort<PIDSample>
     {
         public static PID Instance => _instance = _instance ?? new();
 
-        public override string Name { get => "PID"; }
-        public override string[] DataColumns
-        {
-            get => new string[] {
-                "Time",
-                "PID uV",
-                "PID PPM",
-                "loop mA",
-                "Input",
-                "Light",
-                "Temp C"
-            };
-        }
+        public override string Name => "PID";
+        public override string[] DataColumns => PIDSample.Header;
 
         /// <summary>
         /// Private constructor, use Instance property to get the instance.

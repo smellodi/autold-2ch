@@ -7,13 +7,15 @@
         mc:Ignorable="d"
         Title="COM monitor"
         Icon="/Assets/icons/monitor.png"
-        Height="450" Width="900"
+        Height="600" Width="1000"
         Closing="Window_Closing"
         Activated="Window_Activated">
     <Grid Margin="8">
         <Grid.Resources>
             <Style TargetType="{x:Type Button}">
-                <Setter Property="Margin" Value="0,0,18,4" />
+                <Setter Property="Margin" Value="0,0,4,4" />
+                <Setter Property="Padding" Value="8,4" />
+                <Setter Property="MinWidth" Value="50" />
             </Style>
         </Grid.Resources>
 
@@ -52,7 +54,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="MFC"/>
@@ -66,9 +68,14 @@
                       VerticalAlignment="Center"
                       Checked="chkMFCAsText_Checked"
                       Unchecked="chkMFCAsText_Checked"/>
-            <Button Grid.Row="0" Grid.Column="3"
-                    Content="Clear"
-                    Click="OnClearMFC_Click"/>
+            <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
+                <Button x:Name="btnMFCSave"
+                        Content="Save"
+                        Click="OnSaveMFC_Click"/>
+                <Button x:Name="btnMFCClear"
+                        Content="Clear"
+                        Click="OnClearMFC_Click"/>
+            </StackPanel>
         </Grid>
         
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbMFC"
@@ -94,7 +101,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="PID"/>
@@ -108,9 +115,14 @@
                       VerticalAlignment="Center"
                       Checked="chkPIDAsText_Checked"
                       Unchecked="chkPIDAsText_Checked"/>
-            <Button Grid.Row="0" Grid.Column="3"
-                    Content="Clear"
-                    Click="OnClearPID_Click"/>
+            <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
+                <Button x:Name="btnPIDSave"
+                        Content="Save"
+                        Click="OnSavePID_Click"/>
+                <Button x:Name="btnPIDClear"
+                        Content="Clear"
+                        Click="OnClearPID_Click"/>
+            </StackPanel>
         </Grid>
 
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="txbPID"
@@ -119,7 +131,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Header="PID (uV)" Width="60" DisplayMemberBinding="{Binding Path=PID}" />
+                    <GridViewColumn Header="PID (mV)" Width="60" DisplayMemberBinding="{Binding Path=PID}" />
                     <GridViewColumn Header="PID (ppm)" Width="65" DisplayMemberBinding="{Binding Path=PID_PPM}" />
                     <GridViewColumn Header="Loop (mA)" Width="60" DisplayMemberBinding="{Binding Path=Loop}" />
                     <GridViewColumn Header="Input" Width="60" DisplayMemberBinding="{Binding Path=Input}" />

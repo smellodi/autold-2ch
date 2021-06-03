@@ -3,23 +3,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Olfactory.Comm;
+using Olfactory.Utils;
 
 namespace Olfactory
 {
     public partial class CommMonitor : Window
     {
         public static CommMonitor Instance { get; private set; }
-
-        DispatcherTimer _mfcTimer = new DispatcherTimer();
-        DispatcherTimer _pidTimer = new DispatcherTimer();
-
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
-
-        Logger _logger = Logger.Instance;
-
-        bool _preventClosing = true;
-
 
         public CommMonitor()
         {
@@ -62,6 +52,17 @@ namespace Olfactory
 
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
+
+            var settings = Properties.Settings.Default;
+            if (settings.MonitorWindow_Width > 0)
+            {
+                Left = settings.MonitorWindow_X;
+                Top = settings.MonitorWindow_Y;
+                Width = settings.MonitorWindow_Width;
+                Height = settings.MonitorWindow_Height;
+            }
+
+            UpdateUI();
         }
 
         public void LogResult(LogSource source, Result result)
@@ -94,6 +95,16 @@ namespace Olfactory
 
 
         // Internal
+
+        DispatcherTimer _mfcTimer = new DispatcherTimer();
+        DispatcherTimer _pidTimer = new DispatcherTimer();
+
+        MFC _mfc = MFC.Instance;
+        PID _pid = PID.Instance;
+
+        FlowLogger _logger = FlowLogger.Instance;
+
+        bool _preventClosing = true;
 
         private void AddToList(LogSource source, object data)
         {
@@ -129,8 +140,8 @@ namespace Olfactory
             {
                 _logger.Add(source, "data", data.ToString());
                 output.AppendText(data.ToString() + "\r\n");
-
                 AddToList(source, data);
+                UpdateUI();
             }
             else
             {
@@ -139,6 +150,15 @@ namespace Olfactory
             }
 
             output.ScrollToEnd();
+        }
+
+        private void UpdateUI()
+        {
+            btnMFCSave.IsEnabled = _logger.HasMeasurements(LogSource.MFC);
+            btnMFCClear.IsEnabled = lsvMFC.Items.Count > 0;
+
+            btnPIDSave.IsEnabled = _logger.HasMeasurements(LogSource.PID);
+            btnPIDClear.IsEnabled = lsvPID.Items.Count > 0;
         }
 
         // UI events
@@ -153,6 +173,13 @@ namespace Olfactory
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             lsvMFC.Items.Clear();
+
+            UpdateUI();
+        }
+
+        private void OnSaveMFC_Click(object sender, RoutedEventArgs e)
+        {
+            _logger.SaveOnly(LogSource.MFC, "data", $"MFC_{DateTime.Now:u}.txt".ToPath());
         }
 
         private void OnClearPID_Click(object sender, RoutedEventArgs e)
@@ -160,6 +187,13 @@ namespace Olfactory
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
             lsvPID.Items.Clear();
+
+            UpdateUI();
+        }
+
+        private void OnSavePID_Click(object sender, RoutedEventArgs e)
+        {
+            _logger.SaveOnly(LogSource.PID, "data", $"MFC_{DateTime.Now:u}.txt".ToPath());
         }
 
         private void chkMFCMonitor_Checked(object sender, RoutedEventArgs e)
@@ -186,14 +220,23 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            e.Cancel = _preventClosing;
             Hide();
+
+            var settings = Properties.Settings.Default;
+            settings.MonitorWindow_X = Left;
+            settings.MonitorWindow_Y = Top;
+            settings.MonitorWindow_Width = Width;
+            settings.MonitorWindow_Height = Height;
+            settings.Save();
+
+            e.Cancel = _preventClosing;
         }
 
         private void Window_Activated(object sender, EventArgs e)
         {
             chkMFCMonitor.IsEnabled = _mfc.IsOpen;
             chkPIDMonitor.IsEnabled = _pid.IsOpen;
+            UpdateUI();
         }
     }
 }

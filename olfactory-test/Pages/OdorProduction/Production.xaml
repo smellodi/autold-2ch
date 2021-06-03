@@ -88,12 +88,12 @@
             
             <WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
-                <Label
+                <Label Margin="0,4,0,0"
                        VerticalContentAlignment="Center"
-                       Content="PID value (uV)"
+                       Content="PID value (mV)"
                        FontSize="14"/>
                 <Label x:Name="lblPID"
-                       VerticalContentAlignment="Center"
+                       VerticalContentAlignment="Bottom"
                        Content="0.0"
                        FontSize="26"
                        Foreground="#FF1F6300"/>

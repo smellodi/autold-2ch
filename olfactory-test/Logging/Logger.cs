@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Windows;
 
 namespace Olfactory
@@ -18,62 +17,139 @@ namespace Olfactory
         OdProd = 8,
     }
 
-    public class Logger : LoggerBase<Logger.Record>
+    public abstract class Logger<T> where T : class
     {
-        public class Record
+        public void SaveTo(string defaultFileName, string greeting = "")
         {
-            public static string DELIM => "\t";
-            public static string HEADER => $"ts{DELIM}source{DELIM}type{DELIM}data";
-
-            public long Timestamp { get; private set; }
-            public LogSource Source { get; private set; }
-            public string Type { get; private set; }
-            public string[] Data { get; private set; }
-
-            public Record(LogSource source, string type, string[] data)
+            var filename = defaultFileName;
+            if (PromptToSave(ref filename, greeting))
             {
-                Timestamp = Utils.Timestamp.Value;
-                Source = source;
-                Type = type;
-                Data = data;
+                Save(filename, _records, Header);
             }
 
-            public override string ToString()
+            _records.Clear();
+        }
+
+
+        // Internal
+
+        protected readonly List<T> _records = new List<T>();
+
+        protected abstract string Header { get; }
+
+        string _folder;
+
+        string Title => "Olfactory data logger";
+
+
+        protected Logger()
+        {
+            _folder = Properties.Settings.Default.Logger_Folder;
+            if (string.IsNullOrEmpty(_folder))
             {
-                var result = $"{Timestamp}{DELIM}{Source}{DELIM}{Type}";
-                if (Data != null && Data.Length > 0)
+                _folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            }
+        }
+
+        protected bool PromptToSave(ref string filename, string greeting = "")
+        {
+            if (!string.IsNullOrEmpty(greeting))
+            {
+                greeting += "\n";
+            }
+
+            var dialogResult = MessageBox.Show(
+                $"{greeting}Would you like to save data into\n'{_folder}\\{filename}'?\n\nPress 'No' to change the name and/or folder.\nPress 'Cancel' to discard the data.",
+                Title,
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Question);
+
+            if (dialogResult == MessageBoxResult.Cancel)
+            {
+                return false;
+            }
+            else if (dialogResult == MessageBoxResult.No)
+            {
+                filename = AskFileName(filename);
+                return !string.IsNullOrEmpty(filename);
+            }
+            else
+            {
+                filename = Path.Combine(_folder, filename);
+            }
+
+            return true;
+        }
+
+        protected string AskFileName(string defaultFileName)
+        {
+            var savePicker = new Microsoft.Win32.SaveFileDialog()
+            {
+                DefaultExt = "txt",
+                FileName = defaultFileName,
+                Filter = "Log files (*.txt)|*.txt"
+            };
+
+            if (savePicker.ShowDialog() ?? false)
+            {
+                _folder = Path.GetDirectoryName(savePicker.FileName);
+                Properties.Settings.Default.Logger_Folder = _folder;
+                Properties.Settings.Default.Save();
+
+                return savePicker.FileName;
+            }
+
+            return null;
+        }
+
+        protected bool Save(string filename, IEnumerable<object> records, string header = "")
+        {
+            if (string.IsNullOrEmpty(filename))
+            {
+                return false;
+            }
+
+            var folder = Path.GetDirectoryName(filename);
+
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            using (StreamWriter writer = File.CreateText(filename))
+            {
+                try
                 {
-                    result += DELIM + string.Join(DELIM, Data);
+                    if (!string.IsNullOrEmpty(header))
+                    {
+                        writer.WriteLine(header);
+                    }
+
+                    writer.WriteLine(string.Join("\n", records));
+
+                    MessageBox.Show(
+                        $"Data saved into '{filename}'",
+                        Title,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
+
+                    return true;
                 }
-
-                return result;
+                catch (Exception ex)
+                {
+                    var result = MessageBox.Show(
+                        $"Failed to save data into '{filename}' file:\n\n{ex.Message}\n\nRetry?",
+                        Title,
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+                    if (result == MessageBoxResult.OK)
+                    {
+                        return Save(AskFileName(filename), records, header);
+                    }
+                }
             }
+
+            return false;
         }
-
-        public static Logger Instance => _instance = _instance ?? new();
-
-        public bool IsEnabled { get; set; } = true;
-        public bool HasAnyRecord => _records.Count > 0;
-        public bool HasTestRecords => _records.Any(r => (int)r.Source >= (int)LogSource.__MIN_TEST_ID);
-
-
-        public void Add(LogSource source, string type, params string[] data)
-        {
-            if (IsEnabled)
-            {
-                var record = new Record(source, type, data);
-                _records.Add(record);
-                //System.Diagnostics.Debug.WriteLine(record.ToString());
-            }
-        }
-
-
-        // Internal methods
-
-        static Logger _instance = null;
-
-        protected override string Header => Record.HEADER;
-
-        protected Logger() : base() { }
     }
 }

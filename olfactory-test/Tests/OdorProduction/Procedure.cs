@@ -59,7 +59,7 @@ namespace Olfactory.Tests.OdorProduction
                     //_logger.Add(LogSource.PID, "data", sample.ToString());
                     _logger.Add(pidSample);
                     CommMonitor.Instance.LogData(LogSource.PID, pidSample);
-                    Data(this, pidSample.Loop);
+                    Data(this, pidSample.PID);
                 }
                 if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                 {

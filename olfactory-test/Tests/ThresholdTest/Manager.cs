@@ -81,6 +81,6 @@ namespace Olfactory.Tests.ThresholdTest
 
         Page _current = null;
 
-        Logger _logger = Logger.Instance;
+        FlowLogger _logger = FlowLogger.Instance;
     }
 }

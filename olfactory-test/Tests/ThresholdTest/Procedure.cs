@@ -164,7 +164,7 @@ namespace Olfactory.Tests.ThresholdTest
         // Members
 
         OdorController _odorController = OdorController.Instance;
-        Logger _logger = Logger.Instance;
+        FlowLogger _logger = FlowLogger.Instance;
 
         bool _inProgress = false;
 
