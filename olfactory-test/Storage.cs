@@ -67,20 +67,26 @@ namespace Olfactory
 
         // Helpers
 
-        public void BindVisibilityToDebug(DependencyObject obj)
+        public Storage BindVisibilityToDebug(DependencyObject obj)
         {
             var isDebuggingBinding = new Binding("IsDebugging");
             isDebuggingBinding.Source = this;
             isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
+
             BindingOperations.SetBinding(obj, UIElement.VisibilityProperty, isDebuggingBinding);
+
+            return this;
         }
 
-        public void BindScaleToZoomLevel(DependencyObject obj)
+        public Storage BindScaleToZoomLevel(DependencyObject obj)
         {
             var zoomLevelBinding = new Binding("ZoomLevel");
             zoomLevelBinding.Source = this;
+
             BindingOperations.SetBinding(obj, ScaleTransform.ScaleXProperty, zoomLevelBinding);
             BindingOperations.SetBinding(obj, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+
+            return this;
         }
 
         // Other

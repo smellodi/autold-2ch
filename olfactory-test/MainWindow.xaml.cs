@@ -21,51 +21,8 @@ namespace Olfactory
 
             _monitor.Hide();
 
-            _setupPage.LogResult += (s, comResult) => _monitor.LogResult(comResult.Source, comResult.Result);
-            _setupPage.Next += (s, test) =>
-            {
-                _currentTest = test switch
-                {
-                    Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
-                    Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
-                    _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
-                };
-
-                _currentTest.PageDone += (s, e) => Continue();
-
-                Content = _currentTest.Start();
-
-                if (Comm.MFC.Instance.IsDebugging)
-                {
-                    _currentTest.Emulate(Tests.EmulationCommand.EnableEmulation);
-                }
-            };
-
-            _finishedPage.Next += (s, exit) =>
-            {
-                if (exit)
-                {
-                    Close();
-                }
-                else
-                {
-                    Content = _setupPage;
-                }
-            };
-        }
-
-        private void Continue()
-        {
-            var page = _currentTest.NextPage();
-            if (page == null)
-            {
-                Content = _finishedPage;
-                DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
-            }
-            else
-            {
-                Content = page;
-            }
+            _setupPage.Next += OnSetupPage_Next;
+            _finishedPage.Next += OnFinishedPage_Next;
         }
 
         private void SaveLoggingData()
@@ -81,6 +38,51 @@ namespace Olfactory
             if (syncLogger.HasRecords)
             {
                 syncLogger.SaveTo($"olfactory_sync_{DateTime.Now:u}.txt".ToPath());
+            }
+        }
+
+        private void OnSetupPage_Next(object sender, Tests.Test test)
+        {
+            _currentTest = test switch
+            {
+                Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
+                Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
+                _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
+            };
+
+            _currentTest.PageDone += OnTest_PageDone;
+
+            Content = _currentTest.Start();
+
+            if (_storage.IsDebugging)
+            {
+                _currentTest.Emulate(Tests.EmulationCommand.EnableEmulation);
+            }
+        }
+
+        private void OnFinishedPage_Next(object sender, bool exit)
+        {
+            if (exit)
+            {
+                Close();
+            }
+            else
+            {
+                Content = _setupPage;
+            }
+        }
+
+        private void OnTest_PageDone(object sender, EventArgs args)
+        {
+            var page = _currentTest.NextPage();
+            if (page == null)
+            {
+                Content = _finishedPage;
+                DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
+            }
+            else
+            {
+                Content = page;
             }
         }
 

@@ -8,14 +8,7 @@ namespace Olfactory.Pages
 {
     public partial class Setup : Page, IPage<Tests.Test>
     {
-        public class LogCOMResult
-        {
-            public LogSource Source;
-            public Result Result;
-        }
-
         public event EventHandler<Tests.Test> Next = delegate { };
-        public event EventHandler<LogCOMResult> LogResult = delegate { };
 
         public double Scale { get; private set; } = 1;
 
@@ -23,8 +16,9 @@ namespace Olfactory.Pages
         {
             InitializeComponent();
 
-            Storage.Instance.BindScaleToZoomLevel(sctScale);
-            Storage.Instance.BindVisibilityToDebug(lblDebug);
+            Storage.Instance
+                .BindScaleToZoomLevel(sctScale)
+                .BindVisibilityToDebug(lblDebug);
 
             UpdatePortList(cmbPIDPort);
             UpdatePortList(cmbMFCPort);
@@ -33,29 +27,20 @@ namespace Olfactory.Pages
 
             LoadSettings();
 
-            _usb.Inserted += (s, e) =>
-            {
-                Dispatcher.Invoke(() =>
+            _usb.Inserted += (s, e) => Dispatcher.Invoke(() =>
                 {
                     UpdatePortList(cmbPIDPort);
                     UpdatePortList(cmbMFCPort);
                 });
-            };
-            _usb.Removed += (s, e) =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    UpdatePortList(cmbPIDPort);
-                    UpdatePortList(cmbMFCPort);
-                });
-            };
 
-            _mfc.Closed += (s, e) => {
-                UpdateUI();
-            };
-            _pid.Closed += (s, e) => {
-                UpdateUI();
-            };
+            _usb.Removed += (s, e) => Dispatcher.Invoke(() =>
+                {
+                    UpdatePortList(cmbPIDPort);
+                    UpdatePortList(cmbMFCPort);
+                });
+
+            _mfc.Closed += (s, e) => UpdateUI();
+            _pid.Closed += (s, e) => UpdateUI();
 
             UpdateUI();
         }
@@ -135,7 +120,7 @@ namespace Olfactory.Pages
                 success = result.Error == Error.Success;
 
                 LogSource source = port.Name == "PID" ? LogSource.PID : LogSource.MFC;
-                LogResult(this, new LogCOMResult() { Source = source, Result = result });
+                CommMonitor.Instance.LogResult(source, result);
             }
             else
             {
