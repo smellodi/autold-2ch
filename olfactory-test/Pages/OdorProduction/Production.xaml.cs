@@ -119,5 +119,12 @@ namespace Olfactory.Pages.OdorProduction
                 _countdownTimer.Start();
             }
         }
+
+        private void btnInterrupt_Click(object sender, RoutedEventArgs e)
+        {
+            // Do I need to show a confirmation dialog here?
+            _procedure.Interrupt();
+            Next(this, new EventArgs());
+        }
     }
 }

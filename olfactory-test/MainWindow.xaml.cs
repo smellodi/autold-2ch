@@ -23,6 +23,7 @@ namespace Olfactory
 
             _setupPage.Next += OnSetupPage_Next;
             _finishedPage.Next += OnFinishedPage_Next;
+            _finishedPage.RequestSaving += OnFinishedPage_RequestSaving;
 
             var settings = Properties.Settings.Default;
             if (settings.MainWindow_Width > 0)
@@ -34,20 +35,32 @@ namespace Olfactory
             }
         }
 
-        private void SaveLoggingData()
+        private bool SaveLoggingData()
         {
+            bool hasData = false;
+
             FlowLogger logger = FlowLogger.Instance;
             if (logger.HasTestRecords)
             {
-                logger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+                hasData = true;
+                if (logger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath()))
+                {
+                    _finishedPage.DisableSaving();
+                }
             }
 
             SyncLogger syncLogger = SyncLogger.Instance;
             syncLogger.Finilize();
             if (syncLogger.HasRecords)
             {
-                syncLogger.SaveTo($"olfactory_sync_{DateTime.Now:u}.txt".ToPath());
+                hasData = true;
+                if (syncLogger.SaveTo($"olfactory_sync_{DateTime.Now:u}.txt".ToPath()))
+                {
+                    _finishedPage.DisableSaving();
+                }
             }
+
+            return hasData;
         }
 
         private void OnSetupPage_Next(object sender, Tests.Test test)
@@ -71,6 +84,9 @@ namespace Olfactory
 
         private void OnFinishedPage_Next(object sender, bool exit)
         {
+            FlowLogger.Instance.Clear();
+            SyncLogger.Instance.Clear();
+
             if (exit)
             {
                 Close();
@@ -78,6 +94,15 @@ namespace Olfactory
             else
             {
                 Content = _setupPage;
+            }
+        }
+
+        private void OnFinishedPage_RequestSaving(object sender, EventArgs e)
+        {
+            if (!SaveLoggingData())
+            {
+                _finishedPage.DisableSaving();
+                MessageBox.Show($"There is no data to save", Title, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -133,7 +158,7 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            SaveLoggingData();
+            // SaveLoggingData();
 
             _storage.Dispose();
 

@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Threading;
 using Olfactory.Comm;
 
 namespace Olfactory.Pages
@@ -42,6 +43,27 @@ namespace Olfactory.Pages
             _mfc.Closed += (s, e) => UpdateUI();
             _pid.Closed += (s, e) => UpdateUI();
 
+
+            _mfcTimer.Interval = TimeSpan.FromSeconds(1);
+            _mfcTimer.Tick += (s, e) => {
+                if (_mfc.IsOpen)
+                {
+                    var result = _mfc.GetSample(out MFCSample sample);
+                    lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
+                    lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
+                }
+            };
+
+            _pidTimer.Interval = TimeSpan.FromSeconds(1);
+            _pidTimer.Tick += (s, e) => {
+                if (_pid.IsOpen)
+                {
+                    var result = _pid.GetSample(out PIDSample sample);
+                    lblPID_PID.Content = sample.PID.ToString("F2");
+                    lblPID_Loop.Content = sample.Loop.ToString("F2");
+                }
+            };
+
             UpdateUI();
         }
 
@@ -51,6 +73,9 @@ namespace Olfactory.Pages
         USB _usb = new USB();
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
+
+        DispatcherTimer _mfcTimer = new DispatcherTimer();
+        DispatcherTimer _pidTimer = new DispatcherTimer();
 
 
         private void UpdatePortList(ComboBox cmb)
@@ -195,6 +220,16 @@ namespace Olfactory.Pages
             {
                 Focus();
             }
+
+            if (_mfc.IsOpen)
+            {
+                _mfcTimer.Start();
+            }
+
+            if (_pid.IsOpen)
+            {
+                _pidTimer.Start();
+            }
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)
@@ -228,6 +263,10 @@ namespace Olfactory.Pages
             {
                 MessageBox.Show("Cannot open the port");
             }
+            else
+            {
+                _mfcTimer.Start();
+            }
 
             UpdateUI();
         }
@@ -237,6 +276,10 @@ namespace Olfactory.Pages
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
                 MessageBox.Show("Cannot open the port");
+            }
+            else
+            {
+                _pidTimer.Start();
             }
 
             UpdateUI();
@@ -272,11 +315,17 @@ namespace Olfactory.Pages
 
         private void btnOdorProduction_Click(object sender, RoutedEventArgs e)
         {
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
             Next(this, Tests.Test.OdorProduction);
         }
 
         private void btnThresholdTest_Click(object sender, RoutedEventArgs e)
         {
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
             Next(this, Tests.Test.Threshold);
         }
     }

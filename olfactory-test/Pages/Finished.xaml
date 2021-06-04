@@ -6,7 +6,9 @@
       xmlns:local="clr-namespace:Olfactory.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Finished" WindowTitle="Olfactory test tool">
+      Title="Finished"
+      WindowTitle="Olfactory test tool"
+      GotFocus="Page_GotFocus">
 
     <Grid>
         <Grid.Resources>
@@ -47,6 +49,10 @@
                 Style="{StaticResource Next}"
                 Click="OnReturn_Click"
                 Content="Return"/>
+            <Button x:Name="btnSaveData"
+                Style="{StaticResource Next}"
+                Click="OnSaveData_Click"
+                Content="Save data"/>
         </StackPanel>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>

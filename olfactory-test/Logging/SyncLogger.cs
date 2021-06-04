@@ -49,6 +49,10 @@ namespace Olfactory
 
         public bool HasRecords => _records.Count > 0;
 
+        public void Start()
+        {
+            _timer.Start();
+        }
 
         public void Add(MFCSample mfcSample)
         {
@@ -100,8 +104,6 @@ namespace Olfactory
             {
                 AddRecord();
             };
-
-            _timer.Start();
         }
 
         private void AddRecord()

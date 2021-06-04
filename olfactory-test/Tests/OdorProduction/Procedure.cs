@@ -35,6 +35,9 @@ namespace Olfactory.Tests.OdorProduction
             {
                 if (_timer.IsEnabled)
                 {
+                    _timer.Stop();
+                    _runner?.Stop();
+
                     MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.");
                     Application.Current.Shutdown();
                 }
@@ -85,6 +88,8 @@ namespace Olfactory.Tests.OdorProduction
             _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
             _timer.Start();
 
+            _logger.Start();
+
             Next();
         }
 
@@ -102,6 +107,15 @@ namespace Olfactory.Tests.OdorProduction
                 .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
                 .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
                 .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, () => Finilize());
+        }
+
+        public void Interrupt()
+        {
+            _timer.Stop();
+            _runner?.Stop();
+
+            _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
+            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll;
         }
 
 

@@ -7,6 +7,7 @@ namespace Olfactory.Pages
     public partial class Finished : Page, IPage<bool>
     {
         public event EventHandler<bool> Next = delegate { }; // true: exit, false: return to the fornt page
+        public event EventHandler RequestSaving = delegate { };
 
         public Finished()
         {
@@ -16,8 +17,22 @@ namespace Olfactory.Pages
             Storage.Instance.BindVisibilityToDebug(lblDebug);
         }
 
+        public void DisableSaving()
+        {
+            btnSaveData.IsEnabled = false;
+        }
 
         // UI events
+
+        private void Page_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnSaveData.IsEnabled = true;
+        }
+
+        private void OnSaveData_Click(object sender, RoutedEventArgs e)
+        {
+            RequestSaving(this, new EventArgs());
+        }
 
         private void OnReturn_Click(object sender, RoutedEventArgs e)
         {

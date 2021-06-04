@@ -52,7 +52,7 @@
             <Style x:Key="Box" TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="#80000000"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Margin" Value="4,10"/>
+                <Setter Property="Margin" Value="4,0,4,10"/>
                 <Setter Property="Padding" Value="0,0,0,10"/>
             </Style>
 

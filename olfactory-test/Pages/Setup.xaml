@@ -19,6 +19,13 @@
             <Style TargetType="{x:Type Label}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
+            <Style x:Key="Value" TargetType="{x:Type Label}">
+                <Setter Property="Foreground" Value="#FF1F6300"/>
+                <Setter Property="Content" Value="0.0"/>
+            </Style>
+            <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
         </Grid.Resources>
         
         <Grid.ColumnDefinitions>
@@ -38,6 +45,26 @@
                Style="{StaticResource PageTitle}"
                Content="Setup"/>
 
+        <StackPanel Grid.Row="2" x:Name="stpMeasurements">
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="PID value (mV)"/>
+                <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="PID loop (mA)"/>
+                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <Label/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Fresh air (l/min)"/>
+                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Odor (ml/min)"/>
+                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
+            </WrapPanel>
+        </StackPanel>
+        
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
             <StackPanel.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>

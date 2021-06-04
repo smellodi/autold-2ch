@@ -228,7 +228,37 @@ namespace Olfactory.Properties {
                 this["MainWindow_Height"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_X
+        {
+            get
+            {
+                return ((double)(this["MainWindow_X"]));
+            }
+            set
+            {
+                this["MainWindow_X"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double MainWindow_Y
+        {
+            get
+            {
+                return ((double)(this["MainWindow_Y"]));
+            }
+            set
+            {
+                this["MainWindow_Y"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
@@ -250,30 +280,6 @@ namespace Olfactory.Properties {
             }
             set {
                 this["MonitorWindow_Height"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MainWindow_X {
-            get {
-                return ((double)(this["MainWindow_X"]));
-            }
-            set {
-                this["MainWindow_X"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MainWindow_Y {
-            get {
-                return ((double)(this["MainWindow_Y"]));
-            }
-            set {
-                this["MainWindow_Y"] = value;
             }
         }
         

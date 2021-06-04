@@ -19,14 +19,25 @@ namespace Olfactory
 
     public abstract class Logger<T> where T : class
     {
-        public void SaveTo(string defaultFileName, string greeting = "")
+        public bool SaveTo(string defaultFileName, string greeting = "")
         {
+            bool result = false;
             var filename = defaultFileName;
             if (PromptToSave(ref filename, greeting))
             {
-                Save(filename, _records, Header);
+                result = Save(filename, _records, Header);
             }
 
+            if (result)
+            {
+                _records.Clear();
+            }
+
+            return result;
+        }
+
+        public void Clear()
+        {
             _records.Clear();
         }
 

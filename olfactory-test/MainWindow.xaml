@@ -8,7 +8,7 @@
         Title="Olfactory test tool"
         Icon="/Assets/icons/main.png"
         Height="620" Width="800"
-        MinHeight="520" MinWidth="480"
+        MinHeight="590" MinWidth="540"
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewMouseWheel="Window_PreviewMouseWheel" 
