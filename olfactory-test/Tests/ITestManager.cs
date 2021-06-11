@@ -14,6 +14,7 @@ namespace Olfactory.Tests
         event EventHandler PageDone;
         Page Start();
         Page NextPage();
+        void Interrupt();
         void Emulate(EmulationCommand command, params object[] args);
     }
 

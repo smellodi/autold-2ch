@@ -13,6 +13,11 @@ namespace Olfactory.Tests.ThresholdTest
 
         public Manager()
         {
+            _setupPage.Next += (s, e) =>
+            {
+                _settings = e;
+                PageDone(this, new EventArgs());
+            };
             _instructionsPage.Next += (s, e) => PageDone(this, new EventArgs());
             _familiarizePage.Next += (s, e) =>
             {
@@ -33,7 +38,8 @@ namespace Olfactory.Tests.ThresholdTest
         {
             _current = _current switch
             {
-                null => _instructionsPage,
+                null => _setupPage,
+                Setup => _instructionsPage,
                 Instructions _ => _familiarizePage,
                 Familiarize _ => _threePensPage,
                 ThreePens _ => _resultPage,
@@ -48,7 +54,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             if (_current is ThreePens page)
             {
-                page.Init();
+                page.Init(_settings);
             }
 
             return _current;
@@ -58,6 +64,18 @@ namespace Olfactory.Tests.ThresholdTest
         {
             _current = null;
             return NextPage();
+        }
+
+        public void Interrupt()
+        {
+            if (_current == _familiarizePage)
+            {
+                _familiarizePage.Interrupt();
+            }
+            else if (_current == _threePensPage)
+            {
+                _threePensPage.Interrupt();
+            }
         }
 
         public void Emulate(EmulationCommand command, params object[] args)
@@ -74,6 +92,7 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Internal
 
+        Setup _setupPage = new Setup();
         Instructions _instructionsPage = new Instructions();
         Familiarize _familiarizePage = new Familiarize();
         ThreePens _threePensPage = new ThreePens();
@@ -82,5 +101,6 @@ namespace Olfactory.Tests.ThresholdTest
         Page _current = null;
 
         FlowLogger _logger = FlowLogger.Instance;
+        Settings _settings;
     }
 }

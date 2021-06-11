@@ -76,5 +76,47 @@
     <Setting Name="MonitorWindow_Y" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="Test_TT_FreshAir" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Test_TT_OdorPreparationDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="Test_TT_PenSniffingDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="Test_TT_PIDReadingInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="Test_TT_PPMs" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;2&lt;/string&gt;
+  &lt;string&gt;4&lt;/string&gt;
+  &lt;string&gt;6&lt;/string&gt;
+  &lt;string&gt;8&lt;/string&gt;
+  &lt;string&gt;10&lt;/string&gt;
+  &lt;string&gt;12&lt;/string&gt;
+  &lt;string&gt;14&lt;/string&gt;
+  &lt;string&gt;16&lt;/string&gt;
+  &lt;string&gt;18&lt;/string&gt;
+  &lt;string&gt;20&lt;/string&gt;
+  &lt;string&gt;22&lt;/string&gt;
+  &lt;string&gt;24&lt;/string&gt;
+  &lt;string&gt;26&lt;/string&gt;
+  &lt;string&gt;28&lt;/string&gt;
+  &lt;string&gt;30&lt;/string&gt;
+  &lt;string&gt;32&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="Test_TT_RecognitionInRow" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="Test_TT_TurningPoints" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="Test_TT_TurningPointsToCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">4</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

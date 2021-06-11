@@ -112,6 +112,7 @@ namespace Olfactory
             if (page == null)
             {
                 Content = _finishedPage;
+                _currentTest = null;
                 DispatchOnce.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
             }
             else
@@ -158,7 +159,11 @@ namespace Olfactory
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // SaveLoggingData();
+            if (_currentTest != null)
+            {
+                _currentTest.Interrupt();
+                SaveLoggingData();
+            }
 
             _storage.Dispose();
 

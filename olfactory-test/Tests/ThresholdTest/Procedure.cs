@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using Olfactory.Utils;
 using OdorController = Olfactory.Comm.OdorController;
 
@@ -49,6 +50,7 @@ namespace Olfactory.Tests.ThresholdTest
             Application.Current.MainWindow.Closing += (s, e) =>
             {
                 _inProgress = false;
+                _timer.Stop();
             };
 
             // If the test is in progress, display warning message and quit the app:
@@ -57,8 +59,19 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (_inProgress)
                 {
-                    MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.");
+                    MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.",
+                        Application.Current.MainWindow.Title,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     Application.Current.Shutdown();
+                }
+            };
+
+            _timer.Tick += (s, e) =>
+            {
+                if (_pid.GetSample(out Comm.PIDSample pidSample).Error == Comm.Error.Success)
+                {
+                    _logger.Add(LogSource.PID, "data", pidSample.ToString());
                 }
             };
         }
@@ -66,9 +79,16 @@ namespace Olfactory.Tests.ThresholdTest
         /// <summary>
         /// Starts a new trial
         /// </summary>
+        /// <param name="settings">Settings</param>
         /// <returns>A set of pens</returns>
-        public Pen[] Start()
+        public Pen[] Start(Settings settings)
         {
+            if (settings != null)
+            {
+                _settings = settings;
+                _odorTubeFillingDuration = settings.OdorPreparationDuration - OUTPUT_READINESS_DURATION;
+            }
+
             _currentPenID = -1;
             _inProgress = true;
 
@@ -81,6 +101,9 @@ namespace Olfactory.Tests.ThresholdTest
 
             _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
+
+            _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
+            _timer.Start();
 
             _stepID++;
 
@@ -100,9 +123,10 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
                 {
-                    var result = _currentPPMLevel < 0 ? -1 : _turningPointPPMs.TakeLast(TURNING_POINTS_TO_USE_IN_ESTIMATION).Average();
+                    var result = _currentPPMLevel < 0 ? -1 : _turningPointPPMs.TakeLast(_settings.TurningPointsToCount).Average();
                     Finished(this, result);
                     _inProgress = false;
+                    _timer.Stop();
                 }
                 else
                 {
@@ -111,21 +135,27 @@ namespace Olfactory.Tests.ThresholdTest
             });
         }
 
+        public void Interrupt()
+        {
+            _timer.Stop();
+            _inProgress = false;
+        }
+
+
         // ITestEmulation
 
         public void EmulationInit()
         {
-            ODOR_TUBE_FILLING_DURATION = 1;
-            ODOR_PREPARATION_DURATION = 2;
-            PEN_PRESENTATION_DURATION = 1;
-            AFTERMATH_PAUSE = 1;
+            _odorTubeFillingDuration = 10;
+            _settings.OdorPreparationDuration = 2;
+            _settings.PenSniffingDuration = 1;
         }
 
         public void EmulationFinilize()
         {
-            while (_inProgress && _turningPointPPMs.Count < TURNING_POINT_COUNT)
+            while (_inProgress && _turningPointPPMs.Count < _settings.TurningPoints)
             {
-                _turningPointPPMs.Add(PPMS[6]);
+                _turningPointPPMs.Add(_settings.PPMs[6]);
             }
         }
 
@@ -134,25 +164,11 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Contants / readonlies
 
-        const int PPM_LEVEL_COUNT = 16;
         const int PPM_LEVEL_STEP = 1;
-        const int RECOGNITIONS_IN_ROW_COUNT = 2;
-        const int TURNING_POINT_COUNT = 7;
-        const int TURNING_POINTS_TO_USE_IN_ESTIMATION = 4;
-
-        // Next for value are not constants for emulation purposes.
-        double ODOR_TUBE_FILLING_DURATION = 10;
-        double ODOR_PREPARATION_DURATION = 15;      // Must be greater than ODOR_TUBE_FILLING_DURATION
-
-        double PEN_PRESENTATION_DURATION = 5;
-        double AFTERMATH_PAUSE = 3;
+        const double AFTERMATH_PAUSE = 3;           // seconds
+        const double OUTPUT_READINESS_DURATION = 5; // seconds
 
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
-
-        readonly double[] PPMS = new double[PPM_LEVEL_COUNT] {
-            1, 1.5, 2, 3, 4, 6, 8, 11, 14, 17, 22, 27, 33, 40, 48, 59
-        };
-
 
         // Properties
 
@@ -165,6 +181,9 @@ namespace Olfactory.Tests.ThresholdTest
 
         OdorController _odorController = OdorController.Instance;
         FlowLogger _logger = FlowLogger.Instance;
+        Comm.PID _pid = Comm.PID.Instance;
+        DispatcherTimer _timer = new DispatcherTimer();
+        Settings _settings = new Settings();
 
         bool _inProgress = false;
 
@@ -180,19 +199,33 @@ namespace Olfactory.Tests.ThresholdTest
         int _recognitionsInRow = 0;
         List<double> _turningPointPPMs = new List<double>();
 
+        double _odorTubeFillingDuration = 10;
+
         /// <summary>
         /// Sets the MFC-B (odor tube) speed so that the odor fills the tube in 10 seconds,
         /// then sets the MFC-B speed to the level desired in this trial, and wait for another 5 seconds
         /// </summary>
         private void PrepareOdor()
         {
-            _odorController.GetReady(ODOR_TUBE_FILLING_DURATION, PPMS[_currentPPMLevel]);
+            var readinessDelay = _odorController.GetReady(_odorTubeFillingDuration, _settings.PPMs[_currentPPMLevel]);
 
-            DispatchOnce.Do(ODOR_PREPARATION_DURATION, () => ActivateNextPen());
+            // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
+            if (readinessDelay > _settings.OdorPreparationDuration)
+            {
+                MessageBox.Show($"The odor flow rate is too high to be ready in {_settings.OdorPreparationDuration} seconds. The application is terminated.",
+                        Application.Current.MainWindow.Title,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+            }
         }
 
         /// <summary>
-        /// Prepared a pen to be recognized. 
+        /// Prepare a pen to be recognized. 
         /// Controls MFC
         /// IF the pen has odor, then
         /// - sets the max speed to odor tube MFC (MFC-B)
@@ -226,7 +259,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _odorController.OpenFlow();
             }
 
-            DispatchOnce.Do(PEN_PRESENTATION_DURATION, () => ActivateNextPen());
+            DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
 
             PenActivated(this, _currentPenID);
         }
@@ -235,7 +268,7 @@ namespace Olfactory.Tests.ThresholdTest
         {
             if (_direction != direction)
             {
-                _turningPointPPMs.Add(PPMS[_currentPPMLevel]);
+                _turningPointPPMs.Add(_settings.PPMs[_currentPPMLevel]);
                 _direction = direction;
             }
 
@@ -252,7 +285,7 @@ namespace Olfactory.Tests.ThresholdTest
                     PPMChangeDirection.Increasing
                     );
             }
-            else if (++_recognitionsInRow == RECOGNITIONS_IN_ROW_COUNT)               // decrease ppm only if recognized correctly wice in a row
+            else if (++_recognitionsInRow == _settings.RecognitionsInRow)               // decrease ppm only if recognized correctly few times in a row
             {
                 UpdatePPMLevelAndDirection(
                     -PPM_LEVEL_STEP,
@@ -260,9 +293,9 @@ namespace Olfactory.Tests.ThresholdTest
                     );
             }
 
-            bool isOverflow = _currentPPMLevel < 0 || PPM_LEVEL_COUNT <= _currentPPMLevel;
+            bool isOverflow = _currentPPMLevel < 0 || _settings.PPMs.Length <= _currentPPMLevel;
 
-            if (_turningPointPPMs.Count >= TURNING_POINT_COUNT)
+            if (_turningPointPPMs.Count >= _settings.TurningPoints)
             {
                 return false;
             }

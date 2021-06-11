@@ -37,6 +37,7 @@ namespace Olfactory.Comm
         }
     }
 
+
     /// <summary>
     /// MFC and PID inherit this class that declares the reading method
     /// </summary>
@@ -210,6 +211,11 @@ namespace Olfactory.Comm
             port.ReadTimeout = PORT_TIMEOUT; // int.MaxValue;
 
             port.Open();
+
+            /*Application.Current.Exit += (s, e) =>
+            {
+                Stop();
+            };*/
 
             System.Threading.Thread.Sleep(50);       // TODO - maybe, we do not need this
 

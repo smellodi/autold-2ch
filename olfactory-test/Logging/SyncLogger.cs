@@ -11,13 +11,13 @@ namespace Olfactory
         public class Record
         {
             public static string DELIM => ",";
-            public static string HEADER => $"Time [s]{DELIM}PID [mV]{DELIM}Loop [mA]{DELIM}QMa [std]{DELIM}QMb [std]{DELIM}Pa [mbar]{DELIM}Pb [mbar]{DELIM}Ta [C]{DELIM}Tb [C]{DELIM}Mark";
+            public static string HEADER => $"Time [ms]{DELIM}PID [mV]{DELIM}Loop [mA]{DELIM}QMa [std]{DELIM}QMb [std]{DELIM}Pa [mbar]{DELIM}Pb [mbar]{DELIM}Ta [C]{DELIM}Tb [C]{DELIM}Mark";
 
-            public int Time => _time;
+            public long Time => _time;
 
             public Record(ref MFCSample mfcSample, ref PIDSample pidSample, string[] events)
             {
-                _time = (int)Math.Round((double)(mfcSample.Time > pidSample.Time ? mfcSample.Time : pidSample.Time) / 1000);
+                _time = mfcSample.Time > pidSample.Time ? mfcSample.Time : pidSample.Time;
 
                 _fields = new string[]
                 {
@@ -42,15 +42,20 @@ namespace Olfactory
             // Internal
 
             readonly string[] _fields;
-            int _time;
+            long _time;
         }
 
-        public static SyncLogger Instance => _instance = _instance ?? new();
+        public static SyncLogger Instance => _instance ??= new();
 
         public bool HasRecords => _records.Count > 0;
 
-        public void Start()
+        /// <summary>
+        /// Sets the interval and starts logging
+        /// </summary>
+        /// <param name="interval">Time interval in milliseconds</param>
+        public void Start(int interval)
         {
+            _timer.Interval = TimeSpan.FromMilliseconds(interval);
             _timer.Start();
         }
 
@@ -99,7 +104,6 @@ namespace Olfactory
 
         protected SyncLogger() : base()
         {
-            _timer.Interval = TimeSpan.FromSeconds(1);
             _timer.Tick += (s, e) =>
             {
                 AddRecord();

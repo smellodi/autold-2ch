@@ -50,11 +50,11 @@ namespace Olfactory.Pages.ThresholdTest
             };
         }
 
-        public void Init()
+        public void Init(Tests.ThresholdTest.Settings settings = null)
         {
             _currentPenID = -1;
 
-            var pens = _procedure.Start();
+            var pens = _procedure.Start(settings);
             for (int i = 0; i < PENS.Length; i++)
             {
                 PENS[i].PenInstance = pens[i];
@@ -63,6 +63,11 @@ namespace Olfactory.Pages.ThresholdTest
             UpdateDisplay(Update.All);
 
             lblInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
+        }
+
+        public void Interrupt()
+        {
+            _procedure.Interrupt();
         }
 
 

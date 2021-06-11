@@ -6,68 +6,57 @@ namespace Olfactory
 {
     internal class USB
     {
-        public event EventHandler<PropertyDataCollection> Inserted = delegate { };
-        public event EventHandler<PropertyDataCollection> Removed = delegate { };
+        public event EventHandler<string> Inserted = delegate { };
+        public event EventHandler<string> Removed = delegate { };
 
         public USB()
         {
-            WqlEventQuery insertQuery = new WqlEventQuery("SELECT * FROM __InstanceCreationEvent WITHIN 2 WHERE TargetInstance ISA 'Win32_USBHub'");
-
-            ManagementEventWatcher insertWatcher = new ManagementEventWatcher(insertQuery);
-            insertWatcher.EventArrived += new EventArrivedEventHandler(DeviceInsertedEvent);
-            insertWatcher.Start();
-
-            WqlEventQuery removeQuery = new WqlEventQuery("SELECT * FROM __InstanceDeletionEvent WITHIN 2 WHERE TargetInstance ISA 'Win32_USBHub'");
-            ManagementEventWatcher removeWatcher = new ManagementEventWatcher(removeQuery);
-            removeWatcher.EventArrived += (s, e) => Removed(this, ((ManagementBaseObject)e.NewEvent["TargetInstance"]).Properties);
-            removeWatcher.Start();
-
-            // For debug only:
-            //
-            // I wish to figure out which WMI event fires when serial port is connected.
-            // After figuring this out, I can probably modify the listeners above to make them
-            // to fire Inserted and Removed only when a COM port is connected/disconnected,
-            // and not just any USB device as it happens now.
-            Start("__InstanceModificationEvent", "CIM_SerialInterface");
-            Start("__InstanceModificationEvent", "CIM_SerialController");
-            Start("__InstanceModificationEvent", "Win32_SerialPort");
-
-            Start("__InstanceCreationEvent", "CIM_SerialInterface");
-            Start("__InstanceCreationEvent", "CIM_SerialController");
-            Start("__InstanceCreationEvent", "Win32_SerialPort");
+            Listen("__InstanceCreationEvent", "Win32_SerialPort", Inserted);  // CIM_SerialController
+            Listen("__InstanceDeletionEvent", "Win32_SerialPort", Removed);   // Win32_USBHub
         }
 
-        private void DeviceInsertedEvent(object sender, EventArrivedEventArgs e)
-        {
-            ManagementBaseObject instance = (ManagementBaseObject)e.NewEvent["TargetInstance"];
-            Debug.WriteLine($"USB device inserted");
-            Log(instance.Properties);
+        // Internal
 
-            Inserted(this, instance.Properties);
-        }
-
-        void Start(string evt, string target)
+        private void Listen(string evt, string target, EventHandler<string> action)
         {
             WqlEventQuery query = new WqlEventQuery($"SELECT * FROM {evt} WITHIN 2 WHERE TargetInstance ISA '{target}'");
             ManagementEventWatcher watcher = new ManagementEventWatcher(query);
+            
             watcher.EventArrived += (s, e) =>
             {
+                Debug.WriteLine($"{evt} => TargetInstance = {target}");
+                string portName = "";
+
                 try
                 {
-                    Debug.WriteLine($"{evt} => TargetInstance = {target}");
-                    Log(((ManagementBaseObject)e.NewEvent["TargetInstance"]).Properties);
+                    var props = ((ManagementBaseObject)e.NewEvent["TargetInstance"]).Properties;
+                    portName = FindPortName(props);
                 }
                 catch (Exception ex) { Debug.WriteLine("ERROR: " + ex.Message); }
+
+                if (action != null && portName.StartsWith("COM"))
+                {
+                    action(this, portName);
+                }
             };
+            
             watcher.Start();
         }
 
-        void Log(PropertyDataCollection data)
+        private string FindPortName(PropertyDataCollection props)
         {
-            foreach (var property in data)
+            string result = "";
+
+            foreach (var property in props)
             {
                 Debug.WriteLine("   " + property.Name + " = " + property.Value);
+                if (property.Name == "DeviceID")
+                {
+                    result = (string)property.Value;
+                }
             }
+
+            return result;
         }
     }
 }

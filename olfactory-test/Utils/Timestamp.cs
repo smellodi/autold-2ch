@@ -5,7 +5,7 @@ namespace Olfactory.Utils
     public static class Timestamp
     {
         /// <summary>
-        /// Current timestamp to be used everywhere to get syncronized records
+        /// Current timestamp to be used everywhere to get syncronized records, in milliseconds
         /// </summary>
         public static long Value { get { return (DateTime.Now.Ticks - _start) / 10000; } }
 

@@ -75,7 +75,7 @@ namespace Olfactory.Pages.OdorProduction
 
             if (!int.TryParse(txbPIDSamplingInterval.Text, INTEGER, null, out iVal) || iVal < 100 || iVal > 5000)
             {
-                return txbFinalPause;
+                return txbPIDSamplingInterval;
             }
 
             return null;
@@ -90,8 +90,7 @@ namespace Olfactory.Pages.OdorProduction
             }
             else
             {
-                var ok = double.TryParse(value, FLOAT, null, out double dVal2);
-                return double.TryParse(value, FLOAT, null, out double dVal) && dVal > 0 && dVal <= 200;
+                return double.TryParse(value, FLOAT, null, out double dVal) && dVal > 0 && dVal <= Comm.MFC.ODOR_MAX_SPEED;
             }
         }
 
@@ -145,6 +144,7 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.Valve2ToUser = cmbValve2.SelectedIndex == 1;
 
                 _settings.Save();
+
                 Next(this, _settings);
             }
         }

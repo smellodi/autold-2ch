@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.IO.Ports;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Olfactory.Comm
@@ -63,9 +63,26 @@ namespace Olfactory.Comm
         }
     }
 
+    /// <summary>
+    /// Argument to be used in events fired inresponse to a command send to a device
+    /// </summary>
+    public class CommandResultArgs : EventArgs
+    {
+        public readonly string Command;
+        public readonly string Value;
+        public readonly Result Result;
+        public CommandResultArgs(string command, string value, Result result)
+        {
+            Command = command;
+            Value = value;
+            Result = result;
+        }
+    }
+
+
     public class MFC : CommPort<MFCSample>
     {
-        public static MFC Instance => _instance = _instance ?? new();
+        public static MFC Instance => _instance ??= new();
 
         public enum Channel
         {
@@ -93,14 +110,14 @@ namespace Olfactory.Comm
             Mixer
         }
 
-        public override event EventHandler<Result> RequestResult = delegate { };
+        public event EventHandler<CommandResultArgs> CommandResult = delegate { };
         public event EventHandler<string> Message = delegate { };
 
         public override string Name => "MFC";
         public override string[] DataColumns => MFCSample.Header;
 
         public const double ODOR_MAX_SPEED = 128.0;
-        public const double ODOR_MIN_SPEED = 1.0;
+        public const double ODOR_MIN_SPEED = 0.0;
 
 
         // Control
@@ -113,12 +130,13 @@ namespace Olfactory.Comm
             get => _freshAir;
             set
             {
-                var result = SendCommand(FRESH_AIR_CHANNEL, CMD_SET, value.ToString("F1").Replace(',', '.'));
+                var val = value.ToString("F1").Replace(',', '.');
+                var result = SendCommand(FRESH_AIR_CHANNEL, CMD_SET, val);
                 if (result.Error == Error.Success)
                 {
                     _freshAir = value;
                 }
-                RequestResult(this, result);
+                CommandResult(this, new CommandResultArgs(FRESH_AIR_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -130,12 +148,13 @@ namespace Olfactory.Comm
             get => _odor;
             set
             {
-                var result = SendCommand(ODOR_CHANNEL, CMD_SET, value.ToString("F1").Replace(',', '.'));
+                var val = value.ToString("F1").Replace(',', '.');
+                var result = SendCommand(ODOR_CHANNEL, CMD_SET, val);
                 if (result.Error == Error.Success)
                 {
                     _odor = value;
                 }
-                RequestResult(this, result);
+                CommandResult(this, new CommandResultArgs(ODOR_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -144,12 +163,13 @@ namespace Olfactory.Comm
             get => _odorDirection;
             set
             {
-                var result = SendCommand(OUTPUT_CHANNEL, CMD_SET, ((int)value).ToString("D2"));
+                var val = ((int)value).ToString("D2");
+                var result = SendCommand(OUTPUT_CHANNEL, CMD_SET, val);
                 if (result.Error == Error.Success)
                 {
                     _odorDirection = value;
                 }
-                RequestResult(this, result);
+                CommandResult(this, new CommandResultArgs(OUTPUT_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -160,6 +180,16 @@ namespace Olfactory.Comm
         private MFC() : base()
         {
             _portStopBits = StopBits.One;
+        }
+
+        public override void Stop()
+        {
+            if (IsOpen)
+            {
+                OdorSpeed = ODOR_MIN_SPEED;
+            }
+
+            base.Stop();
         }
 
         /// <summary>
@@ -208,7 +238,7 @@ namespace Olfactory.Comm
         /// <returns>Odor speed</returns>
         public double PPM2Speed(double ppm)
         {
-            return 4.0 * ppm;   // TODO: implement this
+            return 1.0 * ppm;   // TODO: implement this
         }
 
         /// <summary>
@@ -365,13 +395,16 @@ namespace Olfactory.Comm
         OdorFlow _odorDirection = OdorFlow.ToSystemAndWaste;
 
         Mutex _mutex = new Mutex();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
+        MFCEmulator _emulator = MFCEmulator.Instance;
+
+        // constants
 
         const Channel FRESH_AIR_CHANNEL = Channel.A;
         const Channel ODOR_CHANNEL = Channel.B;
         const Channel OUTPUT_CHANNEL = Channel.Z;
 
-        const string CMD_SET = "s";
-        const string CMD_TARE_FLOW = "v";
+        public static readonly string CMD_SET = "s";
+        public static readonly string CMD_TARE_FLOW = "v";
 
         const char DATA_END = '\r';
 
@@ -404,7 +437,7 @@ namespace Olfactory.Comm
                 return (Error)Marshal.GetLastWin32Error();
             }
 
-            var response = !IsDebugging ? ReadBytes() : EmulateReading(mfcAddr); // _port.ReadLine()
+            var response = !IsDebugging ? ReadBytes() : _emulator.EmulateReading(mfcAddr); // _port.ReadLine()
             if (_error != null)
             {
                 return (Error)Marshal.GetLastWin32Error();
@@ -482,7 +515,7 @@ namespace Olfactory.Comm
                 {
                     Thread.Sleep(50);
 
-                    if (_port.BytesToRead > 0)  // note: it may appear that reading is need anyway, even if the buffer is empty yet, so thsi check si to be removed
+                    if (_port.BytesToRead > 0)  // note: it may appear that reading is need anyway, even if the buffer is empty yet, so this check is to be removed
                     {
                         string response = ReadBytes();
                         if (_error != null)
@@ -501,7 +534,7 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Reads bytes one by one until _portDataTerminator is met or time is out
+        /// Reads bytes one by one until DATA_END is met or time is out
         /// </summary>
         /// <returns>The string read from the port</returns>
         string ReadBytes()
@@ -562,7 +595,7 @@ namespace Olfactory.Comm
                 }
                 else
                 {
-                    EmulateWriting(bytes);
+                    _emulator.EmulateWriting(bytes);
                 }
             }
             catch
@@ -571,64 +604,6 @@ namespace Olfactory.Comm
             }
 
             return result;
-        }
-
-
-        // Debugging
-
-        Random rnd = new Random((int)DateTime.Now.Ticks);
-        int pressureA = 1200;
-        int pressureB = 1800;
-        double massFlowA = 1.0;
-        double massFlowB = 0.02;
-        double volFlowA = .05;
-        double volFlowB = .05;
-        double e(double amplitude) => (rnd.NextDouble() - 0.5) * 2 * amplitude;
-        int e(int amplitude) => rnd.Next(-amplitude, amplitude);
-        string EmulateReading(char channel)
-        {
-            if (rnd.NextDouble() < 0.002)
-            {
-                return "";
-            }
-
-            var pressure = channel == 'A' ? pressureA : pressureB;
-            var massFlow = channel == 'A' ? massFlowA : massFlowB;
-            var volFlow = channel == 'A' ? volFlowA : volFlowB;
-
-            return string.Join(' ',
-                channel.ToString(),                         // channel
-                (pressure + e(15)).ToString(),              // Absolute pressure
-                (24.74 + e(0.3)).ToString("F2"),            // Temp
-                (volFlow + e(0.05)).ToString("F5"),         // Volumentric flow
-                (massFlow + e(0.05)).ToString("F5"),        // Standart (Mass) Flow
-                "+50.000",                                  // Setpoint
-                "Air"                                       // Gas
-            );
-        }
-        void EmulateWriting(byte[] command)
-        {
-            if (rnd.NextDouble() < 0.002)
-            {
-                throw new Exception("Simulating writing fault");
-            }
-
-            var cmd = System.Text.Encoding.Default.GetString(command);
-            if (cmd.Length > 4)
-            {
-                Channel channel = (Channel)Enum.Parse(typeof(Channel), cmd[0].ToString(), true);
-                string cmdID = cmd[1].ToString();
-                if (cmdID == CMD_SET)
-                {
-                    double value = double.Parse(cmd.Substring(2, command.Length - 2));
-                    switch (channel)
-                    {
-                        case Channel.A: massFlowA = value; break;
-                        case Channel.B: massFlowB = value; break;
-                        default: break;
-                    }
-                }    
-            }
         }
     }
 }

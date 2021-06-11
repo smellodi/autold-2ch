@@ -45,6 +45,14 @@ namespace Olfactory.Tests.OdorProduction
             return NextPage();
         }
 
+        public void Interrupt()
+        {
+            if (_current == _productionPage)
+            {
+                _productionPage.Interrupt();
+            }
+        }
+
         public void Emulate(EmulationCommand command, params object[] args)
         {
             switch (command)

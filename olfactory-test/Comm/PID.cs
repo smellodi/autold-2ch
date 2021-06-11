@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.IO.Ports;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace Olfactory.Comm
@@ -39,8 +39,20 @@ namespace Olfactory.Comm
 
     public class PID : CommPort<PIDSample>
     {
-        public static PID Instance => _instance = _instance ?? new();
+        public static PID Instance => _instance ??= new();
 
+        public new bool IsDebugging
+        {
+            get => base.IsDebugging;
+            set
+            {
+                base.IsDebugging = value;
+                if (value)
+                {
+                    _emulator = PIDEmulator.Instance;
+                }
+            }
+        }
         public override string Name => "PID";
         public override string[] DataColumns => PIDSample.Header;
 
@@ -167,9 +179,10 @@ namespace Olfactory.Comm
 
         static PID _instance;
 
+        PIDEmulator _emulator;
 
         [StructLayout(LayoutKind.Explicit)]
-        struct BtoW                                                             // For convenient byte-level manipulation of 16b integers,
+        internal struct BtoW                                                    // For convenient byte-level manipulation of 16b integers,
         {                                                                       // mainly for ModBus byte swaps.
             [FieldOffset(0)]
             public byte B0;
@@ -180,7 +193,7 @@ namespace Olfactory.Comm
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        struct BtoD                                                             // For convenient byte-level manipulation of 32b integers and floats
+        internal struct BtoD                                                    // For convenient byte-level manipulation of 32b integers and floats
         {                                                                       // mainly for ModBus byte swaps.
             [FieldOffset(0)]
             public byte B0;
@@ -203,7 +216,7 @@ namespace Olfactory.Comm
         // Lamp read/write
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct ModQueryPreset1Regs                                              // ModBus "preset multiple regs" query for ONE register
+        internal struct ModQueryPreset1Regs                                     // ModBus "preset multiple regs" query for ONE register
         {
             public byte SlaveAddr;                                              // Slave address
             public byte Function;                                               // Function number, must be 0x10
@@ -220,7 +233,7 @@ namespace Olfactory.Comm
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct ModResponsePresetRegs                                            // ModBus "preset multiple regs" response
+        internal struct ModResponsePresetRegs                                   // ModBus "preset multiple regs" response
         {                                                                       // (echoes the content of query packet)
             public byte SlaveAddr;                                              // Slave address
             public byte Function;                                               // Function number
@@ -236,7 +249,7 @@ namespace Olfactory.Comm
         // Data read/write
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        struct ModQueryReadInputRegs                                            // ModBus "read input regs" query
+        internal struct ModQueryReadInputRegs                                   // ModBus "read input regs" query
         {
             public byte SlaveAddr;                                              // Slave address
             public byte Function;                                               // Function number, must be 0x04
@@ -250,7 +263,7 @@ namespace Olfactory.Comm
         }
 
         [StructLayout(LayoutKind.Sequential, Pack=1)]
-        struct ModResponseRead12Regs                                            // ModBus "read input regs" response for TWELVE registers
+        internal struct ModResponseRead12Regs                                   // ModBus "read input regs" response for TWELVE registers
         {
             public byte SlaveAddr;                                              // Slave address, echoing the query address
             public byte Function;                                               // Function number (will be 0x04)
@@ -269,14 +282,14 @@ namespace Olfactory.Comm
             public byte CRCLo;                                                  // CRC low byte
         }
 
-        const byte MODBUS_ADDR_PID = 0x01;                    // PID SDK ModBus device address
-        const byte MODBUS_FN_READ_INPUT_REGS = 0x04;          // ModBus function: read (multiple) input registers
-        const byte MODBUS_FN_PRESET_INPUT_REGS = 0x10;        // ModBus function: preset multiple 
-        const ushort MODBUS_REG_PID_POWER = 0x1248;           // SDK register (16b) address for PID power enable; LSb enables the PID lamp
-        const ushort MODBUS_REG_LOOP_POWER = 0x1400;          // SDK register address for the 4...20mA loop power enable; LSb enables the loop
-        const ushort MODBUS_REG_ADCMV_GROUP = 0x1260;         // SDK register address for the ADCMV group; contains 6 DWORDs
-        const ushort MODBUS_REG_SIGNAL_GROUP = 0x12C0;        // SDK register address for the SIGNAL group; contains 6 floats
-        const byte MODBUS_GROUP_LEN = 6;                      // The 6 DWORDs/floats above
+        internal const byte MODBUS_ADDR_PID = 0x01;                    // PID SDK ModBus device address
+        internal const byte MODBUS_FN_READ_INPUT_REGS = 0x04;          // ModBus function: read (multiple) input registers
+        internal const byte MODBUS_FN_PRESET_INPUT_REGS = 0x10;        // ModBus function: preset multiple 
+        internal const ushort MODBUS_REG_PID_POWER = 0x1248;           // SDK register (16b) address for PID power enable; LSb enables the PID lamp
+        internal const ushort MODBUS_REG_LOOP_POWER = 0x1400;          // SDK register address for the 4...20mA loop power enable; LSb enables the loop
+        internal const ushort MODBUS_REG_ADCMV_GROUP = 0x1260;         // SDK register address for the ADCMV group; contains 6 DWORDs
+        internal const ushort MODBUS_REG_SIGNAL_GROUP = 0x12C0;        // SDK register address for the SIGNAL group; contains 6 floats
+        internal const byte MODBUS_GROUP_LEN = 6;                      // The 6 DWORDs/floats above
 
 
         /// <summary>
@@ -451,7 +464,7 @@ namespace Olfactory.Comm
             }
             else
             {
-                EmulateWrite(query);
+                _emulator.EmulateWrite(query);
             }
             if (_error != null)
             {
@@ -486,7 +499,9 @@ namespace Olfactory.Comm
             // Try to receive 'length' bytes; wait more data in POLL_PERIOD pieces;
             for (; duration <= PORT_TIMEOUT && bytesRemaining > 0; duration += POLL_PERIOD)
             {
-                int readCount = !IsDebugging ? _port.Read(buffer, offset, bytesRemaining) : EmulateReading(buffer, offset, bytesRemaining);
+                int readCount = !IsDebugging
+                    ? _port.Read(buffer, offset, bytesRemaining)
+                    : _emulator.EmulateReading(buffer, offset, bytesRemaining);
                 if (_error != null)           // return immediately (with error) if port read fails.
                 {
                     return (Error)Marshal.GetLastWin32Error();
@@ -521,7 +536,7 @@ namespace Olfactory.Comm
 
         // Utilities
 
-        byte[] CRC_DATA_HI = new byte[256]
+        static byte[] CRC_DATA_HI = new byte[256]
                                 { 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81,
                                   0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
                                   0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01,
@@ -541,7 +556,7 @@ namespace Olfactory.Comm
                                   0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81,
                                   0x40 };
 
-        byte[] CRC_DATA_LO = new byte[256]
+        static byte[] CRC_DATA_LO = new byte[256]
                                 { 0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06, 0x07, 0xC7, 0x05, 0xC5, 0xC4,
                                   0x04, 0xCC, 0x0C, 0x0D, 0xCD, 0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
                                   0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A, 0x1E, 0xDE, 0xDF, 0x1F, 0xDD,
@@ -568,7 +583,7 @@ namespace Olfactory.Comm
         /// <param name="data">Message</param>
         /// <param name="length">number of bytes of data to use</param>
         /// <returns>16b CRC to be appended to the message</returns>
-        ushort CRC16(byte[] data, int length)
+        internal static ushort CRC16(byte[] data, int length)
         {
             int i = 0;
             byte crcHi = 0xFF;
@@ -642,144 +657,6 @@ namespace Olfactory.Comm
             Marshal.FreeHGlobal(ptr);
 
             return str;
-        }
-
-
-        // Debugging
-
-        Random rnd = new Random((int)DateTime.Now.Ticks);
-        ModQueryPreset1Regs presetQuery;
-        ModQueryReadInputRegs inputQuery;
-
-        double e(double amplitude) => (rnd.NextDouble() - 0.5) * 2 * amplitude;
-        int e(int amplitude) => rnd.Next(-amplitude, amplitude);
-        void EmulateWrite<T>(T query)
-        {
-            if (query is ModQueryPreset1Regs preset)
-            {
-                presetQuery = preset;
-            }
-            else if (query is ModQueryReadInputRegs input)
-            {
-                inputQuery = input;
-            }
-        }
-        int EmulateReading(byte[] buffer, int offset, int count)
-        {
-            if (rnd.NextDouble() < 0.005)
-            {
-                throw new Exception("Simulating reading fault");
-            }
-
-            if (count == 8) // query-preset1
-            {
-                buffer[0] = MODBUS_ADDR_PID;
-                buffer[1] = MODBUS_FN_PRESET_INPUT_REGS;
-                buffer[2] = MODBUS_REG_PID_POWER >> 8;
-                buffer[3] = MODBUS_REG_PID_POWER & 0xFF;
-                buffer[4] = 0x00;
-                buffer[5] = 0x01;
-                buffer[6] = 0x84;
-                buffer[7] = 0xA7;
-            }
-            else if (count == 29) // query-input
-            {
-                var addr = (inputQuery.AddressHi << 8) | inputQuery.AddressLo;
-
-                buffer[0] = MODBUS_ADDR_PID;
-                buffer[1] = MODBUS_FN_READ_INPUT_REGS;
-                buffer[2] = MODBUS_GROUP_LEN * sizeof(uint);
-
-                if (addr == MODBUS_REG_ADCMV_GROUP)
-                {
-                    // rtd
-                    buffer[3] = (byte)'T';
-                    buffer[4] = (byte)'R';
-                    buffer[5] = 0;
-                    buffer[6] = (byte)'D';
-                    // ref = 10000
-                    buffer[7] = 0x27;
-                    buffer[8] = 0x10;
-                    buffer[9] = 0;
-                    buffer[10] = 0;
-                    // pid
-                    buffer[11] = 0;
-                    buffer[12] = (byte)(210 + e(10));
-                    buffer[13] = 0;
-                    buffer[14] = 0;
-                    // light
-                    buffer[15] = (byte)'G';
-                    buffer[16] = (byte)'L';
-                    buffer[17] = (byte)'T';
-                    buffer[18] = (byte)'H';
-                    // temp
-                    buffer[19] = (byte)'E';
-                    buffer[20] = (byte)'T';
-                    buffer[21] = (byte)'P';
-                    buffer[22] = (byte)'M';
-                    // currloop
-                    buffer[23] = (byte)'R';
-                    buffer[24] = (byte)'C';
-                    buffer[25] = (byte)'P';
-                    buffer[26] = (byte)'L';
-                }
-                else if (addr == MODBUS_REG_SIGNAL_GROUP)
-                {
-                    // rtd
-                    BtoD rtd = new BtoD();
-                    rtd.f = 25f + (float)e(0.15);
-                    buffer[3] = rtd.B1;
-                    buffer[4] = rtd.B0;
-                    buffer[5] = rtd.B3;
-                    buffer[6] = rtd.B2;
-                    // ref
-                    BtoD ref10V = new BtoD();
-                    ref10V.f = 20f;
-                    buffer[7] = ref10V.B1;
-                    buffer[8] = ref10V.B0;
-                    buffer[9] = ref10V.B3;
-                    buffer[10] = ref10V.B2;
-                    // pid
-                    BtoD pid = new BtoD();
-                    pid.f = 45f + (float)e(1.5);
-                    buffer[11] = pid.B1;
-                    buffer[12] = pid.B0;
-                    buffer[13] = pid.B3;
-                    buffer[14] = pid.B2;
-                    // light
-                    BtoD light = new BtoD();
-                    light.f = 1f;
-                    buffer[15] = light.B1;
-                    buffer[16] = light.B0;
-                    buffer[17] = light.B3;
-                    buffer[18] = light.B2;
-                    // temp
-                    BtoD temp = new BtoD();
-                    temp.f = 29f;
-                    buffer[19] = temp.B1;
-                    buffer[20] = temp.B0;
-                    buffer[21] = temp.B3;
-                    buffer[22] = temp.B2;
-                    // currloop
-                    BtoD cl = new BtoD();
-                    cl.f = 5.678f + (float)e(0.15);
-                    buffer[23] = cl.B1;
-                    buffer[24] = cl.B0;
-                    buffer[25] = cl.B3;
-                    buffer[26] = cl.B2;
-                }
-                // crc
-                BtoW crc = new BtoW();
-                crc.W = CRC16(buffer, count - sizeof(ushort));
-                buffer[offset + count - 2] = crc.B1;
-                buffer[offset + count - 1] = crc.B0;
-            }
-            else
-            {
-                throw new Exception("Simulator fault");
-            }
-
-            return count;
         }
     }
 }

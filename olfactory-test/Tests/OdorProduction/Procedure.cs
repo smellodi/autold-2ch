@@ -88,7 +88,7 @@ namespace Olfactory.Tests.OdorProduction
             _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
             _timer.Start();
 
-            _logger.Start();
+            _logger.Start(_settings.PIDReadingInterval);
 
             Next();
         }

@@ -4,20 +4,25 @@ namespace Olfactory.Comm
 {
     public class OdorController
     {
-        public static OdorController Instance => _instance = _instance ?? new(); // is this line too complex? it simply return the instance is it exists, otherwise it creates a new instance, memorizes and returns it
+        public static OdorController Instance => _instance ??= new(); // is this line too complex? it simply return the instance is it exists, otherwise it creates a new instance, memorizes and returns it
 
         /// <summary>
-        /// Prepares the odor dilution (in ppm) to be read in a given amount of time
+        /// Prepares the odor dilution (in ppm) to be ready in a given amount of time
         /// </summary>
         /// <param name="interval">Time interval available for preparation</param>
         /// <param name="ppm">Desired odor dilution</param>
-        public void GetReady(double interval, double ppm)
+        /// <returns>Estimated interval required to prepare the odor</returns>
+        public double GetReady(double interval, double ppm)
         {
             var odorSpeed = _mfc.PredictFlowSpeed(interval);
 
-            _mfc.OdorSpeed = Math.Round(odorSpeed, 1);
+            _mfc.OdorSpeed = Math.Min(Math.Round(odorSpeed, 1), MFC.ODOR_MAX_SPEED);
 
-            Utils.DispatchOnce.Do(interval, () => _mfc.OdorSpeed = _mfc.PPM2Speed(ppm));
+            var estimatedInterval = _mfc.EstimateFlowDuration(MFC.FlowEndPoint.User, _mfc.OdorSpeed);
+
+            Utils.DispatchOnce.Do(estimatedInterval, () => _mfc.OdorSpeed = _mfc.PPM2Speed(ppm));
+
+            return estimatedInterval;
         }
 
         /// <summary>

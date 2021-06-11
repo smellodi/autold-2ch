@@ -228,37 +228,31 @@ namespace Olfactory.Properties {
                 this["MainWindow_Height"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MainWindow_X
-        {
-            get
-            {
+        public double MainWindow_X {
+            get {
                 return ((double)(this["MainWindow_X"]));
             }
-            set
-            {
+            set {
                 this["MainWindow_X"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double MainWindow_Y
-        {
-            get
-            {
+        public double MainWindow_Y {
+            get {
                 return ((double)(this["MainWindow_Y"]));
             }
-            set
-            {
+            set {
                 this["MainWindow_Y"] = value;
             }
         }
-
+        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
@@ -304,6 +298,120 @@ namespace Olfactory.Properties {
             }
             set {
                 this["MonitorWindow_Y"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double Test_TT_FreshAir {
+            get {
+                return ((double)(this["Test_TT_FreshAir"]));
+            }
+            set {
+                this["Test_TT_FreshAir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public int Test_TT_OdorPreparationDuration {
+            get {
+                return ((int)(this["Test_TT_OdorPreparationDuration"]));
+            }
+            set {
+                this["Test_TT_OdorPreparationDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int Test_TT_PenSniffingDuration {
+            get {
+                return ((int)(this["Test_TT_PenSniffingDuration"]));
+            }
+            set {
+                this["Test_TT_PenSniffingDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int Test_TT_PIDReadingInterval {
+            get {
+                return ((int)(this["Test_TT_PIDReadingInterval"]));
+            }
+            set {
+                this["Test_TT_PIDReadingInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
+<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+  <string>2</string>
+  <string>4</string>
+  <string>6</string>
+  <string>8</string>
+  <string>10</string>
+  <string>12</string>
+  <string>14</string>
+  <string>16</string>
+  <string>18</string>
+  <string>20</string>
+  <string>22</string>
+  <string>24</string>
+  <string>26</string>
+  <string>28</string>
+  <string>30</string>
+  <string>32</string>
+</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection Test_TT_PPMs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Test_TT_PPMs"]));
+            }
+            set {
+                this["Test_TT_PPMs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Test_TT_RecognitionInRow {
+            get {
+                return ((int)(this["Test_TT_RecognitionInRow"]));
+            }
+            set {
+                this["Test_TT_RecognitionInRow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int Test_TT_TurningPoints {
+            get {
+                return ((int)(this["Test_TT_TurningPoints"]));
+            }
+            set {
+                this["Test_TT_TurningPoints"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int Test_TT_TurningPointsToCount {
+            get {
+                return ((int)(this["Test_TT_TurningPointsToCount"]));
+            }
+            set {
+                this["Test_TT_TurningPointsToCount"] = value;
             }
         }
     }

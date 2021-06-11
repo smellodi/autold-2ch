@@ -35,7 +35,7 @@ namespace Olfactory
             }
         }
 
-        public static FlowLogger Instance => _instance = _instance ?? new();
+        public static FlowLogger Instance => _instance ??= new();
 
         public bool IsEnabled { get; set; } = true;
         public bool HasAnyRecord => _records.Count > 0;

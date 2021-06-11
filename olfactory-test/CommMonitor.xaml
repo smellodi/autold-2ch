@@ -12,6 +12,7 @@
         Activated="Window_Activated">
     <Grid Margin="8">
         <Grid.Resources>
+            <local:BlankConverter x:Key="BlankConverter" />
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Margin" Value="0,0,4,4" />
                 <Setter Property="Padding" Value="8,4" />
@@ -84,11 +85,11 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Header="A:" Width="20" DisplayMemberBinding="{x:Null}" />
+                    <GridViewColumn Header="A:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}"/>
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=A.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=A.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=A.Temperature}" />
-                    <GridViewColumn Header="B:" Width="20" DisplayMemberBinding="{x:Null}" />
+                    <GridViewColumn Header="B:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}" />
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=B.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=B.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=B.Temperature}" />

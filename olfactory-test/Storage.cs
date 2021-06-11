@@ -13,7 +13,7 @@ namespace Olfactory
     public class Storage : INotifyPropertyChanged, IDisposable
     {
         // Instance
-        public static Storage Instance => _instance = _instance ?? new();
+        public static Storage Instance => _instance ??= new();
 
         // Event
 

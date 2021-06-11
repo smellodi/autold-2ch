@@ -1,12 +1,27 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Threading;
 using Olfactory.Comm;
 using Olfactory.Utils;
 
 namespace Olfactory
 {
+    public class BlankConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public partial class CommMonitor : Window
     {
         public static CommMonitor Instance { get; private set; }
@@ -21,7 +36,7 @@ namespace Olfactory
 
             Application.Current.Exit += (s, e) => _preventClosing = false;
 
-            _mfc.RequestResult += (s, e) => LogResult(LogSource.MFC, e);
+            _mfc.CommandResult += (s, e) => LogResult(LogSource.MFC, e.Result, e.Command, e.Value);
             _mfc.Message += (s, e) => LogMessage(LogSource.MFC, e);
             _mfc.Closed += (s, e) => {
                 LogResult(LogSource.MFC, new Result() { Error = Error.Success, Reason = "Stopped" });
@@ -65,17 +80,24 @@ namespace Olfactory
             UpdateUI();
         }
 
-        public void LogResult(LogSource source, Result result)
+        public void LogResult(LogSource source, Result result, params string[] data)
         {
-            _logger.Add(source, "cmnd", result.ToString());
-            txbDebug.AppendText($"{Utils.Timestamp.Value} [{source}] {result}\r\n");
+            if (result.Error == Error.Success && source == LogSource.MFC)
+            {
+                _logger.Add(source, "cmnd", data);
+            }
+            else
+            {
+                _logger.Add(source, "cmnd", result.ToString());
+            }
+            txbDebug.AppendText($"{Timestamp.Value} [{source}] {result}\r\n");
             txbDebug.ScrollToEnd();
         }
 
         public void LogMessage(LogSource source, string message)
         {
             _logger.Add(source, "fdbk", message);
-            txbDebug.AppendText($"{Utils.Timestamp.Value} [{source}] {message}\r\n");
+            txbDebug.AppendText($"{Timestamp.Value} [{source}] {message}\r\n");
             txbDebug.ScrollToEnd();
         }
 
@@ -145,7 +167,7 @@ namespace Olfactory
             }
             else
             {
-                output.AppendText($"{Utils.Timestamp.Value} ----- INVALID -----\r\n");
+                output.AppendText($"{Timestamp.Value} ----- INVALID -----\r\n");
                 LogResult(source, result);
             }
 
@@ -193,7 +215,7 @@ namespace Olfactory
 
         private void OnSavePID_Click(object sender, RoutedEventArgs e)
         {
-            _logger.SaveOnly(LogSource.PID, "data", $"MFC_{DateTime.Now:u}.txt".ToPath());
+            _logger.SaveOnly(LogSource.PID, "data", $"PID_{DateTime.Now:u}.txt".ToPath());
         }
 
         private void chkMFCMonitor_Checked(object sender, RoutedEventArgs e)

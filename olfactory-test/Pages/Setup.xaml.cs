@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -85,14 +86,15 @@ namespace Olfactory.Pages
             cmb.Items.Clear();
 
             var availablePorts = System.IO.Ports.SerialPort.GetPortNames();
-            foreach (var port in availablePorts)
+            HashSet<string> ports = new HashSet<string>(availablePorts);
+            foreach (var port in ports)
             {
                 cmb.Items.Add(port);
             }
 
             if (current != null)
             {
-                foreach (var item in availablePorts)
+                foreach (var item in ports)
                 {
                     if (item == current.ToString())
                     {

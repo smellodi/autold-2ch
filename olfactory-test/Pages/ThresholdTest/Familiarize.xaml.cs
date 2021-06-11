@@ -40,6 +40,11 @@ namespace Olfactory.Pages.ThresholdTest
             };
         }
 
+        public void Interrupt()
+        {
+            _directionChangeTimer.Stop();
+            _mfc.OdorDirection = MFC.OdorFlow.ToSystemAndWaste;
+        }
 
         // Internal
 
