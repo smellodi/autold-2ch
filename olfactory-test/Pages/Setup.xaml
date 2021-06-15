@@ -13,7 +13,7 @@
 
     <Grid>
         <Grid.Resources>
-            <Style TargetType="{x:Type Button}">
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
                 <Setter Property="Margin" Value="10,0" />
             </Style>
             <Style TargetType="{x:Type Label}">
@@ -144,14 +144,14 @@
                         Content="MFC Playgound"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="Fresh air"/>
+                           Style="{StaticResource Field}"
+                           Content="Fresh air"/>
                     <TextBox Grid.Row="2" Grid.Column="1" x:Name="txbFreshAir"
-                                VerticalContentAlignment="Center"
-                                Text="5.0"
-                                ToolTip="a single positive floating-point value"/>
+                             VerticalContentAlignment="Center"
+                             Text="5.0"
+                             ToolTip="a single positive floating-point value"/>
                     <Label Grid.Row="2" Grid.Column="2"
-                            Content="l/min"/>
+                           Content="l/min"/>
                     <Button Grid.Row="2" Grid.Column="3"
                             Content="Set"
                             Click="btnSetFreshAir_Click"/>
@@ -172,12 +172,20 @@
                     <Label Grid.Row="6" Grid.Column="0"
                             Style="{StaticResource Field}"
                             Content="Valve #1"/>
-                    <ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbValve1"
+                    <WrapPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                        <RadioButton x:Name="rdbValve1ToWaste"
+                                     GroupName="valve1"
+                                     Content="waste"/>
+                        <RadioButton x:Name="rdbValve1ToSystem" Margin="16,0,0,0"
+                                     GroupName="valve1"
+                                     Content="system"/>
+                    </WrapPanel>
+                    <!--ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbValve1"
                                 VerticalContentAlignment="Center"
                                 IsReadOnly="True">
                         <ComboBoxItem Content="to waste"/>
                         <ComboBoxItem Content="to system" IsSelected="True"/>
-                    </ComboBox>
+                    </-->
                     <Button Grid.Row="6" Grid.Column="3" Grid.RowSpan="3"
                             Content="Set"
                             Click="btnSetDirection_Click"/>
@@ -185,12 +193,20 @@
                     <Label Grid.Row="8" Grid.Column="0"
                             Style="{StaticResource Field}"
                             Content="Valve #2"/>
-                    <ComboBox Grid.Row="8" Grid.Column="1" x:Name="cmbValve2"
+                    <WrapPanel Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">
+                        <RadioButton x:Name="rdbValve2ToWaste"
+                                     GroupName="valve2"
+                                     Content="waste"/>
+                        <RadioButton x:Name="rdbValve2ToUser" Margin="16,0,0,0"
+                                     GroupName="valve2"
+                                     Content="user"/>
+                    </WrapPanel>
+                    <!--ComboBox Grid.Row="8" Grid.Column="1" x:Name="cmbValve2"
                                 VerticalContentAlignment="Center"
                                 IsReadOnly="True">
                         <ComboBoxItem Content="to waste" IsSelected="True"/>
                         <ComboBoxItem Content="to user"/>
-                    </ComboBox>
+                    </-->
                 </Grid>
             </Border>
         </StackPanel>

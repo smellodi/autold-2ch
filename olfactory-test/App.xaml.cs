@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Olfactory
 {
@@ -13,6 +14,15 @@ namespace Olfactory
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+
+            EventManager.RegisterClassHandler(typeof(TextBox),
+                TextBox.GotFocusEvent,
+                new RoutedEventHandler(TextBox_GotFocus));
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
         }
     }
 }

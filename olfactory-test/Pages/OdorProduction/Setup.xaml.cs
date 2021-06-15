@@ -24,7 +24,9 @@ namespace Olfactory.Pages.OdorProduction
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbFinalPause.Text = _settings.FinalPause.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
-            cmbValve2.SelectedIndex = _settings.Valve2ToUser ? 1 : 0;
+            rdbValve2ToWaste.IsChecked = !_settings.Valve2ToUser;
+            rdbValve2ToUser.IsChecked = _settings.Valve2ToUser;
+            //cmbValve2.SelectedIndex = _settings.Valve2ToUser ? 1 : 0;
         }
 
         public void EmulationInit() { }
@@ -141,7 +143,8 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text);
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
-                _settings.Valve2ToUser = cmbValve2.SelectedIndex == 1;
+                _settings.Valve2ToUser = rdbValve2ToUser.IsChecked ?? false;
+                //_settings.Valve2ToUser = cmbValve2.SelectedIndex == 1;
 
                 _settings.Save();
 

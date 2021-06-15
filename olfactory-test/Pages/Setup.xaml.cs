@@ -176,8 +176,12 @@ namespace Olfactory.Pages
             var settings = Properties.Settings.Default;
             txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
             txbOdor.Text = settings.Setup_MFC_Odor.ToString();
-            cmbValve1.SelectedIndex = settings.Setup_MFC_Valve1;
-            cmbValve2.SelectedIndex = settings.Setup_MFC_Valve2;
+            rdbValve1ToWaste.IsChecked = settings.Setup_MFC_Valve1 == 0;
+            rdbValve1ToSystem.IsChecked = settings.Setup_MFC_Valve1 == 1;
+            rdbValve2ToWaste.IsChecked = settings.Setup_MFC_Valve2 == 0;
+            rdbValve2ToUser.IsChecked = settings.Setup_MFC_Valve2 == 1;
+            //cmbValve1.SelectedIndex = settings.Setup_MFC_Valve1;
+            //cmbValve2.SelectedIndex = settings.Setup_MFC_Valve2;
 
             foreach (string item in cmbMFCPort.Items)
             {
@@ -205,8 +209,10 @@ namespace Olfactory.Pages
             {
                 settings.Setup_MFC_FreshAir = double.Parse(txbFreshAir.Text);
                 settings.Setup_MFC_Odor = double.Parse(txbOdor.Text);
-                settings.Setup_MFC_Valve1 = cmbValve1.SelectedIndex;
-                settings.Setup_MFC_Valve2 = cmbValve2.SelectedIndex;
+                settings.Setup_MFC_Valve1 = rdbValve1ToWaste.IsChecked ?? false ? 0 : 1;
+                settings.Setup_MFC_Valve2 = rdbValve2ToWaste.IsChecked ?? false ? 0 : 1;
+                //settings.Setup_MFC_Valve1 = cmbValve1.SelectedIndex;
+                //settings.Setup_MFC_Valve2 = cmbValve2.SelectedIndex;
                 settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
                 settings.Setup_PIDPort = cmbPIDPort.SelectedItem?.ToString() ?? "";
             }
@@ -305,14 +311,22 @@ namespace Olfactory.Pages
 
         private void btnSetDirection_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorDirection = (cmbValve1.SelectedIndex, cmbValve2.SelectedIndex) switch
+            _mfc.OdorDirection = (rdbValve1ToWaste.IsChecked, rdbValve2ToWaste.IsChecked) switch
+            {
+                (true, true) => MFC.OdorFlow.ToWasteAll,
+                (true, false) => MFC.OdorFlow.ToWasteAndUser,
+                (false, true) => MFC.OdorFlow.ToSystemAndWaste,
+                (false, false) => MFC.OdorFlow.ToSystemAndUser,
+                _ => throw new NotImplementedException()
+            };
+            /*_mfc.OdorDirection = (cmbValve1.SelectedIndex, cmbValve2.SelectedIndex) switch
             {
                 (0, 0) => MFC.OdorFlow.ToWasteAll,
                 (0, 1) => MFC.OdorFlow.ToWasteAndUser,
                 (1, 0) => MFC.OdorFlow.ToSystemAndWaste,
                 (1, 1) => MFC.OdorFlow.ToSystemAndUser,
                 _ => throw new NotImplementedException($"Direction '{cmbValve1.SelectedItem}-{cmbValve2.SelectedItem}' is not expected to be set")
-            };
+            };*/
         }
 
         private void btnOdorProduction_Click(object sender, RoutedEventArgs e)

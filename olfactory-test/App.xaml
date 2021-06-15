@@ -6,7 +6,44 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-
+            <!-- Whole app elements -->
+            <Style x:Key="btn" TargetType="Button">
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="BorderBrush" Value="Gray"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="1">
+                                <ContentPresenter Margin="8,4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsKeyboardFocused" Value="true">
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                </Trigger>
+                                <Trigger Property="IsDefaulted" Value="true">
+                                    <Setter Property="BorderThickness" Value="2"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="BorderBrush" Value="DarkGray"/>
+                                    <Setter Property="Background" Value="WhiteSmoke"/>
+                                    <Setter Property="Foreground" Value="DarkGray"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="AliceBlue"/>
+                                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Background" Value="LightSkyBlue"/>
+                                    <Setter Property="BorderBrush" Value="DodgerBlue"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
             <!-- Each page elements -->
             <Style x:Key="DebugWarning" TargetType="Label">
                 <Setter Property="FontSize" Value="16"/>
@@ -25,11 +62,11 @@
                 <Setter Property="Foreground" Value="#FF00276C"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
-            <Style x:Key="Next" TargetType="Button">
+            <Style x:Key="Next" TargetType="Button" BasedOn="{StaticResource btn}">
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="MinHeight" Value="32"/>
                 <Setter Property="Margin" Value="12"/>
-                <Setter Property="Padding" Value="8"/>
             </Style>
             <Style x:Key="Buttons" TargetType="WrapPanel">
                 <Setter Property="HorizontalAlignment" Value="Right"/>

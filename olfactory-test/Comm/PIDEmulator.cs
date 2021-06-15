@@ -170,11 +170,13 @@ namespace Olfactory.Comm
         const double SAMPLING_INTERVAL = 0.1;               // sec
         const double PID_DELAY = 1;                         // sec
         const double ODOR_TUBE_CAPACITY = 0.35;             // cc
-        const double ODOR_TUBE_EVAPORATION_RATE = 0.05;     // /sec
+        const double ODOR_TUBE_LEAK_RATE = 0.03;            // /sec
         const double TUBE_SURFACE_CAPACITY = 2;             // /(cc/s)
         const double TUBE_SURFACE_EVAPORATION_RATE = 0.3;   // /sec
         const double TUBE_SURFACE_ACCUMULATION_RATE = 0.5;  // sec, to get the accumulation amount half from the max possible
         const double PID_AT_HALF_MEMBRANE_THROUGHPUT = 500; // mV
+        const double PID_AT_HALF_MEMBRANE_THROUGHPUT_IN = 100; // mV
+        const double PID_AT_HALF_MEMBRANE_THROUGHPUT_OUT = 1000; // mV
 
         // Emulates odor left in the tube after valve #1 and before gas mixer
         // Quickly reaches the maximum after the valve is opened, drops after the valve is closed
@@ -206,10 +208,10 @@ namespace Olfactory.Comm
                 var flowing = GetFlowingOdorAmount();
                 var evaporating = GetEvaporatingOdorAmount(flowing);
 
-                var pid = EstimatePID(flowing + evaporating);
+                _currentPID = EstimatePID(flowing + evaporating);
 
                 var ts = Utils.Timestamp.Value / 1000.0;
-                _samples.Enqueue(new Sample(ts, pid));
+                _samples.Enqueue(new Sample(ts, _currentPID));
 
                 while (ts - _samples.Peek().Timestamp > PID_DELAY)
                 {
@@ -236,10 +238,16 @@ namespace Olfactory.Comm
             }
         }
 
+        /// <summary>
+        /// Models odor flow from Valve #1. The odor may not be yet in PID if the flow just started and the tube between
+        /// valve and gas mixer is not yet filled. If the valve is closed and/or MFC-B is 0, then the odor leaks from 
+        /// this tube.
+        /// </summary>
+        /// <returns>Amount of odor flowing through PID from Valve2Mixer tube (ml)</returns>
         private double GetFlowingOdorAmount()
         {
             double? result = null;
-            var ofr = _mfc.OdorFlowRate / 60;   // cc/second
+            var ofr = _mfc.OdorFlowRate / 60;   // cc/sec
 
             if (_isValveOpened && ofr > 0)
             {
@@ -255,7 +263,7 @@ namespace Olfactory.Comm
 
             if (result == null)
             {
-                var odorAmountFromOdorTube = SAMPLING_INTERVAL * _odorInTube * ODOR_TUBE_EVAPORATION_RATE;
+                var odorAmountFromOdorTube = SAMPLING_INTERVAL * _odorInTube * ODOR_TUBE_LEAK_RATE;
                 _odorInTube = Math.Max(0, _odorInTube - odorAmountFromOdorTube);
 
                 result = odorAmountFromOdorTube;
@@ -264,6 +272,11 @@ namespace Olfactory.Comm
             return result ?? 0;
         }
 
+        /// <summary>
+        /// Models the odour accumulation on surface and evaporation from surface of tubes
+        /// </summary>
+        /// <param name="flowing">Current odour flow in ml/sec</param>
+        /// <returns>Positive value of odour amount evaporated from surface, or negative value of odour amount accumulated on surface (ml)</returns>
         private double GetEvaporatingOdorAmount(double flowing)
         {
             var odorOnSurfaceCapicity = flowing * TUBE_SURFACE_CAPACITY;  // assume this is linear, although it could be not
@@ -284,14 +297,28 @@ namespace Olfactory.Comm
             return -amount;              // for evaporation, we reverse the sign of accumulated amount
         }
 
+        /// <summary>
+        /// Models amount of odor inside PID
+        /// </summary>
+        /// <param name="odorAmountFlowingThroughPID">Amount of odor flowing besides the PID membrane (ml)</param>
+        /// <returns>PID value</returns>
         private double EstimatePID(double odorAmountFlowingThroughPID)
         {
-            var odorFlowRate = odorAmountFlowingThroughPID / SAMPLING_INTERVAL * 60;
+            var odorFlowRate = odorAmountFlowingThroughPID / SAMPLING_INTERVAL * 60;  // convert to 
             var expectedPID = -0.124 * odorFlowRate * odorFlowRate + 43.75 * odorFlowRate + 28.2;
-            var pidMembraneThroughput = _currentPID / (PID_AT_HALF_MEMBRANE_THROUGHPUT + _currentPID);
-            _currentPID += (expectedPID - _currentPID) * pidMembraneThroughput * SAMPLING_INTERVAL;
+            var delta = expectedPID - _currentPID;
 
-            return _currentPID;
+            /*
+            if (delta > 0)
+            {
+                return _currentPID + delta * Math.Abs(delta) / (PID_AT_HALF_MEMBRANE_THROUGHPUT_IN + Math.Abs(delta)) * SAMPLING_INTERVAL;
+            }
+            else
+            {
+                return _currentPID + delta * _currentPID / (PID_AT_HALF_MEMBRANE_THROUGHPUT_OUT + _currentPID) * SAMPLING_INTERVAL;
+            }*/
+            var pidMembraneThroughput = _currentPID / (PID_AT_HALF_MEMBRANE_THROUGHPUT + _currentPID);
+            return _currentPID + delta * pidMembraneThroughput * SAMPLING_INTERVAL;
         }
 
         private PID.BtoD GetPID()
