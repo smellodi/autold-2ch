@@ -62,7 +62,7 @@
                 <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
                        Background="#FFD7EFFF"
                        HorizontalContentAlignment="Center"
-                       Content="MFC"/>
+                       Content="Settings"/>
 
                 <Label Grid.Row="2" Grid.Column="0"
                        Style="{StaticResource Field}"
@@ -143,13 +143,6 @@
                                      GroupName="valve2"
                                      Content="user"/>
                     </WrapPanel>
-                    <!--ComboBox x:Name="cmbValve2"
-                              VerticalContentAlignment="Center"
-                              Margin="0,0,8,0"
-                              IsReadOnly="True">
-                        <ComboBoxItem Content="to waste" IsSelected="True"/>
-                        <ComboBoxItem Content="to user"/>
-                    </-->
                     <TextBlock TextWrapping="Wrap"
                                Text="Controls the Valve #2 during odor flow. This valve is directed to waste during both pauses."/>
 

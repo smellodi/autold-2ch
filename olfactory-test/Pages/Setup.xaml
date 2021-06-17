@@ -46,6 +46,18 @@
                Content="Setup"/>
 
         <StackPanel Grid.Row="2" x:Name="stpMeasurements">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale1"/>
+            </StackPanel.LayoutTransform>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Clean air (l/min)"/>
+                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Odor (ml/min)"/>
+                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <Label/>
             <WrapPanel Style="{StaticResource Indicator}">
                 <Label Content="PID value (mV)"/>
                 <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
@@ -54,20 +66,11 @@
                 <Label Content="PID loop (mA)"/>
                 <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
             </WrapPanel>
-            <Label/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="Fresh air (l/min)"/>
-                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
-            </WrapPanel>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="Odor (ml/min)"/>
-                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
-            </WrapPanel>
         </StackPanel>
         
         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
             <StackPanel.LayoutTransform>
-                <ScaleTransform x:Name="sctScale"/>
+                <ScaleTransform x:Name="sctScale2"/>
             </StackPanel.LayoutTransform>
             <Border
                 Style="{StaticResource Box}">
@@ -141,11 +144,11 @@
                     <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
                         Background="#FFD7EFFF"
                         HorizontalContentAlignment="Center"
-                        Content="MFC Playgound"/>
+                        Content="MFC Playground"/>
 
                     <Label Grid.Row="2" Grid.Column="0"
                            Style="{StaticResource Field}"
-                           Content="Fresh air"/>
+                           Content="Clean air"/>
                     <TextBox Grid.Row="2" Grid.Column="1" x:Name="txbFreshAir"
                              VerticalContentAlignment="Center"
                              Text="5.0"
@@ -180,12 +183,6 @@
                                      GroupName="valve1"
                                      Content="system"/>
                     </WrapPanel>
-                    <!--ComboBox Grid.Row="6" Grid.Column="1" x:Name="cmbValve1"
-                                VerticalContentAlignment="Center"
-                                IsReadOnly="True">
-                        <ComboBoxItem Content="to waste"/>
-                        <ComboBoxItem Content="to system" IsSelected="True"/>
-                    </-->
                     <Button Grid.Row="6" Grid.Column="3" Grid.RowSpan="3"
                             Content="Set"
                             Click="btnSetDirection_Click"/>
@@ -201,12 +198,6 @@
                                      GroupName="valve2"
                                      Content="user"/>
                     </WrapPanel>
-                    <!--ComboBox Grid.Row="8" Grid.Column="1" x:Name="cmbValve2"
-                                VerticalContentAlignment="Center"
-                                IsReadOnly="True">
-                        <ComboBoxItem Content="to waste" IsSelected="True"/>
-                        <ComboBoxItem Content="to user"/>
-                    </-->
                 </Grid>
             </Border>
         </StackPanel>

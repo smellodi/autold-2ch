@@ -83,7 +83,7 @@ namespace Olfactory.Tests.OdorProduction
             _settings = settings;
 
             _mfc.FreshAirSpeed = _settings.FreshAir;
-            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll; // should I add delay here?
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste; // should I add delay here?
 
             _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
             _timer.Start();
@@ -115,7 +115,7 @@ namespace Olfactory.Tests.OdorProduction
             _runner?.Stop();
 
             _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
-            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
         }
 
 
@@ -135,7 +135,7 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlow.ToSystemAndUser : MFC.OdorFlow.ToSystemAndWaste;
+            _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
             //_logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
             _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
 
@@ -144,7 +144,7 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToWasteAll;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
             //_logger.Add(LogSource.OdProd, "valves", "close");
             _logger.Add("V00");
 

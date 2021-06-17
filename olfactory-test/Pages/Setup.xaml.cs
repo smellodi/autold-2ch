@@ -19,7 +19,8 @@ namespace Olfactory.Pages
             InitializeComponent();
 
             Storage.Instance
-                .BindScaleToZoomLevel(sctScale)
+                .BindScaleToZoomLevel(sctScale1)
+                .BindScaleToZoomLevel(sctScale2)
                 .BindVisibilityToDebug(lblDebug);
 
             UpdatePortList(cmbPIDPort);
@@ -180,8 +181,6 @@ namespace Olfactory.Pages
             rdbValve1ToSystem.IsChecked = settings.Setup_MFC_Valve1 == 1;
             rdbValve2ToWaste.IsChecked = settings.Setup_MFC_Valve2 == 0;
             rdbValve2ToUser.IsChecked = settings.Setup_MFC_Valve2 == 1;
-            //cmbValve1.SelectedIndex = settings.Setup_MFC_Valve1;
-            //cmbValve2.SelectedIndex = settings.Setup_MFC_Valve2;
 
             foreach (string item in cmbMFCPort.Items)
             {
@@ -211,8 +210,6 @@ namespace Olfactory.Pages
                 settings.Setup_MFC_Odor = double.Parse(txbOdor.Text);
                 settings.Setup_MFC_Valve1 = rdbValve1ToWaste.IsChecked ?? false ? 0 : 1;
                 settings.Setup_MFC_Valve2 = rdbValve2ToWaste.IsChecked ?? false ? 0 : 1;
-                //settings.Setup_MFC_Valve1 = cmbValve1.SelectedIndex;
-                //settings.Setup_MFC_Valve2 = cmbValve2.SelectedIndex;
                 settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
                 settings.Setup_PIDPort = cmbPIDPort.SelectedItem?.ToString() ?? "";
             }
@@ -257,6 +254,10 @@ namespace Olfactory.Pages
 
                 Storage.Instance.IsDebugging = true;
                 lblDebug.Visibility = Visibility.Visible;
+            }
+            else if (e.Key >= Key.D0 && e.Key <= Key.D9)
+            {
+                PIDEmulator.Instance.Pulse(e.Key - Key.D0);
             }
         }
 
@@ -313,20 +314,12 @@ namespace Olfactory.Pages
         {
             _mfc.OdorDirection = (rdbValve1ToWaste.IsChecked, rdbValve2ToWaste.IsChecked) switch
             {
-                (true, true) => MFC.OdorFlow.ToWasteAll,
-                (true, false) => MFC.OdorFlow.ToWasteAndUser,
-                (false, true) => MFC.OdorFlow.ToSystemAndWaste,
-                (false, false) => MFC.OdorFlow.ToSystemAndUser,
+                (true, true) => MFC.OdorFlowsTo.Waste,
+                (true, false) => MFC.OdorFlowsTo.WasteAndUser,
+                (false, true) => MFC.OdorFlowsTo.SystemAndWaste,
+                (false, false) => MFC.OdorFlowsTo.SystemAndUser,
                 _ => throw new NotImplementedException()
             };
-            /*_mfc.OdorDirection = (cmbValve1.SelectedIndex, cmbValve2.SelectedIndex) switch
-            {
-                (0, 0) => MFC.OdorFlow.ToWasteAll,
-                (0, 1) => MFC.OdorFlow.ToWasteAndUser,
-                (1, 0) => MFC.OdorFlow.ToSystemAndWaste,
-                (1, 1) => MFC.OdorFlow.ToSystemAndUser,
-                _ => throw new NotImplementedException($"Direction '{cmbValve1.SelectedItem}-{cmbValve2.SelectedItem}' is not expected to be set")
-            };*/
         }
 
         private void btnOdorProduction_Click(object sender, RoutedEventArgs e)

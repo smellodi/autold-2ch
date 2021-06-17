@@ -96,12 +96,12 @@ namespace Olfactory.Comm
         /// The lower bit controls the Valve #2: 0 - to waste, 1 - to user
         /// The higher bit controls the Valve #1: 0 - to waste, 1 - to system
         /// </summary>
-        public enum OdorFlow
+        public enum OdorFlowsTo
         { 
-            ToWasteAll = 00,
-            ToWasteAndUser = 01,        // probably, makes no sense
-            ToSystemAndWaste = 10,
-            ToSystemAndUser = 11,
+            Waste = 00,
+            WasteAndUser = 01,        // makes no sense
+            SystemAndWaste = 10,
+            SystemAndUser = 11,
         }
 
         public enum FlowEndPoint
@@ -158,7 +158,7 @@ namespace Olfactory.Comm
             }
         }
 
-        public OdorFlow OdorDirection
+        public OdorFlowsTo OdorDirection
         {
             get => _odorDirection;
             set
@@ -392,7 +392,7 @@ namespace Olfactory.Comm
 
         double _freshAir = 5.0;
         double _odor = 4.0;
-        OdorFlow _odorDirection = OdorFlow.ToSystemAndWaste;
+        OdorFlowsTo _odorDirection = OdorFlowsTo.SystemAndWaste;
 
         Mutex _mutex = new Mutex();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
         MFCEmulator _emulator = MFCEmulator.Instance;

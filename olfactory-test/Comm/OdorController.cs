@@ -30,7 +30,7 @@ namespace Olfactory.Comm
         /// </summary>
         public void OpenFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToSystemAndUser;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndUser;
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Olfactory.Comm
         /// </summary>
         public void CloseFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlow.ToSystemAndWaste;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
 
             // no need to wait till the trial is over, just stop odor flow at this point already
             Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case

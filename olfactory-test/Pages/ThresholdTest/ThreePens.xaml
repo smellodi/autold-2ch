@@ -76,7 +76,7 @@
                 </WrapPanel>
                 <WrapPanel Grid.Column="2"
                            HorizontalAlignment="Center">
-                    <Label Content="PPM level: "/>
+                    <Label Content="Odor level: "/>
                     <Label x:Name="lblPPMLevel"/>
                 </WrapPanel>
                 <WrapPanel Grid.Column="3"

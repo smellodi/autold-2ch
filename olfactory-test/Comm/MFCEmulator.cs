@@ -8,7 +8,8 @@ namespace Olfactory.Comm
 
         public double FreshAirFlowRate => _massFlowA;
         public double OdorFlowRate => _massFlowB;
-        public MFC.OdorFlow OdorFlow => _odorFlow;
+
+        public MFC.OdorFlowsTo OdorDirection => _odorDirection;
 
         public string EmulateReading(char channel)
         {
@@ -51,9 +52,15 @@ namespace Olfactory.Comm
                     double value = double.Parse(cmd.Substring(2, command.Length - 2));
                     switch (channel)
                     {
-                        case MFC.Channel.A: _massFlowA = value; break;
-                        case MFC.Channel.B: _massFlowB = value; break;
-                        case MFC.Channel.Z: _odorFlow = (MFC.OdorFlow)value; break;
+                        case MFC.Channel.A:
+                            _massFlowA = value;
+                            break;
+                        case MFC.Channel.B:
+                            _massFlowB = value;
+                            break;
+                        case MFC.Channel.Z:
+                            _odorDirection = (MFC.OdorFlowsTo)value;
+                            break;
                         default: break;
                     }
                 }
@@ -71,7 +78,7 @@ namespace Olfactory.Comm
         double _massFlowB = 0.02;
         double _volFlowA = .05;
         double _volFlowB = .05;
-        MFC.OdorFlow _odorFlow = MFC.OdorFlow.ToWasteAll;
+        MFC.OdorFlowsTo _odorDirection = MFC.OdorFlowsTo.Waste;
 
         private MFCEmulator() { }
 
