@@ -33,7 +33,7 @@ namespace Olfactory.Tests.OdorProduction
             // Or can we recover here by trying to open the COM port again?
             _mfc.Closed += (s, e) =>
             {
-                if (_timer.IsEnabled)
+                if (_timer.Enabled)
                 {
                     _timer.Stop();
                     _runner?.Stop();
@@ -44,30 +44,31 @@ namespace Olfactory.Tests.OdorProduction
             };
             _pid.Closed += (s, e) =>
             {
-                if (_timer.IsEnabled)
+                if (_timer.Enabled)
                 {
                     _timer.Stop();
                     _runner?.Stop();
 
                     MessageBox.Show("Connection with the PID device was shut down. The application is terminated.");
                     Application.Current.Shutdown();
-                    //Finished(this, true);
                 }
             };
 
-            _timer.Tick += (s, e) =>
+            _timer.Elapsed += (s, e) =>
             {
-                if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
+                Dispatcher.CurrentDispatcher.Invoke(() =>  // we let the timer to count further without waiting for the end of reading from serial ports
                 {
-                    //_logger.Add(LogSource.PID, "data", sample.ToString());
-                    _logger.Add(pidSample);
-                    CommMonitor.Instance.LogData(LogSource.PID, pidSample);
-                    Data(this, pidSample.PID);
-                }
-                if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
-                {
-                    _logger.Add(mfcSample);
-                }
+                    if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
+                    {
+                        _logger.Add(pidSample);
+                        CommMonitor.Instance.LogData(LogSource.PID, pidSample);
+                        Data(this, pidSample.PID);
+                    }
+                    if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
+                    {
+                        _logger.Add(mfcSample);
+                    }
+                });
             };
         }
 
@@ -85,7 +86,9 @@ namespace Olfactory.Tests.OdorProduction
             _mfc.FreshAirSpeed = _settings.FreshAir;
             _mfc.OdorDirection = MFC.OdorFlowsTo.Waste; // should I add delay here?
 
-            _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
+            //_timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
+            _timer.Interval = _settings.PIDReadingInterval;
+            _timer.AutoReset = true;
             _timer.Start();
 
             _logger.Start(_settings.PIDReadingInterval);
@@ -129,7 +132,8 @@ namespace Olfactory.Tests.OdorProduction
         PID _pid = PID.Instance;
         SyncLogger _logger = SyncLogger.Instance;
 
-        DispatcherTimer _timer = new DispatcherTimer();
+        //DispatcherTimer _timer = new DispatcherTimer();
+        System.Timers.Timer _timer = new System.Timers.Timer();
         Utils.DispatchOnce _runner;
 
 

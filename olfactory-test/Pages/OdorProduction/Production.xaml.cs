@@ -42,7 +42,7 @@ namespace Olfactory.Pages.OdorProduction
 
             _procedure.Data += (s, pid) =>
             {
-                lblPID.Content = pid.ToString("F2");
+                Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             };
             _procedure.StageChanged += (s, stage) =>
             {

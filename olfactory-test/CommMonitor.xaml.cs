@@ -82,37 +82,36 @@ namespace Olfactory
 
         public void LogResult(LogSource source, Result result, params string[] data)
         {
-            if (result.Error == Error.Success && source == LogSource.MFC)
+            Dispatcher.Invoke(() =>
             {
-                _logger.Add(source, "cmnd", data);
-            }
-            else
-            {
-                _logger.Add(source, "cmnd", result.ToString());
-            }
-            txbDebug.AppendText($"{Timestamp.Value} [{source}] {result}\r\n");
-            txbDebug.ScrollToEnd();
-        }
-
-        public void LogMessage(LogSource source, string message)
-        {
-            _logger.Add(source, "fdbk", message);
-            txbDebug.AppendText($"{Timestamp.Value} [{source}] {message}\r\n");
-            txbDebug.ScrollToEnd();
+                if (result.Error == Error.Success && source == LogSource.MFC)
+                {
+                    _logger.Add(source, "cmnd", data);
+                }
+                else
+                {
+                    _logger.Add(source, "cmnd", result.ToString());
+                }
+                txbDebug.AppendText($"{Timestamp.Value} [{source}] {result}\r\n");
+                txbDebug.ScrollToEnd();
+            });
         }
 
         public void LogData(LogSource source, object data)
         {
-            TextBox output = source switch
+            Dispatcher.Invoke(() =>
             {
-                LogSource.MFC => txbMFC,
-                LogSource.PID => txbPID,
-                _ => txbDebug
-            };
-            output.AppendText(data.ToString() + "\r\n");
-            output.ScrollToEnd();
+                TextBox output = source switch
+                {
+                    LogSource.MFC => txbMFC,
+                    LogSource.PID => txbPID,
+                    _ => txbDebug
+                };
+                output.AppendText(data.ToString() + "\r\n");
+                output.ScrollToEnd();
 
-            AddToList(source, data);
+                AddToList(source, data);
+            });
         }
 
 
@@ -154,6 +153,13 @@ namespace Olfactory
             {
                 timer.Stop();
             }
+        }
+
+        private void LogMessage(LogSource source, string message)
+        {
+            _logger.Add(source, "fdbk", message);
+            txbDebug.AppendText($"{Timestamp.Value} [{source}] {message}\r\n");
+            txbDebug.ScrollToEnd();
         }
 
         private void Log(TextBox output, LogSource source, Result result, object data)

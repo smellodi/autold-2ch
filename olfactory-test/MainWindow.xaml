@@ -12,5 +12,5 @@
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewMouseWheel="Window_PreviewMouseWheel" 
-        Closing="Window_Closing" Topmost="True">
+        Closing="Window_Closing">
 </Window>

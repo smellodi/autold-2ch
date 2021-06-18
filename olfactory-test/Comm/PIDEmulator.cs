@@ -146,7 +146,7 @@ namespace Olfactory.Comm
         /// <param name="id">Odor level, 0..9 => 5-50 ml/min </param>
         public void Pulse(int id)
         {
-            double[] ODOR_FLOW_RATES = new double[] { 5, 10, 15, 20, 25, 30, 35, 40, 45, 80 };
+            double[] ODOR_FLOW_RATES = new double[] { 5, 10, 15, 20, 25, 30, 35, 40, 50, 80 };
 
             if (!MFC.Instance.IsOpen)
             {
@@ -243,7 +243,7 @@ namespace Olfactory.Comm
         DispatcherTimer _timer = new DispatcherTimer();
         Queue<Sample> _samples = new Queue<Sample>();
 
-        // Model parameters:
+        // Model parameters for clean air 5 l/min:
 
         // General delay of the measurements (most likely, because its takes time for odor molecules
         // to get through the membrane)
@@ -256,6 +256,11 @@ namespace Olfactory.Comm
         // Controls the rate of odor leaking from the Valve1-GasMixer tube
         const double ODOR_TUBE_LEAK_RATE = 0.03;            // /sec
 
+        // Control the gas compression speed in Valve1-GasMixer tube tube:
+        // the larger the value, the slower the compression occurs
+        // and the odor delay increases
+        const double GAS_COMPRESSION_K = 2.5;
+
         // GasMixer-PID tube surface capacity
         const double TUBE_SURFACE_CAPACITY = 0;       // ml
 
@@ -263,9 +268,11 @@ namespace Olfactory.Comm
         // The higher this value, the slower the accumulation/evaporation proceeds
         const double TUBE_SURFACE_AV_K = 1;
 
-        // Conrols the amount of odor in PID extra volume/tube: the high this value,
-        // the more odor is available to flow to PID after the valve is closed
-        const double PID_EXTRA_VOLUME_RATIO = 0.6;
+        // Conrols the amount of odor in PID extra volume/tube:
+        // - value #1: the higher it is, the more odor is available to flow to PID after the valve is closed
+        // - value #2: the lower it is, the less non-linearity affects low odor concentrations
+        const double PID_EXTRA_VOLUME_RATIO_1 = 0.6;
+        const double PID_EXTRA_VOLUME_RATIO_2 = 7;
 
         // Conrols the speed of odor leaking from the PID extra volume/tube:
         // the high this value, the faster the odor is consumed after the valve is closed
@@ -280,11 +287,26 @@ namespace Olfactory.Comm
         // Controls the ability of membrane to pass odor depending on the gradient of odor inside and outside PID
         const double PID_MEMBRANE_THROUGHPUT_RATE = 3;
 
+        // Threhsold for conversion:
+        //  - use 2nd-order polynomial approximation below this value,
+        //  - use linear approximation above this value
+        // The approximations are mixed using a sigmoid
+        const double PID_CONVERSION_THRESHOLOD = 45;   // ml/min
+
         // NOTE: the next value(s) are measured and modelled from tests.
         // 2nd order polynom coefficients to convert odor in PID (ml) to PID output (mV)
-        const double PID_A = -0.107;
-        const double PID_B = 42.55;
-        const double PID_C = 51.1;  // baseline
+
+        // Undiluted N-Butanol:
+
+        // Second-order polynom
+        const double PID_P2_A = -0.108;
+        const double PID_P2_B = 42.57;
+        const double PID_P2_C = 53.1;  // baseline
+
+        // Linear
+        const double PID_LN_A = 31.23;
+        const double PID_LN_B = 340.27;
+
 
 
         // Model state:
@@ -377,12 +399,12 @@ namespace Olfactory.Comm
                 var odorAmount = EmulatorTimestamp.SAMPLING_INTERVAL * ofr;
                 _odorFlowed += odorAmount;
 
-                if (_odorFlowed > ODOR_TUBE_CAPACITY)
+                var d = _odorFlowed - ODOR_TUBE_CAPACITY;
+                if (d > 0)
                 {
                     // compression of gas
-                    var d = _odorFlowed - ODOR_TUBE_CAPACITY;
-                    var saturationDelay = 1.0 / Math.Pow(2 + d, 1.5); 
-                    var r = d * d / (saturationDelay + d * d);
+                    var copressionDelay = 1.0 / (GAS_COMPRESSION_K + d); 
+                    var r = d * d / (copressionDelay + d * d);
 
                     result = odorAmount * r;
                 }
@@ -428,7 +450,8 @@ namespace Olfactory.Comm
         private double GetOdorInPID(double input)
         {
             // Extra volume in PID where odor may accumulate
-            var innerDiff = _odorInPID * PID_EXTRA_VOLUME_RATIO - _odorInPIDInnerTube;
+            var odorInExtraVolume = _odorInPID * PID_EXTRA_VOLUME_RATIO_1 * (1 + _odorInPID) / (1 + PID_EXTRA_VOLUME_RATIO_2 * _odorInPID);
+            var innerDiff = odorInExtraVolume - _odorInPIDInnerTube;
             var innerFlow = innerDiff * PID_EXTRA_VOLUME_FLOW_RATE;
             _odorInPIDInnerTube += innerFlow * EmulatorTimestamp.SAMPLING_INTERVAL;
 
@@ -451,7 +474,14 @@ namespace Olfactory.Comm
         private double GetPIDValue(double input)
         {
             var pidOdorFlowRate = input / EmulatorTimestamp.SAMPLING_INTERVAL * 60;  // convert to ml/min
-            return PID_A * pidOdorFlowRate * pidOdorFlowRate + PID_B * pidOdorFlowRate + PID_C;
+            var polynomial = PID_P2_A * pidOdorFlowRate * pidOdorFlowRate + PID_P2_B * pidOdorFlowRate + PID_P2_C;
+            var linear = PID_LN_A * pidOdorFlowRate  + PID_LN_B;
+
+            var weight = pidOdorFlowRate - PID_CONVERSION_THRESHOLOD;
+            weight /= Math.Sqrt(1 + weight * weight);
+            weight = (weight + 1) / 2;
+
+            return polynomial * (1.0 - weight) + linear * weight;
         }
 
         /* // Old model
