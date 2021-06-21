@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Management;
 
 namespace Olfactory
@@ -11,20 +10,25 @@ namespace Olfactory
 
         public USB()
         {
-            Listen("__InstanceCreationEvent", "Win32_SerialPort", Inserted);  // CIM_SerialController
-            Listen("__InstanceDeletionEvent", "Win32_SerialPort", Removed);   // Win32_USBHub
+            Listen("__InstanceCreationEvent", "Win32_SerialPort", ActionType.Inserted);  // CIM_SerialController
+            Listen("__InstanceDeletionEvent", "Win32_SerialPort", ActionType.Removed);   // Win32_USBHub
         }
 
         // Internal
 
-        private void Listen(string evt, string target, EventHandler<string> action)
+        enum ActionType
+        {
+            Inserted,
+            Removed
+        }
+
+        private void Listen(string evt, string target, ActionType actionType)
         {
             WqlEventQuery query = new WqlEventQuery($"SELECT * FROM {evt} WITHIN 2 WHERE TargetInstance ISA '{target}'");
             ManagementEventWatcher watcher = new ManagementEventWatcher(query);
             
             watcher.EventArrived += (s, e) =>
             {
-                Debug.WriteLine($"{evt} => TargetInstance = {target}");
                 string portName = "";
 
                 try
@@ -32,11 +36,16 @@ namespace Olfactory
                     var props = ((ManagementBaseObject)e.NewEvent["TargetInstance"]).Properties;
                     portName = FindPortName(props);
                 }
-                catch (Exception ex) { Debug.WriteLine("ERROR: " + ex.Message); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine("ERROR: " + ex.Message); }
 
-                if (action != null && portName.StartsWith("COM"))
+                switch (actionType)
                 {
-                    action(this, portName);
+                    case ActionType.Inserted:
+                        Inserted(this, portName);
+                        break;
+                    case ActionType.Removed:
+                        Removed(this, portName);
+                        break;
                 }
             };
             
@@ -49,7 +58,7 @@ namespace Olfactory
 
             foreach (var property in props)
             {
-                Debug.WriteLine("   " + property.Name + " = " + property.Value);
+                // System.Diagnostics.Debug.WriteLine("   " + property.Name + " = " + property.Value);
                 if (property.Name == "DeviceID")
                 {
                     result = (string)property.Value;

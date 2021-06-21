@@ -46,24 +46,33 @@ namespace Olfactory.Pages
             _pid.Closed += (s, e) => UpdateUI();
 
 
-            _mfcTimer.Interval = TimeSpan.FromSeconds(1);
-            _mfcTimer.Tick += (s, e) => {
-                if (_mfc.IsOpen)
+            long startTs = Utils.Timestamp.Value;
+            _mfcTimer.Interval = 1000;
+            _mfcTimer.AutoReset = true;
+            _mfcTimer.Elapsed += (s, e) => {
+                Dispatcher.Invoke(() =>
                 {
-                    var result = _mfc.GetSample(out MFCSample sample);
-                    lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
-                    lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                }
+                    if (_mfc.IsOpen)
+                    {
+                        var result = _mfc.GetSample(out MFCSample sample);
+                        lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
+                        lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
+                    }
+                });
             };
 
-            _pidTimer.Interval = TimeSpan.FromSeconds(1);
-            _pidTimer.Tick += (s, e) => {
-                if (_pid.IsOpen)
+            _pidTimer.Interval = 1000;
+            _pidTimer.AutoReset = true;
+            _pidTimer.Elapsed += (s, e) => {
+                Dispatcher.Invoke(() =>
                 {
-                    var result = _pid.GetSample(out PIDSample sample);
-                    lblPID_PID.Content = sample.PID.ToString("F2");
-                    lblPID_Loop.Content = sample.Loop.ToString("F2");
-                }
+                    if (_pid.IsOpen)
+                    {
+                        var result = _pid.GetSample(out PIDSample sample);
+                        lblPID_PID.Content = sample.PID.ToString("F2");
+                        lblPID_Loop.Content = sample.Loop.ToString("F2");
+                    }
+                });
             };
 
             UpdateUI();
@@ -76,8 +85,8 @@ namespace Olfactory.Pages
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
 
-        DispatcherTimer _mfcTimer = new DispatcherTimer();
-        DispatcherTimer _pidTimer = new DispatcherTimer();
+        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
+        System.Timers.Timer _pidTimer = new System.Timers.Timer();
 
 
         private void UpdatePortList(ComboBox cmb)
@@ -255,9 +264,13 @@ namespace Olfactory.Pages
                 Storage.Instance.IsDebugging = true;
                 lblDebug.Visibility = Visibility.Visible;
             }
-            else if (e.Key >= Key.D0 && e.Key <= Key.D9)
+            else if (e.Key >= Key.D0 && e.Key <= Key.D9 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                PIDEmulator.Instance.Pulse(e.Key - Key.D0);
+                PIDEmulator.Instance.Model.PulseInput(e.Key - Key.D0);
+            }
+            else if (e.Key >= Key.D0 && e.Key <= Key.D9 && e.KeyboardDevice.Modifiers == ModifierKeys.Alt)
+            {
+                PIDEmulator.Instance.Model.PulseOutput(e.Key - Key.D0);
             }
         }
 

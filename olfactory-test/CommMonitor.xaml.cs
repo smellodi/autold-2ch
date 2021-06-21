@@ -47,22 +47,30 @@ namespace Olfactory
                 LogResult(LogSource.PID, new Result() { Error = Error.Success, Reason = "Stopped" });
             };
 
-            _mfcTimer.Interval = TimeSpan.FromSeconds(1);
-            _mfcTimer.Tick += (s, e) => {
-                if (_mfc.IsOpen)
+            _mfcTimer.Interval = 1000;
+            _mfcTimer.AutoReset = true;
+            _mfcTimer.Elapsed += (s, e) => {
+                Dispatcher.Invoke(() =>
                 {
-                    var result = _mfc.GetSample(out MFCSample sample);
-                    Log(txbMFC, LogSource.MFC, result, sample);
-                }
+                    if (_mfc.IsOpen)
+                    {
+                        var result = _mfc.GetSample(out MFCSample sample);
+                        Log(txbMFC, LogSource.MFC, result, sample);
+                    }
+                });
             };
 
-            _pidTimer.Interval = TimeSpan.FromSeconds(1);
-            _pidTimer.Tick += (s, e) => {
-                if (_pid.IsOpen)
+            _pidTimer.Interval = 1000;
+            _pidTimer.AutoReset = true;
+            _pidTimer.Elapsed += (s, e) => {
+                Dispatcher.Invoke(() =>
                 {
-                    var result = _pid.GetSample(out PIDSample sample);
-                    Log(txbPID, LogSource.PID, result, sample);
-                }
+                    if (_pid.IsOpen)
+                    {
+                        var result = _pid.GetSample(out PIDSample sample);
+                        Log(txbPID, LogSource.PID, result, sample);
+                    }
+                });
             };
 
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
@@ -117,8 +125,8 @@ namespace Olfactory
 
         // Internal
 
-        DispatcherTimer _mfcTimer = new DispatcherTimer();
-        DispatcherTimer _pidTimer = new DispatcherTimer();
+        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
+        System.Timers.Timer _pidTimer = new System.Timers.Timer();
 
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
@@ -143,7 +151,7 @@ namespace Olfactory
             }
         }
 
-        private void ToggleMonitoring(CheckBox chk, DispatcherTimer timer)
+        private void ToggleMonitoring(CheckBox chk, System.Timers.Timer timer)
         {
             if (chk.IsChecked ?? false)
             {

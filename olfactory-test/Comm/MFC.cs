@@ -438,6 +438,7 @@ namespace Olfactory.Comm
             }
 
             var response = !IsDebugging ? ReadBytes() : _emulator.EmulateReading(mfcAddr); // _port.ReadLine()
+
             if (_error != null)
             {
                 return (Error)Marshal.GetLastWin32Error();
@@ -510,19 +511,19 @@ namespace Olfactory.Comm
                     reason = $"Command '{command}' sent successfully";
                 }
 
-                // we may have response to our request, lets read it after a short delay
+                // we should have a response to our request
                 if (!IsDebugging)
                 {
-                    Thread.Sleep(50);
+                    // Thread.Sleep(50);
 
-                    if (_port.BytesToRead > 0)  // note: it may appear that reading is need anyway, even if the buffer is empty yet, so this check is to be removed
+                    // if (_port.BytesToRead > 0)
+                    // {
+                    string response = ReadBytes();
+                    if (_error != null)
                     {
-                        string response = ReadBytes();
-                        if (_error != null)
-                        {
-                            error = (Error)Marshal.GetLastWin32Error();
-                        }
+                        error = (Error)Marshal.GetLastWin32Error();
                     }
+                    // }
                 }
             }
 
@@ -544,6 +545,7 @@ namespace Olfactory.Comm
             int duration = 0;
             int lastChar;
 
+            var ts = Utils.Timestamp.Value;
             try
             {
                 while (duration < PORT_TIMEOUT)        // Wait for response; response ends in return
