@@ -85,8 +85,8 @@ namespace Olfactory.Comm
         /// <param name="id">PID value, 0..9 => 200-2700 mV </param>
         public void PulseOutput(int id)
         {
-            /*
-            double[] PID_OUTPUTS = new double[] { 200, 300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700 };
+            //double[] PID_OUTPUTS = new double[] { 200, 300, 600, 900, 1200, 1500, 1800, 2100, 2400, 2700 };
+            double[] ODOR_FLOW_RATES = new double[] { 5, 10, 15, 20, 25, 30, 35, 40, 50, 80 };
 
             if (!MFC.Instance.IsOpen)
             {
@@ -103,35 +103,46 @@ namespace Olfactory.Comm
             _odorInPIDInnerTube = 0;
             _samples.Clear();
 
+            _flStableLevelSampleCount = 0;
+            _isFlStableLevelReached = false;
+
             List<string> log = new List<string>();
-            //log.Add("Time\tInput\tAccum\tTube\tPID In\tPID Od\tPID mV");
+            log.Add("Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV");
 
             double ts = EmulatorTimestamp.Start();
 
-            double MAX_ODOR_FLOW_RATE = 90;
-            MFC.Instance.OdorSpeed = MAX_ODOR_FLOW_RATE;  // max odor
+            var targetOdor = ODOR_FLOW_RATES[id];
+            var targetPID = GetPIDValue(targetOdor);
+
+            // Initially, we set the odor flow to the max posible rate
+            MFC.Instance.OdorSpeed = FL_MAX_ODOR_FLOW_RATE;
             MFC.Instance.OdorDirection = MFC.OdorFlowsTo.SystemAndUser;
 
-            var counter = 0;
+            // We then set the neasest odor flow rate update after the valve-mixer tube is full
+            var nextMFCUpdateTs = 0.4; // can we comute this aumatically based on tube capacity and FL_MAX_ODOR_FLOW_RATE (minus STEP)?
+            
+            // Emulate 60 seconds, with valve closed after 30 seconds
             while (ts < 60)
             {
-                var (pidInput, pidOdor) = UpdatePID(ts);
+                UpdatePID(ts);
 
-                var input = _mfc.OdorFlowRate * ((int)_mfc.OdorDirection / 10);
-                var logRecord = $"{ts:F2}\t{input:F4}\t{_odorFlowed:F4}\t{_odorInTube:F4}\t{pidInput:F4}\t{pidOdor:F6}\t{PID}";
-
-                log.Add(logRecord);
-
-                if (counter++ % 5 == 0) // every half a second..
+                if (ts > nextMFCUpdateTs) // every half a second.. 
                 {
-
+                    nextMFCUpdateTs += 0.3;
+                    MFC.Instance.OdorSpeed = UpdateMFC(targetPID, targetOdor);
                 }
 
+                var input = _mfc.OdorFlowRate * ((int)_mfc.OdorDirection / 10);
+                var logRecord = $"{ts:F2}\t{targetPID:F4}\t{input:F4}\t{targetPID-PID:F4}\t{_dbg1:F4}\t{_dbg2}\t{PID}";
+                log.Add(logRecord);
+                
                 var newTs = EmulatorTimestamp.Next;
 
                 if (ts < 30 && 30 < newTs)
                 {
                     MFC.Instance.OdorDirection = MFC.OdorFlowsTo.Waste;
+                    targetPID = PID_P2_C;
+                    targetOdor = 0;
                 }
 
                 ts = newTs;
@@ -144,14 +155,14 @@ namespace Olfactory.Comm
             System.Media.SystemSounds.Asterisk.Play();
 
             _timer.Start();  // resume normal processing
-            */
         }
+
 
         // Internal
 
-        Random rnd = new Random((int)DateTime.Now.Ticks);
-
+        // -------------------
         // PID emulation model
+        // -------------------
 
         class Sample
         {
@@ -173,7 +184,7 @@ namespace Olfactory.Comm
 
         // General delay of the measurements (most likely, because its takes time for odor molecules
         // to get through the membrane)
-        const double PID_DELAY = 1;                    // sec
+        const double PID_DELAY = 0.05;                    // sec
 
         // NOTE: the next value(s) are measured and modelled from tests.
         // Valve1-GasMixer tube capacity
@@ -217,7 +228,9 @@ namespace Olfactory.Comm
         //  - use 2nd-order polynomial approximation below this value,
         //  - use linear approximation above this value
         // The approximations are mixed using a sigmoid
-        const double PID_CONVERSION_THRESHOLOD = 45;   // ml/min
+        // The value can be compted by solving the equation d(PID_P2_A*x*x + PID_P2_B*x + PID_P2_C)/dx = d(PID_LN_A*x + PID_LN_B)/dx
+        //      i.e. x = (PID_LN_A - PID_P2_B) / (-2 * PID_P2_A)
+        const double PID_CONVERSION_THRESHOLOD = 52.5;   // ml/min
 
         // NOTE: the next value(s) are measured and modelled from tests.
         // 2nd order polynom coefficients to convert odor in PID (ml) to PID output (mV)
@@ -277,7 +290,9 @@ namespace Olfactory.Comm
             var pidInput = GetInputToPID(gasMixerInput);
 
             var pidOdor = GetOdorInPID(pidInput);
-            var pidValue = GetPIDValue(pidOdor);
+
+            var pidOdorFlowRate = pidOdor / EmulatorTimestamp.SAMPLING_INTERVAL * 60;  // convert to ml/min
+            var pidValue = GetPIDValue(pidOdorFlowRate);
 
             _samples.Enqueue(new Sample(timestamp, pidValue));
 
@@ -395,43 +410,64 @@ namespace Olfactory.Comm
         /// <summary>
         /// Converts odor in PID to mV
         /// </summary>
-        /// <param name="input">Odor amount, ml</param>
+        /// <param name="input">Odor amount, ml/min</param>
         /// <returns>PID value, mV</returns>
         private double GetPIDValue(double input)
         {
-            var pidOdorFlowRate = input / EmulatorTimestamp.SAMPLING_INTERVAL * 60;  // convert to ml/min
-            var polynomial = PID_P2_A * pidOdorFlowRate * pidOdorFlowRate + PID_P2_B * pidOdorFlowRate + PID_P2_C;
-            var linear = PID_LN_A * pidOdorFlowRate + PID_LN_B;
+            var polynomial = PID_P2_A * input * input + PID_P2_B * input + PID_P2_C;
+            var linear = PID_LN_A * input + PID_LN_B;
 
-            var weight = pidOdorFlowRate - PID_CONVERSION_THRESHOLOD;
+            var weight = input - PID_CONVERSION_THRESHOLOD;
             weight /= Math.Sqrt(1 + weight * weight);
             weight = (weight + 1) / 2;
 
             return polynomial * (1.0 - weight) + linear * weight;
         }
 
-        /* // Old model
-        const double PID_AT_HALF_MEMBRANE_THROUGHPUT = 500; // mV
 
-        double _currentPID = PID_C;
+        // -------------------
+        // Feedback loop
+        // -------------------
+        
+        const double FL_MAX_ODOR_FLOW_RATE = 90;
+        const double FL_ACCURACY = 0.005;       // 0.5%
+        const double FL_GAIN = 22;
+        const double FL_GAIN_THRESHOLD = 15;    // ml/min
+        const double FL_STABLE_LEVEL_DURATION_THRESHOLD = 8;
 
-        private double GetOdorInPID(double value) => value; // no model for this
+        double _dbg1 = 0;
+        double _dbg2 = 0;
+        int _flStableLevelSampleCount = 0;
+        bool _isFlStableLevelReached = false;
 
-        /// <summary>
-        /// Models the conversion of odor flowing in PID device into int measurement as mV
-        /// </summary>
-        /// <param name="odorAmountFlowingThroughPID">Amount of odor flowing over the PID membrane (ml)</param>
-        /// <returns>PID value, mV</returns>
-        private double GetPIDValue(double odorAmountFlowingThroughPID)
+        private double UpdateMFC(double targetPID, double targetOdor)
         {
-            var ofr = odorAmountFlowingThroughPID / SAMPLING_INTERVAL * 60;  // convert to ml/min
-            var expectedPID = PID_A * ofr * ofr + PID_B * ofr + PID_C;
-            var delta = expectedPID - _currentPID;
+            var result = targetOdor;
 
-            var pidMembraneThroughput = _currentPID / (PID_AT_HALF_MEMBRANE_THROUGHPUT + _currentPID);
-            _currentPID += delta * pidMembraneThroughput * SAMPLING_INTERVAL;
-            return _currentPID;
+            var pid = PID;
+
+            var targetPidDistance = targetPID - pid;
+            var targetPidDistanceAbs = Math.Abs(targetPidDistance);
+            if (!_isFlStableLevelReached && targetPidDistanceAbs > FL_ACCURACY * targetPID)
+            {
+                _flStableLevelSampleCount = 0;
+
+                // This model is rather presice if there is no delay in PID measurements (PID_DELAY < 0.1 sec)
+                var gain = FL_GAIN * (1.0 - 0.6 * targetOdor / Math.Sqrt(FL_GAIN_THRESHOLD * FL_GAIN_THRESHOLD + targetOdor * targetOdor));
+                var targetPidDistanceRel = targetPidDistance / targetPID;
+                var newOdorFlow = targetOdor * (1.0 + targetPidDistanceRel * gain);
+
+                _dbg1 = gain;
+                result = Math.Max(1.0, Math.Min(FL_MAX_ODOR_FLOW_RATE, newOdorFlow));
+            }
+            else
+            {
+                _flStableLevelSampleCount++;
+                _isFlStableLevelReached = _flStableLevelSampleCount >= FL_STABLE_LEVEL_DURATION_THRESHOLD;
+            }
+
+            _dbg2 = _flStableLevelSampleCount;
+            return result;
         }
-        */
     }
 }

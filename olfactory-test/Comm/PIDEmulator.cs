@@ -29,10 +29,10 @@ namespace Olfactory.Comm
 
             if (count == 8) // query-preset1
             {
-                buffer[0] = Comm.PID.MODBUS_ADDR_PID;
-                buffer[1] = Comm.PID.MODBUS_FN_PRESET_INPUT_REGS;
-                buffer[2] = Comm.PID.MODBUS_REG_PID_POWER >> 8;
-                buffer[3] = Comm.PID.MODBUS_REG_PID_POWER & 0xFF;
+                buffer[0] = PID.MODBUS_ADDR_PID;
+                buffer[1] = PID.MODBUS_FN_PRESET_INPUT_REGS;
+                buffer[2] = PID.MODBUS_REG_PID_POWER >> 8;
+                buffer[3] = PID.MODBUS_REG_PID_POWER & 0xFF;
                 buffer[4] = 0x00;
                 buffer[5] = 0x01;
                 buffer[6] = 0x84;
@@ -42,11 +42,11 @@ namespace Olfactory.Comm
             {
                 var addr = (inputQuery.AddressHi << 8) | inputQuery.AddressLo;
 
-                buffer[0] = Comm.PID.MODBUS_ADDR_PID;
-                buffer[1] = Comm.PID.MODBUS_FN_READ_INPUT_REGS;
-                buffer[2] = Comm.PID.MODBUS_GROUP_LEN * sizeof(uint);
+                buffer[0] = PID.MODBUS_ADDR_PID;
+                buffer[1] = PID.MODBUS_FN_READ_INPUT_REGS;
+                buffer[2] = PID.MODBUS_GROUP_LEN * sizeof(uint);
 
-                if (addr == Comm.PID.MODBUS_REG_ADCMV_GROUP)
+                if (addr == PID.MODBUS_REG_ADCMV_GROUP)
                 {
                     // rtd
                     buffer[3] = (byte)'T';
