@@ -4,7 +4,7 @@
     {
         public static readonly double SAMPLING_INTERVAL = 0.1;
 
-        public static double Value => _isEmulating ? _emulated : Utils.Timestamp.Value / 1000.0;
+        public static double Value => _isEmulating ? _emulated : Utils.Timestamp.Sec;
 
         public static double Next => _emulated += SAMPLING_INTERVAL;
 

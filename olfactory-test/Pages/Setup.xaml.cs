@@ -46,7 +46,7 @@ namespace Olfactory.Pages
             _pid.Closed += (s, e) => UpdateUI();
 
 
-            long startTs = Utils.Timestamp.Value;
+            long startTs = Utils.Timestamp.Ms;
             _mfcTimer.Interval = 1000;
             _mfcTimer.AutoReset = true;
             _mfcTimer.Elapsed += (s, e) => {
@@ -58,6 +58,10 @@ namespace Olfactory.Pages
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
                         lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow);
+                    }
+                    else
+                    {
+                        lmsOdor.Add(Utils.Timestamp.Sec, 0);
                     }
                 });
             };
@@ -73,6 +77,10 @@ namespace Olfactory.Pages
                         lblPID_PID.Content = sample.PID.ToString("F2");
                         lblPID_Loop.Content = sample.Loop.ToString("F2");
                         lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
+                    }
+                    else
+                    {
+                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0);
                     }
                 });
             };

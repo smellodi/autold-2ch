@@ -29,9 +29,9 @@ namespace Olfactory.Pages.OdorProduction
             _countdownTimer.Interval = TimeSpan.FromSeconds(1);
             _countdownTimer.Tick += (s, e) =>
             {
-                if (_countdownStop > Utils.Timestamp.Value)
+                if (_countdownStop > Utils.Timestamp.Sec)
                 {
-                    lblCountdown.Content = Math.Round((double)(_countdownStop - Utils.Timestamp.Value) / 1000);
+                    lblCountdown.Content = Math.Round(_countdownStop - Utils.Timestamp.Sec);
                 }
                 else
                 {
@@ -109,13 +109,13 @@ namespace Olfactory.Pages.OdorProduction
 
         DispatcherTimer _countdownTimer = new DispatcherTimer();
 
-        long _countdownStop = 0;
+        double _countdownStop = 0;
 
         private void InitiateCountdownTimer(int value)
         {
             _countdownTimer.Stop();
-            _countdownStop = Utils.Timestamp.Value + 1000 * value;
-            lblCountdown.Content = Math.Round((double)(_countdownStop - Utils.Timestamp.Value)/1000);
+            _countdownStop = Utils.Timestamp.Sec + value;
+            lblCountdown.Content = Math.Round(_countdownStop - Utils.Timestamp.Sec);
 
             if (value > 0)
             {

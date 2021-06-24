@@ -297,7 +297,7 @@ namespace Olfactory.Comm
                 }
                 else
                 {
-                    sample.Time = Utils.Timestamp.Value;
+                    sample.Time = Utils.Timestamp.Ms;
                 }
 
                 _error = null;
@@ -595,7 +595,7 @@ namespace Olfactory.Comm
             int duration = 0;
             int lastChar;
 
-            var ts = Utils.Timestamp.Value;
+            var ts = Utils.Timestamp.Ms;
             try
             {
                 while (duration < PORT_TIMEOUT)        // Wait for response; response ends in return

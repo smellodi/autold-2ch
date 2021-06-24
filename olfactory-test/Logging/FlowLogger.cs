@@ -17,7 +17,7 @@ namespace Olfactory
 
             public Record(LogSource source, string type, string[] data)
             {
-                Timestamp = Utils.Timestamp.Value;
+                Timestamp = Utils.Timestamp.Ms;
                 Source = source;
                 Type = type;
                 Data = data;

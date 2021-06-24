@@ -16,7 +16,6 @@ namespace Olfactory.Controls
         }
 
         public SeriesCollection SeriesCollection { get; set; }
-        //public ChartValues<MeasureModel> Values { get; set; }
 
         public LiveMeasurement()
         {
@@ -43,20 +42,19 @@ namespace Olfactory.Controls
             var values = SeriesCollection[0].Values;
             values.Clear();
 
-            _startTimestamp = Utils.Timestamp.Value;
-            var count = ActualWidth / 4;
-            var index = 0;
+            var count = ActualWidth / PIXELS_PER_POINT;
+            var ts = Utils.Timestamp.Sec;
 
             while (values.Count < count)
             {
-                values.Add(new MeasureModel { Timestamp = (index - count), Value = baseline });
+                values.Add(new MeasureModel { Timestamp = ts + values.Count - count, Value = baseline });
             }
         }
 
         public void Add(double timestamp,  double value)
         {
             var values = SeriesCollection[0].Values;
-            if (values.Count > ActualWidth / 4)
+            while (values.Count > ActualWidth / PIXELS_PER_POINT)
             {
                 values.RemoveAt(0);
             }
@@ -64,8 +62,8 @@ namespace Olfactory.Controls
             values.Add(new MeasureModel { Timestamp = timestamp, Value = value });
         }
 
-        // Internal
+        // Internal 
 
-        long _startTimestamp = 0;
+        const int PIXELS_PER_POINT = 4;
     }
 }

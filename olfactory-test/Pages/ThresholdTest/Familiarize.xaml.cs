@@ -28,7 +28,7 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     _countdownTimer.Stop();
 
-                    _sniffingStartTimestamp = Utils.Timestamp.Value;
+                    _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
                     if (_settings.FamiliarizationDuration > 0)
                     {
@@ -111,7 +111,7 @@ namespace Olfactory.Pages.ThresholdTest
 
                 _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
                 Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
-                Utils.DispatchOnce.Do(1, () => Next(this, Utils.Timestamp.Value - _sniffingStartTimestamp));
+                Utils.DispatchOnce.Do(1, () => Next(this, Utils.Timestamp.Ms - _sniffingStartTimestamp));
             }
         }
     }

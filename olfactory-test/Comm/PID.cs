@@ -126,7 +126,7 @@ namespace Olfactory.Comm
             }
             else
             {
-                sample.Time = Utils.Timestamp.Value;
+                sample.Time = Utils.Timestamp.Ms;
             }
 
             _error = null;

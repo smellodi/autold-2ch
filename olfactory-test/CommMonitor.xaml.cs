@@ -100,7 +100,7 @@ namespace Olfactory
                 {
                     _logger.Add(source, "cmnd", result.ToString());
                 }
-                txbDebug.AppendText($"{Timestamp.Value} [{source}] {result}\r\n");
+                txbDebug.AppendText($"{Timestamp.Ms} [{source}] {result}\r\n");
                 txbDebug.ScrollToEnd();
             });
         }
@@ -166,7 +166,7 @@ namespace Olfactory
         private void LogMessage(LogSource source, string message)
         {
             _logger.Add(source, "fdbk", message);
-            txbDebug.AppendText($"{Timestamp.Value} [{source}] {message}\r\n");
+            txbDebug.AppendText($"{Timestamp.Ms} [{source}] {message}\r\n");
             txbDebug.ScrollToEnd();
         }
 
@@ -181,7 +181,7 @@ namespace Olfactory
             }
             else
             {
-                output.AppendText($"{Timestamp.Value} ----- INVALID -----\r\n");
+                output.AppendText($"{Timestamp.Ms} ----- INVALID -----\r\n");
                 LogResult(source, result);
             }
 
