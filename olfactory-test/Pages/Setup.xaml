@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages"
+      xmlns:local="clr-namespace:Olfactory.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="470" d:DesignWidth="600"
       Title="Setup"
@@ -19,6 +19,11 @@
             <Style TargetType="{x:Type Label}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
+            <Style x:Key="Divider" TargetType="{x:Type Label}">
+                <Setter Property="BorderThickness" Value="0,1,0,0"/>
+                <Setter Property="BorderBrush" Value="#FF4D4D4D"/>
+                <Setter Property="Height" Value="1"/>
+            </Style>
             <Style x:Key="Value" TargetType="{x:Type Label}">
                 <Setter Property="Foreground" Value="#FF1F6300"/>
                 <Setter Property="Content" Value="0.0"/>
@@ -29,7 +34,6 @@
         </Grid.Resources>
         
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -45,34 +49,11 @@
                Style="{StaticResource PageTitle}"
                Content="Setup"/>
 
-        <StackPanel Grid.Row="2" x:Name="stpMeasurements">
-            <StackPanel.LayoutTransform>
-                <ScaleTransform x:Name="sctScale1"/>
-            </StackPanel.LayoutTransform>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="Clean air (l/min)"/>
-                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
-            </WrapPanel>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="Odor (ml/min)"/>
-                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
-            </WrapPanel>
-            <Label/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="PID value (mV)"/>
-                <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
-            </WrapPanel>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="PID loop (mA)"/>
-                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
-            </WrapPanel>
-        </StackPanel>
-        
-        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center">
             <StackPanel.LayoutTransform>
                 <ScaleTransform x:Name="sctScale2"/>
             </StackPanel.LayoutTransform>
-            <Border
+            <Border Margin="12,0,0,12"
                 Style="{StaticResource Box}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -120,7 +101,7 @@
                 </Grid>
             </Border>
             
-            <Border
+            <Border Margin="12,0,0,12"
                 Style="{StaticResource Box}">
                 <Grid x:Name="grdPlayground">
                     <Grid.RowDefinitions>
@@ -200,6 +181,43 @@
                     </WrapPanel>
                 </Grid>
             </Border>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" x:Name="stpMeasurements"
+                    Margin="12,0">
+            <StackPanel.LayoutTransform>
+                <ScaleTransform x:Name="sctScale1"/>
+            </StackPanel.LayoutTransform>
+
+            <Label Style="{StaticResource Divider}"/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Clean air (l/min)"/>
+                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
+            </WrapPanel>
+
+            <Label Style="{StaticResource Divider}"/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="Odor (ml/min)"/>
+                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <local:LiveMeasurement x:Name="lmsOdor"
+                                   Height="100"/>
+
+            <Label Style="{StaticResource Divider}"/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="PID value (mV)"/>
+                <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
+            </WrapPanel>
+            <local:LiveMeasurement x:Name="lmsPIDValue"
+                                   Height="100"/>
+
+            <Label Style="{StaticResource Divider}"/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="PID loop (mA)"/>
+                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
+            </WrapPanel>
+
+            <Label Style="{StaticResource Divider}"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="4" Grid.Column="0"

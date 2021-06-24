@@ -57,6 +57,7 @@ namespace Olfactory.Pages
                         var result = _mfc.GetSample(out MFCSample sample);
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
+                        lmsOdor.Add(sample.B.MassFlow);
                     }
                 });
             };
@@ -71,6 +72,7 @@ namespace Olfactory.Pages
                         var result = _pid.GetSample(out PIDSample sample);
                         lblPID_PID.Content = sample.PID.ToString("F2");
                         lblPID_Loop.Content = sample.Loop.ToString("F2");
+                        lmsPIDValue.Add(sample.PID);
                     }
                 });
             };
@@ -293,9 +295,10 @@ namespace Olfactory.Pages
             {
                 MessageBox.Show("Cannot open the port");
             }
-            else
+            else if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
+                lmsOdor.Reset();
             }
 
             GetSystemStates();
@@ -308,9 +311,14 @@ namespace Olfactory.Pages
             {
                 MessageBox.Show("Cannot open the port");
             }
-            else
+            else if (_pid.IsOpen)
             {
                 _pidTimer.Start();
+
+                if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
+                {
+                    lmsPIDValue.Reset(sample.PID);
+                }
             }
 
             UpdateUI();
