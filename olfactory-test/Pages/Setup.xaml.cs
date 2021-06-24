@@ -57,7 +57,7 @@ namespace Olfactory.Pages
                         var result = _mfc.GetSample(out MFCSample sample);
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                        lmsOdor.Add(sample.B.MassFlow);
+                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow);
                     }
                 });
             };
@@ -72,7 +72,7 @@ namespace Olfactory.Pages
                         var result = _pid.GetSample(out PIDSample sample);
                         lblPID_PID.Content = sample.PID.ToString("F2");
                         lblPID_Loop.Content = sample.Loop.ToString("F2");
-                        lmsPIDValue.Add(sample.PID);
+                        lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
                     }
                 });
             };

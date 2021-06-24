@@ -6,7 +6,7 @@ namespace Olfactory.Comm
 {
     public class OlfactoryDeviceModel
     {
-        public double PID => _samples.Count > 0 ? _samples.Peek().Value : 0;
+        public double PID => _lastPID;
 
         public OlfactoryDeviceModel()
         {
@@ -37,7 +37,7 @@ namespace Olfactory.Comm
             _odorOnSurface = 0;
             _odorInPID = 0;
             _odorInPIDInnerTube = 0;
-            _samples.Clear();
+            _lastPID = 0;
 
             List<string> log = new List<string>();
             log.Add("Time\tInput\tAccum\tTube\tPID In\tPID Od\tPID mV");
@@ -48,10 +48,10 @@ namespace Olfactory.Comm
 
             while (ts < 56)
             {
-                var (pidInput, pidOdor) = UpdatePID(ts);
+                UpdatePID(ts);
 
                 var input = _mfc.OdorFlowRate * ((int)_mfc.OdorDirection / 10);
-                var logRecord = $"{ts:F2}\t{input:F4}\t{_odorFlowed:F4}\t{_odorInTube:F4}\t{pidInput:F4}\t{pidOdor:F6}\t{PID}";
+                var logRecord = $"{ts:F2}\t{input:F4}\t{_odorFlowed:F4}\t{_odorInTube:F4}\t{_dbg1:F4}\t{_dbg2:F6}\t{PID}";
 
                 log.Add(logRecord);
 
@@ -101,7 +101,7 @@ namespace Olfactory.Comm
             _odorOnSurface = 0;
             _odorInPID = 0;
             _odorInPIDInnerTube = 0;
-            _samples.Clear();
+            _lastPID = 0;
 
             _flStableLevelSampleCount = 0;
             _isFlStableLevelReached = false;
@@ -160,6 +160,9 @@ namespace Olfactory.Comm
 
         // Internal
 
+        double _dbg1 = 0;
+        double _dbg2 = 0;
+
         // -------------------
         // PID emulation model
         // -------------------
@@ -178,13 +181,9 @@ namespace Olfactory.Comm
 
         MFCEmulator _mfc = MFCEmulator.Instance;
         System.Timers.Timer _timer = new System.Timers.Timer();
-        Queue<Sample> _samples = new Queue<Sample>();
+        double _lastPID = 0;
 
         // Model parameters for clean air 5 l/min:
-
-        // General delay of the measurements (most likely, because its takes time for odor molecules
-        // to get through the membrane)
-        const double PID_DELAY = 0.05;                    // sec
 
         // NOTE: the next value(s) are measured and modelled from tests.
         // Valve1-GasMixer tube capacity
@@ -272,13 +271,12 @@ namespace Olfactory.Comm
         // Memorizes the valve state to flush the tubes after it is closed
         bool _isValveOpened = false;
 
-
         /// <summary>
         /// Estimates the PID output value
         /// </summary>
         /// <param name="timestamp">Current timestamp</param>
         /// <returns>PID input and PID odor</returns>
-        private (double, double) UpdatePID(double timestamp)
+        private void UpdatePID(double timestamp)
         {
             var isValveOpened = _mfc.OdorDirection >= MFC.OdorFlowsTo.SystemAndWaste;
             if (isValveOpened != _isValveOpened)
@@ -292,16 +290,10 @@ namespace Olfactory.Comm
             var pidOdor = GetOdorInPID(pidInput);
 
             var pidOdorFlowRate = pidOdor / EmulatorTimestamp.SAMPLING_INTERVAL * 60;  // convert to ml/min
-            var pidValue = GetPIDValue(pidOdorFlowRate);
+            _lastPID = GetPIDValue(pidOdorFlowRate);
 
-            _samples.Enqueue(new Sample(timestamp, pidValue));
-
-            while (timestamp - _samples.Peek().Timestamp > PID_DELAY)
-            {
-                _samples.Dequeue();
-            }
-
-            return (pidInput, pidOdor);
+            _dbg1 = pidInput;
+            _dbg2 = pidOdor;
         }
 
         /// <summary>
@@ -333,10 +325,11 @@ namespace Olfactory.Comm
         private double GetInputToGasMixer()
         {
             double? result = null;
-            var ofr = _mfc.OdorFlowRate / 60;   // ml/sec
 
-            if (_isValveOpened && ofr > 0)
+            if (_isValveOpened && _mfc.OdorFlowRate > 0)
             {
+                var ofr = _mfc.OdorFlowRate / 60;   // ml/sec
+
                 var odorAmount = EmulatorTimestamp.SAMPLING_INTERVAL * ofr;
                 _odorFlowed += odorAmount;
 
@@ -435,8 +428,6 @@ namespace Olfactory.Comm
         const double FL_GAIN_THRESHOLD = 15;    // ml/min
         const double FL_STABLE_LEVEL_DURATION_THRESHOLD = 8;
 
-        double _dbg1 = 0;
-        double _dbg2 = 0;
         int _flStableLevelSampleCount = 0;
         bool _isFlStableLevelReached = false;
 

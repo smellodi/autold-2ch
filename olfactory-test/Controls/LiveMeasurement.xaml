@@ -8,19 +8,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <lvc:CartesianChart LegendLocation="None" AnimationsSpeed="0">
-            <lvc:CartesianChart.Series>
-                <lvc:LineSeries Title=""
-                                Values="{Binding Values}" 
-                                Fill="Transparent" 
-                                LineSmoothness="0" 
-                                PointGeometry="{x:Null}" />
-            </lvc:CartesianChart.Series>
+        <lvc:CartesianChart LegendLocation="None" AnimationsSpeed="0" Series="{Binding SeriesCollection}" >
             <lvc:CartesianChart.AxisY>
-                <lvc:Axis MinValue="0"/>
+                <lvc:Axis MinValue="-1"/>
             </lvc:CartesianChart.AxisY>
             <lvc:CartesianChart.AxisX>
-                <lvc:Axis Labels=""/>
+                <lvc:Axis ShowLabels="True">
+                    <lvc:Axis.Separator>
+                        <lvc:Separator IsEnabled="True" Step="10"/>
+                    </lvc:Axis.Separator>
+                </lvc:Axis>
             </lvc:CartesianChart.AxisX>
         </lvc:CartesianChart>
     </Grid>
