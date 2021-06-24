@@ -118,5 +118,8 @@
     <Setting Name="Test_TT_TurningPointsToCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4</Value>
     </Setting>
+    <Setting Name="Test_TT_FamiliarizationDuration" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

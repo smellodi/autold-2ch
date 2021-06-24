@@ -19,6 +19,15 @@ namespace Olfactory.Comm
                 return "";
             }*/
 
+            if (channel == 'Z')
+            {
+                return string.Join(' ',
+                    'Z',
+                    OdorDirection.HasFlag(MFC.OdorFlowsTo.SystemAndWaste) ? 1 : 0,
+                    OdorDirection.HasFlag(MFC.OdorFlowsTo.WasteAndUser) ? 1 : 0
+                );
+            }
+
             var pressure = channel == 'A' ? _pressureA : _pressureB;
             var massFlow = channel == 'A' ? _massFlowA : _massFlowB;
             var volFlow = channel == 'A' ? _volFlowA : _volFlowB;

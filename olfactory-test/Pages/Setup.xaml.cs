@@ -226,6 +226,14 @@ namespace Olfactory.Pages
             settings.Save();
         }
 
+        private void GetSystemStates()
+        {
+            rdbValve1ToSystem.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.SystemAndWaste);
+            rdbValve1ToWaste.IsChecked = !rdbValve1ToSystem.IsChecked;
+            rdbValve2ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.WasteAndUser);
+            rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
+        }
+
         // UI events
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -290,6 +298,7 @@ namespace Olfactory.Pages
                 _mfcTimer.Start();
             }
 
+            GetSystemStates();
             UpdateUI();
         }
 

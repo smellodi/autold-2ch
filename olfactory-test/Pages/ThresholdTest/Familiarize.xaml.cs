@@ -24,13 +24,32 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     txbCountdown.Text = $"{_waitingCountdown} seconds left";
                 }
-                else
+                else if (_sniffingStartTimestamp == 0)
                 {
-                    txbCountdown.Text = $"Odor is flowing now. Click 'Continue' when it is enough.";
-                    btnNext.IsEnabled = true;
                     _countdownTimer.Stop();
 
                     _sniffingStartTimestamp = Utils.Timestamp.Value;
+
+                    if (_settings.FamiliarizationDuration > 0)
+                    {
+                        txbCountdown.Text = $"Odor is flowing now, sniff it!";
+                        _countdownTimer.Interval = TimeSpan.FromSeconds(_settings.FamiliarizationDuration);
+                        _countdownTimer.Start();
+                    }
+                    else
+                    {
+                        txbCountdown.Text = $"Odor is flowing now, sniff it! Click 'Continue' when it is enough.";
+                        btnNext.IsEnabled = true;
+                    }
+                }
+                else
+                {
+                    _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
+                    Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
+
+                    txbCountdown.Text = $"Click 'Continue' to start the test.";
+                    _countdownTimer.Stop();
+                    btnNext.IsEnabled = true;
                 }
             };
 
@@ -40,8 +59,14 @@ namespace Olfactory.Pages.ThresholdTest
             };
         }
 
+        public void Init(Tests.ThresholdTest.Settings settings)
+        {
+            _settings = settings;
+        }
+
         public void Interrupt()
         {
+            _countdownTimer.Stop();
             _directionChangeTimer.Stop();
             _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
         }
@@ -53,8 +78,9 @@ namespace Olfactory.Pages.ThresholdTest
         DispatcherTimer _countdownTimer = new DispatcherTimer();
         DispatcherTimer _directionChangeTimer = new DispatcherTimer();
         int _waitingCountdown = 0;
-        long _sniffingStartTimestamp;
+        long _sniffingStartTimestamp = 0;
 
+        Tests.ThresholdTest.Settings _settings;
 
         // UI events
 
@@ -75,12 +101,18 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void btnNext_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
+            if (_settings.FamiliarizationDuration > 0)
+            {
+                Next(this, (long)(_settings.FamiliarizationDuration * 1000));
+            }
+            else
+            {
+                btnNext.IsEnabled = false;
 
-            // We do not need this command as the next page immediately sets the odor speed to some other value
-            //Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.5 sec delay between the requests
-
-            Next(this, Utils.Timestamp.Value - _sniffingStartTimestamp);
+                _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
+                Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
+                Utils.DispatchOnce.Do(1, () => Next(this, Utils.Timestamp.Value - _sniffingStartTimestamp));
+            }
         }
     }
 }

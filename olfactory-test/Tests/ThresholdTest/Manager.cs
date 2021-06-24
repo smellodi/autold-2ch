@@ -52,9 +52,13 @@ namespace Olfactory.Tests.ThresholdTest
                 _logger.Add(LogSource.ThTest, "page", _current.Title);
             }
 
-            if (_current is ThreePens page)
+            if (_current is ThreePens threePens)
             {
-                page.Init(_settings);
+                threePens.Init(_settings);
+            }
+            else if (_current is Familiarize famil)
+            {
+                famil.Init(_settings);
             }
 
             return _current;

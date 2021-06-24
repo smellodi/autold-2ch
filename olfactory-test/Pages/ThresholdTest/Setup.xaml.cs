@@ -24,6 +24,7 @@ namespace Olfactory.Pages.ThresholdTest
             txbTurningPoints.Text = _settings.TurningPoints.ToString();
             txbTurningPointsToCount.Text = _settings.TurningPointsToCount.ToString();
             txbRecognitionsInRow.Text = _settings.RecognitionsInRow.ToString();
+            txbFamiliarizationDuration.Text = _settings.FamiliarizationDuration.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
         }
 
@@ -84,6 +85,11 @@ namespace Olfactory.Pages.ThresholdTest
                 return txbRecognitionsInRow;
             }
 
+            if (!double.TryParse(txbFamiliarizationDuration.Text, INTEGER, null, out dVal) || iVal < 0 || iVal > 5)
+            {
+                return txbFamiliarizationDuration;
+            }
+
             if (!int.TryParse(txbPIDSamplingInterval.Text, INTEGER, null, out iVal) || iVal < 100 || iVal > 5000)
             {
                 return txbPIDSamplingInterval;
@@ -120,6 +126,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.TurningPoints = int.Parse(txbTurningPoints.Text);
                 _settings.TurningPointsToCount = int.Parse(txbTurningPointsToCount.Text);
                 _settings.RecognitionsInRow = int.Parse(txbRecognitionsInRow.Text);
+                _settings.FamiliarizationDuration = double.Parse(txbFamiliarizationDuration.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
                 _settings.Save();

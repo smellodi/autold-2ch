@@ -53,9 +53,11 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="8"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="310"/>
                 </Grid.ColumnDefinitions>
 
@@ -74,7 +76,7 @@
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" x:Name="txbFreshAir"
                              Text="5"
-                             ToolTip="a single positive floating-point value"/>
+                             ToolTip="a positive number"/>
                     <Label Grid.Column="1"
                            Content="l/min"/>
                 </Grid>
@@ -148,10 +150,26 @@
                              ToolTip="a positive integer"/>
                 </Grid>
 
+
                 <Label Grid.Row="10" Grid.Column="0"
                            Style="{StaticResource Field}"
-                           Content="PID sampling"/>
+                           Content="Familiarization"/>
                 <Grid Grid.Row="10" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" x:Name="txbFamiliarizationDuration"
+                         Text="2"
+                         ToolTip="a positive number"/>
+                    <Label Grid.Column="1"
+                           Content="sec"/>
+                </Grid>
+
+                <Label Grid.Row="12" Grid.Column="0"
+                           Style="{StaticResource Field}"
+                           Content="PID sampling"/>
+                <Grid Grid.Row="12" Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="50"/>

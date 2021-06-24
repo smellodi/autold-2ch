@@ -96,12 +96,13 @@ namespace Olfactory.Comm
         /// The lower bit controls the Valve #2: 0 - to waste, 1 - to user
         /// The higher bit controls the Valve #1: 0 - to waste, 1 - to system
         /// </summary>
+        [Flags]
         public enum OdorFlowsTo
         { 
             Waste = 00,
             WasteAndUser = 01,        // makes no sense
             SystemAndWaste = 10,
-            SystemAndUser = 11,
+            SystemAndUser = WasteAndUser | SystemAndWaste,
         }
 
         public enum FlowEndPoint
@@ -346,6 +347,12 @@ namespace Olfactory.Comm
                     _channels |= Channels.B;
                     _odor = sample.B.MassFlow;
                 }
+                if ((error = ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)) == Error.Success)
+                {
+                    _odorDirection = OdorFlowsTo.Waste
+                        | (isValve1Opened ? OdorFlowsTo.SystemAndWaste : OdorFlowsTo.Waste)
+                        | (isValve2Opened ? OdorFlowsTo.WasteAndUser : OdorFlowsTo.Waste);
+                }
             }
             catch (Exception ex)
             {
@@ -472,6 +479,49 @@ namespace Olfactory.Comm
             {
                 return Error.WrongDevice;
             }
+
+            return Error.Success;
+        }
+
+        Error ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)
+        {
+            var mfcAddr = Channel.Z.ToString()[0];
+            isValve1Opened = false;
+            isValve2Opened = false;
+
+            if (!IsDebugging)
+            {
+                char[] chars = new char[2] { mfcAddr, DATA_END };
+                _port.Write(chars, 0, 2);
+            }
+            if (_error != null)
+            {
+                return (Error)Marshal.GetLastWin32Error();
+            }
+
+            var response = !IsDebugging ? ReadBytes() : _emulator.EmulateReading(mfcAddr);
+
+            if (_error != null)
+            {
+                return (Error)Marshal.GetLastWin32Error();
+            }
+            if (string.IsNullOrEmpty(response))
+            {
+                return Error.ReadFault;
+            }
+
+            string[] values = response.Split(' ');
+            if (values.Length != 3)
+            {
+                return Error.BadDataFormat;
+            }
+            if (values[0][0] != mfcAddr)
+            {
+                return Error.WrongDevice;
+            }
+
+            isValve1Opened = values[1][0] == '1';
+            isValve2Opened = values[2][0] == '1';
 
             return Error.Success;
         }

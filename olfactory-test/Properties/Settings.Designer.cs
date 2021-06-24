@@ -414,5 +414,17 @@ namespace Olfactory.Properties {
                 this["Test_TT_TurningPointsToCount"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public double Test_TT_FamiliarizationDuration {
+            get {
+                return ((double)(this["Test_TT_FamiliarizationDuration"]));
+            }
+            set {
+                this["Test_TT_FamiliarizationDuration"] = value;
+            }
+        }
     }
 }
