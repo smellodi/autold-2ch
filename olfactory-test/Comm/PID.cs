@@ -56,6 +56,8 @@ namespace Olfactory.Comm
         public override string Name => "PID";
         public override string[] DataColumns => PIDSample.Header;
 
+        public double Value => _emulator?.Model.PID ?? _lastSample.PID;
+
         /// <summary>
         /// Private constructor, use Instance property to get the instance.
         /// Needs only to set the port stops bits
@@ -127,6 +129,7 @@ namespace Olfactory.Comm
             else
             {
                 sample.Time = Utils.Timestamp.Ms;
+                _lastSample = sample;
             }
 
             _error = null;
@@ -180,6 +183,7 @@ namespace Olfactory.Comm
         static PID _instance;
 
         PIDEmulator _emulator;
+        PIDSample _lastSample = new PIDSample();
 
         [StructLayout(LayoutKind.Explicit)]
         internal struct BtoW                                                    // For convenient byte-level manipulation of 16b integers,

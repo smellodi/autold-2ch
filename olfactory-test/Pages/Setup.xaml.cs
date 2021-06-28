@@ -284,11 +284,11 @@ namespace Olfactory.Pages
             }
             else if (e.Key >= Key.D0 && e.Key <= Key.D9 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                PIDEmulator.Instance.Model.PulseInput(e.Key - Key.D0);
+                PIDEmulator.Instance.Model._PulseInput(e.Key - Key.D0);
             }
             else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
             {
-                PIDEmulator.Instance.Model.PulseOutput(e.Key - Key.NumPad0);
+                PIDEmulator.Instance.Model._PulseOutput(e.Key - Key.NumPad0);
             }
         }
 

@@ -26,6 +26,7 @@ namespace Olfactory.Pages.ThresholdTest
             txbRecognitionsInRow.Text = _settings.RecognitionsInRow.ToString();
             txbFamiliarizationDuration.Text = _settings.FamiliarizationDuration.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
+            chkFeedbackLoop.IsChecked = _settings.UseFeedbackLoop;
         }
 
 
@@ -128,6 +129,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.RecognitionsInRow = int.Parse(txbRecognitionsInRow.Text);
                 _settings.FamiliarizationDuration = double.Parse(txbFamiliarizationDuration.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
+                _settings.UseFeedbackLoop = chkFeedbackLoop.IsChecked ?? false;
 
                 _settings.Save();
 

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
+using Olfactory.Comm;
 using Olfactory.Utils;
-using OdorController = Olfactory.Comm.OdorController;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -55,7 +55,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             // If the test is in progress, display warning message and quit the app:
             // Or can we recover here by trying to open the COM port again?
-            Comm.MFC.Instance.Closed += (s, e) =>
+            MFC.Instance.Closed += (s, e) =>
             {
                 if (_inProgress)
                 {
@@ -69,10 +69,15 @@ namespace Olfactory.Tests.ThresholdTest
 
             _timer.Tick += (s, e) =>
             {
-                if (_pid.GetSample(out Comm.PIDSample pidSample).Error == Comm.Error.Success)
+                if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
                     _logger.Add(LogSource.PID, "data", pidSample.ToString());
                 }
+            };
+
+            _model.TargetOdorLevelReached += (s, e) =>
+            {
+                System.Diagnostics.Debug.WriteLine("FL" + (e ? "0" : "1"));
             };
         }
 
@@ -179,9 +184,9 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Members
 
-        OdorController _odorController = OdorController.Instance;
+        OlfactoryDeviceModel _model = new OlfactoryDeviceModel();
         FlowLogger _logger = FlowLogger.Instance;
-        Comm.PID _pid = Comm.PID.Instance;
+        PID _pid = PID.Instance;
         DispatcherTimer _timer = new DispatcherTimer();
         Settings _settings = new Settings();
 
@@ -207,20 +212,29 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void PrepareOdor()
         {
-            var readinessDelay = _odorController.GetReady(_odorTubeFillingDuration, _settings.PPMs[_currentPPMLevel]);
-
-            // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
-            if (readinessDelay > _settings.OdorPreparationDuration)
+            if (_settings.UseFeedbackLoop)
             {
-                MessageBox.Show($"The odor flow rate is too high to be ready in {_settings.OdorPreparationDuration} seconds. The application is terminated.",
-                        Application.Current.MainWindow.Title,
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                Application.Current.Shutdown();
+                _model.Reach(_settings.PPMs[_currentPPMLevel], _settings.OdorPreparationDuration);
+
+                DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
             }
             else
             {
-                DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+                var readinessDelay = _model.GetReady(_settings.PPMs[_currentPPMLevel], _odorTubeFillingDuration);
+
+                // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
+                if (readinessDelay > _settings.OdorPreparationDuration)
+                {
+                    MessageBox.Show($"The odor flow rate is too high to be ready in {_settings.OdorPreparationDuration} seconds. The application is terminated.",
+                            Application.Current.MainWindow.Title,
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    Application.Current.Shutdown();
+                }
+                else
+                {
+                    DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+                }
             }
         }
 
@@ -240,7 +254,7 @@ namespace Olfactory.Tests.ThresholdTest
         {
             if (CurrentColor == ODOR_PEN_COLOR)     // previous pen was with the odor - switch the mixer back to the fresh air
             {
-                _odorController.CloseFlow();
+                _model.CloseFlow();
             }
 
             if (++_currentPenID == _pens.Length)
@@ -256,7 +270,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             if (CurrentColor == ODOR_PEN_COLOR)
             {
-                _odorController.OpenFlow();
+                _model.OpenFlow();
             }
 
             DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());

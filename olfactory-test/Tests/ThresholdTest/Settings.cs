@@ -14,6 +14,7 @@ namespace Olfactory.Tests.ThresholdTest
         public int TurningPoints;
         public int TurningPointsToCount;
         public double FamiliarizationDuration; // seconds
+        public bool UseFeedbackLoop;
 
         public Settings()
         {

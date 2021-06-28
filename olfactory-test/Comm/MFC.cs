@@ -105,6 +105,12 @@ namespace Olfactory.Comm
             SystemAndUser = WasteAndUser | SystemAndWaste,
         }
 
+        public enum FlowStartPoint
+        {
+            Chamber,
+            Valve1
+        }
+
         public enum FlowEndPoint
         {
             User,
@@ -117,7 +123,7 @@ namespace Olfactory.Comm
         public override string Name => "MFC";
         public override string[] DataColumns => MFCSample.Header;
 
-        public const double ODOR_MAX_SPEED = 128.0;
+        public const double ODOR_MAX_SPEED = 90.0;
         public const double ODOR_MIN_SPEED = 0.0;
 
 
@@ -204,19 +210,56 @@ namespace Olfactory.Comm
         /// <returns>Time the odor reaches a user in seconds</returns>
         public double EstimateFlowDuration(FlowEndPoint endPoint, double speed = 0)
         {
-            var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
+            var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
             var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;      // ml/s
 
             var result = odorTubeVolume / odorSpeed;
 
             if (endPoint == FlowEndPoint.User)
             {
-                var mixedTubeVolume = Math.PI * MIXED_TUBE_R * MIXED_TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
+                var mixedTubeVolume = Math.PI * TUBE_R * TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
                 var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
 
                 result += mixedTubeVolume / mixedSpeed;
             }
             
+            return result;
+        }
+
+        /// <summary>
+        /// Calculated the time in seconds for the odor to flow from the bottle to 
+        /// 1 - the user
+        /// 2 - the mixer
+        /// given the current odor and fresh air speeds
+        /// </summary>
+        /// <param name="startPoint">the starting point</param>
+        /// <param name="endPoint">the point for odor to reach</param>
+        /// <param name="speed">Odor speed (the current one if omitted)</param>
+        /// <returns>Time the odor reaches a user in seconds</returns>
+        public double EstimateFlowDuration(FlowStartPoint startPoint, FlowEndPoint endPoint, double speed = 0)
+        {
+            double result = 0;
+
+            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;      // ml/s
+
+            if (startPoint == FlowStartPoint.Chamber)
+            {
+                var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
+
+                result += odorTubeVolume / odorSpeed;
+            }
+
+            var vmTubeVolume = Math.PI * TUBE_R * TUBE_R * VALVE_MIXER_TUBE_LENGTH / 1000;           // ml
+            result += vmTubeVolume / odorSpeed;
+
+            if (endPoint == FlowEndPoint.User)
+            {
+                var mixedTubeVolume = Math.PI * TUBE_R * TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
+                var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
+
+                result += mixedTubeVolume / mixedSpeed;
+            }
+
             return result;
         }
 
@@ -228,7 +271,7 @@ namespace Olfactory.Comm
         /// <returns>The speed in ml/min</returns>
         public double PredictFlowSpeed(double time)
         {
-            var odorTubeVolume = Math.PI * ODOR_TUBE_R * ODOR_TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
+            var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
             return odorTubeVolume / time * 60;
         }
 
@@ -415,10 +458,10 @@ namespace Olfactory.Comm
 
         const char DATA_END = '\r';
 
-        const double ODOR_TUBE_LENGTH = 500;     // mm
-        const double ODOR_TUBE_R = 2;            // mm
-        const double MIXED_TUBE_LENGTH = 1200;   // mm
-        const double MIXED_TUBE_R = 2;           // mm
+        const double ODOR_TUBE_LENGTH = 600;       // mm
+        const double VALVE_MIXER_TUBE_LENGTH = 27; // mm
+        const double MIXED_TUBE_LENGTH = 1200;     // mm
+        const double TUBE_R = 2;                   // mm
 
         /// <summary>
         /// Read the mass flow rate and the temperature of the specified MFC.

@@ -86,7 +86,6 @@ namespace Olfactory.Tests.OdorProduction
             _mfc.FreshAirSpeed = _settings.FreshAir;
             _mfc.OdorDirection = MFC.OdorFlowsTo.Waste; // should I add delay here?
 
-            //_timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
             _timer.Interval = _settings.PIDReadingInterval;
             _timer.AutoReset = true;
             _timer.Start();
@@ -132,7 +131,6 @@ namespace Olfactory.Tests.OdorProduction
         PID _pid = PID.Instance;
         SyncLogger _logger = SyncLogger.Instance;
 
-        //DispatcherTimer _timer = new DispatcherTimer();
         System.Timers.Timer _timer = new System.Timers.Timer();
         Utils.DispatchOnce _runner;
 
@@ -142,6 +140,16 @@ namespace Olfactory.Tests.OdorProduction
             _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
             //_logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
             _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
+
+            if (_settings.UseFeedbackLoop)
+            {
+                var model = new OlfactoryDeviceModel();
+                model.TargetOdorLevelReached += (s, e) =>
+                {
+                    _logger.Add("FL" + (e ? "0" : "1"));
+                };
+                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration);
+            }
 
             StageChanged(this, Stage.OdorFlow);
         }

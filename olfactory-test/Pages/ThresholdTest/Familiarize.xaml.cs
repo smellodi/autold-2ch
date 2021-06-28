@@ -62,6 +62,7 @@ namespace Olfactory.Pages.ThresholdTest
         public void Init(Tests.ThresholdTest.Settings settings)
         {
             _settings = settings;
+            _mfc.FreshAirSpeed = _settings.FreshAir;
         }
 
         public void Interrupt()

@@ -26,6 +26,7 @@ namespace Olfactory.Pages.OdorProduction
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             rdbValve2ToWaste.IsChecked = !_settings.Valve2ToUser;
             rdbValve2ToUser.IsChecked = _settings.Valve2ToUser;
+            chkFeedbackLoop.IsChecked = _settings.UseFeedbackLoop;
         }
 
         public void EmulationInit() { }
@@ -143,6 +144,7 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.Valve2ToUser = rdbValve2ToUser.IsChecked ?? false;
+                _settings.UseFeedbackLoop = chkFeedbackLoop.IsChecked ?? false;
 
                 _settings.Save();
 
