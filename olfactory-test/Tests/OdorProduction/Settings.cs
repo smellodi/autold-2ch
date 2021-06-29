@@ -12,7 +12,8 @@ namespace Olfactory.Tests.OdorProduction
         public int FinalPause;
         public int PIDReadingInterval;
         public bool Valve2ToUser;
-        public bool UseFeedbackLoop;
+        public bool UseFeedbackLoopToReachLevel;
+        public bool UseFeedbackLoopToKeepLevel;
 
         public Settings()
         {
@@ -24,6 +25,8 @@ namespace Olfactory.Tests.OdorProduction
             FinalPause = settings.Test_OP_FinalPause;
             PIDReadingInterval = settings.Test_OP_PIDReadingInterval;
             Valve2ToUser = settings.Test_OP_Valve2User;
+            UseFeedbackLoopToReachLevel = settings.Test_OP_UseFeedbackLoopToReachLevel;
+            UseFeedbackLoopToKeepLevel = settings.Test_OP_UseFeedbackLoopToKeepLevel;
 
             List<double> odorQuantities = new List<double>();
             foreach (var q in settings.Test_OP_OdorQuantities)
@@ -43,6 +46,8 @@ namespace Olfactory.Tests.OdorProduction
             settings.Test_OP_FinalPause = FinalPause;
             settings.Test_OP_PIDReadingInterval = PIDReadingInterval;
             settings.Test_OP_Valve2User = Valve2ToUser;
+            settings.Test_OP_UseFeedbackLoopToReachLevel = UseFeedbackLoopToReachLevel;
+            settings.Test_OP_UseFeedbackLoopToKeepLevel = UseFeedbackLoopToKeepLevel;
 
             settings.Test_OP_OdorQuantities.Clear();
             settings.Test_OP_OdorQuantities.AddRange(OdorQuantities.Select(q => q.ToString()).ToArray());

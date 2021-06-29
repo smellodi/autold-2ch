@@ -26,7 +26,8 @@ namespace Olfactory.Pages.ThresholdTest
             txbRecognitionsInRow.Text = _settings.RecognitionsInRow.ToString();
             txbFamiliarizationDuration.Text = _settings.FamiliarizationDuration.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
-            chkFeedbackLoop.IsChecked = _settings.UseFeedbackLoop;
+            chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
+            chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
         }
 
 
@@ -86,7 +87,7 @@ namespace Olfactory.Pages.ThresholdTest
                 return txbRecognitionsInRow;
             }
 
-            if (!double.TryParse(txbFamiliarizationDuration.Text, INTEGER, null, out dVal) || iVal < 0 || iVal > 5)
+            if (!double.TryParse(txbFamiliarizationDuration.Text, INTEGER, null, out dVal) || iVal <= 0 || iVal > 5)
             {
                 return txbFamiliarizationDuration;
             }
@@ -129,7 +130,8 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.RecognitionsInRow = int.Parse(txbRecognitionsInRow.Text);
                 _settings.FamiliarizationDuration = double.Parse(txbFamiliarizationDuration.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
-                _settings.UseFeedbackLoop = chkFeedbackLoop.IsChecked ?? false;
+                _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
+                _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
 
                 _settings.Save();
 

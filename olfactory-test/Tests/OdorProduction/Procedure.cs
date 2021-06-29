@@ -141,14 +141,10 @@ namespace Olfactory.Tests.OdorProduction
             //_logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
             _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
 
-            if (_settings.UseFeedbackLoop)
+            if (_settings.UseFeedbackLoopToReachLevel)
             {
                 var model = new OlfactoryDeviceModel();
-                model.TargetOdorLevelReached += (s, e) =>
-                {
-                    _logger.Add("FL" + (e ? "0" : "1"));
-                };
-                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration);
+                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
             }
 
             StageChanged(this, Stage.OdorFlow);

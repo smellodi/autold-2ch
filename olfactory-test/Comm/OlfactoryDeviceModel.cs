@@ -27,7 +27,8 @@ namespace Olfactory.Comm
         /// </summary>
         /// <param name="ppm">The target PPM value</param>
         /// <param name="maxWaitingTime">Max waiting time in seconds</param>
-        public void Reach(double ppm, double maxWaitingTime)
+        /// <param name="keepAfterReached">Set to 'true' to continue tracking the state after the desired level is reached</param>
+        public void Reach(double ppm, double maxWaitingTime, bool keepAfterReached)
         {
             if (_flTimer.Enabled)
             {
@@ -37,25 +38,47 @@ namespace Olfactory.Comm
             _flStableLevelSampleCount = 0;
             _isFlStableLevelReached = false;
 
-            List<string> log = new List<string>();
-            log.Add("Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV");
-
             var targetOdor = _mfc.PPM2Speed(ppm);
             var targetPID = GetPIDValue(targetOdor);
             var startTimestamp = Utils.Timestamp.Sec;
 
+            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
+
+            System.Diagnostics.Debug.WriteLine($"TARGET: {targetOdor} ml/min = {targetPID} mV");
+
+            // Initially, we set the odor flow to the max possible rate
+            if (targetPID > _lastPID)
+            {
+                double initialOdorSpeedRel = 1.0 - (_lastPID - PID_P2_C) / (targetPID - PID_P2_C);
+                _mfc.OdorSpeed = Math.Min(1.0, initialOdorSpeedRel) * MFC.ODOR_MAX_SPEED;
+                System.Diagnostics.Debug.WriteLine($"INIT: {_mfc.OdorSpeed} ml/min");
+            }
+            else
+            {
+                _mfc.OdorSpeed = targetOdor;
+                System.Diagnostics.Debug.WriteLine($"No need for FL: PID = {_lastPID} mV");
+
+                if (!keepAfterReached)
+                {
+                    return;
+                }
+            }
+
+            List<string> log = new List<string>();
+            log.Add("Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV");
             var input = _mfc.OdorSpeed * ((int)_mfc.OdorDirection / 10);
             var logRecord = $"0\t{targetPID:F4}\t{input:F4}\t{targetPID - _pid.Value:F4}\t{_dbg1:F4}\t{_dbg2}\t{_pid.Value}";
             log.Add(logRecord);
 
-            // Initially, we set the odor flow to the max possible rate
-            _mfc.OdorSpeed = MFC.ODOR_MAX_SPEED;
-            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
-            System.Diagnostics.Debug.WriteLine($"TARGET: {targetOdor} ml/min = {targetPID} mV");
-
             void Update()
             {
                 _mfc.OdorSpeed = UpdateMFC(targetPID, targetOdor);
+                System.Diagnostics.Debug.WriteLine($"PID: {_lastPID} mV");
+
+                if (keepAfterReached)
+                {
+                    _isFlStableLevelReached = false;
+                }
 
                 var ts = Utils.Timestamp.Sec - startTimestamp;
 
@@ -100,7 +123,7 @@ namespace Olfactory.Comm
 
             _mfc.OdorSpeed = Math.Min(Math.Round(odorSpeed, 1), MFC.ODOR_MAX_SPEED);
 
-            var estimatedInterval = _mfc.EstimateFlowDuration(MFC.FlowEndPoint.User, _mfc.OdorSpeed);
+            var estimatedInterval = _mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User, _mfc.OdorSpeed);
 
             Utils.DispatchOnce.Do(estimatedInterval, () => _mfc.OdorSpeed = _mfc.PPM2Speed(ppm));
 
@@ -406,7 +429,6 @@ namespace Olfactory.Comm
 
             var pidOdorFlowRate = pidOdor / EmulatorTimestamp.SAMPLING_INTERVAL * 60;  // convert to ml/min
             _lastPID = GetPIDValue(pidOdorFlowRate);
-            //System.Diagnostics.Debug.WriteLine($"PID: {_lastPID} mV");
 
             _dbg1 = pidInput;
             _dbg2 = pidOdor;

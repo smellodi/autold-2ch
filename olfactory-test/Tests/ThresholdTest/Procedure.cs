@@ -212,9 +212,9 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void PrepareOdor()
         {
-            if (_settings.UseFeedbackLoop)
+            if (_settings.UseFeedbackLoopToReachLevel)
             {
-                _model.Reach(_settings.PPMs[_currentPPMLevel], _settings.OdorPreparationDuration);
+                _model.Reach(_settings.PPMs[_currentPPMLevel], _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
 
                 DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
             }

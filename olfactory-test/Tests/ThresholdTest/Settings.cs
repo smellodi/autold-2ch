@@ -14,7 +14,8 @@ namespace Olfactory.Tests.ThresholdTest
         public int TurningPoints;
         public int TurningPointsToCount;
         public double FamiliarizationDuration; // seconds
-        public bool UseFeedbackLoop;
+        public bool UseFeedbackLoopToReachLevel;
+        public bool UseFeedbackLoopToKeepLevel;
 
         public Settings()
         {
@@ -28,6 +29,8 @@ namespace Olfactory.Tests.ThresholdTest
             TurningPoints = settings.Test_TT_TurningPoints;
             TurningPointsToCount = settings.Test_TT_TurningPointsToCount;
             FamiliarizationDuration = settings.Test_TT_FamiliarizationDuration;
+            UseFeedbackLoopToReachLevel = settings.Test_TT_UseFeedbackLoopToReachLevel;
+            UseFeedbackLoopToKeepLevel = settings.Test_TT_UseFeedbackLoopToKeepLevel;
 
             List<double> odorQuantities = new List<double>();
             foreach (var q in settings.Test_TT_PPMs)
@@ -49,6 +52,8 @@ namespace Olfactory.Tests.ThresholdTest
             settings.Test_TT_TurningPoints = TurningPoints;
             settings.Test_TT_TurningPointsToCount = TurningPointsToCount;
             settings.Test_TT_FamiliarizationDuration = FamiliarizationDuration;
+            settings.Test_TT_UseFeedbackLoopToReachLevel = UseFeedbackLoopToReachLevel;
+            settings.Test_TT_UseFeedbackLoopToKeepLevel = UseFeedbackLoopToKeepLevel;
 
             settings.Test_TT_PPMs.Clear();
             settings.Test_TT_PPMs.AddRange(PPMs.Select(ppm => ppm.ToString()).ToArray());

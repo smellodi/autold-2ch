@@ -121,5 +121,17 @@
     <Setting Name="Test_TT_FamiliarizationDuration" Type="System.Double" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="Test_TT_UseFeedbackLoopToReachLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Test_TT_UseFeedbackLoopToKeepLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Test_OP_UseFeedbackLoopToReachLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Test_OP_UseFeedbackLoopToKeepLevel" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

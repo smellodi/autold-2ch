@@ -200,34 +200,10 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Calculated the time in seconds for the odor to flow from the bottle to 
-        /// 1 - the user
-        /// 2 - the mixer
-        /// given the current odor and fresh air speeds
-        /// </summary>
-        /// <param name="endPoint">the point for odor to reach</param>
-        /// <param name="speed">Odor speed (the current one if omitted)</param>
-        /// <returns>Time the odor reaches a user in seconds</returns>
-        public double EstimateFlowDuration(FlowEndPoint endPoint, double speed = 0)
-        {
-            var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
-            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;      // ml/s
-
-            var result = odorTubeVolume / odorSpeed;
-
-            if (endPoint == FlowEndPoint.User)
-            {
-                var mixedTubeVolume = Math.PI * TUBE_R * TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
-                var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
-
-                result += mixedTubeVolume / mixedSpeed;
-            }
-            
-            return result;
-        }
-
-        /// <summary>
-        /// Calculated the time in seconds for the odor to flow from the bottle to 
+        /// Calculated the time in seconds for the odor to flow from 
+        /// 1 - the bottle
+        /// 2 - the valve #1
+        /// to 
         /// 1 - the user
         /// 2 - the mixer
         /// given the current odor and fresh air speeds

@@ -24,31 +24,46 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     txbCountdown.Text = $"{_waitingCountdown} seconds left";
                 }
-                else if (_sniffingStartTimestamp == 0)
+                else
                 {
+                    txbCountdown.Text = "";
                     _countdownTimer.Stop();
+                }
+            };
+
+            _stateTimer.Tick += (s, e) =>
+            {
+                _stateTimer.Stop();
+
+                if (_state == State.OdorPreparation)
+                {
+                    _state = State.OdorFlow;
+                    txbInstruction.Text = "Odor is flowing now, sniff it!";
 
                     _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
-                    if (_settings.FamiliarizationDuration > 0)
-                    {
-                        txbCountdown.Text = $"Odor is flowing now, sniff it!";
-                        _countdownTimer.Interval = TimeSpan.FromSeconds(_settings.FamiliarizationDuration);
-                        _countdownTimer.Start();
-                    }
-                    else
-                    {
-                        txbCountdown.Text = $"Odor is flowing now, sniff it! Click 'Continue' when it is enough.";
-                        btnNext.IsEnabled = true;
-                    }
+                    _stateTimer.Interval = TimeSpan.FromSeconds(_settings.FamiliarizationDuration);
+                    _stateTimer.Start();
                 }
-                else
+                else if (_state == State.OdorFlow)
                 {
+                    _state = State.Ventilation;
+                    txbInstruction.Text = "Please wait while the tube is ventilating...";
+
                     _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
                     Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
 
-                    txbCountdown.Text = $"Click 'Continue' to start the test.";
-                    _countdownTimer.Stop();
+                    _waitingCountdown = VENTILATION_DURATION;
+                    _countdownTimer.Start();
+
+                    _stateTimer.Interval = TimeSpan.FromSeconds(VENTILATION_DURATION);
+                    _stateTimer.Start();
+                }
+                else if (_state == State.Ventilation)
+                {
+                    _state = State.Finished;
+                    txbInstruction.Text = "Click 'Continue' to start the test.";
+
                     btnNext.IsEnabled = true;
                 }
             };
@@ -67,19 +82,34 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void Interrupt()
         {
-            _countdownTimer.Stop();
+            _stateTimer.Stop();
             _directionChangeTimer.Stop();
             _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
         }
 
         // Internal
 
+        enum State
+        {
+            Initial,
+            OdorPreparation,
+            OdorFlow,
+            Ventilation,
+            Finished
+        }
+
+        const int VENTILATION_DURATION = 15;  // seconds
+
         MFC _mfc = MFC.Instance;
 
+        DispatcherTimer _stateTimer = new DispatcherTimer();
         DispatcherTimer _countdownTimer = new DispatcherTimer();
         DispatcherTimer _directionChangeTimer = new DispatcherTimer();
+
         int _waitingCountdown = 0;
         long _sniffingStartTimestamp = 0;
+
+        State _state = State.Initial;
 
         Tests.ThresholdTest.Settings _settings;
 
@@ -89,13 +119,18 @@ namespace Olfactory.Pages.ThresholdTest
         {
             _mfc.OdorSpeed = MFC.ODOR_MAX_SPEED;
 
-            _directionChangeTimer.Interval = TimeSpan.FromSeconds(_mfc.EstimateFlowDuration(MFC.FlowEndPoint.Mixer));
-            _waitingCountdown = (int)Math.Ceiling(_mfc.EstimateFlowDuration(MFC.FlowEndPoint.User));
+            _state = State.OdorPreparation;
+            txbInstruction.Text = "Odor is soon to reach you...";
+            txbCountdown.Text = $"{_waitingCountdown} seconds left";
 
+            _directionChangeTimer.Interval = TimeSpan.FromSeconds(_mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.Mixer));
             _directionChangeTimer.Start();
+
+            _waitingCountdown = (int)Math.Ceiling(_mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User));
             _countdownTimer.Start();
 
-            txbCountdown.Text = $"{_waitingCountdown} seconds left";
+            _stateTimer.Interval = TimeSpan.FromSeconds(_waitingCountdown);
+            _stateTimer.Start();
 
             (sender as Button).IsEnabled = false;
         }

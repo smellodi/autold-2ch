@@ -426,5 +426,53 @@ namespace Olfactory.Properties {
                 this["Test_TT_FamiliarizationDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_TT_UseFeedbackLoopToReachLevel {
+            get {
+                return ((bool)(this["Test_TT_UseFeedbackLoopToReachLevel"]));
+            }
+            set {
+                this["Test_TT_UseFeedbackLoopToReachLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_TT_UseFeedbackLoopToKeepLevel {
+            get {
+                return ((bool)(this["Test_TT_UseFeedbackLoopToKeepLevel"]));
+            }
+            set {
+                this["Test_TT_UseFeedbackLoopToKeepLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_OP_UseFeedbackLoopToReachLevel {
+            get {
+                return ((bool)(this["Test_OP_UseFeedbackLoopToReachLevel"]));
+            }
+            set {
+                this["Test_OP_UseFeedbackLoopToReachLevel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_OP_UseFeedbackLoopToKeepLevel {
+            get {
+                return ((bool)(this["Test_OP_UseFeedbackLoopToKeepLevel"]));
+            }
+            set {
+                this["Test_OP_UseFeedbackLoopToKeepLevel"] = value;
+            }
+        }
     }
 }
