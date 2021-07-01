@@ -27,7 +27,7 @@ namespace Olfactory.Comm
         };
     }
 
-    public struct MFCSample                     // Sample record/vector; all the measured values for one second
+    public struct MFCSample : ISample               // Sample record/vector; all the measured values for one second
     {
         /// <summary>
         /// Sample time; milliseconds from start
@@ -43,6 +43,8 @@ namespace Olfactory.Comm
         /// Odored air channel
         /// </summary>
         public MFCChannel B { get; set; }
+
+        public double MainValue => B.MassFlow;
 
         public override string ToString() => string.Join('\t', new string[] {
             Time.ToString(),

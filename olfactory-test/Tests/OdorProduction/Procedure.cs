@@ -61,12 +61,13 @@ namespace Olfactory.Tests.OdorProduction
                     if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                     {
                         _logger.Add(pidSample);
-                        CommMonitor.Instance.LogData(LogSource.PID, pidSample);
+                        _monitor.LogData(LogSource.PID, pidSample);
                         Data(this, pidSample.PID);
                     }
                     if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                     {
                         _logger.Add(mfcSample);
+                        _monitor.LogData(LogSource.MFC, mfcSample);
                     }
                 });
             };
@@ -130,6 +131,7 @@ namespace Olfactory.Tests.OdorProduction
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
         SyncLogger _logger = SyncLogger.Instance;
+        CommMonitor _monitor = CommMonitor.Instance;
 
         System.Timers.Timer _timer = new System.Timers.Timer();
         Utils.DispatchOnce _runner;

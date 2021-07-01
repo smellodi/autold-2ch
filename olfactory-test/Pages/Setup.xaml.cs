@@ -58,10 +58,15 @@ namespace Olfactory.Pages
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
                         lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow);
+                        _monitor.LogData(LogSource.MFC, sample);
                     }
                     else
                     {
                         lmsOdor.Add(Utils.Timestamp.Sec, 0);
+
+                        MFCSample sample = new MFCSample();
+                        sample.Time = Utils.Timestamp.Ms;
+                        _monitor.LogData(LogSource.MFC, sample);
                     }
                 });
             };
@@ -77,10 +82,15 @@ namespace Olfactory.Pages
                         lblPID_PID.Content = sample.PID.ToString("F2");
                         lblPID_Loop.Content = sample.Loop.ToString("F2");
                         lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
+                        _monitor.LogData(LogSource.PID, sample);
                     }
                     else
                     {
                         lmsPIDValue.Add(Utils.Timestamp.Sec, 0);
+
+                        PIDSample sample = new PIDSample();
+                        sample.Time = Utils.Timestamp.Ms;
+                        _monitor.LogData(LogSource.PID, sample);
                     }
                 });
             };
@@ -94,6 +104,8 @@ namespace Olfactory.Pages
         USB _usb = new USB();
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
+
+        CommMonitor _monitor;
 
         System.Timers.Timer _mfcTimer = new System.Timers.Timer();
         System.Timers.Timer _pidTimer = new System.Timers.Timer();
@@ -167,7 +179,7 @@ namespace Olfactory.Pages
                 success = result.Error == Error.Success;
 
                 LogSource source = port.Name == "PID" ? LogSource.PID : LogSource.MFC;
-                CommMonitor.Instance.LogResult(source, result);
+                _monitor.LogResult(source, result);
             }
             else
             {
@@ -248,6 +260,8 @@ namespace Olfactory.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            _monitor = CommMonitor.Instance;
+
             if (Focusable)
             {
                 Focus();
@@ -262,6 +276,11 @@ namespace Olfactory.Pages
             {
                 _pidTimer.Start();
             }
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _mfcTimer.Stop();
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)

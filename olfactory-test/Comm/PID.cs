@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace Olfactory.Comm
 {
-    public struct PIDSample                       // Sample record/vector; all the measured values for one second
+    public struct PIDSample : ISample             // Sample record/vector; all the measured values for one second
     {
         public long Time { get; set; }            // Sample time; milliseconds from start
 
@@ -15,6 +15,8 @@ namespace Olfactory.Comm
         public double Input { get; set; }         // 10V scaled input
         public double Light { get; set; }         // 10V scaled input
         public double Temperature { get; set; }   // degrees in C
+
+        public double MainValue => PID;
 
         public override string ToString() => string.Join('\t', new string[] {
             Time.ToString(),

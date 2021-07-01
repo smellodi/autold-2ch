@@ -4,19 +4,25 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Olfactory"
+        xmlns:controls="clr-namespace:Olfactory.Controls"
         mc:Ignorable="d"
         Title="COM monitor"
         Icon="/Assets/icons/monitor.png"
         Height="600" Width="1000"
         Closing="Window_Closing"
-        Activated="Window_Activated">
+        Activated="Window_Activated" Loaded="Window_Loaded">
     <Grid Margin="8">
         <Grid.Resources>
             <local:BlankConverter x:Key="BlankConverter" />
+            <local:ViewerVisibilityConverter x:Key="ViewerVisibilityConverter" />
             <Style TargetType="{x:Type Button}">
                 <Setter Property="Margin" Value="0,0,4,4" />
                 <Setter Property="Padding" Value="8,4" />
                 <Setter Property="MinWidth" Value="50" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="MinHeight" Value="28" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>
         </Grid.Resources>
 
@@ -44,7 +50,7 @@
                    Content="Debug"/>
             <Button Grid.Row="0" Grid.Column="1"
                     Content="Clear"
-                    Click="OnClearDebug_Click"/>
+                    Click="btnClearDebug_Click"/>
         </Grid>
 
         <TextBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" x:Name="txbDebug"
@@ -54,34 +60,41 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="MFC"/>
-            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkMFCMonitor"
+            <!--CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkMFCMonitor"
                       Content="Monitor"
                       VerticalAlignment="Center"
                       Checked="chkMFCMonitor_Checked"
-                      Unchecked="chkMFCMonitor_Checked"/>
-            <CheckBox Grid.Row="0" Grid.Column="2" x:Name="chkMFCAsText"
-                      Content="As text"
-                      VerticalAlignment="Center"
-                      Checked="chkMFCAsText_Checked"
-                      Unchecked="chkMFCAsText_Checked"/>
+                      Unchecked="chkMFCMonitor_Checked"/-->
+            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,4">
+                <Label Content="Show as" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cmbMFCViewerType"
+                          VerticalAlignment="Center"
+                          MinWidth="60">
+                    <ComboBoxItem Content="Table"/>
+                    <ComboBoxItem Content="Text"/>
+                    <ComboBoxItem Content="Graph" IsSelected="True"/>
+                </ComboBox>
+            </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
                 <Button x:Name="btnMFCSave"
                         Content="Save"
-                        Click="OnSaveMFC_Click"/>
+                        Click="btnSaveMFC_Click"/>
                 <Button x:Name="btnMFCClear"
                         Content="Clear"
-                        Click="OnClearMFC_Click"/>
+                        Click="btnClearMFC_Click"/>
             </StackPanel>
         </Grid>
         
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbMFC"
-                 VerticalScrollBarVisibility="Visible"/>
-        <ListView Grid.Row="1" Grid.Column="1" Name="lsvMFC">
+                 VerticalScrollBarVisibility="Visible"
+                 Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Text, ElementName=cmbMFCViewerType}"/>
+        <ListView Grid.Row="1" Grid.Column="1" x:Name="lsvMFC"
+                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Table, ElementName=cmbMFCViewerType}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
@@ -96,39 +109,48 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <controls:LiveMeasurement Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
+                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="PID"/>
-            <CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkPIDMonitor"
+            <!--CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkPIDMonitor"
                       Content="Monitor"
                       VerticalAlignment="Center"
                       Checked="chkPIDMonitor_Checked"
-                      Unchecked="chkPIDMonitor_Checked"/>
-            <CheckBox Grid.Row="0" Grid.Column="2" x:Name="chkPIDAsText"
-                      Content="As text"
-                      VerticalAlignment="Center"
-                      Checked="chkPIDAsText_Checked"
-                      Unchecked="chkPIDAsText_Checked"/>
+                      Unchecked="chkPIDMonitor_Checked"/-->
+            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,4">
+                <Label Content="Show as" VerticalAlignment="Center"/>
+                <ComboBox x:Name="cmbPIDViewerType"
+                          VerticalAlignment="Center"
+                          MinWidth="60">
+                    <ComboBoxItem Content="Table"/>
+                    <ComboBoxItem Content="Text"/>
+                    <ComboBoxItem Content="Graph" IsSelected="True"/>
+                </ComboBox>
+            </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
                 <Button x:Name="btnPIDSave"
                         Content="Save"
-                        Click="OnSavePID_Click"/>
+                        Click="btnSavePID_Click"/>
                 <Button x:Name="btnPIDClear"
                         Content="Clear"
-                        Click="OnClearPID_Click"/>
+                        Click="btnClearPID_Click"/>
             </StackPanel>
         </Grid>
 
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="txbPID"
-                 VerticalScrollBarVisibility="Visible"/>
-        <ListView Grid.Row="3" Grid.Column="1" Name="lsvPID">
+                 VerticalScrollBarVisibility="Visible"
+                 Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Text, ElementName=cmbPIDViewerType}"/>
+        <ListView Grid.Row="3" Grid.Column="1" x:Name="lsvPID"
+                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Table, ElementName=cmbPIDViewerType}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
@@ -141,5 +163,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <controls:LiveMeasurement Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
+                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/>
     </Grid>
 </Window>

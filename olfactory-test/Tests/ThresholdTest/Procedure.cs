@@ -67,13 +67,7 @@ namespace Olfactory.Tests.ThresholdTest
                 }
             };
 
-            _timer.Tick += (s, e) =>
-            {
-                if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
-                {
-                    _logger.Add(LogSource.PID, "data", pidSample.ToString());
-                }
-            };
+            _timer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(Measure);
 
             _model.TargetOdorLevelReached += (s, e) =>
             {
@@ -107,7 +101,7 @@ namespace Olfactory.Tests.ThresholdTest
             _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
 
-            _timer.Interval = TimeSpan.FromMilliseconds(_settings.PIDReadingInterval);
+            _timer.Interval = _settings.PIDReadingInterval;
             _timer.Start();
 
             _stepID++;
@@ -146,6 +140,18 @@ namespace Olfactory.Tests.ThresholdTest
             _inProgress = false;
         }
 
+        public void Measure()
+        {
+            if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
+            {
+                _logger.Add(LogSource.PID, "data", pidSample.ToString());
+                _monitor.LogData(LogSource.PID, pidSample);
+            }
+            if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
+            {
+                _monitor.LogData(LogSource.MFC, mfcSample);
+            }
+        }
 
         // ITestEmulation
 
@@ -187,8 +193,11 @@ namespace Olfactory.Tests.ThresholdTest
         OlfactoryDeviceModel _model = new OlfactoryDeviceModel();
         FlowLogger _logger = FlowLogger.Instance;
         PID _pid = PID.Instance;
-        DispatcherTimer _timer = new DispatcherTimer();
+        MFC _mfc = MFC.Instance;
         Settings _settings = new Settings();
+        CommMonitor _monitor = CommMonitor.Instance;
+
+        System.Timers.Timer _timer = new System.Timers.Timer();
 
         bool _inProgress = false;
 

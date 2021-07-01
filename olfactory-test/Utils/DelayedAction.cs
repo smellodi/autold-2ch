@@ -8,13 +8,10 @@ namespace Olfactory.Utils
     {
         public DispatchOnce(double seconds, Action action, bool start = true) : base()
         {
-            _actions.Enqueue(new Delayed() { Pause = seconds, Action = action });
+            _actions.Enqueue(new ScheduledAction() { Pause = seconds, Action = action });
 
             Interval = TimeSpan.FromSeconds(seconds);
-            Tick += (s, e) =>
-            {
-                Execute();
-            };
+            Tick += (s, e) => Execute();
 
             if (start)
             {
@@ -29,27 +26,27 @@ namespace Olfactory.Utils
 
         public DispatchOnce Then(double seconds, Action action)
         {
-            _actions.Enqueue(new Delayed() { Pause = seconds, Action = action });
+            _actions.Enqueue(new ScheduledAction() { Pause = seconds, Action = action });
             return this;
         }
 
 
         // Internal
 
-        struct Delayed
+        struct ScheduledAction
         {
             public double Pause;
             public Action Action;
         }
 
-        Queue<Delayed> _actions = new Queue<Delayed>();
+        Queue<ScheduledAction> _actions = new Queue<ScheduledAction>();
 
         private void Execute()
         {
             Stop();
 
-            var delayed = _actions.Dequeue();
-            delayed.Action();
+            var action = _actions.Dequeue();
+            action.Action();
 
             if (_actions.Count > 0)
             {
@@ -62,14 +59,14 @@ namespace Olfactory.Utils
     
     public class DelayedAction : System.Timers.Timer
     {
-        public DelayedAction(double seconds, Action action, bool start = true) : base()
+        public DelayedAction(int milliseconds, Action action, bool start = true) : base()
         {
-            Interval = (int)(seconds * 1000);
+            _actions.Enqueue(new ScheduledAction() { Pause = milliseconds, Action = action });
+
+            Interval = milliseconds;
             AutoReset = false;
-            Elapsed += (s, e) =>
-            {
-                action();
-            };
+
+            Elapsed += (s, e) => Execute();
 
             if (start)
             {
@@ -77,9 +74,41 @@ namespace Olfactory.Utils
             }
         }
 
-        public static DelayedAction Do(double seconds, Action action)
+        public static DelayedAction Do(int milliseconds, Action action)
         {
-            return new DelayedAction(seconds, action);
+            return new DelayedAction(milliseconds, action);
+        }
+
+        public DelayedAction Then(int milliseconds, Action action)
+        {
+            _actions.Enqueue(new ScheduledAction() { Pause = milliseconds, Action = action });
+            return this;
+        }
+
+
+        // Internal
+
+        struct ScheduledAction
+        {
+            public int Pause;
+            public Action Action;
+        }
+
+        Queue<ScheduledAction> _actions = new Queue<ScheduledAction>();
+
+        private void Execute()
+        {
+            Stop();
+
+            var action = _actions.Dequeue();
+            Dispatcher.CurrentDispatcher.Invoke(() => action.Action());
+
+            if (_actions.Count > 0)
+            {
+                var next = _actions.Peek();
+                Interval = next.Pause;
+                Start();
+            }
         }
     }
 }

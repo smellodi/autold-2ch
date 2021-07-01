@@ -55,7 +55,7 @@ namespace Olfactory
         /// <param name="interval">Time interval in milliseconds</param>
         public void Start(int interval)
         {
-            _timer.Interval = TimeSpan.FromMilliseconds(interval);
+            _timer.Interval = interval;
             _timer.Start();
         }
 
@@ -94,7 +94,7 @@ namespace Olfactory
 
         protected override string Header => Record.HEADER;
 
-        DispatcherTimer _timer = new DispatcherTimer();
+        System.Timers.Timer _timer = new System.Timers.Timer();
 
         MFCSample _mfcSample;
         PIDSample _pidSample;
@@ -104,10 +104,7 @@ namespace Olfactory
 
         protected SyncLogger() : base()
         {
-            _timer.Tick += (s, e) =>
-            {
-                AddRecord();
-            };
+            _timer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(AddRecord);
         }
 
         private void AddRecord()

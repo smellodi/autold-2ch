@@ -22,6 +22,19 @@ namespace Olfactory
         }
     }
 
+    public class ViewerVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (value as ComboBoxItem).Content.ToString() == parameter.ToString() ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public partial class CommMonitor : Window
     {
         public static CommMonitor Instance { get; private set; }
@@ -47,6 +60,7 @@ namespace Olfactory
                 LogResult(LogSource.PID, new Result() { Error = Error.Success, Reason = "Stopped" });
             };
 
+            /*
             _mfcTimer.Interval = 1000;
             _mfcTimer.AutoReset = true;
             _mfcTimer.Elapsed += (s, e) => {
@@ -71,7 +85,7 @@ namespace Olfactory
                         Log(txbPID, LogSource.PID, result, sample);
                     }
                 });
-            };
+            };*/
 
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
@@ -105,19 +119,10 @@ namespace Olfactory
             });
         }
 
-        public void LogData(LogSource source, object data)
+        public void LogData(LogSource source, ISample data)
         {
             Dispatcher.Invoke(() =>
             {
-                TextBox output = source switch
-                {
-                    LogSource.MFC => txbMFC,
-                    LogSource.PID => txbPID,
-                    _ => txbDebug
-                };
-                output.AppendText(data.ToString() + "\r\n");
-                output.ScrollToEnd();
-
                 AddToList(source, data);
             });
         }
@@ -125,8 +130,8 @@ namespace Olfactory
 
         // Internal
 
-        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
-        System.Timers.Timer _pidTimer = new System.Timers.Timer();
+        //System.Timers.Timer _mfcTimer = new System.Timers.Timer();
+        //System.Timers.Timer _pidTimer = new System.Timers.Timer();
 
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
@@ -135,8 +140,19 @@ namespace Olfactory
 
         bool _preventClosing = true;
 
-        private void AddToList(LogSource source, object data)
+        private void AddToList(LogSource source, ISample data)
         {
+            // add to text
+            TextBox output = source switch
+            {
+                LogSource.MFC => txbMFC,
+                LogSource.PID => txbPID,
+                _ => txbDebug
+            };
+            output.AppendText(data.ToString() + "\r\n");
+            output.ScrollToEnd();
+
+            // add to table
             var list = source switch
             {
                 LogSource.MFC => lsvMFC,
@@ -149,6 +165,16 @@ namespace Olfactory
                 list.Items.Add(data);
                 list.ScrollIntoView(data);
             }
+
+            // add to graph
+            var graph = source switch
+            {
+                LogSource.MFC => lmsMFC,
+                LogSource.PID => lmsPID,
+                _ => null
+            };
+
+            graph?.Add((double)data.Time / 1000, data.MainValue);
         }
 
         private void ToggleMonitoring(CheckBox chk, System.Timers.Timer timer)
@@ -170,7 +196,7 @@ namespace Olfactory
             txbDebug.ScrollToEnd();
         }
 
-        private void Log(TextBox output, LogSource source, Result result, object data)
+        private void Log(TextBox output, LogSource source, Result result, ISample data)
         {
             if (result.Error == Error.Success)
             {
@@ -199,59 +225,63 @@ namespace Olfactory
 
         // UI events
 
-        private void OnClearDebug_Click(object sender, RoutedEventArgs e)
+        private void btnClearDebug_Click(object sender, RoutedEventArgs e)
         {
             txbDebug.Clear();
         }
 
-        private void OnClearMFC_Click(object sender, RoutedEventArgs e)
+        private void btnClearMFC_Click(object sender, RoutedEventArgs e)
         {
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             lsvMFC.Items.Clear();
+            lmsMFC.Reset();
 
             UpdateUI();
         }
 
-        private void OnSaveMFC_Click(object sender, RoutedEventArgs e)
+        private void btnSaveMFC_Click(object sender, RoutedEventArgs e)
         {
             _logger.SaveOnly(LogSource.MFC, "data", $"MFC_{DateTime.Now:u}.txt".ToPath());
         }
 
-        private void OnClearPID_Click(object sender, RoutedEventArgs e)
+        private void btnClearPID_Click(object sender, RoutedEventArgs e)
         {
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
             lsvPID.Items.Clear();
+            lmsPID.Reset();
 
             UpdateUI();
         }
 
-        private void OnSavePID_Click(object sender, RoutedEventArgs e)
+        private void btnSavePID_Click(object sender, RoutedEventArgs e)
         {
             _logger.SaveOnly(LogSource.PID, "data", $"PID_{DateTime.Now:u}.txt".ToPath());
         }
-
+        /*
         private void chkMFCMonitor_Checked(object sender, RoutedEventArgs e)
         {
             ToggleMonitoring(e.Source as CheckBox, _mfcTimer);
         }
 
-        private void chkMFCAsText_Checked(object sender, RoutedEventArgs e)
-        {
-            lsvMFC.Visibility = chkMFCAsText.IsChecked ?? false ? Visibility.Hidden : Visibility.Visible;
-            txbMFC.Visibility = chkMFCAsText.IsChecked ?? false ? Visibility.Visible : Visibility.Hidden;
-        }
-
         private void chkPIDMonitor_Checked(object sender, RoutedEventArgs e)
         {
             ToggleMonitoring(e.Source as CheckBox, _pidTimer);
+        }*/
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            lmsMFC.Reset();
+            lmsPID.Reset();
         }
 
-        private void chkPIDAsText_Checked(object sender, RoutedEventArgs e)
+        private void Window_Activated(object sender, EventArgs e)
         {
-            lsvPID.Visibility = chkPIDAsText.IsChecked ?? false ? Visibility.Hidden : Visibility.Visible;
-            txbPID.Visibility = chkPIDAsText.IsChecked ?? false ? Visibility.Visible : Visibility.Hidden;
+            //chkMFCMonitor.IsEnabled = _mfc.IsOpen;
+            //chkPIDMonitor.IsEnabled = _pid.IsOpen;
+
+            UpdateUI();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -266,13 +296,6 @@ namespace Olfactory
             settings.Save();
 
             e.Cancel = _preventClosing;
-        }
-
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            chkMFCMonitor.IsEnabled = _mfc.IsOpen;
-            chkPIDMonitor.IsEnabled = _pid.IsOpen;
-            UpdateUI();
         }
     }
 }

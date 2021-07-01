@@ -8,8 +8,9 @@
       d:DesignHeight="470" d:DesignWidth="600"
       Title="Setup"
       Focusable="True"
+      KeyDown="Page_KeyDown"
       Loaded="Page_Loaded"
-      KeyDown="Page_KeyDown">
+      Unloaded="Page_Unloaded">
 
     <Grid>
         <Grid.Resources>
