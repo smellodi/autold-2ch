@@ -90,7 +90,7 @@ namespace Olfactory.Pages.ThresholdTest
 
 
         string INSTRUCTION_SNIFF_THE_PEN(int id) => $"Sniff the pen #{id + 1}";
-        const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready (approx. 15 seconds).";
+        const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready.";
         const string INSTRUCTION_CHOOSE_THE_PEN = "Please select the pen with the odorant.";
         const string INSTRUCTION_DONE = "Thanks, your choice has been recorded.";
 

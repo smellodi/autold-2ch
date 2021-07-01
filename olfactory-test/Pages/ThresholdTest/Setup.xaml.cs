@@ -35,66 +35,31 @@ namespace Olfactory.Pages.ThresholdTest
 
         const char LIST_DELIM = ' ';
 
-        const NumberStyles INTEGER = NumberStyles.Integer | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite;
-        const NumberStyles FLOAT = NumberStyles.Float;
-
         Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
 
-        private TextBox CheckInput()
+        private Utils.Validation CheckInput()
         {
-            bool IsValidValue(string value)
-            {
-                return double.TryParse(value, FLOAT, null, out double dVal) && dVal > 0 && dVal <= Comm.MFC.ODOR_MAX_SPEED;
-            }
+            int.TryParse(txbTurningPoints.Text, out int maxTurningPoints);
 
-            double dVal;
-            int iVal;
-
-            if (!double.TryParse(txbFreshAir.Text, FLOAT, null, out dVal) || dVal <= 0 || dVal > 10)
+            var validations = new Utils.Validation[]
             {
-                return txbFreshAir;
-            }
+                new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbPPMs, 1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
+                new Utils.Validation(txbOdorPreparationDuration, 10, 300, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbPenSniffingDuration, 1, 10, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbTurningPoints, 2, 15, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbTurningPointsToCount, 2, maxTurningPoints, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbRecognitionsInRow, 1, 5, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbFamiliarizationDuration, 1, 5, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
+            };
 
-            var odorQuantities = txbPPMs.Text.Split(LIST_DELIM);
-            if (odorQuantities.Length == 0 || odorQuantities.Any(quant => !IsValidValue(quant)))
+            foreach (var v in validations)
             {
-                return txbPPMs;
-            }
-
-            if (!int.TryParse(txbOdorPreparationDuration.Text, INTEGER, null, out iVal) || iVal < 10 || iVal > 300)
-            {
-                return txbOdorPreparationDuration;
-            }
-
-            if (!int.TryParse(txbPenSniffingDuration.Text, INTEGER, null, out iVal) || iVal < 3 || iVal > 30)
-            {
-                return txbPenSniffingDuration;
-            }
-
-            if (!int.TryParse(txbTurningPoints.Text, INTEGER, null, out iVal) || iVal < 2 || iVal > 15)
-            {
-                return txbTurningPoints;
-            }
-
-            var turningPoints = iVal;
-            if (!int.TryParse(txbTurningPointsToCount.Text, INTEGER, null, out iVal) || iVal < 2 || iVal > turningPoints)
-            {
-                return txbTurningPointsToCount;
-            }
-
-            if (!int.TryParse(txbRecognitionsInRow.Text, INTEGER, null, out iVal) || iVal < 1 || iVal > 5)
-            {
-                return txbRecognitionsInRow;
-            }
-
-            if (!double.TryParse(txbFamiliarizationDuration.Text, INTEGER, null, out dVal) || iVal <= 0 || iVal > 5)
-            {
-                return txbFamiliarizationDuration;
-            }
-
-            if (!int.TryParse(txbPIDSamplingInterval.Text, INTEGER, null, out iVal) || iVal < 100 || iVal > 5000)
-            {
-                return txbPIDSamplingInterval;
+                if (!v.IsValid)
+                {
+                    return v;
+                }
             }
 
             return null;
@@ -105,16 +70,16 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            var improperInput = CheckInput();
-            if (improperInput != null)
+            var validation = CheckInput();
+            if (validation != null)
             {
                 MessageBox.Show(
-                    $"The value '{improperInput.Text}' is not valid, it must be {improperInput.ToolTip}. Please correct and try again",
+                    $"{validation}.\nPlease correct and try again.",
                     Title,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                improperInput.Focus();
-                improperInput.SelectAll();
+                validation.Source.Focus();
+                validation.Source.SelectAll();
             }
             else
             {
