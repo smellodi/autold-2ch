@@ -101,10 +101,12 @@ namespace Olfactory.Comm
         [Flags]
         public enum OdorFlowsTo
         { 
-            Waste = 00,
-            WasteAndUser = 01,        // makes no sense
-            SystemAndWaste = 10,
-            SystemAndUser = WasteAndUser | SystemAndWaste,
+            Waste = 0,
+            User = 1,
+            System = 10,
+            WasteAndUser = Waste | User,        // makes no sense
+            SystemAndWaste = System | Waste,
+            SystemAndUser = System | User,
         }
 
         public enum FlowStartPoint
@@ -371,8 +373,8 @@ namespace Olfactory.Comm
                 if ((error = ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)) == Error.Success)
                 {
                     _odorDirection = OdorFlowsTo.Waste
-                        | (isValve1Opened ? OdorFlowsTo.SystemAndWaste : OdorFlowsTo.Waste)
-                        | (isValve2Opened ? OdorFlowsTo.WasteAndUser : OdorFlowsTo.Waste);
+                        | (isValve1Opened ? OdorFlowsTo.System : OdorFlowsTo.Waste)
+                        | (isValve2Opened ? OdorFlowsTo.User : OdorFlowsTo.Waste);
                 }
             }
             catch (Exception ex)

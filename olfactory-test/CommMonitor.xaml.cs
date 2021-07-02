@@ -167,16 +167,19 @@ namespace Olfactory
             }
 
             // add to graph
-            var graph = source switch
+            if (source == LogSource.MFC)
             {
-                LogSource.MFC => lmsMFC,
-                LogSource.PID => lmsPID,
-                _ => null
-            };
-
-            graph?.Add((double)data.Time / 1000, data.MainValue);
+                lmsMFC.Add(
+                    (double)data.Time / 1000,
+                    data.MainValue,
+                    Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
+            }
+            else if (source == LogSource.PID)
+            {
+                lmsPID.Add((double)data.Time / 1000, data.MainValue);
+            }
         }
-
+        /*
         private void ToggleMonitoring(CheckBox chk, System.Timers.Timer timer)
         {
             if (chk.IsChecked ?? false)
@@ -187,7 +190,7 @@ namespace Olfactory
             {
                 timer.Stop();
             }
-        }
+        }*/
 
         private void LogMessage(LogSource source, string message)
         {
@@ -235,7 +238,7 @@ namespace Olfactory
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             lsvMFC.Items.Clear();
-            lmsMFC.Reset();
+            lmsMFC.Reset(Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
 
             UpdateUI();
         }
@@ -250,7 +253,7 @@ namespace Olfactory
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
             lsvPID.Items.Clear();
-            lmsPID.Reset();
+            lmsPID.Reset(Controls.LiveMeasurement.BRUSH_NEUTRAL);
 
             UpdateUI();
         }
@@ -272,8 +275,8 @@ namespace Olfactory
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            lmsMFC.Reset();
-            lmsPID.Reset();
+            lmsMFC.Reset(Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
+            lmsPID.Reset(Controls.LiveMeasurement.BRUSH_NEUTRAL);
         }
 
         private void Window_Activated(object sender, EventArgs e)

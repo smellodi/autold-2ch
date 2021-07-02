@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Olfactory.Comm;
 
@@ -57,12 +58,12 @@ namespace Olfactory.Pages
                         var result = _mfc.GetSample(out MFCSample sample);
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow);
+                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
                         _monitor.LogData(LogSource.MFC, sample);
                     }
                     else
                     {
-                        lmsOdor.Add(Utils.Timestamp.Sec, 0);
+                        lmsOdor.Add(Utils.Timestamp.Sec, 0, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
 
                         MFCSample sample = new MFCSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -86,7 +87,7 @@ namespace Olfactory.Pages
                     }
                     else
                     {
-                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0);
+                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0, Brushes.LightSkyBlue);
 
                         PIDSample sample = new PIDSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -109,7 +110,6 @@ namespace Olfactory.Pages
 
         System.Timers.Timer _mfcTimer = new System.Timers.Timer();
         System.Timers.Timer _pidTimer = new System.Timers.Timer();
-
 
         private void UpdatePortList(ComboBox cmb)
         {
@@ -250,9 +250,9 @@ namespace Olfactory.Pages
 
         private void GetSystemStates()
         {
-            rdbValve1ToSystem.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.SystemAndWaste);
+            rdbValve1ToSystem.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.System);
             rdbValve1ToWaste.IsChecked = !rdbValve1ToSystem.IsChecked;
-            rdbValve2ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.WasteAndUser);
+            rdbValve2ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.User);
             rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
         }
 
@@ -325,7 +325,7 @@ namespace Olfactory.Pages
             else if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
-                lmsOdor.Reset();
+                lmsOdor.Reset(Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection));
             }
 
             GetSystemStates();
@@ -344,7 +344,7 @@ namespace Olfactory.Pages
 
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    lmsPIDValue.Reset(sample.PID);
+                    lmsPIDValue.Reset(Controls.LiveMeasurement.BRUSH_NEUTRAL, sample.PID);
                 }
             }
 

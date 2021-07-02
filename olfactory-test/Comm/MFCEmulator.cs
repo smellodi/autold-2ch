@@ -23,8 +23,8 @@ namespace Olfactory.Comm
             {
                 return string.Join(' ',
                     'Z',
-                    OdorDirection.HasFlag(MFC.OdorFlowsTo.SystemAndWaste) ? 1 : 0,
-                    OdorDirection.HasFlag(MFC.OdorFlowsTo.WasteAndUser) ? 1 : 0
+                    OdorDirection.HasFlag(MFC.OdorFlowsTo.System) ? 1 : 0,
+                    OdorDirection.HasFlag(MFC.OdorFlowsTo.User) ? 1 : 0
                 );
             }
 
