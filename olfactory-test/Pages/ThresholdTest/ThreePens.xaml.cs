@@ -19,35 +19,25 @@ namespace Olfactory.Pages.ThresholdTest
 
             PENS = new Controls.Pen[Procedure.PEN_COUNT] { pen1, pen2, pen3 };
 
-            _procedure.PenActivated += (s, e) => {
-                if (CurrentPen != null)
-                {
-                    CurrentPen.IsActive = false;
-                }
-                _currentPenID = e;
+            _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => ActivatePen(e));
 
-                lblInstruction.Text = INSTRUCTION_SNIFF_THE_PEN(_currentPenID);
-
-                CurrentPen.IsActive = true;
-            };
-
-            _procedure.WaitingForPenSelection += (s, e) => {
+            _procedure.WaitingForPenSelection += (s, e) => Dispatcher.Invoke(() => {
                 if (CurrentPen != null)
                 {
                     CurrentPen.IsActive = false;
                 }
                 EnableChoiceButtons(true);
-            };
+            });
 
-            _procedure.Next += (s, e) => {
+            _procedure.Next += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
-                Utils.DispatchOnce.Do(0.1, () => Init());
-            };
+                Utils.DispatchOnceUI.Do(0.1, () => Init());
+            });
 
-            _procedure.Finished += (s, e) => {
+            _procedure.Finished += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
                 Next(this, e);
-            };
+            });
         }
 
         public void Init(Tests.ThresholdTest.Settings settings = null)
@@ -96,6 +86,18 @@ namespace Olfactory.Pages.ThresholdTest
 
         readonly Controls.Pen[] PENS;
 
+        private void ActivatePen(int penID)
+        {
+            if (CurrentPen != null)
+            {
+                CurrentPen.IsActive = false;
+            }
+            _currentPenID = penID;
+
+            lblInstruction.Text = INSTRUCTION_SNIFF_THE_PEN(_currentPenID);
+
+            CurrentPen.IsActive = true;
+        }
 
         // UI actions
 

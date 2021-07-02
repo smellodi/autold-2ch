@@ -40,46 +40,9 @@ namespace Olfactory.Pages.OdorProduction
                 }
             };
 
-            _procedure.Data += (s, pid) =>
-            {
-                Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
-            };
-            _procedure.StageChanged += (s, stage) =>
-            {
-                switch (stage)
-                {
-                    case Procedure.Stage.InitWait:
-                        stpInitialPause.Style = _activeIntervalStyle;
-                        InitiateCountdownTimer(_settings.InitialPause);
-                        break;
-                    case Procedure.Stage.OdorFlow:
-                        stpInitialPause.Style = _inactiveIntervalStyle;
-                        stpOdorFlowDuration.Style = _activeIntervalStyle;
-                        InitiateCountdownTimer(_settings.OdorFlowDuration);
-                        break;
-                    case Procedure.Stage.FinalWait:
-                        stpOdorFlowDuration.Style = _inactiveIntervalStyle;
-                        stpFinalPause.Style = _activeIntervalStyle;
-                        InitiateCountdownTimer(_settings.FinalPause);
-                        break;
-                    default:
-                        throw new NotImplementedException($"Trial stage '{stage}' of Odor Production does not exist");
-                }
-            };
-            _procedure.Finished += (s, noMoreTrials) =>
-            {
-                stpFinalPause.Style = _inactiveIntervalStyle;
-
-                if (noMoreTrials)
-                {
-                    Next(this, new EventArgs());
-                }
-                else
-                {
-                    lblOdorStatus.Content = _settings.OdorQuantities[_procedure.Step];
-                    Utils.DispatchOnce.Do(0.1, () => _procedure.Next());
-                }
-            };
+            _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
+            _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => UpdateStage(stage));
+            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
         }
 
         public void Init(Settings settings)
@@ -110,6 +73,45 @@ namespace Olfactory.Pages.OdorProduction
         DispatcherTimer _countdownTimer = new DispatcherTimer();
 
         double _countdownStop = 0;
+
+        private void UpdateStage(Procedure.Stage stage)
+        {
+            switch (stage)
+            {
+                case Procedure.Stage.InitWait:
+                    stpInitialPause.Style = _activeIntervalStyle;
+                    InitiateCountdownTimer(_settings.InitialPause);
+                    break;
+                case Procedure.Stage.OdorFlow:
+                    stpInitialPause.Style = _inactiveIntervalStyle;
+                    stpOdorFlowDuration.Style = _activeIntervalStyle;
+                    InitiateCountdownTimer(_settings.OdorFlowDuration);
+                    break;
+                case Procedure.Stage.FinalWait:
+                    stpOdorFlowDuration.Style = _inactiveIntervalStyle;
+                    stpFinalPause.Style = _activeIntervalStyle;
+                    InitiateCountdownTimer(_settings.FinalPause);
+                    break;
+                default:
+                    throw new NotImplementedException($"Trial stage '{stage}' of Odor Production does not exist");
+            }
+        }
+
+        private void FinilizeTrial(bool noMoreTrials)
+        {
+            stpFinalPause.Style = _inactiveIntervalStyle;
+
+            if (noMoreTrials)
+            {
+                Next(this, new EventArgs());
+            }
+            else
+            {
+                lblOdorStatus.Content = _settings.OdorQuantities[_procedure.Step];
+                Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
+            }
+        }
+
 
         private void InitiateCountdownTimer(int value)
         {

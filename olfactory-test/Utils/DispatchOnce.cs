@@ -4,9 +4,9 @@ using System.Windows.Threading;
 
 namespace Olfactory.Utils
 {
-    public class DispatchOnce : DispatcherTimer
+    public class DispatchOnceUI : DispatcherTimer
     {
-        public DispatchOnce(double seconds, Action action, bool start = true) : base()
+        public DispatchOnceUI(double seconds, Action action, bool start = true) : base()
         {
             _actions.Enqueue(new ScheduledAction() { Pause = seconds, Action = action });
 
@@ -19,12 +19,12 @@ namespace Olfactory.Utils
             }
         }
 
-        public static DispatchOnce Do(double seconds, Action action)
+        public static DispatchOnceUI Do(double seconds, Action action)
         {
-            return new DispatchOnce(seconds, action);
+            return new DispatchOnceUI(seconds, action);
         }
 
-        public DispatchOnce Then(double seconds, Action action)
+        public DispatchOnceUI Then(double seconds, Action action)
         {
             _actions.Enqueue(new ScheduledAction() { Pause = seconds, Action = action });
             return this;
@@ -57,13 +57,14 @@ namespace Olfactory.Utils
         }
     }
     
-    public class DelayedAction : System.Timers.Timer
+    public class DispatchOnce : System.Timers.Timer
     {
-        public DelayedAction(int milliseconds, Action action, bool start = true) : base()
+        public DispatchOnce(double seconds, Action action, bool start = true) : base()
         {
-            _actions.Enqueue(new ScheduledAction() { Pause = milliseconds, Action = action });
+            var pause = (int)(1000 * seconds);
+            _actions.Enqueue(new ScheduledAction() { Pause = pause, Action = action });
 
-            Interval = milliseconds;
+            Interval = pause;
             AutoReset = false;
 
             Elapsed += (s, e) => Execute();
@@ -74,14 +75,14 @@ namespace Olfactory.Utils
             }
         }
 
-        public static DelayedAction Do(int milliseconds, Action action)
+        public static DispatchOnce Do(double seconds, Action action)
         {
-            return new DelayedAction(milliseconds, action);
+            return new DispatchOnce(seconds, action);
         }
 
-        public DelayedAction Then(int milliseconds, Action action)
+        public DispatchOnce Then(double seconds, Action action)
         {
-            _actions.Enqueue(new ScheduledAction() { Pause = milliseconds, Action = action });
+            _actions.Enqueue(new ScheduledAction() { Pause = (int)(1000 * seconds), Action = action });
             return this;
         }
 
@@ -101,7 +102,7 @@ namespace Olfactory.Utils
             Stop();
 
             var action = _actions.Dequeue();
-            Dispatcher.CurrentDispatcher.Invoke(() => action.Action());
+            action.Action();
 
             if (_actions.Count > 0)
             {
