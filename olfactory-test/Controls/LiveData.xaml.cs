@@ -5,25 +5,12 @@ namespace Olfactory.Controls
 {
     public partial class LiveData : UserControl
     {
-        public static readonly System.Drawing.Color BRUSH_NEUTRAL = System.Drawing.Color.FromArgb(16, 160, 255);
-        public static readonly System.Drawing.Color BRUSH_WARNING = System.Drawing.Color.Red;
-        public static readonly System.Drawing.Color BRUSH_OK = System.Drawing.Color.Green;
-
-        public static System.Drawing.Color OdorColor(Comm.MFC.OdorFlowsTo odorDirection)
-        {
-            return odorDirection switch
-            {
-                Comm.MFC.OdorFlowsTo.SystemAndUser => BRUSH_OK,
-                Comm.MFC.OdorFlowsTo.SystemAndWaste => BRUSH_NEUTRAL,
-                _ => BRUSH_WARNING
-            };
-        }
+        static readonly System.Drawing.Color LINE_COLOR = System.Drawing.Color.FromArgb(16, 160, 255);
 
         public class MeasureModel
         {
             public double Timestamp { get; set; }
             public double Value { get; set; }
-            public System.Drawing.Color Brush { get; set; }
         }
 
         public LiveData()
@@ -31,7 +18,7 @@ namespace Olfactory.Controls
             InitializeComponent();
 
             _scatter = new ScottPlot.Plottable.ScatterPlot(new double[] { 0 }, new double[] { 0 });
-            _scatter.Color = System.Drawing.Color.FromArgb(16, 160, 255);
+            _scatter.Color = LINE_COLOR;
             _scatter.MarkerSize = 4f;
 
             chart.Plot.Add(_scatter);
@@ -50,7 +37,7 @@ namespace Olfactory.Controls
             chart.Plot.YAxis2.Hide();
         }
 
-        public void Reset(System.Drawing.Color brush, double baseline = 0)
+        public void Reset(double baseline = 0)
         {
             _data.Clear();
 
@@ -63,7 +50,6 @@ namespace Olfactory.Controls
                 {
                     Timestamp = ts + _data.Count - count,
                     Value = baseline,
-                    Brush = brush
                 });
             }
 
@@ -81,7 +67,7 @@ namespace Olfactory.Controls
                 _data.RemoveAt(0);
             }
 
-            _data.Add(new MeasureModel { Timestamp = timestamp, Value = value, Brush = brush ?? BRUSH_NEUTRAL });
+            _data.Add(new MeasureModel { Timestamp = timestamp, Value = value });
 
             Data2XY(out double[] x, out double[] y);
 

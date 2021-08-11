@@ -171,8 +171,9 @@ namespace Olfactory
             {
                 lmsMFC.Add(
                     (double)data.Time / 1000,
-                    data.MainValue,
-                    Controls.LiveData.OdorColor(_mfc.OdorDirection));
+                    data.MainValue
+                    //Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)
+                );
             }
             else if (source == LogSource.PID)
             {
@@ -238,7 +239,7 @@ namespace Olfactory
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             lsvMFC.Items.Clear();
-            lmsMFC.Reset(Controls.LiveData.OdorColor(_mfc.OdorDirection));
+            lmsMFC.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
 
             UpdateUI();
         }
@@ -253,7 +254,7 @@ namespace Olfactory
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
             lsvPID.Items.Clear();
-            lmsPID.Reset(Controls.LiveData.BRUSH_NEUTRAL);
+            lmsPID.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
 
             UpdateUI();
         }
@@ -275,8 +276,8 @@ namespace Olfactory
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            lmsMFC.Reset(Controls.LiveData.OdorColor(_mfc.OdorDirection));
-            lmsPID.Reset(Controls.LiveData.BRUSH_NEUTRAL);
+            lmsMFC.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+            lmsPID.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
         }
 
         private void Window_Activated(object sender, EventArgs e)

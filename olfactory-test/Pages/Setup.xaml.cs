@@ -58,12 +58,12 @@ namespace Olfactory.Pages
                         var result = _mfc.GetSample(out MFCSample sample);
                         lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
                         lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow, Controls.LiveData.OdorColor(_mfc.OdorDirection));
+                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
                         _monitor.LogData(LogSource.MFC, sample);
                     }
                     else
                     {
-                        lmsOdor.Add(Utils.Timestamp.Sec, 0, Controls.LiveData.OdorColor(_mfc.OdorDirection));
+                        lmsOdor.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
 
                         MFCSample sample = new MFCSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -87,7 +87,7 @@ namespace Olfactory.Pages
                     }
                     else
                     {
-                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0, Controls.LiveData.BRUSH_NEUTRAL);
+                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
 
                         PIDSample sample = new PIDSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -325,7 +325,7 @@ namespace Olfactory.Pages
             else if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
-                lmsOdor.Reset(Controls.LiveData.OdorColor(_mfc.OdorDirection));
+                lmsOdor.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
             }
 
             GetSystemStates();
@@ -344,7 +344,7 @@ namespace Olfactory.Pages
 
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    lmsPIDValue.Reset(Controls.LiveData.BRUSH_NEUTRAL, sample.PID);
+                    lmsPIDValue.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL, */sample.PID);
                 }
             }
 
