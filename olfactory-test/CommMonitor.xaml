@@ -109,8 +109,10 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <controls:LiveMeasurement Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
-                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/>
+        <!--controls:LiveMeasurement Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
+                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/-->
+        <controls:LiveData Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
+                                Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
@@ -163,7 +165,9 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <controls:LiveMeasurement Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
-                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/>
+        <!--controls:LiveMeasurement Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
+                                  Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/-->
+        <controls:LiveData Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
+                           Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/>
     </Grid>
 </Window>

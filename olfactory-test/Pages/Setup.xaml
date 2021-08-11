@@ -201,16 +201,16 @@
                 <Label Content="Odor (ml/min)"/>
                 <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
             </WrapPanel>
-            <local:LiveMeasurement x:Name="lmsOdor"
-                                   Height="100"/>
+            <local:LiveData x:Name="lmsOdor"
+                            Height="100"/>
 
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
                 <Label Content="PID value (mV)"/>
                 <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
             </WrapPanel>
-            <local:LiveMeasurement x:Name="lmsPIDValue"
-                                   Height="100"/>
+            <local:LiveData x:Name="lmsPIDValue"
+                            Height="100"/>
 
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
