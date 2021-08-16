@@ -22,8 +22,8 @@ namespace Olfactory.Controls
             _scatter.MarkerSize = 4f;
 
             chart.Plot.Add(_scatter);
-            chart.Plot.XAxis.Color(System.Drawing.Color.Gray);
-            chart.Plot.YAxis.Color(System.Drawing.Color.Gray);
+            chart.Plot.XAxis.Color(COLOR_GRAY);
+            chart.Plot.YAxis.Color(COLOR_GRAY);
 
             chart.Plot.XAxis.TickLabelStyle(fontSize: 10);
             chart.Plot.XAxis.SetSizeLimit(10, 20, 0);
@@ -80,6 +80,8 @@ namespace Olfactory.Controls
         // Internal 
 
         const int PIXELS_PER_POINT = 4;
+        readonly System.Drawing.Color COLOR_GRAY = System.Drawing.Color.FromArgb(80, 80, 80);
+
 
         ScottPlot.Plottable.ScatterPlot _scatter;
 

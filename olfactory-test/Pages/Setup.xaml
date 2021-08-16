@@ -202,7 +202,14 @@
                 <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
             </WrapPanel>
             <local:LiveData x:Name="lmsOdor"
-                            Height="100"/>
+                            Height="92"/>
+
+            <Label Style="{StaticResource Divider}"
+                   Margin="0,12,0,0"/>
+            <WrapPanel Style="{StaticResource Indicator}">
+                <Label Content="PID loop (mA)"/>
+                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
+            </WrapPanel>
 
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
@@ -210,15 +217,7 @@
                 <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
             </WrapPanel>
             <local:LiveData x:Name="lmsPIDValue"
-                            Height="100"/>
-
-            <Label Style="{StaticResource Divider}"/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="PID loop (mA)"/>
-                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
-            </WrapPanel>
-
-            <Label Style="{StaticResource Divider}"/>
+                            Height="118"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="4" Grid.Column="0"
