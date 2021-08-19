@@ -13,8 +13,15 @@
         <Grid.Resources>
             <Style TargetType="{x:Type TextBox}">
                 <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="MinHeight" Value="26" />
+                <Setter Property="Margin" Value="0,0,4,0" />
                 <Setter Property="Padding" Value="4,0" />
+            </Style>
+            <Style x:Key="RowHeader" TargetType="TextBlock" BasedOn="{StaticResource RowHeader}">
+                <Setter Property="Width" Value="90"/>
+            </Style>
+            <Style TargetType="CheckBox">
+                <Setter Property="Margin" Value="0,0,8,0"/>
             </Style>
         </Grid.Resources>
 
@@ -40,166 +47,98 @@
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Border.LayoutTransform>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="8"/>
-                    <RowDefinition Height="auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
-                    <ColumnDefinition Width="310"/>
-                </Grid.ColumnDefinitions>
-
-                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"
-                       Background="#FFD7EFFF"
-                       HorizontalContentAlignment="Center"
+            <StackPanel Width="410">
+                <Label Grid.ColumnSpan="3"
+                       Style="{StaticResource BoxHeader}"
                        Content="Settings"/>
 
-                <Label Grid.Row="2" Grid.Column="0"
-                       Style="{StaticResource Field}"
-                       Content="Clean air"/>
-                <Grid Grid.Row="2" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" x:Name="txbFreshAir"
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Clean air"/>
+                    <TextBox x:Name="txbFreshAir"
+                             Width="250"
                              Text="5"
                              ToolTip="a positive number"/>
-                    <Label Grid.Column="1"
-                           Content="l/min"/>
-                </Grid>
-
-                <Label Grid.Row="4" Grid.Column="0"
-                       Style="{StaticResource Field}"
-                       Content="Odor levels"/>
-                <Grid Grid.Row="4" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Row="0" Grid.Column="0" x:Name="txbPPMs"
+                    <Label Content="l/min"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Odor levels"/>
+                    <TextBox x:Name="txbPPMs"
+                             Width="250"
                              Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
                              ToolTip="space-separated positive numbers"/>
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Content="ml/min"/>
-                </Grid>
-
-                <TextBlock Grid.Row="6" Grid.Column="0"
-                           Style="{StaticResource Label}"
-                           Text="Durations in seconds"/>
-                <Grid Grid.Row="6" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="24"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Content="Odor prepartion time"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" x:Name="txbOdorPreparationDuration"
+                    <Label Content="ml/min"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Durations in seconds"/>
+                    <StackPanel Width="150">
+                        <Label Content="Odor prepartion time"/>
+                        <TextBox x:Name="txbOdorPreparationDuration"
                              Text="15"
                              ToolTip="a non-negative integer"/>
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Content="Pen sniffing time"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbPenSniffingDuration"
-                             Text="5"
-                             ToolTip="a positive integer"/>
-                </Grid>
-
-                <TextBlock Grid.Row="8" Grid.Column="0"
-                           Style="{StaticResource Label}"
-                           Text="Turnings"/>
-                <Grid Grid.Row="8" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="24"/>
-                    </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0"
-                           Content="To collect"/>
-                    <TextBox Grid.Row="1" Grid.Column="0" x:Name="txbTurningPoints"
-                             Text="7"
-                             ToolTip="a positive integer"/>
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Content="To count"/>
-                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbTurningPointsToCount"
-                             Text="4"
-                             ToolTip="a positive integer"/>
-                    <Label Grid.Row="0" Grid.Column="2"
-                           Content="Recogn. in row"/>
-                    <TextBox Grid.Row="1" Grid.Column="2" x:Name="txbRecognitionsInRow"
+                    </StackPanel>
+                    <StackPanel Width="150">
+                        <Label Content="Pen sniffing time"/>
+                        <TextBox x:Name="txbPenSniffingDuration"
+                                 Text="5"
+                                 ToolTip="a positive integer"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Turnings"/>
+                    <StackPanel Width="100">
+                        <Label Content="To collect"/>
+                        <TextBox x:Name="txbTurningPoints"
+                                 Text="7"
+                                 ToolTip="a positive integer"/>
+                    </StackPanel>
+                    <StackPanel Width="100">
+                        <Label Content="To count"/>
+                        <TextBox x:Name="txbTurningPointsToCount"
+                                 Text="4"
+                                 ToolTip="a positive integer"/>
+                    </StackPanel>
+                    <StackPanel Width="100">
+                        <Label Content="Recogn. in row"/>
+                        <TextBox x:Name="txbRecognitionsInRow"
+                                 Text="2"
+                                 ToolTip="a positive integer"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Familiarization"/>
+                    <TextBox x:Name="txbFamiliarizationDuration"
+                             Width="240"
                              Text="2"
+                             ToolTip="a positive number"/>
+                    <Label Content="sec"/>
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="PID sampling"/>
+                    <TextBox x:Name="txbPIDSamplingInterval"
+                             Width="240"
+                             Text="1000"
                              ToolTip="a positive integer"/>
-                </Grid>
-
-
-                <Label Grid.Row="10" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="Familiarization"/>
-                <Grid Grid.Row="10" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" x:Name="txbFamiliarizationDuration"
-                         Text="2"
-                         ToolTip="a positive number"/>
-                    <Label Grid.Column="1"
-                           Content="sec"/>
-                </Grid>
-
-                <Label Grid.Row="12" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="PID sampling"/>
-                <Grid Grid.Row="12" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="50"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBox Grid.Column="0" x:Name="txbPIDSamplingInterval"
-                         Text="1000"
-                         ToolTip="a positive integer"/>
                     <Label Grid.Column="1"
                            Content="ms"/>
-                </Grid>
-
-                <Label Grid.Row="14" Grid.Column="0"
-                       Style="{StaticResource Field}"
-                       Content="Feedback loop"/>
-                <Grid Grid.Row="14" Grid.Column="1">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <CheckBox Grid.Column="0" x:Name="chkFeedbackLoopToReachLevel"
+                </StackPanel>
+                <StackPanel Style="{StaticResource Row}">
+                    <TextBlock Style="{StaticResource RowHeader}"
+                               Text="Feedback loop"/>
+                    <CheckBox x:Name="chkFeedbackLoopToReachLevel"
                               Content="to reach the target level"
                               VerticalAlignment="Center"/>
-                    <CheckBox Grid.Column="1" x:Name="chkFeedbackLoopToKeepLevel"
+                    <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
                               Content="to keep the target level"
                               VerticalAlignment="Center"
                               IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
-                </Grid>
-            </Grid>
+                </StackPanel>
+            </StackPanel>
         </Border>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10" x:Name="btnStart"

@@ -74,15 +74,8 @@
             </Style>
 
             <!-- Setup page elements -->
-            <Style x:Key="Field" TargetType="{x:Type Label}">
-                <Setter Property="Margin" Value="4,0"/>
-                <!--Setter Property="VerticalAlignment" Value="Center"/-->
-            </Style>
-            <Style x:Key="Label" TargetType="{x:Type TextBlock}">
-                <Setter Property="Margin" Value="8,4"/>
-                <Setter Property="TextWrapping" Value="Wrap"/>
-            </Style>
-            <Style x:Key="Header" TargetType="{x:Type Label}">
+            <Style x:Key="BoxHeader" TargetType="{x:Type Label}">
+                <Setter Property="Margin" Value="0,0,0,10"/>
                 <Setter Property="Background" Value="#FFD7EFFF"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
@@ -90,7 +83,14 @@
                 <Setter Property="BorderBrush" Value="#80000000"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Margin" Value="0,0,0,10"/>
-                <Setter Property="Padding" Value="0,0,0,10"/>
+            </Style>
+            <Style x:Key="Row" TargetType="StackPanel">
+                <Setter Property="Orientation" Value="Horizontal"/>
+                <Setter Property="Margin" Value="0,0,0,4" />
+            </Style>
+            <Style x:Key="RowHeader" TargetType="{x:Type TextBlock}">
+                <Setter Property="Margin" Value="8,4"/>
+                <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
 
         </ResourceDictionary>

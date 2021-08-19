@@ -16,9 +16,16 @@
         <Grid.Resources>
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
                 <Setter Property="Margin" Value="10,0" />
+                <Setter Property="MinWidth" Value="75" />
+            </Style>
+            <Style TargetType="{x:Type ComboBox}">
+                <Setter Property="Width" Value="120" />
             </Style>
             <Style TargetType="{x:Type Label}">
                 <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            <Style x:Key="RowHeader" TargetType="TextBlock" BasedOn="{StaticResource RowHeader}">
+                <Setter Property="Width" Value="50"/>
             </Style>
             <Style x:Key="Divider" TargetType="{x:Type Label}">
                 <Setter Property="BorderThickness" Value="0,1,0,0"/>
@@ -56,131 +63,104 @@
             </StackPanel.LayoutTransform>
             <Border Margin="12,0,0,12"
                 Style="{StaticResource Box}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="60"/>
-                        <ColumnDefinition Width="100"/>
-                        <ColumnDefinition Width="100"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
+                <StackPanel>
+                    <Label Style="{StaticResource BoxHeader}"
+                           Content="Serial ports"/>
 
-                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                            Style="{StaticResource Header}"
-                            Content="Serial ports"/>
-
-                    <Label Grid.Row="2" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="MFC"/>
-                    <ComboBox Grid.Row="2" Grid.Column="1" x:Name="cmbMFCPort"
+                    <StackPanel Style="{StaticResource Row}">
+                        <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="MFC"/>
+                        <ComboBox x:Name="cmbMFCPort"
                                 VerticalContentAlignment="Center"
                                 SelectionChanged="cmbPort_SelectionChanged"/>
-                    <Button Grid.Row="2" Grid.Column="2" x:Name="btnMFCToggle"
-                            Click="btnMFCToggle_Click"/>
-
-                    <Label Grid.Row="4" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="PID"/>
-                    <ComboBox Grid.Row="4" Grid.Column="1" x:Name="cmbPIDPort"
-                                VerticalContentAlignment="Center"
-                                SelectionChanged="cmbPort_SelectionChanged"/>
-                    <Button Grid.Row="4" Grid.Column="2" x:Name="btnPIDToggle"
-                            Click="btnPIDToggle_Click"/>
-
-                    <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" 
-                                Margin="8,0,0,0"
-                                TextWrapping="Wrap"
-                                Text="Press F5 any time to show the logging window. Press F2 to simulate COM ports."/>
-
-                </Grid>
+                        <Button x:Name="btnMFCToggle"
+                                Content="Open"
+                                Click="btnMFCToggle_Click"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource Row}">
+                        <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="PID"/>
+                        <ComboBox x:Name="cmbPIDPort"
+                                  VerticalContentAlignment="Center"
+                                  SelectionChanged="cmbPort_SelectionChanged"/>
+                        <Button x:Name="btnPIDToggle"
+                                Content="Open"
+                                Click="btnPIDToggle_Click"/>
+                    </StackPanel>
+                    <TextBlock Margin="8,2,0,2"
+                               HorizontalAlignment="Left"
+                               Width="250"
+                               TextWrapping="Wrap">
+                        Press F5 any time to show the logging window.
+                        Press F2 to simulate COM ports.
+                    </TextBlock>
+                </StackPanel>
             </Border>
             
             <Border Margin="12,0,0,12"
                 Style="{StaticResource Box}">
-                <Grid x:Name="grdPlayground">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="8"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="70"/>
-                        <ColumnDefinition Width="80"/>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="60"/>
-                    </Grid.ColumnDefinitions>
+                <StackPanel x:Name="grdPlayground">
+                    <Label Style="{StaticResource BoxHeader}"
+                           Content="MFC Playground"/>
 
-                    <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
-                        Background="#FFD7EFFF"
-                        HorizontalContentAlignment="Center"
-                        Content="MFC Playground"/>
-
-                    <Label Grid.Row="2" Grid.Column="0"
-                           Style="{StaticResource Field}"
-                           Content="Clean air"/>
-                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="txbFreshAir"
-                             VerticalContentAlignment="Center"
-                             Text="5.0"
-                             ToolTip="a single positive floating-point value"/>
-                    <Label Grid.Row="2" Grid.Column="2"
-                           Content="l/min"/>
-                    <Button Grid.Row="2" Grid.Column="3"
-                            Content="Set"
-                            Click="btnSetFreshAir_Click"/>
-
-                    <Label Grid.Row="4" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="Odor"/>
-                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="txbOdor"
-                                VerticalContentAlignment="Center"
-                                Text="8.0"
-                                ToolTip="a single positive floating-point value"/>
-                    <Label Grid.Row="4" Grid.Column="2"
-                            Content="ml/min"/>
-                    <Button Grid.Row="4" Grid.Column="3"
-                            Content="Set"
-                            Click="btnSetOdor_Click"/>
-
-                    <Label Grid.Row="6" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="Valve #1"/>
-                    <WrapPanel Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                        <RadioButton x:Name="rdbValve1ToWaste"
-                                     GroupName="valve1"
-                                     Content="waste"/>
-                        <RadioButton x:Name="rdbValve1ToSystem" Margin="16,0,0,0"
-                                     GroupName="valve1"
-                                     Content="system"/>
-                    </WrapPanel>
-                    <Button Grid.Row="6" Grid.Column="3" Grid.RowSpan="3"
-                            Content="Set"
-                            Click="btnSetDirection_Click"/>
-                    
-                    <Label Grid.Row="8" Grid.Column="0"
-                            Style="{StaticResource Field}"
-                            Content="Valve #2"/>
-                    <WrapPanel Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">
-                        <RadioButton x:Name="rdbValve2ToWaste"
-                                     GroupName="valve2"
-                                     Content="waste"/>
-                        <RadioButton x:Name="rdbValve2ToUser" Margin="16,0,0,0"
-                                     GroupName="valve2"
-                                     Content="user"/>
-                    </WrapPanel>
-                </Grid>
+                    <StackPanel Style="{StaticResource Row}">
+                        <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="Clean air"/>
+                        <TextBox x:Name="txbFreshAir"
+                                 Width="60"
+                                 VerticalContentAlignment="Center"
+                                 Text="5.0"
+                                 ToolTip="a single positive floating-point value"/>
+                        <Label Content="l/min"
+                               Width="60"/>
+                        <Button Content="Set"
+                                Click="btnSetFreshAir_Click"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource Row}">
+                        <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="Odor"/>
+                        <TextBox x:Name="txbOdor"
+                                 Width="60"
+                                 VerticalContentAlignment="Center"
+                                 Text="8.0"
+                                 ToolTip="a single positive floating-point value"/>
+                        <Label Content="ml/min"
+                               Width="60"/>
+                        <Button Content="Set"
+                                Click="btnSetOdor_Click"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                        <StackPanel>
+                            <StackPanel Style="{StaticResource Row}">
+                                <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="Valve #1"/>
+                                <WrapPanel VerticalAlignment="Center">
+                                    <RadioButton x:Name="rdbValve1ToWaste"
+                                         GroupName="valve1"
+                                         Content="waste"/>
+                                    <RadioButton x:Name="rdbValve1ToSystem" Margin="16,0,0,0"
+                                         GroupName="valve1"
+                                         Content="system"/>
+                                </WrapPanel>
+                            </StackPanel>
+                            <StackPanel Style="{StaticResource Row}">
+                                <TextBlock Style="{StaticResource RowHeader}"
+                                   Text="Valve #2"/>
+                                <WrapPanel VerticalAlignment="Center">
+                                    <RadioButton x:Name="rdbValve2ToWaste"
+                                         GroupName="valve2"
+                                         Content="waste"/>
+                                    <RadioButton x:Name="rdbValve2ToUser"
+                                         Margin="16,0,0,0"
+                                         GroupName="valve2"
+                                         Content="user"/>
+                                </WrapPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <Button Content="Set"
+                                Click="btnSetDirection_Click"/>
+                    </StackPanel>
+                </StackPanel>
             </Border>
         </StackPanel>
 
