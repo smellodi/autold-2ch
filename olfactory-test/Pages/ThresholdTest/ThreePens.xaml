@@ -15,9 +15,9 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0"
-               Style="{StaticResource PageTitle}"
-               Content="Threshold test - Three pens"/>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}"
+                   Text="Threshold test - Three pens"/>
 
         <Grid Grid.Row="1" Grid.Column="0"
               HorizontalAlignment="Center"

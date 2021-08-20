@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Controls"
       mc:Ignorable="d" 
-      d:DesignHeight="470" d:DesignWidth="600"
+      d:DesignHeight="470" d:DesignWidth="800"
       Title="Setup"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -16,17 +16,24 @@
         <Grid.Resources>
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
                 <Setter Property="Margin" Value="10,0" />
-                <Setter Property="MinWidth" Value="75" />
+                <Setter Property="Width" Value="75" />
+            </Style>
+            <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}">
+                <Setter Property="Width" Value="55" />
             </Style>
             <Style TargetType="{x:Type ComboBox}">
-                <Setter Property="Width" Value="120" />
+                <Setter Property="Width" Value="150" />
             </Style>
-            <Style TargetType="{x:Type Label}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style TargetType="{x:Type RadioButton}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>
-            <Style x:Key="RowHeader" TargetType="TextBlock" BasedOn="{StaticResource RowHeader}">
-                <Setter Property="Width" Value="50"/>
+            <Style x:Key="RadioLabel" TargetType="{x:Type Label}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
             </Style>
+
+            <!-- Indicator & graph area-->
             <Style x:Key="Divider" TargetType="{x:Type Label}">
                 <Setter Property="BorderThickness" Value="0,1,0,0"/>
                 <Setter Property="BorderBrush" Value="#FF4D4D4D"/>
@@ -53,113 +60,125 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
-               Style="{StaticResource PageTitle}"
-               Content="Setup"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
+                   Style="{StaticResource PageTitle}"
+                   Text="Setup"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center">
+        <StackPanel Grid.Row="2" Grid.Column="0"
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    Margin="12,0,0,0">
             <StackPanel.LayoutTransform>
                 <ScaleTransform x:Name="sctScale2"/>
             </StackPanel.LayoutTransform>
-            <Border Margin="12,0,0,12"
-                Style="{StaticResource Box}">
+            <Border Style="{StaticResource Form}" Margin="0,0,0,12">
                 <StackPanel>
-                    <Label Style="{StaticResource BoxHeader}"
+                    <Label Style="{StaticResource FormHeader}"
                            Content="Serial ports"/>
 
-                    <StackPanel Style="{StaticResource Row}">
-                        <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="MFC"/>
-                        <ComboBox x:Name="cmbMFCPort"
-                                VerticalContentAlignment="Center"
-                                SelectionChanged="cmbPort_SelectionChanged"/>
-                        <Button x:Name="btnMFCToggle"
-                                Content="Open"
-                                Click="btnMFCToggle_Click"/>
-                    </StackPanel>
-                    <StackPanel Style="{StaticResource Row}">
-                        <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="PID"/>
-                        <ComboBox x:Name="cmbPIDPort"
-                                  VerticalContentAlignment="Center"
-                                  SelectionChanged="cmbPort_SelectionChanged"/>
-                        <Button x:Name="btnPIDToggle"
-                                Content="Open"
-                                Click="btnPIDToggle_Click"/>
-                    </StackPanel>
+                    <UserControl Style="{StaticResource FormRow}" Tag="MFC">
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="cmbMFCPort"
+                                      VerticalContentAlignment="Center"
+                                      SelectionChanged="cmbPort_SelectionChanged"/>
+                            <Button x:Name="btnMFCToggle"
+                                    Content="Open"
+                                    Click="btnMFCToggle_Click"/>
+                        </StackPanel>
+                    </UserControl>
+                    <UserControl Style="{StaticResource FormRow}" Tag="PID">
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox x:Name="cmbPIDPort"
+                                      VerticalContentAlignment="Center"
+                                      SelectionChanged="cmbPort_SelectionChanged"/>
+                            <Button x:Name="btnPIDToggle"
+                                    Content="Open"
+                                    Click="btnPIDToggle_Click"/>
+                        </StackPanel>
+                    </UserControl>
                     <TextBlock Margin="8,2,0,2"
                                HorizontalAlignment="Left"
-                               Width="250"
                                TextWrapping="Wrap">
-                        Press F5 any time to show the logging window.
+                        Press F5 any time to show the logging window.<LineBreak/>
                         Press F2 to simulate COM ports.
                     </TextBlock>
                 </StackPanel>
             </Border>
-            
-            <Border Margin="12,0,0,12"
-                Style="{StaticResource Box}">
+
+            <Border Style="{StaticResource Form}" Margin="0,0,0,12">
                 <StackPanel x:Name="grdPlayground">
-                    <Label Style="{StaticResource BoxHeader}"
+                    <Label Style="{StaticResource FormHeader}"
                            Content="MFC Playground"/>
 
-                    <StackPanel Style="{StaticResource Row}">
-                        <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="Clean air"/>
-                        <TextBox x:Name="txbFreshAir"
-                                 Width="60"
-                                 VerticalContentAlignment="Center"
-                                 Text="5.0"
-                                 ToolTip="a single positive floating-point value"/>
-                        <Label Content="l/min"
-                               Width="60"/>
-                        <Button Content="Set"
-                                Click="btnSetFreshAir_Click"/>
-                    </StackPanel>
-                    <StackPanel Style="{StaticResource Row}">
-                        <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="Odor"/>
-                        <TextBox x:Name="txbOdor"
-                                 Width="60"
-                                 VerticalContentAlignment="Center"
-                                 Text="8.0"
-                                 ToolTip="a single positive floating-point value"/>
-                        <Label Content="ml/min"
-                               Width="60"/>
-                        <Button Content="Set"
-                                Click="btnSetOdor_Click"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
-                        <StackPanel>
-                            <StackPanel Style="{StaticResource Row}">
-                                <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="Valve #1"/>
+                    <UserControl Style="{StaticResource FormRow}" Tag="Clean air">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                                <TextBox x:Name="txbFreshAir"
+                                         VerticalContentAlignment="Center"
+                                         Text="5.0"
+                                         ToolTip="a single positive floating-point value"/>
+                            </UserControl>
+                            <Button Grid.Column="1"
+                                    Content="Set"
+                                    Click="btnSetFreshAir_Click"/>
+                        </Grid>
+                    </UserControl>
+                    <UserControl Style="{StaticResource FormRow}" Tag="Odor">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                                <TextBox x:Name="txbOdor"
+                                         VerticalContentAlignment="Center"
+                                         Text="8.0"
+                                         ToolTip="a single positive floating-point value"/>
+                            </UserControl>
+                            <Button Grid.Column="1" 
+                                    Content="Set"
+                                    Click="btnSetOdor_Click"/>
+                        </Grid>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="Valves">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
                                 <WrapPanel VerticalAlignment="Center">
+                                    <Label Style="{StaticResource RadioLabel}" Content="#1  "/>
                                     <RadioButton x:Name="rdbValve1ToWaste"
-                                         GroupName="valve1"
-                                         Content="waste"/>
-                                    <RadioButton x:Name="rdbValve1ToSystem" Margin="16,0,0,0"
-                                         GroupName="valve1"
-                                         Content="system"/>
+                                                 GroupName="valve1"
+                                                 Content="waste"/>
+                                    <RadioButton x:Name="rdbValve1ToSystem"
+                                                 GroupName="valve1"
+                                                 Content="system"
+                                                 Margin="16,0,0,0"/>
                                 </WrapPanel>
-                            </StackPanel>
-                            <StackPanel Style="{StaticResource Row}">
-                                <TextBlock Style="{StaticResource RowHeader}"
-                                   Text="Valve #2"/>
                                 <WrapPanel VerticalAlignment="Center">
+                                    <Label Style="{StaticResource RadioLabel}" Content="#2  "/>
                                     <RadioButton x:Name="rdbValve2ToWaste"
-                                         GroupName="valve2"
-                                         Content="waste"/>
+                                                 GroupName="valve2"
+                                                 Content="waste"/>
                                     <RadioButton x:Name="rdbValve2ToUser"
-                                         Margin="16,0,0,0"
-                                         GroupName="valve2"
-                                         Content="user"/>
+                                                 GroupName="valve2"
+                                                 Content="user"
+                                                 Margin="16,0,0,0"/>
                                 </WrapPanel>
                             </StackPanel>
-                        </StackPanel>
-                        <Button Content="Set"
-                                Click="btnSetDirection_Click"/>
-                    </StackPanel>
+                            <Button Grid.Column="1"
+                                    Content="Set"
+                                    Click="btnSetDirection_Click"/>
+                        </Grid>
+                    </UserControl>
                 </StackPanel>
             </Border>
         </StackPanel>

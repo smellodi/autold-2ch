@@ -24,9 +24,9 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0"
-               Style="{StaticResource PageTitle}"
-               Content="Threshold test - Instructions"/>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}"
+                   Text="Threshold test - Instructions"/>
 
         <ScrollViewer Grid.Row="1"
                       HorizontalAlignment="Center"

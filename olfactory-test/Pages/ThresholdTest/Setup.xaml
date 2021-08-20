@@ -10,21 +10,6 @@
       WindowTitle="Threshold test">
 
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="MinHeight" Value="26" />
-                <Setter Property="Margin" Value="0,0,4,0" />
-                <Setter Property="Padding" Value="4,0" />
-            </Style>
-            <Style x:Key="RowHeader" TargetType="TextBlock" BasedOn="{StaticResource RowHeader}">
-                <Setter Property="Width" Value="90"/>
-            </Style>
-            <Style TargetType="CheckBox">
-                <Setter Property="Margin" Value="0,0,8,0"/>
-            </Style>
-        </Grid.Resources>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="auto"/>
@@ -38,18 +23,18 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
-               Style="{StaticResource PageTitle}"
-               Content="Threshold test - Setup"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
+                   Style="{StaticResource PageTitle}"
+                   Text="Threshold test - Setup"/>
 
         <Border Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource Box}">
+                Style="{StaticResource Form}">
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Border.LayoutTransform>
             <StackPanel Width="410">
                 <Label Grid.ColumnSpan="3"
-                       Style="{StaticResource BoxHeader}"
+                       Style="{StaticResource FormHeader}"
                        Content="Settings"/>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="Clean air">
@@ -130,7 +115,7 @@
                     </Grid>
                 </UserControl>
 
-                <Border Style="{StaticResource Separator}"/>
+                <Border Style="{StaticResource HorizontalLine}"/>
                 <UserControl Style="{StaticResource FormRow}" Tag="PID sampling">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="ms">
                         <TextBox x:Name="txbPIDSamplingInterval"
@@ -138,8 +123,8 @@
                                  ToolTip="a positive integer"/>
                     </UserControl>
                 </UserControl>
-                
-                <Border Style="{StaticResource Separator}"/>
+
+                <Border Style="{StaticResource HorizontalLine}"/>
                 <UserControl Style="{StaticResource FormRow}" Tag="Feedback loop">
                     <StackPanel Orientation="Horizontal">
                         <CheckBox x:Name="chkFeedbackLoopToReachLevel"

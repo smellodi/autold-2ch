@@ -16,9 +16,9 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0"
-               Style="{StaticResource PageTitle}"
-               Content="Threshold test - Familiarize with the odor"/>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}"
+                   Text="Threshold test - Familiarize with the odor"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"

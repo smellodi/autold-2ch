@@ -11,6 +11,8 @@ namespace Olfactory.Tests.ThresholdTest
     {
         public event EventHandler PageDone = delegate { };
 
+        public string Name => "Threshold test";
+
         public Manager()
         {
             _setupPage.Next += (s, e) =>

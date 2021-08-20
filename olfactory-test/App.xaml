@@ -43,7 +43,16 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="MinHeight" Value="26" />
+                <Setter Property="Margin" Value="0,0,8,0" />
+                <Setter Property="Padding" Value="4,0" />
+            </Style>
+            <Style TargetType="CheckBox">
+                <Setter Property="Margin" Value="0,0,8,0"/>
+            </Style>
+
             <!-- Each page elements -->
             <Style x:Key="DebugWarning" TargetType="Label">
                 <Setter Property="FontSize" Value="16"/>
@@ -54,13 +63,14 @@
                 <Setter Property="Grid.RowSpan" Value="64"/>
                 <Setter Property="Panel.ZIndex" Value="-1"/>
             </Style>
-            <Style x:Key="PageTitle" TargetType="Label">
+            <Style x:Key="PageTitle" TargetType="TextBlock">
                 <Setter Property="FontSize" Value="20"/>
                 <Setter Property="FontFamily" Value="Lucida Sans"/>
-                <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 <Setter Property="Background" Value="#FFE0E0E0"/>
                 <Setter Property="Foreground" Value="#FF00276C"/>
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                <Setter Property="TextAlignment" Value="Center" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Padding" Value="0,8" />
             </Style>
             <Style x:Key="Next" TargetType="Button" BasedOn="{StaticResource btn}">
                 <Setter Property="HorizontalAlignment" Value="Right"/>
@@ -74,42 +84,36 @@
             </Style>
 
             <!-- Setup page elements -->
-            <Style x:Key="Box" TargetType="{x:Type Border}">
+            <Style x:Key="Form" TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="#80000000"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Margin" Value="0,0,0,10"/>
             </Style>
-            <Style x:Key="BoxHeader" TargetType="{x:Type Label}">
+            <Style x:Key="FormHeader" TargetType="{x:Type Label}">
                 <Setter Property="Margin" Value="0,0,0,10"/>
                 <Setter Property="Background" Value="#FFD7EFFF"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
-            <Style x:Key="Separator" TargetType="{x:Type Border}">
+            <Style x:Key="HorizontalLine" TargetType="{x:Type Border}">
                 <Setter Property="BorderBrush" Value="#FF62B1FF"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Height" Value="1"/>
                 <Setter Property="Margin" Value="4,0,4,8"/>
             </Style>
-            <Style x:Key="Row" TargetType="StackPanel">
-                <Setter Property="Orientation" Value="Horizontal"/>
-                <Setter Property="Margin" Value="0,0,0,4" />
-            </Style>
-            <Style x:Key="RowHeader" TargetType="{x:Type TextBlock}">
-                <Setter Property="Margin" Value="8,4"/>
+            <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}">
+                <Setter Property="Width" Value="90"/>
+                <Setter Property="DockPanel.Dock" Value="Left"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="8,0,8,8"/>
             </Style>
-            <!-- Alternative to Row with RowHeader inside -->
             <Style x:Key="FormRow" TargetType="UserControl">
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="UserControl">
                             <DockPanel>
-                                <TextBlock Text="{TemplateBinding Tag}"
-                                           Width="90"
-                                           DockPanel.Dock="Left"
-                                           TextWrapping="Wrap"
-                                           VerticalAlignment="Center"
-                                           Margin="8,0,8,8"/>
+                                <TextBlock Style="{StaticResource FormRowHeader}"
+                                           Text="{TemplateBinding Tag}"/>
                                 <ContentPresenter Margin="0,0,8,8"/>
                             </DockPanel>
                         </ControlTemplate>
@@ -120,13 +124,17 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="UserControl">
-                            <DockPanel>
-                                <TextBlock Text="{TemplateBinding Tag}"
-                                           Width="40"
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="40"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="{TemplateBinding Tag}"
                                            DockPanel.Dock="Right"
                                            VerticalAlignment="Center"/>
-                                <ContentPresenter/>
-                            </DockPanel>
+                            </Grid>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -145,7 +153,6 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -5,26 +5,11 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="600"
+      d:DesignHeight="480" d:DesignWidth="600"
       Title="Setup"
       WindowTitle="Odor Production">
 
     <Grid>
-        <Grid.Resources>
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="MinHeight" Value="26" />
-                <Setter Property="Margin" Value="0,0,8,0" />
-                <Setter Property="Padding" Value="4,0" />
-            </Style>
-            <Style x:Key="RowHeader" TargetType="TextBlock" BasedOn="{StaticResource RowHeader}">
-                <Setter Property="Width" Value="100"/>
-            </Style>
-            <Style TargetType="CheckBox">
-                <Setter Property="Margin" Value="0,0,8,0"/>
-            </Style>
-        </Grid.Resources>
-
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="auto"/>
@@ -38,105 +23,107 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
-               Style="{StaticResource PageTitle}"
-               Content="Setup"/>
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
+                   Style="{StaticResource PageTitle}"
+                   Text="Odor pulses - Setup"/>
 
         <Border Grid.Row="2" Grid.Column="1"
-                Style="{StaticResource Box}">
+                Style="{StaticResource Form}">
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Border.LayoutTransform>
             <StackPanel Width="420">
-                <Label Style="{StaticResource BoxHeader}"
+                <Label Style="{StaticResource FormHeader}"
                        Content="Settings"/>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Fresh air"/>
-                    <TextBox Grid.Column="0" x:Name="txbFreshAir"
-                             Width="240"
-                             Text="5"
-                             ToolTip="a single positive floating-point value"/>
-                    <Label Content="l/min"/>
-                </StackPanel>
+                <UserControl Style="{StaticResource FormRow}" Tag="Fresh air">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                        <TextBox x:Name="txbFreshAir"
+                                 Text="5"
+                                 ToolTip="a single positive floating-point value"/>
+                    </UserControl>
+                </UserControl>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Odor flow"/>
-                    <StackPanel Width="250">
-                        <TextBox x:Name="txbOdorQuantities"
-                                 Text="4, 8, 16, 32, 64, 128"
-                                 ToolTip="comma-separated positive floating-point values or expressions in a form 'VALUExCOUNT'"/>
+                <UserControl Style="{StaticResource FormRow}" Tag="Odor flow">
+                    <StackPanel>
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="ml/min">
+                            <TextBox x:Name="txbOdorQuantities"
+                                     Text="4, 8, 16, 32, 64, 128"
+                                     ToolTip="comma-separated positive floating-point values or expressions in a form 'VALUExCOUNT'"/>
+                        </UserControl>
                         <TextBlock TextWrapping="Wrap"
-                                    Text="A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'"/>
+                                   Text="A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'"/>
                     </StackPanel>
-                    <Label Grid.Row="0" Grid.Column="1"
-                           Content="ml/min"/>
-                </StackPanel>
+                </UserControl>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Durations in seconds"/>
-                    <StackPanel Width="100">
-                        <Label Content="Initial pause"/>
-                        <TextBox x:Name="txbInitialPause"
-                                 Text="60"
-                                 ToolTip="a non-negative integer"/>
-                    </StackPanel>
-                    <StackPanel Width="100">
-                        <Label Content="Odor flow"/>
-                        <TextBox x:Name="txbOdorFlowDuration"
-                                 Text="10"
-                                 ToolTip="a positive integer"/>
-                    </StackPanel>
-                    <StackPanel Width="100">
-                        <Label Content="Final pause"/>
-                        <TextBox x:Name="txbFinalPause"
-                             Text="30"
-                             ToolTip="a non-negative integer"/>
-                    </StackPanel>
-                </StackPanel>
+                <UserControl Style="{StaticResource FormRow}" Tag="Durations in seconds">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <UserControl Grid.Column="0"
+                                     Style="{StaticResource ValueWithLabelAbove}"
+                                     Tag="Initial pause">
+                            <TextBox x:Name="txbInitialPause"
+                                     Text="60"
+                                     ToolTip="a non-negative integer"/>
+                        </UserControl>
+                        <UserControl Grid.Column="1"
+                                     Style="{StaticResource ValueWithLabelAbove}"
+                                     Tag="Odor flow">
+                            <TextBox x:Name="txbOdorFlowDuration"
+                                     Text="10"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
+                        <UserControl Grid.Column="2"
+                                     Style="{StaticResource ValueWithLabelAbove}"
+                                     Tag="Final pause">
+                            <TextBox x:Name="txbFinalPause"
+                                     Text="30"
+                                     ToolTip="a non-negative integer"/>
+                        </UserControl>
+                    </Grid>
+                </UserControl>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Valve #2"/>
-                    <StackPanel Width="250">
+                <UserControl Style="{StaticResource FormRow}" Tag="Valve #2">
+                    <StackPanel>
                         <WrapPanel Margin="0,6">
                             <RadioButton x:Name="rdbValve2ToWaste"
-                                     GroupName="valve2"
-                                     Content="waste"/>
-                            <RadioButton x:Name="rdbValve2ToUser" Margin="16,0,0,0"
-                                     GroupName="valve2"
-                                     Content="user"/>
+                                         GroupName="valve2"
+                                         Content="waste"/>
+                            <RadioButton x:Name="rdbValve2ToUser"
+                                         Margin="16,0,0,0"
+                                         GroupName="valve2"
+                                         Content="user"/>
                         </WrapPanel>
                         <TextBlock TextWrapping="Wrap"
-                               Text="Controls the Valve #2 during odor flow. This valve is directed to waste during both pauses."/>
-
+                                   Text="Controls the Valve #2 during odor flow. This valve is directed to waste during both pauses."/>
                     </StackPanel>
-                </StackPanel>
+                </UserControl>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="PID sampling"/>
-                    <TextBox x:Name="txbPIDSamplingInterval"
-                             Width="250"
-                             Text="1000"
-                             ToolTip="a positive integer"/>
-                    <Label Content="ms"/>
-                </StackPanel>
+                <Border Style="{StaticResource HorizontalLine}"/>
+                <UserControl Style="{StaticResource FormRow}" Tag="PID sampling">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="ms">
+                        <TextBox x:Name="txbPIDSamplingInterval"
+                                 Text="1000"
+                                 ToolTip="a positive integer"/>
+                    </UserControl>
+                </UserControl>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Feedback loop"/>
-                    <CheckBox x:Name="chkFeedbackLoopToReachLevel"
-                              Content="to reach the target level"
-                              VerticalAlignment="Center"/>
-                    <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
-                              Content="to keep the target level"
-                              VerticalAlignment="Center"
-                              IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
-                </StackPanel>
+                <Border Style="{StaticResource HorizontalLine}"/>
+                <UserControl Style="{StaticResource FormRow}" Tag="Feedback loop">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="chkFeedbackLoopToReachLevel"
+                                  Content="to reach the target level"
+                                  VerticalAlignment="Center"/>
+                        <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
+                                  Content="to keep the target level"
+                                  VerticalAlignment="Center"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
+                    </StackPanel>
+                </UserControl>
             </StackPanel>
         </Border>
 

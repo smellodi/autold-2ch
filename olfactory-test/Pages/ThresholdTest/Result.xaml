@@ -19,9 +19,9 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Row="0"
-               Style="{StaticResource PageTitle}"
-               Content="Threshold test - Result"/>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}"
+                   Text="Threshold test - Result"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center">

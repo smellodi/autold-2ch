@@ -27,9 +27,9 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0"
-               Style="{StaticResource PageTitle}"
-               Content="Odor production"/>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}"
+                   Text="Odor pulses - Production"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"

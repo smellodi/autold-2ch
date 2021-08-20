@@ -12,6 +12,7 @@ namespace Olfactory.Tests
     public interface ITestManager
     {
         event EventHandler PageDone;
+        string Name { get; }
         Page Start();
         Page NextPage();
         void Interrupt();

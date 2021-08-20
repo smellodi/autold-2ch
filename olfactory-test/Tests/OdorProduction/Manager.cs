@@ -11,6 +11,8 @@ namespace Olfactory.Tests.OdorProduction
     {
         public event EventHandler PageDone = delegate { };
 
+        public string Name => "Odor pulses";
+
         public Manager()
         {
             _setupPage.Next += (s, e) =>
@@ -59,6 +61,7 @@ namespace Olfactory.Tests.OdorProduction
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
                 case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
+                case EmulationCommand.ReportKey: /* ignore keypresses */ break;
                 default: throw new NotImplementedException("This emulation command is not recognized in Odor Production");
             }
         }
