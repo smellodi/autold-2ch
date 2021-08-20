@@ -474,5 +474,17 @@ namespace Olfactory.Properties {
                 this["Test_OP_UseFeedbackLoopToKeepLevel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Test_TT_FlowType {
+            get {
+                return ((int)(this["Test_TT_FlowType"]));
+            }
+            set {
+                this["Test_TT_FlowType"] = value;
+            }
+        }
     }
 }

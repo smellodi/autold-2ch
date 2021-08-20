@@ -17,7 +17,7 @@
 
         <Label Grid.Row="0"
                Style="{StaticResource PageTitle}"
-               Content="Three pens"/>
+               Content="Threshold test - Three pens"/>
 
         <Grid Grid.Row="1" Grid.Column="0"
               HorizontalAlignment="Center"

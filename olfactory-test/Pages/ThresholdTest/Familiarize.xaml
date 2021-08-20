@@ -18,7 +18,7 @@
 
         <Label Grid.Row="0"
                Style="{StaticResource PageTitle}"
-               Content="Familiarize with the odor"/>
+               Content="Threshold test - Familiarize with the odor"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"

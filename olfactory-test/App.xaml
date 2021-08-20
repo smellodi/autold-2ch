@@ -92,6 +92,53 @@
                 <Setter Property="Margin" Value="8,4"/>
                 <Setter Property="TextWrapping" Value="Wrap"/>
             </Style>
+            <!-- Alternative to Row with RowHeader inside -->
+            <Style x:Key="FormRow" TargetType="UserControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="UserControl">
+                            <DockPanel>
+                                <TextBlock Text="{TemplateBinding Tag}"
+                                           Width="90"
+                                           DockPanel.Dock="Left"
+                                           TextWrapping="Wrap"
+                                           VerticalAlignment="Center"
+                                           Margin="8,0,8,8"/>
+                                <ContentPresenter Margin="0,0,8,8"/>
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ValueWithUnit" TargetType="UserControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="UserControl">
+                            <DockPanel>
+                                <TextBlock Text="{TemplateBinding Tag}"
+                                           Width="40"
+                                           DockPanel.Dock="Right"
+                                           VerticalAlignment="Center"/>
+                                <ContentPresenter/>
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style x:Key="ValueWithLabelAbove" TargetType="UserControl">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="UserControl">
+                            <DockPanel>
+                                <TextBlock Text="{TemplateBinding Tag}"
+                                           Margin="8,5,0,5"
+                                           DockPanel.Dock="Top"/>
+                                <ContentPresenter/>
+                            </DockPanel>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>

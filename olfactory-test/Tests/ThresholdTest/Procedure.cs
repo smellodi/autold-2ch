@@ -10,13 +10,31 @@ namespace Olfactory.Tests.ThresholdTest
 {
     public class Procedure : ITestEmulator
     {
+        public enum FlowType
+        {
+            FixedTime,
+            Manual,
+            Auto
+        }
+
+        public class PenActivationArgs : EventArgs
+        {
+            public int ID { get; private set; }
+            public FlowType FlowType { get; private set; }
+            public PenActivationArgs(int id, FlowType flowType)
+            {
+                ID = id;
+                FlowType = flowType;
+            }
+        }
+
         public const int PEN_COUNT = 3;
         public enum PPMChangeDirection { Increasing, Decreasing }
 
         /// <summary>
         /// Fires when some pen is activated, passes its ID
         /// </summary>
-        public event EventHandler<int> PenActivated = delegate { };
+        public event EventHandler<PenActivationArgs> PenActivated = delegate { };
         /// <summary>
         /// Fires when all pens were active, and it is time select the pen with odorant
         /// </summary>
@@ -153,6 +171,22 @@ namespace Olfactory.Tests.ThresholdTest
             }
         }
 
+        public void ReportSpacePress()
+        {
+            if (_settings.FlowType == FlowType.Manual)
+            {
+                StartOdorFlow(FLOW_DURATION_FOR_INHALE);
+            }
+        }
+
+        public void ReportInhaleStart()
+        {
+            if (_settings.FlowType == FlowType.Auto)
+            {
+                StartOdorFlow(FLOW_DURATION_FOR_INHALE);
+            }
+        }
+
         // ITestEmulation
 
         public void EmulationInit()
@@ -176,9 +210,9 @@ namespace Olfactory.Tests.ThresholdTest
         // Contants / readonlies
 
         const int PPM_LEVEL_STEP = 1;
-        const double AFTERMATH_PAUSE = 3;           // seconds
-        const double OUTPUT_READINESS_DURATION = 5; // seconds
-
+        const double AFTERMATH_PAUSE = 3;               // seconds
+        const double OUTPUT_READINESS_DURATION = 5;     // seconds
+        const double FLOW_DURATION_FOR_INHALE = 1.0;    // seconds
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
 
         // Properties
@@ -254,10 +288,11 @@ namespace Olfactory.Tests.ThresholdTest
         /// - sets the max speed to odor tube MFC (MFC-B)
         /// - after the odor fills the odor tube, sets the MFC-B speed to the desired speed
         /// - waits for 0.5s for the mixed air to stabilize
-        /// - switches the output (odor goed to the user) and enables "Pen #N" button that finilizes this pen 
+        /// - optionally, waits for user inhale
+        /// - switches the valve #2 output (odor flows to the user)
         /// OTHERWISE
         /// - just wait same time,
-        /// - then enable "Pen #N" button that finilizes this pen 
+        /// - then enables "Pen #N" button that finilizes this pen 
         /// </summary>
         private void ActivateNextPen()
         {
@@ -277,14 +312,30 @@ namespace Olfactory.Tests.ThresholdTest
 
             _logger.Add(LogSource.ThTest, "pen", CurrentColor.ToString());
 
+            switch (_settings.FlowType)
+            {
+                case FlowType.FixedTime:
+                    StartOdorFlow(_settings.PenSniffingDuration);
+                    break;
+                case FlowType.Manual:
+                    // wait for SPACE press to be reported via ReportSpacePress()
+                    break;
+                case FlowType.Auto:
+                    // wait for inhale start detection to be reported via ReportInhaleStart()
+                    break;
+            }
+
+            PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowType));
+        }
+
+        private void StartOdorFlow(double flowDuration)
+        {
             if (CurrentColor == ODOR_PEN_COLOR)
             {
                 _model.OpenFlow();
             }
 
-            DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
-
-            PenActivated(this, _currentPenID);
+            DispatchOnce.Do(flowDuration, () => ActivateNextPen());
         }
 
         private void UpdatePPMLevelAndDirection(int ppmLevelChange, PPMChangeDirection direction)

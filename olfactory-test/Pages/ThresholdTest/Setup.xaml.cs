@@ -2,9 +2,21 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Olfactory.Pages.ThresholdTest
 {
+    public class ProcedureFlowConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return value?.ToString() == Tests.ThresholdTest.Procedure.FlowType.FixedTime.ToString();
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) { return ""; }
+    }
+
+
     public partial class Setup : Page, IPage<Tests.ThresholdTest.Settings>
     {
         public event EventHandler<Tests.ThresholdTest.Settings> Next = delegate { };
@@ -27,6 +39,8 @@ namespace Olfactory.Pages.ThresholdTest
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
+            cmbProcedureFlow.ItemsSource = Enum.GetNames(typeof(Tests.ThresholdTest.Procedure.FlowType));
+            cmbProcedureFlow.SelectedIndex = (int)_settings.FlowType;
         }
 
 
@@ -96,6 +110,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
+                _settings.FlowType = (Tests.ThresholdTest.Procedure.FlowType)cmbProcedureFlow.SelectedIndex;
 
                 _settings.Save();
 

@@ -133,5 +133,8 @@
     <Setting Name="Test_OP_UseFeedbackLoopToKeepLevel" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Test_TT_FlowType" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

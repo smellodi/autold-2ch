@@ -22,5 +22,6 @@ namespace Olfactory.Tests
     {
         EnableEmulation,
         ForceToFinishWithResult,
+        ReportKey,
     }
 }

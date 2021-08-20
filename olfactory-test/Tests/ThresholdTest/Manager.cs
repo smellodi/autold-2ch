@@ -90,6 +90,7 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 case EmulationCommand.EnableEmulation: emulator.EmulationInit(); break;
                 case EmulationCommand.ForceToFinishWithResult: emulator.EmulationFinilize(); break;
+                case EmulationCommand.ReportKey: _threePensPage.ConsumeKeyDown((System.Windows.Input.Key)args[0]); break;
                 default: throw new NotImplementedException("This emulation command is not recognized in Threshold Test");
             }
         }

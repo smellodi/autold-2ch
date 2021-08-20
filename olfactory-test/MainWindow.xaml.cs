@@ -140,6 +140,10 @@ namespace Olfactory
             {
                 _currentTest?.Emulate(Tests.EmulationCommand.ForceToFinishWithResult);
             }
+            else
+            {
+                _currentTest?.Emulate(Tests.EmulationCommand.ReportKey, e.Key);
+            }
         }
 
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)

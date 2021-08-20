@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Procedure = Olfactory.Tests.ThresholdTest.Procedure;
 
 namespace Olfactory.Pages.ThresholdTest
@@ -19,7 +20,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             PENS = new Controls.Pen[Procedure.PEN_COUNT] { pen1, pen2, pen3 };
 
-            _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => ActivatePen(e));
+            _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => ActivatePen(e.ID, e.FlowType));
 
             _procedure.WaitingForPenSelection += (s, e) => Dispatcher.Invoke(() => {
                 if (CurrentPen != null)
@@ -60,6 +61,14 @@ namespace Olfactory.Pages.ThresholdTest
             _procedure.Interrupt();
         }
 
+        public void ConsumeKeyDown(Key e)
+        {
+            if (e == Key.Space)
+            {
+                _procedure.ReportSpacePress();
+            }
+        }
+
 
         // Internal
 
@@ -79,14 +88,16 @@ namespace Olfactory.Pages.ThresholdTest
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
 
 
-        string INSTRUCTION_SNIFF_THE_PEN(int id) => $"Sniff the pen #{id + 1}";
+        string INSTRUCTION_SNIFF_THE_PEN_FIXED(int id) => $"Sniff the pen #{id + 1}";
+        const string INSTRUCTION_SNIFF_THE_PEN_MANUAL = "Press SPACE when start inhaling";
+        const string INSTRUCTION_SNIFF_THE_PEN_AUTO = "Make an inhale";
         const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready.";
         const string INSTRUCTION_CHOOSE_THE_PEN = "Please select the pen with the odorant.";
         const string INSTRUCTION_DONE = "Thanks, your choice has been recorded.";
 
         readonly Controls.Pen[] PENS;
 
-        private void ActivatePen(int penID)
+        private void ActivatePen(int penID, Procedure.FlowType flowType)
         {
             if (CurrentPen != null)
             {
@@ -94,7 +105,13 @@ namespace Olfactory.Pages.ThresholdTest
             }
             _currentPenID = penID;
 
-            lblInstruction.Text = INSTRUCTION_SNIFF_THE_PEN(_currentPenID);
+            lblInstruction.Text = flowType switch
+            {
+                Procedure.FlowType.FixedTime => INSTRUCTION_SNIFF_THE_PEN_FIXED(_currentPenID),
+                Procedure.FlowType.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
+                Procedure.FlowType.Auto => INSTRUCTION_SNIFF_THE_PEN_AUTO,
+                _ => ""
+            };
 
             CurrentPen.IsActive = true;
         }

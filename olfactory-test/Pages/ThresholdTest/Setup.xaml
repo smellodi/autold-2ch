@@ -3,11 +3,11 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
+      xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="600"
+      d:DesignHeight="480" d:DesignWidth="600"
       Title="Setup"
-      WindowTitle="Odor Production">
+      WindowTitle="Threshold test">
 
     <Grid>
         <Grid.Resources>
@@ -23,6 +23,8 @@
             <Style TargetType="CheckBox">
                 <Setter Property="Margin" Value="0,0,8,0"/>
             </Style>
+
+            <local:ProcedureFlowConverter x:Key="procedureFlowConverter"/>
         </Grid.Resources>
 
         <Grid.ColumnDefinitions>
@@ -40,7 +42,7 @@
 
         <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                Style="{StaticResource PageTitle}"
-               Content="Setup"/>
+               Content="Threshold test - Setup"/>
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Box}">
@@ -52,92 +54,91 @@
                        Style="{StaticResource BoxHeader}"
                        Content="Settings"/>
 
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Clean air"/>
-                    <TextBox x:Name="txbFreshAir"
-                             Width="250"
-                             Text="5"
-                             ToolTip="a positive number"/>
-                    <Label Content="l/min"/>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Odor levels"/>
-                    <TextBox x:Name="txbPPMs"
-                             Width="250"
-                             Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
-                             ToolTip="space-separated positive numbers"/>
-                    <Label Content="ml/min"/>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Durations in seconds"/>
-                    <StackPanel Width="150">
-                        <Label Content="Odor prepartion time"/>
-                        <TextBox x:Name="txbOdorPreparationDuration"
-                             Text="15"
-                             ToolTip="a non-negative integer"/>
-                    </StackPanel>
-                    <StackPanel Width="150">
-                        <Label Content="Pen sniffing time"/>
-                        <TextBox x:Name="txbPenSniffingDuration"
+                <UserControl Style="{StaticResource FormRow}" Tag="Clean air">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                        <TextBox x:Name="txbFreshAir"
+                                 Width="250"
                                  Text="5"
-                                 ToolTip="a positive integer"/>
+                                 ToolTip="a positive number"/>
+                    </UserControl>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Odor levels">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="ml/min">
+                        <TextBox x:Name="txbPPMs"
+                                 Width="250"
+                                 Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
+                                 ToolTip="space-separated positive numbers"/>
+                    </UserControl>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Procedure flow">
+                    <ComboBox x:Name="cmbProcedureFlow" />
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Durations in seconds">
+                    <StackPanel Orientation="Horizontal">
+                        <UserControl Style="{StaticResource ValueWithLabelAbove}" Tag="Odor prepartion time"
+                                     Width="150">
+                            <TextBox x:Name="txbOdorPreparationDuration"
+                                 Text="15"
+                                 ToolTip="a non-negative integer"/>
+                        </UserControl>
+                        <UserControl Style="{StaticResource ValueWithLabelAbove}" Tag="Pen sniffing time"
+                                     IsEnabled="{Binding ElementName=cmbProcedureFlow, Path=SelectedItem, Converter={StaticResource procedureFlowConverter}}"
+                                     Width="150">
+                            <TextBox x:Name="txbPenSniffingDuration"
+                                     Text="5"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Turnings"/>
-                    <StackPanel Width="100">
-                        <Label Content="To collect"/>
-                        <TextBox x:Name="txbTurningPoints"
-                                 Text="7"
-                                 ToolTip="a positive integer"/>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Turnings">
+                    <StackPanel Orientation="Horizontal">
+                        <UserControl Style="{StaticResource ValueWithLabelAbove}" Tag="To collect"
+                                 Width="100">
+                            <TextBox x:Name="txbTurningPoints"
+                                     Text="7"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
+                        <UserControl Style="{StaticResource ValueWithLabelAbove}" Tag="To count"
+                                 Width="100">
+                            <TextBox x:Name="txbTurningPointsToCount"
+                                     Text="4"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
+                        <UserControl Style="{StaticResource ValueWithLabelAbove}" Tag="Recogn. in row"
+                                 Width="100">
+                            <TextBox x:Name="txbRecognitionsInRow"
+                                     Text="2"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
                     </StackPanel>
-                    <StackPanel Width="100">
-                        <Label Content="To count"/>
-                        <TextBox x:Name="txbTurningPointsToCount"
-                                 Text="4"
-                                 ToolTip="a positive integer"/>
-                    </StackPanel>
-                    <StackPanel Width="100">
-                        <Label Content="Recogn. in row"/>
-                        <TextBox x:Name="txbRecognitionsInRow"
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Familiarization">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="sec">
+                        <TextBox x:Name="txbFamiliarizationDuration"
+                                 Width="250"
                                  Text="2"
+                                 ToolTip="a positive number"/>
+                    </UserControl>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="PID sampling">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="ms">
+                        <TextBox x:Name="txbPIDSamplingInterval"
+                                 Width="250"
+                                 Text="1000"
                                  ToolTip="a positive integer"/>
+                    </UserControl>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="Feedback loop">
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox x:Name="chkFeedbackLoopToReachLevel"
+                                  Content="to reach the target level"
+                                  VerticalAlignment="Center"/>
+                        <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
+                                  Content="to keep the target level"
+                                  VerticalAlignment="Center"
+                                  IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
                     </StackPanel>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Familiarization"/>
-                    <TextBox x:Name="txbFamiliarizationDuration"
-                             Width="240"
-                             Text="2"
-                             ToolTip="a positive number"/>
-                    <Label Content="sec"/>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="PID sampling"/>
-                    <TextBox x:Name="txbPIDSamplingInterval"
-                             Width="240"
-                             Text="1000"
-                             ToolTip="a positive integer"/>
-                    <Label Grid.Column="1"
-                           Content="ms"/>
-                </StackPanel>
-                <StackPanel Style="{StaticResource Row}">
-                    <TextBlock Style="{StaticResource RowHeader}"
-                               Text="Feedback loop"/>
-                    <CheckBox x:Name="chkFeedbackLoopToReachLevel"
-                              Content="to reach the target level"
-                              VerticalAlignment="Center"/>
-                    <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
-                              Content="to keep the target level"
-                              VerticalAlignment="Center"
-                              IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
-                </StackPanel>
+                </UserControl>
             </StackPanel>
         </Border>
 
