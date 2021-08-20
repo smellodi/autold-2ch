@@ -8,7 +8,7 @@ namespace Olfactory.Tests.ThresholdTest
         public double FreshAir;
         public double[] PPMs;
         public int OdorPreparationDuration;
-        public int PenSniffingDuration;
+        public double PenSniffingDuration;
         public int PIDReadingInterval;
         public int RecognitionsInRow;
         public int TurningPoints;

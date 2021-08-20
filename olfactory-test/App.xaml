@@ -74,15 +74,21 @@
             </Style>
 
             <!-- Setup page elements -->
+            <Style x:Key="Box" TargetType="{x:Type Border}">
+                <Setter Property="BorderBrush" Value="#80000000"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="0,0,0,10"/>
+            </Style>
             <Style x:Key="BoxHeader" TargetType="{x:Type Label}">
                 <Setter Property="Margin" Value="0,0,0,10"/>
                 <Setter Property="Background" Value="#FFD7EFFF"/>
                 <Setter Property="HorizontalContentAlignment" Value="Center"/>
             </Style>
-            <Style x:Key="Box" TargetType="{x:Type Border}">
-                <Setter Property="BorderBrush" Value="#80000000"/>
+            <Style x:Key="Separator" TargetType="{x:Type Border}">
+                <Setter Property="BorderBrush" Value="#FF62B1FF"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Margin" Value="0,0,0,10"/>
+                <Setter Property="Height" Value="1"/>
+                <Setter Property="Margin" Value="4,0,4,8"/>
             </Style>
             <Style x:Key="Row" TargetType="StackPanel">
                 <Setter Property="Orientation" Value="Horizontal"/>

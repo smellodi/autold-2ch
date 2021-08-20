@@ -328,9 +328,9 @@ namespace Olfactory.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public int Test_TT_PenSniffingDuration {
+        public double Test_TT_PenSniffingDuration {
             get {
-                return ((int)(this["Test_TT_PenSniffingDuration"]));
+                return ((double)(this["Test_TT_PenSniffingDuration"]));
             }
             set {
                 this["Test_TT_PenSniffingDuration"] = value;

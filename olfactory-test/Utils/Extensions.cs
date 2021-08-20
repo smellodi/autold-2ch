@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Olfactory.Utils
 {
@@ -35,6 +37,13 @@ namespace Olfactory.Utils
             var invalidChars = System.IO.Path.GetInvalidFileNameChars();
             string[] temp = s.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries);
             return string.Join(replacement, temp);
+        }
+
+        public static string SeparateWords(this string s)
+        {
+            Regex r = new Regex(@"[A-Z][a-z]*");
+            var words = r.Matches(s).Select(m => m.Value.ToLower());
+            return string.Join(' ', words);
         }
     }
 }

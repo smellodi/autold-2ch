@@ -82,7 +82,7 @@
     <Setting Name="Test_TT_OdorPreparationDuration" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
-    <Setting Name="Test_TT_PenSniffingDuration" Type="System.Int32" Scope="User">
+    <Setting Name="Test_TT_PenSniffingDuration" Type="System.Double" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="Test_TT_PIDReadingInterval" Type="System.Int32" Scope="User">

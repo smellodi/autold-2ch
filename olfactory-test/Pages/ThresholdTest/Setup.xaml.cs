@@ -2,21 +2,10 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
+using Olfactory.Utils;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public class ProcedureFlowConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            return value?.ToString() == Tests.ThresholdTest.Procedure.FlowType.FixedTime.ToString();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) { return ""; }
-    }
-
-
     public partial class Setup : Page, IPage<Tests.ThresholdTest.Settings>
     {
         public event EventHandler<Tests.ThresholdTest.Settings> Next = delegate { };
@@ -39,7 +28,7 @@ namespace Olfactory.Pages.ThresholdTest
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
-            cmbProcedureFlow.ItemsSource = Enum.GetNames(typeof(Tests.ThresholdTest.Procedure.FlowType));
+            cmbProcedureFlow.ItemsSource = Enum.GetNames(typeof(Tests.ThresholdTest.Procedure.FlowType)).Select(s => s.SeparateWords() );
             cmbProcedureFlow.SelectedIndex = (int)_settings.FlowType;
         }
 
@@ -59,7 +48,7 @@ namespace Olfactory.Pages.ThresholdTest
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbPPMs, 1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
                 new Utils.Validation(txbOdorPreparationDuration, 10, 300, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbPenSniffingDuration, 1, 10, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbPenSniffingDuration, 0.2, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbTurningPoints, 2, 15, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbTurningPointsToCount, 2, maxTurningPoints, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbRecognitionsInRow, 1, 5, Utils.Validation.ValueFormat.Integer),
@@ -102,7 +91,7 @@ namespace Olfactory.Pages.ThresholdTest
                     .Select(val => double.Parse(val))
                     .ToArray(); 
                 _settings.OdorPreparationDuration = int.Parse(txbOdorPreparationDuration.Text);
-                _settings.PenSniffingDuration = int.Parse(txbPenSniffingDuration.Text);
+                _settings.PenSniffingDuration = double.Parse(txbPenSniffingDuration.Text);
                 _settings.TurningPoints = int.Parse(txbTurningPoints.Text);
                 _settings.TurningPointsToCount = int.Parse(txbTurningPointsToCount.Text);
                 _settings.RecognitionsInRow = int.Parse(txbRecognitionsInRow.Text);
