@@ -20,7 +20,12 @@ namespace Olfactory.Pages.ThresholdTest
 
             PENS = new Controls.Pen[Procedure.PEN_COUNT] { pen1, pen2, pen3 };
 
-            _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => ActivatePen(e.ID, e.FlowType));
+            _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => prbOdorPreparation.Value = e * prbOdorPreparation.Maximum);
+            _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => {
+                prbOdorPreparation.Value = 0;
+                prbOdorPreparation.Visibility = System.Windows.Visibility.Hidden;
+                ActivatePen(e.ID, e.FlowType);
+            });
 
             _procedure.WaitingForPenSelection += (s, e) => Dispatcher.Invoke(() => {
                 if (CurrentPen != null)
@@ -33,10 +38,12 @@ namespace Olfactory.Pages.ThresholdTest
             _procedure.Next += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
                 Utils.DispatchOnceUI.Do(0.1, () => Init());
+                prbOdorPreparation.Visibility = System.Windows.Visibility.Visible;
             });
 
             _procedure.Finished += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
+                prbOdorPreparation.Visibility = System.Windows.Visibility.Hidden;
                 Next(this, e);
             });
         }
@@ -65,6 +72,7 @@ namespace Olfactory.Pages.ThresholdTest
         {
             if (e == Key.Space)
             {
+                lblInstruction.Text = "";
                 _procedure.ReportSpacePress();
             }
         }

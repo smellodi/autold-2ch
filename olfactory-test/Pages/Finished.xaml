@@ -50,7 +50,7 @@
             <Button
                 Style="{StaticResource Next}"
                 Click="OnReturn_Click"
-                Content="Return"/>
+                Content="Back to home page"/>
             <Button x:Name="btnSaveData"
                 Style="{StaticResource Next}"
                 Click="OnSaveData_Click"

@@ -154,7 +154,7 @@
 
                             <StackPanel Grid.Column="0">
                                 <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="#1  "/>
+                                    <Label Style="{StaticResource RadioLabel}" Content="#1: "/>
                                     <RadioButton x:Name="rdbValve1ToWaste"
                                                  GroupName="valve1"
                                                  Content="waste"/>
@@ -164,7 +164,7 @@
                                                  Margin="16,0,0,0"/>
                                 </WrapPanel>
                                 <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="#2  "/>
+                                    <Label Style="{StaticResource RadioLabel}" Content="#2: "/>
                                     <RadioButton x:Name="rdbValve2ToWaste"
                                                  GroupName="valve2"
                                                  Content="waste"/>

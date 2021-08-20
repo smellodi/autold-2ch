@@ -32,6 +32,10 @@ namespace Olfactory.Tests.ThresholdTest
         public enum PPMChangeDirection { Increasing, Decreasing }
 
         /// <summary>
+        /// Fires on progressing the odor preparation
+        /// </summary>
+        public event EventHandler<double> OdorPreparation = delegate { };
+        /// <summary>
         /// Fires when some pen is activated, passes its ID
         /// </summary>
         public event EventHandler<PenActivationArgs> PenActivated = delegate { };
@@ -214,6 +218,7 @@ namespace Olfactory.Tests.ThresholdTest
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const double FLOW_DURATION_FOR_INHALE = 1.0;    // seconds
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
+        const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
 
         // Properties
 
@@ -249,6 +254,8 @@ namespace Olfactory.Tests.ThresholdTest
 
         double _odorTubeFillingDuration = 10;
 
+        double _odorPreparationStart = 0;
+
         /// <summary>
         /// Sets the MFC-B (odor tube) speed so that the odor fills the tube in 10 seconds,
         /// then sets the MFC-B speed to the level desired in this trial, and wait for another 5 seconds
@@ -258,8 +265,6 @@ namespace Olfactory.Tests.ThresholdTest
             if (_settings.UseFeedbackLoopToReachLevel)
             {
                 _model.Reach(_settings.PPMs[_currentPPMLevel], _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
-
-                DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
             }
             else
             {
@@ -273,12 +278,14 @@ namespace Olfactory.Tests.ThresholdTest
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);
                     Application.Current.Shutdown();
-                }
-                else
-                {
-                    DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+                    return;
                 }
             }
+
+            DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+
+            _odorPreparationStart = Timestamp.Sec;
+            DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress() );
         }
 
         /// <summary>
@@ -382,5 +389,19 @@ namespace Olfactory.Tests.ThresholdTest
             return true;
         }
 
+        private void EstimatePreparationProgress()
+        {
+            if (_currentPenID < 0)
+            {
+                var duration = Timestamp.Sec - _odorPreparationStart;
+                var progress = Math.Min(1.0, duration / _settings.OdorPreparationDuration);
+                OdorPreparation(this, progress);
+
+                if (progress < 1)
+                {
+                    DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress());
+                }
+            }
+        }
     }
 }

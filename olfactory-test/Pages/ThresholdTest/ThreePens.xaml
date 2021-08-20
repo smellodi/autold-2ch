@@ -38,11 +38,17 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.ColumnSpan="3" x:Name="lblInstruction"
-                       Margin="0,36"
+            <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
+                        Margin="0,36"
+                        VerticalAlignment="Bottom">
+                <TextBlock x:Name="lblInstruction"
+                       Margin="0,8"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Bottom"
-                       Text="Please wait until the odor is prepared. Click a pen button to start recognition once it is enabled"/>
+                       Text="Please wait until the odor is prepared"/>
+                <ProgressBar x:Name="prbOdorPreparation"
+                             Height="15"
+                             Width="200"/>
+            </StackPanel>
 
             <local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1"
                        ID="1"
