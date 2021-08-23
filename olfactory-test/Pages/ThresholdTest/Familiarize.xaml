@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
+      xmlns:local="clr-namespace:Olfactory.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Familiarize with the odor"
@@ -26,23 +26,16 @@
             <StackPanel.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </StackPanel.LayoutTransform>
-            
-            <TextBlock x:Name="txbInstruction"
-                       TextAlignment="Center"
-                       Margin="0,12"
-                       MaxWidth="150"
-                       MinHeight="90"
-                       TextWrapping="Wrap"
-                       Text="After opening the valve, please wait for few seconds before the odor reaches you, then spend some time memorizing it."/>
+
+            <local:WaitingInstruction x:Name="wtiInstruction"
+                                      Margin="0,12"
+                                      Width="250"
+                                      MinHeight="90"
+                                      Text="After opening the valve, please wait for few seconds before the odor reaches you, then spend some time memorizing it."/>
 
             <Button Style="{StaticResource btn}"
                 Height="32"
                 Content="Open the odor valve" Click="btnOpenValve_Click"/>
-            <TextBlock x:Name="txbCountdown"
-                       TextAlignment="Center"
-                       Margin="0,12"
-                       MaxWidth="150"
-                       TextWrapping="Wrap"/>
         </StackPanel>
 
         <Button Grid.Row="2" x:Name="btnNext"

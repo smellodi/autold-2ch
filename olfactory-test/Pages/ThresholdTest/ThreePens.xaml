@@ -38,18 +38,11 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.ColumnSpan="3"
-                        Margin="0,36"
-                        VerticalAlignment="Bottom">
-                <TextBlock x:Name="lblInstruction"
-                       Margin="0,8"
-                       HorizontalAlignment="Center"
-                       Text="Please wait until the odor is prepared"/>
-                <ProgressBar x:Name="prbOdorPreparation"
-                             Height="2"
-                             Width="200"/>
-            </StackPanel>
-
+            <local:WaitingInstruction x:Name="wtiInstruction" Grid.Row="0" Grid.ColumnSpan="3"
+                                      Margin="0,36"
+                                      VerticalContentAlignment="Bottom"
+                                      Text="Instructions"/>
+            
             <local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1"
                        ID="1"
                        Selected="OnPen_Selected"/>

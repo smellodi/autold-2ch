@@ -17,9 +17,6 @@ namespace Olfactory.Pages.ThresholdTest
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            _countdownTimer.Interval = 1000;
-            _countdownTimer.Elapsed += (s, e) => Dispatcher.Invoke(TickCountdown);
-
             _stateTimer.Elapsed += (s, e) => Dispatcher.Invoke(NextState);
 
             _directionChangeTimer.Elapsed += (s, e) => Dispatcher.Invoke(OpenValve);
@@ -63,29 +60,14 @@ namespace Olfactory.Pages.ThresholdTest
         CommMonitor _monitor = CommMonitor.Instance;
 
         System.Timers.Timer _stateTimer = new System.Timers.Timer();
-        System.Timers.Timer _countdownTimer = new System.Timers.Timer();
         System.Timers.Timer _directionChangeTimer = new System.Timers.Timer();
         System.Timers.Timer _measurementTimer = new System.Timers.Timer();
 
-        int _waitingCountdown = 0;
         long _sniffingStartTimestamp = 0;
 
         State _state = State.Initial;
 
         Tests.ThresholdTest.Settings _settings;
-
-        private void TickCountdown()
-        {
-            if (--_waitingCountdown > 0)
-            {
-                txbCountdown.Text = $"{_waitingCountdown} seconds left";
-            }
-            else
-            {
-                txbCountdown.Text = "";
-                _countdownTimer.Stop();
-            }
-        }
 
         private void NextState()
         {
@@ -94,7 +76,9 @@ namespace Olfactory.Pages.ThresholdTest
             if (_state == State.OdorPreparation)
             {
                 _state = State.OdorFlow;
-                txbInstruction.Text = "Odor is flowing now, sniff it!";
+
+                wtiInstruction.Reset();
+                wtiInstruction.Text = "Odor is flowing now, sniff it!";
 
                 _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
@@ -104,13 +88,13 @@ namespace Olfactory.Pages.ThresholdTest
             else if (_state == State.OdorFlow)
             {
                 _state = State.Ventilation;
-                txbInstruction.Text = "Please wait while the tube is ventilating...";
+
+                wtiInstruction.Text = "Please wait while the tube is ventilating...";
 
                 _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
                 Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
 
-                _waitingCountdown = VENTILATION_DURATION;
-                _countdownTimer.Start();
+                wtiInstruction.Start(VENTILATION_DURATION);
 
                 _stateTimer.Interval = 1000 * VENTILATION_DURATION;
                 _stateTimer.Start();
@@ -118,7 +102,9 @@ namespace Olfactory.Pages.ThresholdTest
             else if (_state == State.Ventilation)
             {
                 _state = State.Finished;
-                txbInstruction.Text = "Click 'Continue' to start the test.";
+
+                wtiInstruction.Reset();
+                wtiInstruction.Text = "Click 'Continue' to start the test.";
 
                 btnNext.IsEnabled = true;
             }
@@ -149,16 +135,15 @@ namespace Olfactory.Pages.ThresholdTest
             _mfc.OdorSpeed = MFC.ODOR_MAX_SPEED;
 
             _state = State.OdorPreparation;
-            txbInstruction.Text = "Odor is soon to reach you...";
-            txbCountdown.Text = $"{_waitingCountdown} seconds left";
 
             _directionChangeTimer.Interval = 1000 * _mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.Mixer);
             _directionChangeTimer.Start();
 
-            _waitingCountdown = (int)Math.Ceiling(_mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User));
-            _countdownTimer.Start();
+            var waitingInterval = (double)Math.Ceiling(_mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User));
+            wtiInstruction.Text = "Preparing the odor";
+            wtiInstruction.Start(waitingInterval);
 
-            _stateTimer.Interval = 1000 * _waitingCountdown;
+            _stateTimer.Interval = 1000 * waitingInterval;
             _stateTimer.Start();
 
             (sender as Button).IsEnabled = false;

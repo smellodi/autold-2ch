@@ -20,17 +20,17 @@ namespace Olfactory.Pages.ThresholdTest
 
             PENS = new Controls.Pen[Procedure.PEN_COUNT] { pen1, pen2, pen3 };
 
-            _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => prbOdorPreparation.Value = e * prbOdorPreparation.Maximum);
+            _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => wtiInstruction.Progress = e);
+
             _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => {
-                prbOdorPreparation.Value = 0;
-                prbOdorPreparation.Visibility = System.Windows.Visibility.Hidden;
+                wtiInstruction.Reset();
                 ActivatePen(e.ID, e.FlowStart);
             });
 
             _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
                 if (_procedure.FlowStarts != Procedure.FlowStart.Immediately)
                 {
-                    lblInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
+                    wtiInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
                 }
             });
 
@@ -45,12 +45,10 @@ namespace Olfactory.Pages.ThresholdTest
             _procedure.Next += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
                 Utils.DispatchOnceUI.Do(0.1, () => Init());
-                prbOdorPreparation.Visibility = System.Windows.Visibility.Visible;
             });
 
             _procedure.Finished += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
-                prbOdorPreparation.Visibility = System.Windows.Visibility.Hidden;
                 Next(this, e);
             });
         }
@@ -67,7 +65,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             UpdateDisplay(Update.All);
 
-            lblInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
+            wtiInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
         }
 
         public void Interrupt()
@@ -120,7 +118,7 @@ namespace Olfactory.Pages.ThresholdTest
             }
             _currentPenID = penID;
 
-            lblInstruction.Text = flowStart switch
+            wtiInstruction.Text = flowStart switch
             {
                 Procedure.FlowStart.Immediately => INSTRUCTION_SNIFF_THE_PEN_FIXED,
                 Procedure.FlowStart.Manually => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
@@ -135,7 +133,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void EnableChoiceButtons(bool enable)
         {
-            lblInstruction.Text = enable ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_DONE;
+            wtiInstruction.Text = enable ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_DONE;
 
             foreach (var pen in PENS)
             {
