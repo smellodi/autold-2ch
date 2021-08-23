@@ -478,12 +478,12 @@ namespace Olfactory.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Test_TT_FlowType {
+        public int Test_TT_FlowStart {
             get {
-                return ((int)(this["Test_TT_FlowType"]));
+                return ((int)(this["Test_TT_FlowStart"]));
             }
             set {
-                this["Test_TT_FlowType"] = value;
+                this["Test_TT_FlowStart"] = value;
             }
         }
     }

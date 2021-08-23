@@ -24,7 +24,14 @@ namespace Olfactory.Pages.ThresholdTest
             _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => {
                 prbOdorPreparation.Value = 0;
                 prbOdorPreparation.Visibility = System.Windows.Visibility.Hidden;
-                ActivatePen(e.ID, e.FlowType);
+                ActivatePen(e.ID, e.FlowStart);
+            });
+
+            _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
+                if (_procedure.FlowStarts != Procedure.FlowStart.Immediately)
+                {
+                    lblInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
+                }
             });
 
             _procedure.WaitingForPenSelection += (s, e) => Dispatcher.Invoke(() => {
@@ -70,10 +77,10 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void ConsumeKeyDown(Key e)
         {
-            if (e == Key.Space)
+            if ((e == Key.Space && _procedure.FlowStarts == Procedure.FlowStart.Manually) ||
+                (e == Key.Enter && _procedure.FlowStarts == Procedure.FlowStart.Automatically))
             {
-                lblInstruction.Text = "";
-                _procedure.ReportSpacePress();
+                _procedure.EnablePenOdor();
             }
         }
 
@@ -96,7 +103,7 @@ namespace Olfactory.Pages.ThresholdTest
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
 
 
-        string INSTRUCTION_SNIFF_THE_PEN_FIXED(int id) => $"Sniff the pen #{id + 1}";
+        const string INSTRUCTION_SNIFF_THE_PEN_FIXED = "Sniff the pen";
         const string INSTRUCTION_SNIFF_THE_PEN_MANUAL = "Press SPACE when start inhaling";
         const string INSTRUCTION_SNIFF_THE_PEN_AUTO = "Make an inhale";
         const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready.";
@@ -105,7 +112,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         readonly Controls.Pen[] PENS;
 
-        private void ActivatePen(int penID, Procedure.FlowType flowType)
+        private void ActivatePen(int penID, Procedure.FlowStart flowStart)
         {
             if (CurrentPen != null)
             {
@@ -113,11 +120,11 @@ namespace Olfactory.Pages.ThresholdTest
             }
             _currentPenID = penID;
 
-            lblInstruction.Text = flowType switch
+            lblInstruction.Text = flowStart switch
             {
-                Procedure.FlowType.FixedTime => INSTRUCTION_SNIFF_THE_PEN_FIXED(_currentPenID),
-                Procedure.FlowType.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
-                Procedure.FlowType.Auto => INSTRUCTION_SNIFF_THE_PEN_AUTO,
+                Procedure.FlowStart.Immediately => INSTRUCTION_SNIFF_THE_PEN_FIXED,
+                Procedure.FlowStart.Manually => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
+                Procedure.FlowStart.Automatically => INSTRUCTION_SNIFF_THE_PEN_AUTO,
                 _ => ""
             };
 

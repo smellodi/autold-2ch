@@ -10,21 +10,21 @@ namespace Olfactory.Tests.ThresholdTest
 {
     public class Procedure : ITestEmulator
     {
-        public enum FlowType
+        public enum FlowStart
         {
-            FixedTime,
-            Manual,
-            Auto
+            Immediately,
+            Manually,
+            Automatically
         }
 
         public class PenActivationArgs : EventArgs
         {
             public int ID { get; private set; }
-            public FlowType FlowType { get; private set; }
-            public PenActivationArgs(int id, FlowType flowType)
+            public FlowStart FlowStart { get; private set; }
+            public PenActivationArgs(int id, FlowStart flowStart)
             {
                 ID = id;
-                FlowType = flowType;
+                FlowStart = flowStart;
             }
         }
 
@@ -39,6 +39,15 @@ namespace Olfactory.Tests.ThresholdTest
         /// Fires when some pen is activated, passes its ID
         /// </summary>
         public event EventHandler<PenActivationArgs> PenActivated = delegate { };
+        /// <summary>
+        /// Fires when a pen flow starts in automatic/manual mode.
+        /// The boolean parameter indicates whether the odor is really flowing to the participant
+        /// </summary>
+        public event EventHandler<bool> OdorFlowStarted = delegate { };
+        /// <summary>
+        /// Inhale start event
+        /// </summary>
+        public event EventHandler InhaleStarts = delegate { };
         /// <summary>
         /// Fires when all pens were active, and it is time select the pen with odorant
         /// </summary>
@@ -57,6 +66,8 @@ namespace Olfactory.Tests.ThresholdTest
         public int PPMLevel => _currentPPMLevel + 1;
         public int RecognitionsInRow => _recognitionsInRow;
         public int TurningPointCount => _turningPointPPMs.Count;
+
+        public FlowStart FlowStarts => _settings.FlowStart;
 
         private string[] State => new string[] {
             Step.ToString(),
@@ -112,6 +123,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             _currentPenID = -1;
             _inProgress = true;
+            _isAwaitingOdorFlowStart = false;
 
             _pens = new Pen[PEN_COUNT] {
                 new Pen(PenColor.Red),
@@ -160,34 +172,18 @@ namespace Olfactory.Tests.ThresholdTest
         {
             _timer.Stop();
             _inProgress = false;
+            _isAwaitingOdorFlowStart = false;
         }
 
-        public void Measure()
+        /// <summary>
+        /// Should be called from the parent to be notified when a user pressed SPACE/ENTER key
+        /// </summary>
+        public void EnablePenOdor()
         {
-            if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
+            if (_settings.FlowStart != FlowStart.Immediately && _isAwaitingOdorFlowStart)
             {
-                _logger.Add(LogSource.PID, "data", pidSample.ToString());
-                _monitor.LogData(LogSource.PID, pidSample);
-            }
-            if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
-            {
-                _monitor.LogData(LogSource.MFC, mfcSample);
-            }
-        }
-
-        public void ReportSpacePress()
-        {
-            if (_settings.FlowType == FlowType.Manual)
-            {
-                StartOdorFlow(FLOW_DURATION_FOR_INHALE);
-            }
-        }
-
-        public void ReportInhaleStart()
-        {
-            if (_settings.FlowType == FlowType.Auto)
-            {
-                StartOdorFlow(FLOW_DURATION_FOR_INHALE);
+                _isAwaitingOdorFlowStart = false;
+                StartOdorFlow();
             }
         }
 
@@ -216,7 +212,6 @@ namespace Olfactory.Tests.ThresholdTest
         const int PPM_LEVEL_STEP = 1;
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
-        const double FLOW_DURATION_FOR_INHALE = 1.0;    // seconds
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
 
@@ -255,6 +250,36 @@ namespace Olfactory.Tests.ThresholdTest
         double _odorTubeFillingDuration = 10;
 
         double _odorPreparationStart = 0;
+        bool _isAwaitingOdorFlowStart = false;
+
+        BreathingDetector _breathingDetector = new BreathingDetector();
+
+        /// <summary>
+        /// Called by PID measurement timer
+        /// </summary>
+        private void Measure()
+        {
+            if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
+            {
+                _logger.Add(LogSource.PID, "data", pidSample.ToString());
+                _monitor.LogData(LogSource.PID, pidSample);
+
+                if (_settings.FlowStart == FlowStart.Automatically &&
+                    _breathingDetector.Feed(pidSample.Loop) && 
+                    _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale)
+                {
+                    if (_isAwaitingOdorFlowStart)
+                    {
+                        _isAwaitingOdorFlowStart = false;
+                        StartOdorFlow();
+                    }
+                }
+            }
+            if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
+            {
+                _monitor.LogData(LogSource.MFC, mfcSample);
+            }
+        }
 
         /// <summary>
         /// Sets the MFC-B (odor tube) speed so that the odor fills the tube in 10 seconds,
@@ -319,30 +344,32 @@ namespace Olfactory.Tests.ThresholdTest
 
             _logger.Add(LogSource.ThTest, "pen", CurrentColor.ToString());
 
-            switch (_settings.FlowType)
+            switch (_settings.FlowStart)
             {
-                case FlowType.FixedTime:
-                    StartOdorFlow(_settings.PenSniffingDuration);
+                case FlowStart.Immediately:
+                    StartOdorFlow();
                     break;
-                case FlowType.Manual:
-                    // wait for SPACE press to be reported via ReportSpacePress()
+                case FlowStart.Manually:
+                    _isAwaitingOdorFlowStart = true;
                     break;
-                case FlowType.Auto:
-                    // wait for inhale start detection to be reported via ReportInhaleStart()
+                case FlowStart.Automatically:
+                    _isAwaitingOdorFlowStart = true;
                     break;
             }
 
-            PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowType));
+            PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowStart));
         }
 
-        private void StartOdorFlow(double flowDuration)
+        private void StartOdorFlow()
         {
             if (CurrentColor == ODOR_PEN_COLOR)
             {
                 _model.OpenFlow();
             }
 
-            DispatchOnce.Do(flowDuration, () => ActivateNextPen());
+            OdorFlowStarted(this, CurrentColor == ODOR_PEN_COLOR);
+
+            DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
         }
 
         private void UpdatePPMLevelAndDirection(int ppmLevelChange, PPMChangeDirection direction)

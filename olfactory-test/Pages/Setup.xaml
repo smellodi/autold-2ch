@@ -12,42 +12,42 @@
       Loaded="Page_Loaded"
       Unloaded="Page_Unloaded">
 
-    <Grid>
-        <Grid.Resources>
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-                <Setter Property="Margin" Value="10,0" />
-                <Setter Property="Width" Value="75" />
-            </Style>
-            <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}">
-                <Setter Property="Width" Value="55" />
-            </Style>
-            <Style TargetType="{x:Type ComboBox}">
-                <Setter Property="Width" Value="150" />
-            </Style>
-            <Style TargetType="{x:Type RadioButton}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-            </Style>
-            <Style x:Key="RadioLabel" TargetType="{x:Type Label}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-            </Style>
+    <Page.Resources>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="10,0" />
+            <Setter Property="Width" Value="75" />
+        </Style>
+        <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource FormRowHeader}">
+            <Setter Property="Width" Value="50" />
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Width" Value="150" />
+        </Style>
+        <Style TargetType="{x:Type RadioButton}">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="RadioLabel" TargetType="{x:Type Label}">
+            <Setter Property="Height" Value="30" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
 
-            <!-- Indicator & graph area-->
-            <Style x:Key="Divider" TargetType="{x:Type Label}">
-                <Setter Property="BorderThickness" Value="0,1,0,0"/>
-                <Setter Property="BorderBrush" Value="#FF4D4D4D"/>
-                <Setter Property="Height" Value="1"/>
-            </Style>
-            <Style x:Key="Value" TargetType="{x:Type Label}">
-                <Setter Property="Foreground" Value="#FF1F6300"/>
-                <Setter Property="Content" Value="0.0"/>
-            </Style>
-            <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
-                <Setter Property="VerticalAlignment" Value="Center"/>
-            </Style>
-        </Grid.Resources>
-        
+        <!-- Indicator & graph area-->
+        <Style x:Key="Divider" TargetType="{x:Type Label}">
+            <Setter Property="BorderThickness" Value="0,1,0,0"/>
+            <Setter Property="BorderBrush" Value="#FF4D4D4D"/>
+            <Setter Property="Height" Value="1"/>
+        </Style>
+        <Style x:Key="Value" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="#FF1F6300"/>
+            <Setter Property="Content" Value="0.0"/>
+        </Style>
+        <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition />
@@ -133,7 +133,7 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="ml/min">
                                 <TextBox x:Name="txbOdor"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"

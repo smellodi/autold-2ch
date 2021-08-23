@@ -46,7 +46,7 @@
                        HorizontalAlignment="Center"
                        Text="Please wait until the odor is prepared"/>
                 <ProgressBar x:Name="prbOdorPreparation"
-                             Height="15"
+                             Height="2"
                              Width="200"/>
             </StackPanel>
 

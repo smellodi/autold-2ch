@@ -112,7 +112,7 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="UserControl">
                             <DockPanel>
-                                <TextBlock Style="{StaticResource FormRowHeader}"
+                                <TextBlock Style="{DynamicResource FormRowHeader}"
                                            Text="{TemplateBinding Tag}"/>
                                 <ContentPresenter Margin="0,0,8,8"/>
                             </DockPanel>

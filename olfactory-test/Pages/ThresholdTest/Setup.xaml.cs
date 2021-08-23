@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,14 +29,26 @@ namespace Olfactory.Pages.ThresholdTest
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
-            cmbProcedureFlow.ItemsSource = Enum.GetNames(typeof(Tests.ThresholdTest.Procedure.FlowType)).Select(s => s.SeparateWords() );
-            cmbProcedureFlow.SelectedIndex = (int)_settings.FlowType;
+            cmbProcedureFlow.ItemsSource = PROCEDURE_FLOW_TOOLTIPS
+                .Select(item => new ComboBoxItem()
+                {
+                    Content = item.Key.ToString().SeparateWords(),
+                    ToolTip = item.Value,
+                });
+            cmbProcedureFlow.SelectedIndex = (int)_settings.FlowStart;
         }
 
 
         // Internal
 
         const char LIST_DELIM = ' ';
+
+        Dictionary<Tests.ThresholdTest.Procedure.FlowStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.FlowStart, string>()
+        {
+            { Tests.ThresholdTest.Procedure.FlowStart.Immediately, "The odor flow starts immediately after the odor is ready" },
+            { Tests.ThresholdTest.Procedure.FlowStart.Manually, "Users have to press SPACE when they start inhaling" },
+            { Tests.ThresholdTest.Procedure.FlowStart.Automatically, "The odor flow starts after the inhale sensor detects a start of inhale" },
+        };
 
         Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
 
@@ -99,7 +112,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
-                _settings.FlowType = (Tests.ThresholdTest.Procedure.FlowType)cmbProcedureFlow.SelectedIndex;
+                _settings.FlowStart = (Tests.ThresholdTest.Procedure.FlowStart)cmbProcedureFlow.SelectedIndex;
 
                 _settings.Save();
 
