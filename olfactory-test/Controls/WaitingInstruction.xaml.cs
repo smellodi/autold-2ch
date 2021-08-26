@@ -6,23 +6,21 @@ using System.Windows.Controls;
 
 namespace Olfactory.Controls
 {
-    public partial class WaitingInstruction : UserControl
+    public partial class WaitingInstruction : UserControl, INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         #region Text property
 
         [Description("Instruction text"), Category("Common Properties")]
         public string Text
         {
             get => (string)GetValue(TextProperty);
-            set
-            {
-                lblInstruction.Text = value;
-                SetValue(TextProperty, value);
-            }
+            set => SetValue(TextProperty, value);
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "TextProperty",
+            nameof(Text),
             typeof(string),
             typeof(WaitingInstruction),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTextPropertyChanged)));
@@ -31,7 +29,7 @@ namespace Olfactory.Controls
         {
             if (sender is WaitingInstruction instance)
             {
-                instance.lblInstruction.Text = instance.Text;
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Text)));
             }
         }
 

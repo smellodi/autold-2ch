@@ -17,7 +17,7 @@
 
         <TextBlock Grid.Row="0"
                    Style="{StaticResource PageTitle}"
-                   Text="Threshold test - Three pens"/>
+                   Text="Threshold test - Pen presentation"/>
 
         <Grid Grid.Row="1" Grid.Column="0"
               HorizontalAlignment="Center"
@@ -75,7 +75,7 @@
                 </WrapPanel>
                 <WrapPanel Grid.Column="2"
                            HorizontalAlignment="Center">
-                    <Label Content="Odor level: "/>
+                    <Label Content="Odour level: "/>
                     <Label x:Name="lblPPMLevel"/>
                 </WrapPanel>
                 <WrapPanel Grid.Column="3"

@@ -64,9 +64,9 @@ namespace Olfactory.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int Test_OP_OdorFlowDuration {
+        public double Test_OP_OdorFlowDuration {
             get {
-                return ((int)(this["Test_OP_OdorFlowDuration"]));
+                return ((double)(this["Test_OP_OdorFlowDuration"]));
             }
             set {
                 this["Test_OP_OdorFlowDuration"] = value;

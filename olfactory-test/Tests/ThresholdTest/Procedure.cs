@@ -10,18 +10,18 @@ namespace Olfactory.Tests.ThresholdTest
 {
     public class Procedure : ITestEmulator
     {
-        public enum FlowStart
+        public enum PenPresentationStart
         {
-            Immediately,
-            Manually,
-            Automatically
+            Immediate,
+            Manual,
+            Automatic
         }
-
+        public enum PPMChangeDirection { Increasing, Decreasing }
         public class PenActivationArgs : EventArgs
         {
             public int ID { get; private set; }
-            public FlowStart FlowStart { get; private set; }
-            public PenActivationArgs(int id, FlowStart flowStart)
+            public PenPresentationStart FlowStart { get; private set; }
+            public PenActivationArgs(int id, PenPresentationStart flowStart)
             {
                 ID = id;
                 FlowStart = flowStart;
@@ -29,7 +29,6 @@ namespace Olfactory.Tests.ThresholdTest
         }
 
         public const int PEN_COUNT = 3;
-        public enum PPMChangeDirection { Increasing, Decreasing }
 
         /// <summary>
         /// Fires on progressing the odor preparation
@@ -67,7 +66,7 @@ namespace Olfactory.Tests.ThresholdTest
         public int RecognitionsInRow => _recognitionsInRow;
         public int TurningPointCount => _turningPointPPMs.Count;
 
-        public FlowStart FlowStarts => _settings.FlowStart;
+        public PenPresentationStart FlowStarts => _settings.FlowStart;
 
         private string[] State => new string[] {
             Step.ToString(),
@@ -83,7 +82,8 @@ namespace Olfactory.Tests.ThresholdTest
             Application.Current.MainWindow.Closing += (s, e) =>
             {
                 _inProgress = false;
-                _timer.Stop();
+                _pidTimer.Stop();
+                _mfcTimer.Stop();
             };
 
             // If the test is in progress, display warning message and quit the app:
@@ -100,7 +100,8 @@ namespace Olfactory.Tests.ThresholdTest
                 }
             };
 
-            _timer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(Measure);
+            _pidTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasurePID);
+            _mfcTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasureMFC);
 
             _model.TargetOdorLevelReached += (s, e) =>
             {
@@ -135,8 +136,11 @@ namespace Olfactory.Tests.ThresholdTest
             _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
 
-            _timer.Interval = _settings.PIDReadingInterval;
-            _timer.Start();
+            _pidTimer.Interval = _settings.PIDReadingInterval;
+            _pidTimer.Start();
+
+            _mfcTimer.Interval = TIMER_MFC_INTERVAL;
+            _mfcTimer.Start();
 
             _stepID++;
 
@@ -158,8 +162,7 @@ namespace Olfactory.Tests.ThresholdTest
                 {
                     var result = _currentPPMLevel < 0 ? -1 : _turningPointPPMs.TakeLast(_settings.TurningPointsToCount).Average();
                     Finished(this, result);
-                    _inProgress = false;
-                    _timer.Stop();
+                    Stop();
                 }
                 else
                 {
@@ -168,9 +171,10 @@ namespace Olfactory.Tests.ThresholdTest
             });
         }
 
-        public void Interrupt()
+        public void Stop()
         {
-            _timer.Stop();
+            _pidTimer.Stop();
+            _mfcTimer.Stop();
             _inProgress = false;
             _isAwaitingOdorFlowStart = false;
         }
@@ -180,7 +184,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         public void EnablePenOdor()
         {
-            if (_settings.FlowStart != FlowStart.Immediately && _isAwaitingOdorFlowStart)
+            if (_settings.FlowStart != PenPresentationStart.Immediate && _isAwaitingOdorFlowStart)
             {
                 _isAwaitingOdorFlowStart = false;
                 StartOdorFlow();
@@ -214,6 +218,7 @@ namespace Olfactory.Tests.ThresholdTest
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const PenColor ODOR_PEN_COLOR = PenColor.Red;
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
+        const int TIMER_MFC_INTERVAL = 1000;
 
         // Properties
 
@@ -231,7 +236,8 @@ namespace Olfactory.Tests.ThresholdTest
         Settings _settings = new Settings();
         CommMonitor _monitor = CommMonitor.Instance;
 
-        System.Timers.Timer _timer = new System.Timers.Timer();
+        System.Timers.Timer _pidTimer = new System.Timers.Timer();
+        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
 
         bool _inProgress = false;
 
@@ -257,24 +263,26 @@ namespace Olfactory.Tests.ThresholdTest
         /// <summary>
         /// Called by PID measurement timer
         /// </summary>
-        private void Measure()
+        private void MeasurePID()
         {
             if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
             {
                 _logger.Add(LogSource.PID, "data", pidSample.ToString());
                 _monitor.LogData(LogSource.PID, pidSample);
 
-                if (_settings.FlowStart == FlowStart.Automatically &&
-                    _breathingDetector.Feed(pidSample.Loop) && 
-                    _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale)
+                if (_settings.FlowStart == PenPresentationStart.Automatic &&
+                    _breathingDetector.Feed(pidSample.Loop) &&
+                    _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale &&
+                    _isAwaitingOdorFlowStart)
                 {
-                    if (_isAwaitingOdorFlowStart)
-                    {
-                        _isAwaitingOdorFlowStart = false;
-                        StartOdorFlow();
-                    }
+                    _isAwaitingOdorFlowStart = false;
+                    StartOdorFlow();
                 }
             }
+        }
+
+        private void MeasureMFC()
+        {
             if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
             {
                 _monitor.LogData(LogSource.MFC, mfcSample);
@@ -346,13 +354,13 @@ namespace Olfactory.Tests.ThresholdTest
 
             switch (_settings.FlowStart)
             {
-                case FlowStart.Immediately:
+                case PenPresentationStart.Immediate:
                     StartOdorFlow();
                     break;
-                case FlowStart.Manually:
+                case PenPresentationStart.Manual:
                     _isAwaitingOdorFlowStart = true;
                     break;
-                case FlowStart.Automatically:
+                case PenPresentationStart.Automatic:
                     _isAwaitingOdorFlowStart = true;
                     break;
             }

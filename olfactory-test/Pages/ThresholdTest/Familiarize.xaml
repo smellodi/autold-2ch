@@ -18,7 +18,7 @@
 
         <TextBlock Grid.Row="0"
                    Style="{StaticResource PageTitle}"
-                   Text="Threshold test - Familiarize with the odor"/>
+                   Text="Threshold test - Familiarize with the odour"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
@@ -31,11 +31,12 @@
                                       Margin="0,12"
                                       Width="250"
                                       MinHeight="90"
-                                      Text="After opening the valve, please wait for few seconds before the odor reaches you, then spend some time memorizing it."/>
+                                      Text="Instructions..."/>
 
             <Button Style="{StaticResource btn}"
-                Height="32"
-                Content="Open the odor valve" Click="btnOpenValve_Click"/>
+                    Height="32"
+                    Content="Open the odour valve"
+                    Click="btnOpenValve_Click"/>
         </StackPanel>
 
         <Button Grid.Row="2" x:Name="btnNext"

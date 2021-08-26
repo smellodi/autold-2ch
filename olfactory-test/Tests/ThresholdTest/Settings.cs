@@ -16,7 +16,7 @@ namespace Olfactory.Tests.ThresholdTest
         public double FamiliarizationDuration; // seconds
         public bool UseFeedbackLoopToReachLevel;
         public bool UseFeedbackLoopToKeepLevel;
-        public Procedure.FlowStart FlowStart;
+        public Procedure.PenPresentationStart FlowStart;
 
         public Settings()
         {
@@ -32,7 +32,7 @@ namespace Olfactory.Tests.ThresholdTest
             FamiliarizationDuration = settings.Test_TT_FamiliarizationDuration;
             UseFeedbackLoopToReachLevel = settings.Test_TT_UseFeedbackLoopToReachLevel;
             UseFeedbackLoopToKeepLevel = settings.Test_TT_UseFeedbackLoopToKeepLevel;
-            FlowStart = (Procedure.FlowStart)settings.Test_TT_FlowStart;
+            FlowStart = (Procedure.PenPresentationStart)settings.Test_TT_FlowStart;
 
             List<double> odorQuantities = new List<double>();
             foreach (var q in settings.Test_TT_PPMs)

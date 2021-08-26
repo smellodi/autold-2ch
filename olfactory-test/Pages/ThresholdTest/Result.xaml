@@ -30,13 +30,13 @@
             </StackPanel.LayoutTransform>
             <Label
                 HorizontalAlignment="Center"
-                Content="Your odor sensitivity (ppm):"
+                Content="Your odour sensitivity (ml/min):"
                 FontSize="14"/>
             <Label x:Name="lblContent"
                    HorizontalAlignment="Center"
                    Content="0.0"
                    FontSize="36"
-                   Foreground="#FF1F6300"/>
+                   Foreground="{StaticResource BrushFontDark}"/>
         </StackPanel>
         
         <Button Grid.Row="2"

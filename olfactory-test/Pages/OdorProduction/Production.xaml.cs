@@ -1,15 +1,44 @@
-﻿using System;
+﻿using Olfactory.Tests.OdorProduction;
+using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
-using Olfactory.Tests.OdorProduction;
 
 namespace Olfactory.Pages.OdorProduction
 {
-    public partial class Production : Page, IPage<EventArgs>
+    public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     {
+        #region Stage property
+
+        public Procedure.Stage Stage
+        {
+            get => _stage;
+            set
+            {
+                _stage = value;
+                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Stage)));
+
+                var pause = value switch
+                {
+                    Procedure.Stage.InitWait => _settings.InitialPause,
+                    Procedure.Stage.OdorFlow => _settings.OdorFlowDuration,
+                    Procedure.Stage.FinalWait => _settings.FinalPause,
+                    Procedure.Stage.None => 0,
+                    _ => throw new NotImplementedException($"Stage '{_stage}' of Odour Pulses does not exist")
+                };
+
+                if (pause > 1)
+                {
+                    wtiWaiting.Start(pause);
+                }
+            }
+        }
+
+        #endregion 
+
         public event EventHandler<EventArgs> Next = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         public Tests.ITestEmulator Emulator => _procedure;
 
@@ -20,28 +49,10 @@ namespace Olfactory.Pages.OdorProduction
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            _inactiveIntervalStyle = FindResource("Interval") as Style;
-
-            _activeIntervalStyle = new Style(typeof(StackPanel), _inactiveIntervalStyle);
-            _activeIntervalStyle.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(102, 205, 255))));
-            _activeIntervalStyle.Setters.Add(new Setter(ForegroundProperty, new SolidColorBrush(Color.FromRgb(255, 255, 255))));
-
-            _countdownTimer.Interval = TimeSpan.FromSeconds(1);
-            _countdownTimer.Tick += (s, e) =>
-            {
-                if (_countdownStop > Utils.Timestamp.Sec)
-                {
-                    lblCountdown.Content = Math.Round(_countdownStop - Utils.Timestamp.Sec);
-                }
-                else
-                {
-                    lblCountdown.Content = "0";
-                    _countdownTimer.Stop();
-                }
-            };
+            DataContext = this;
 
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
-            _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => UpdateStage(stage));
+            _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => Stage = stage);
             _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
         }
 
@@ -50,9 +61,10 @@ namespace Olfactory.Pages.OdorProduction
             _settings = settings;
 
             lblOdorStatus.Content = _settings.OdorQuantities[0];
-            lblInitialPause.Content = _settings.InitialPause;
-            lblOdorFlowDuration.Content = _settings.OdorFlowDuration;
-            lblFinalPause.Content = _settings.FinalPause;
+
+            lblInitialPause.Content = $"{_settings.InitialPause} sec";
+            lblOdorFlowDuration.Content = $"{_settings.OdorFlowDuration} sec";
+            lblFinalPause.Content = $"{_settings.FinalPause} sec";
 
             _procedure.Start(settings);
         }
@@ -62,44 +74,16 @@ namespace Olfactory.Pages.OdorProduction
             _procedure.Interrupt();
         }
 
-        // Internal
 
-        readonly Style _inactiveIntervalStyle;
-        readonly Style _activeIntervalStyle;
+        // Internal
 
         Settings _settings;
         Procedure _procedure = new Procedure();
-
-        DispatcherTimer _countdownTimer = new DispatcherTimer();
-
-        double _countdownStop = 0;
-
-        private void UpdateStage(Procedure.Stage stage)
-        {
-            switch (stage)
-            {
-                case Procedure.Stage.InitWait:
-                    stpInitialPause.Style = _activeIntervalStyle;
-                    InitiateCountdownTimer(_settings.InitialPause);
-                    break;
-                case Procedure.Stage.OdorFlow:
-                    stpInitialPause.Style = _inactiveIntervalStyle;
-                    stpOdorFlowDuration.Style = _activeIntervalStyle;
-                    InitiateCountdownTimer(_settings.OdorFlowDuration);
-                    break;
-                case Procedure.Stage.FinalWait:
-                    stpOdorFlowDuration.Style = _inactiveIntervalStyle;
-                    stpFinalPause.Style = _activeIntervalStyle;
-                    InitiateCountdownTimer(_settings.FinalPause);
-                    break;
-                default:
-                    throw new NotImplementedException($"Trial stage '{stage}' of Odor Production does not exist");
-            }
-        }
+        Procedure.Stage _stage = Procedure.Stage.None;
 
         private void FinilizeTrial(bool noMoreTrials)
         {
-            stpFinalPause.Style = _inactiveIntervalStyle;
+            Stage = Procedure.Stage.None;
 
             if (noMoreTrials)
             {
@@ -113,17 +97,7 @@ namespace Olfactory.Pages.OdorProduction
         }
 
 
-        private void InitiateCountdownTimer(int value)
-        {
-            _countdownTimer.Stop();
-            _countdownStop = Utils.Timestamp.Sec + value;
-            lblCountdown.Content = Math.Round(_countdownStop - Utils.Timestamp.Sec);
-
-            if (value > 0)
-            {
-                _countdownTimer.Start();
-            }
-        }
+        // UI
 
         private void btnInterrupt_Click(object sender, RoutedEventArgs e)
         {

@@ -11,6 +11,11 @@
         Height="600" Width="1000"
         Closing="Window_Closing"
         Activated="Window_Activated" Loaded="Window_Loaded">
+    <Window.Resources>
+        <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource btn}">
+            <Setter Property="Margin" Value="2,0,0,0"/>
+        </Style>
+    </Window.Resources>
     <Grid Margin="8">
         <Grid.Resources>
             <local:BlankConverter x:Key="BlankConverter" />
@@ -44,17 +49,19 @@
         <Grid Grid.Row="0" Grid.Column="0" Margin="0,0,12,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
-                   Content="Debug"/>
-            <Button Grid.Row="0" Grid.Column="1"
+                   Content="Events"/>
+            <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource ActionButton}"
                     Content="Clear"
                     Click="btnClearDebug_Click"/>
         </Grid>
 
-        <TextBox Grid.Row="1" Grid.Column="0" Grid.RowSpan="3" x:Name="txbDebug"
-                 Margin="0,0,12,0" VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="txbDebug" Grid.Row="1" Grid.Column="0" Grid.RowSpan="3"
+                 Margin="0,0,12,0"
+                 VerticalContentAlignment="Top"
+                 VerticalScrollBarVisibility="Visible"/>
 
         <Grid Grid.Row="0" Grid.Column="1">
             <Grid.ColumnDefinitions>
@@ -65,12 +72,7 @@
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="MFC"/>
-            <!--CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkMFCMonitor"
-                      Content="Monitor"
-                      VerticalAlignment="Center"
-                      Checked="chkMFCMonitor_Checked"
-                      Unchecked="chkMFCMonitor_Checked"/-->
-            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,4">
+            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
                 <ComboBox x:Name="cmbMFCViewerType"
                           VerticalAlignment="Center"
@@ -81,10 +83,10 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
-                <Button x:Name="btnMFCSave"
+                <Button x:Name="btnMFCSave" Style="{StaticResource ActionButton}"
                         Content="Save"
                         Click="btnSaveMFC_Click"/>
-                <Button x:Name="btnMFCClear"
+                <Button x:Name="btnMFCClear" Style="{StaticResource ActionButton}"
                         Content="Clear"
                         Click="btnClearMFC_Click"/>
             </StackPanel>
@@ -98,11 +100,11 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Time" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Header="A:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}"/>
+                    <GridViewColumn Header="C:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}"/>
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=A.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=A.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=A.Temperature}" />
-                    <GridViewColumn Header="B:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}" />
+                    <GridViewColumn Header="S:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource BlankConverter}}" />
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=B.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=B.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=B.Temperature}" />
@@ -123,12 +125,7 @@
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0"
                    Content="PID"/>
-            <!--CheckBox Grid.Row="0" Grid.Column="1" x:Name="chkPIDMonitor"
-                      Content="Monitor"
-                      VerticalAlignment="Center"
-                      Checked="chkPIDMonitor_Checked"
-                      Unchecked="chkPIDMonitor_Checked"/-->
-            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,4">
+            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
                 <ComboBox x:Name="cmbPIDViewerType"
                           VerticalAlignment="Center"
@@ -139,10 +136,10 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
-                <Button x:Name="btnPIDSave"
+                <Button x:Name="btnPIDSave" Style="{StaticResource ActionButton}"
                         Content="Save"
                         Click="btnSavePID_Click"/>
-                <Button x:Name="btnPIDClear"
+                <Button x:Name="btnPIDClear" Style="{StaticResource ActionButton}"
                         Content="Clear"
                         Click="btnClearPID_Click"/>
             </StackPanel>

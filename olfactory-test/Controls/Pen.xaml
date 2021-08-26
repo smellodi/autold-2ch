@@ -3,41 +3,55 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Olfactory.Controls"
+             xmlns:utils="clr-namespace:Olfactory.Utils"
              mc:Ignorable="d" 
              d:DesignHeight="200"
              d:DesignWidth="120">
     
     <UserControl.Resources>
-        <Style x:Key="Pen" TargetType="{x:Type Label}" x:Name="stylePen">
+        <utils:BoolToVisibilityConverter x:Key="bool2vis"/>
+        <Style x:Key="Pen" TargetType="{x:Type Label}">
             <Setter Property="Width" Value="120"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
         </Style>
         <Style x:Key="Colorbox" TargetType="{x:Type Rectangle}">
             <Setter Property="Width" Value="120"/>
             <Setter Property="Height" Value="10"/>
         </Style>
-        <Style x:Key="Choice" TargetType="{x:Type Button}">
+        <Style x:Key="Choice" TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
             <Setter Property="Width" Value="120"/>
             <Setter Property="Height" Value="36"/>
             <Setter Property="Margin" Value="0,30,0,0"/>
-            <Setter Property="Content" Value="Odorant was here"/>
         </Style>
     </UserControl.Resources>
 
     <StackPanel>
         <Label x:Name="lblPen"
-               Style="{StaticResource Pen}"
-               Content="Pen"
-               Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}"/>
+               Content="{Binding ID}"
+               ContentStringFormat="Pen #{0}"
+               Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <Label.Style>
+                <Style TargetType="Label" BasedOn="{StaticResource Pen}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsActive}" Value="True">
+                            <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
+                            <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+        </Label>
         <Rectangle x:Name="rctPenColor"
+                   Fill="Wheat"
+                   Visibility="{Binding IsColorVisible, Converter={StaticResource bool2vis}}"
                    Style="{StaticResource Colorbox}"/>
-        <Button x:Name="btnChoice"
-                    Style="{StaticResource Choice}"
-                    Click="OnChoice_Click"/>
+        <Button Style="{StaticResource Choice}"
+                Visibility="{Binding IsSelectable, Converter={StaticResource bool2vis}}"
+                Content="Odourant was here"
+                Click="OnChoice_Click"/>
     </StackPanel>
 </UserControl>

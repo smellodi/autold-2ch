@@ -16,7 +16,7 @@
     <Setting Name="Test_OP_InitialPause" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
-    <Setting Name="Test_OP_OdorFlowDuration" Type="System.Int32" Scope="User">
+    <Setting Name="Test_OP_OdorFlowDuration" Type="System.Double" Scope="User">
       <Value Profile="(Default)">15</Value>
     </Setting>
     <Setting Name="Test_OP_FinalPause" Type="System.Int32" Scope="User">

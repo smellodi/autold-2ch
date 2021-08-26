@@ -44,14 +44,14 @@
                                  ToolTip="a positive number"/>
                     </UserControl>
                 </UserControl>
-                <UserControl Style="{StaticResource FormRow}" Tag="Odor levels">
+                <UserControl Style="{StaticResource FormRow}" Tag="Odour levels">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="ml/min">
                         <TextBox x:Name="txbPPMs"
                                  Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
                                  ToolTip="space-separated positive numbers"/>
                     </UserControl>
                 </UserControl>
-                <UserControl Style="{StaticResource FormRow}" Tag="Odor flow starts">
+                <UserControl Style="{StaticResource FormRow}" Tag="Pen presentation">
                     <ComboBox x:Name="cmbProcedureFlow">
                         <ComboBox.ItemContainerStyle>
                             <Style>
@@ -76,7 +76,7 @@
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
-                                     Tag="Odor prepartion">
+                                     Tag="Odour prepartion">
                             <TextBox x:Name="txbOdorPreparationDuration"
                                  Text="15"
                                  ToolTip="a non-negative integer"/>
@@ -99,23 +99,23 @@
                         </Grid.ColumnDefinitions>
                         <UserControl Grid.Column="0"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Tag="Recogn. in row">
+                            <TextBox x:Name="txbRecognitionsInRow"
+                                     Text="2"
+                                     ToolTip="a positive integer"/>
+                        </UserControl>
+                        <UserControl Grid.Column="1"
+                                     Style="{StaticResource ValueWithLabelAbove}"
                                      Tag="To collect">
                             <TextBox x:Name="txbTurningPoints"
                                      Text="7"
                                      ToolTip="a positive integer"/>
                         </UserControl>
-                        <UserControl Grid.Column="1"
+                        <UserControl Grid.Column="2"
                                      Style="{StaticResource ValueWithLabelAbove}"
                                      Tag="To count">
                             <TextBox x:Name="txbTurningPointsToCount"
                                      Text="4"
-                                     ToolTip="a positive integer"/>
-                        </UserControl>
-                        <UserControl Grid.Column="2"
-                                     Style="{StaticResource ValueWithLabelAbove}"
-                                     Tag="Recogn. in row">
-                            <TextBox x:Name="txbRecognitionsInRow"
-                                     Text="2"
                                      ToolTip="a positive integer"/>
                         </UserControl>
                     </Grid>

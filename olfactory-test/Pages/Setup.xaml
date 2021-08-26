@@ -18,10 +18,10 @@
             <Setter Property="Width" Value="75" />
         </Style>
         <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource FormRowHeader}">
-            <Setter Property="Width" Value="50" />
+            <Setter Property="Width" Value="60" />
         </Style>
         <Style TargetType="{x:Type ComboBox}">
-            <Setter Property="Width" Value="150" />
+            <Setter Property="Width" Value="90" />
         </Style>
         <Style TargetType="{x:Type RadioButton}">
             <Setter Property="Height" Value="30" />
@@ -35,11 +35,11 @@
         <!-- Indicator & graph area-->
         <Style x:Key="Divider" TargetType="{x:Type Label}">
             <Setter Property="BorderThickness" Value="0,1,0,0"/>
-            <Setter Property="BorderBrush" Value="#FF4D4D4D"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorderLight}"/>
             <Setter Property="Height" Value="1"/>
         </Style>
-        <Style x:Key="Value" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="#FF1F6300"/>
+        <Style x:Key="NumericIndicator" TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
             <Setter Property="Content" Value="0.0"/>
         </Style>
         <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
@@ -106,7 +106,8 @@
             </Border>
 
             <Border Style="{StaticResource Form}" Margin="0,0,0,12">
-                <StackPanel x:Name="grdPlayground">
+                <StackPanel x:Name="grdPlayground"
+                            IsEnabled="False">
                     <Label Style="{StaticResource FormHeader}"
                            Content="MFC Playground"/>
 
@@ -120,14 +121,15 @@
                                 <TextBox x:Name="txbFreshAir"
                                          VerticalContentAlignment="Center"
                                          Text="5.0"
-                                         ToolTip="a single positive floating-point value"/>
+                                         ToolTip="a single positive floating-point value"
+                                         KeyUp="txbFreshAir_KeyUp"/>
                             </UserControl>
                             <Button Grid.Column="1"
                                     Content="Set"
                                     Click="btnSetFreshAir_Click"/>
                         </Grid>
                     </UserControl>
-                    <UserControl Style="{StaticResource FormRow}" Tag="Odor">
+                    <UserControl Style="{StaticResource FormRow}" Tag="Scented air">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -137,7 +139,8 @@
                                 <TextBox x:Name="txbOdor"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"
-                                         ToolTip="a single positive floating-point value"/>
+                                         ToolTip="a single positive floating-point value"
+                                         KeyUp="txbOdor_KeyUp"/>
                             </UserControl>
                             <Button Grid.Column="1" 
                                     Content="Set"
@@ -152,16 +155,18 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <StackPanel Grid.Column="0">
+                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
                                 <WrapPanel VerticalAlignment="Center">
                                     <Label Style="{StaticResource RadioLabel}" Content="#1: "/>
                                     <RadioButton x:Name="rdbValve1ToWaste"
                                                  GroupName="valve1"
-                                                 Content="waste"/>
+                                                 Content="waste"
+                                                 Click="btnSetDirection_Click"/>
                                     <RadioButton x:Name="rdbValve1ToSystem"
                                                  GroupName="valve1"
                                                  Content="system"
-                                                 Margin="16,0,0,0"/>
+                                                 Margin="16,0,0,0"
+                                                 Click="btnSetDirection_Click"/>
                                 </WrapPanel>
                                 <WrapPanel VerticalAlignment="Center">
                                     <Label Style="{StaticResource RadioLabel}" Content="#2: "/>
@@ -174,9 +179,9 @@
                                                  Margin="16,0,0,0"/>
                                 </WrapPanel>
                             </StackPanel>
-                            <Button Grid.Column="1"
+                            <!--Button Grid.Column="1"
                                     Content="Set"
-                                    Click="btnSetDirection_Click"/>
+                                    Click="btnSetDirection_Click"/-->
                         </Grid>
                     </UserControl>
                 </StackPanel>
@@ -192,13 +197,13 @@
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
                 <Label Content="Clean air (l/min)"/>
-                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource Value}"/>
+                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource NumericIndicator}"/>
             </WrapPanel>
 
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="Odor (ml/min)"/>
-                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource Value}"/>
+                <Label Content="Scented air (ml/min)"/>
+                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource NumericIndicator}"/>
             </WrapPanel>
             <local:LiveData x:Name="lmsOdor"
                             Height="92"/>
@@ -206,14 +211,14 @@
             <Label Style="{StaticResource Divider}"
                    Margin="0,12,0,0"/>
             <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="PID loop (mA)"/>
-                <Label x:Name="lblPID_Loop" Style="{StaticResource Value}"/>
+                <Label Content="Temperature detector current (mA)"/>
+                <Label x:Name="lblPID_Loop" Style="{StaticResource NumericIndicator}"/>
             </WrapPanel>
 
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
-                <Label Content="PID value (mV)"/>
-                <Label x:Name="lblPID_PID" Style="{StaticResource Value}"/>
+                <Label Content="PID voltage (mV)"/>
+                <Label x:Name="lblPID_PID" Style="{StaticResource NumericIndicator}"/>
             </WrapPanel>
             <local:LiveData x:Name="lmsPIDValue"
                             Height="118"/>
@@ -223,11 +228,11 @@
                    Style="{StaticResource Buttons}">
             <Button x:Name="btnOdorProduction"
                 Style="{StaticResource Next}"
-                Content="Odor Production"
+                Content="Odor pulses"
                 Click="btnOdorProduction_Click"/>
             <Button x:Name="btnThresholdTest"
                 Style="{StaticResource Next}"
-                Content="Threshold Test"
+                Content="Threshold test"
                 Click="btnThresholdTest_Click"/>
         </WrapPanel>
 

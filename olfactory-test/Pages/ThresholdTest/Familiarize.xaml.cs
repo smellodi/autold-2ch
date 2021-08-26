@@ -23,6 +23,8 @@ namespace Olfactory.Pages.ThresholdTest
 
             _measurementTimer.Interval = 1000;
             _measurementTimer.Elapsed += (s, e) => Dispatcher.Invoke(Measure);
+
+            wtiInstruction.Text = INSTRUCTION_OPEN_VALVE;
         }
 
         public void Init(Tests.ThresholdTest.Settings settings)
@@ -55,6 +57,12 @@ namespace Olfactory.Pages.ThresholdTest
 
         const int VENTILATION_DURATION = 15;  // seconds
 
+        const string INSTRUCTION_OPEN_VALVE = "After opening the valve, please wait for few seconds before the odour reaches you, then spend some time memorizing it.";
+        const string INSTRUCTION_WAIT_UNTIL_READY = "Preparing the odour";
+        const string INSTRUCTION_SNIFF = "Odour is flowing now, sniff it!";
+        const string INSTRUCTION_WAIT_UNTIL_VENTILATED = "Please wait while the tube is ventilating...";
+        const string INSTRUCTION_CONTINUE = "Click 'Continue' to start the test.";
+
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
         CommMonitor _monitor = CommMonitor.Instance;
@@ -78,7 +86,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _state = State.OdorFlow;
 
                 wtiInstruction.Reset();
-                wtiInstruction.Text = "Odor is flowing now, sniff it!";
+                wtiInstruction.Text = INSTRUCTION_SNIFF;
 
                 _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
@@ -89,7 +97,7 @@ namespace Olfactory.Pages.ThresholdTest
             {
                 _state = State.Ventilation;
 
-                wtiInstruction.Text = "Please wait while the tube is ventilating...";
+                wtiInstruction.Text = INSTRUCTION_WAIT_UNTIL_VENTILATED;
 
                 _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
                 Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
@@ -104,7 +112,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _state = State.Finished;
 
                 wtiInstruction.Reset();
-                wtiInstruction.Text = "Click 'Continue' to start the test.";
+                wtiInstruction.Text = INSTRUCTION_CONTINUE;
 
                 btnNext.IsEnabled = true;
             }
@@ -140,7 +148,7 @@ namespace Olfactory.Pages.ThresholdTest
             _directionChangeTimer.Start();
 
             var waitingInterval = (double)Math.Ceiling(_mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User));
-            wtiInstruction.Text = "Preparing the odor";
+            wtiInstruction.Text = INSTRUCTION_WAIT_UNTIL_READY;
             wtiInstruction.Start(waitingInterval);
 
             _stateTimer.Interval = 1000 * waitingInterval;

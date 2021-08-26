@@ -28,7 +28,7 @@ namespace Olfactory.Pages.ThresholdTest
             });
 
             _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
-                if (_procedure.FlowStarts != Procedure.FlowStart.Immediately)
+                if (_procedure.FlowStarts != Procedure.PenPresentationStart.Immediate)
                 {
                     wtiInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
                 }
@@ -70,13 +70,13 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void Interrupt()
         {
-            _procedure.Interrupt();
+            _procedure.Stop();
         }
 
         public void ConsumeKeyDown(Key e)
         {
-            if ((e == Key.Space && _procedure.FlowStarts == Procedure.FlowStart.Manually) ||
-                (e == Key.Enter && _procedure.FlowStarts == Procedure.FlowStart.Automatically))
+            if ((e == Key.Space && _procedure.FlowStarts == Procedure.PenPresentationStart.Manual) ||
+                (e == Key.Enter && _procedure.FlowStarts == Procedure.PenPresentationStart.Automatic))
             {
                 _procedure.EnablePenOdor();
             }
@@ -110,7 +110,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         readonly Controls.Pen[] PENS;
 
-        private void ActivatePen(int penID, Procedure.FlowStart flowStart)
+        private void ActivatePen(int penID, Procedure.PenPresentationStart flowStart)
         {
             if (CurrentPen != null)
             {
@@ -120,9 +120,9 @@ namespace Olfactory.Pages.ThresholdTest
 
             wtiInstruction.Text = flowStart switch
             {
-                Procedure.FlowStart.Immediately => INSTRUCTION_SNIFF_THE_PEN_FIXED,
-                Procedure.FlowStart.Manually => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
-                Procedure.FlowStart.Automatically => INSTRUCTION_SNIFF_THE_PEN_AUTO,
+                Procedure.PenPresentationStart.Immediate => INSTRUCTION_SNIFF_THE_PEN_FIXED,
+                Procedure.PenPresentationStart.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
+                Procedure.PenPresentationStart.Automatic => INSTRUCTION_SNIFF_THE_PEN_AUTO,
                 _ => ""
             };
 

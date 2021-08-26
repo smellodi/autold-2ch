@@ -9,6 +9,7 @@ namespace Olfactory.Tests.OdorProduction
     {
         public enum Stage
         {
+            None,
             InitWait,
             OdorFlow,
             FinalWait,

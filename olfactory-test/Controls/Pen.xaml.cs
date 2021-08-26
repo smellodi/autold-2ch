@@ -1,37 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Olfactory.Controls
 {
-    public partial class Pen : UserControl
+    public partial class Pen : UserControl, INotifyPropertyChanged
     {
         #region ID property
 
         [Description("Pen ID"), Category("Common Properties")]
-        public int ID
+        public string ID
         {
-            get { return (int)GetValue(IDProperty); }
-            set
-            {
-                lblPen.Content = $"Pen #{value}";
-                SetValue(IDProperty, value);
-            }
+            get => (string)GetValue(IDProperty);
+            set => SetValue(IDProperty, value);
         }
 
         public static readonly DependencyProperty IDProperty = DependencyProperty.Register(
-            "ID",
-            typeof(int),
+            nameof(ID),
+            typeof(string),
             typeof(Pen),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIDPropertyChanged)));
 
@@ -39,7 +27,7 @@ namespace Olfactory.Controls
         {
             if (sender is Pen instance)
             {
-                instance.lblPen.Content = $"Pen #{e.NewValue}";
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(ID)));
             }
         }
 
@@ -50,16 +38,12 @@ namespace Olfactory.Controls
         [Description("Is the pen active"), Category("Common Properties")]
         public bool IsActive
         {
-            get { return (bool)GetValue(IsActiveProperty); }
-            set
-            {
-                lblPen.Style = value ? _activePenStyle : _inactivePenStyle;
-                SetValue(IsActiveProperty, value);
-            }
+            get => (bool)GetValue(IsActiveProperty);
+            set => SetValue(IsActiveProperty, value);
         }
 
         public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
-            "IsActive",
+            nameof(IsActive),
             typeof(bool),
             typeof(Pen),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsActivePropertyChanged)));
@@ -68,7 +52,7 @@ namespace Olfactory.Controls
         {
             if (sender is Pen instance)
             {
-                instance.lblPen.Style = instance.IsActive ? instance._activePenStyle : instance._inactivePenStyle;
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsActive)));
             }
         }
 
@@ -79,16 +63,12 @@ namespace Olfactory.Controls
         [Description("Is pen color visible"), Category("Common Properties")]
         public bool IsColorVisible
         {
-            get { return (bool)GetValue(IsColorVisibleProperty); }
-            set
-            {
-                rctPenColor.Visibility = value ? Visibility.Visible : Visibility.Hidden;
-                SetValue(IsColorVisibleProperty, value);
-            }
+            get => (bool)GetValue(IsColorVisibleProperty);
+            set => SetValue(IsColorVisibleProperty, value);
         }
 
         public static readonly DependencyProperty IsColorVisibleProperty = DependencyProperty.Register(
-            "IsColorVisible",
+            nameof(IsColorVisible),
             typeof(bool),
             typeof(Pen),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsColorVisiblePropertyChanged)));
@@ -97,7 +77,7 @@ namespace Olfactory.Controls
         {
             if (sender is Pen instance)
             {
-                instance.rctPenColor.Visibility = instance.IsColorVisible ? Visibility.Visible : Visibility.Hidden;
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsColorVisible)));
             }
         }
 
@@ -108,16 +88,12 @@ namespace Olfactory.Controls
         [Description("Is pen can be selected"), Category("Common Properties")]
         public bool IsSelectable
         {
-            get { return (bool)GetValue(IsSelectableProperty); }
-            set
-            {
-                btnChoice.Visibility = value ? Visibility.Visible : Visibility.Hidden;
-                SetValue(IsSelectableProperty, value);
-            }
+            get => (bool)GetValue(IsSelectableProperty);
+            set => SetValue(IsSelectableProperty, value);
         }
 
         public static readonly DependencyProperty IsSelectableProperty = DependencyProperty.Register(
-            "IsSelectable",
+            nameof(IsSelectable),
             typeof(bool),
             typeof(Pen),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsSelectablePropertyChanged)));
@@ -126,7 +102,7 @@ namespace Olfactory.Controls
         {
             if (sender is Pen instance)
             {
-                instance.btnChoice.Visibility = instance.IsSelectable ? Visibility.Visible : Visibility.Hidden;
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsSelectable)));
             }
         }
 
@@ -143,36 +119,19 @@ namespace Olfactory.Controls
         }
 
         public event EventHandler Selected = delegate { };
-        
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
         public Pen()
         {
             InitializeComponent();
 
-            var penStyle = FindResource("Pen") as Style;
-
-            _inactivePenStyle = new Style(typeof(Label), penStyle);
-            _inactivePenStyle.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(255, 255, 255))));
-
-            _activePenStyle = new Style(typeof(Label), penStyle);
-            _activePenStyle.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Color.FromRgb(102, 205, 255))));
-
-            lblPen.Style = IsActive ? _activePenStyle : _inactivePenStyle;
-            rctPenColor.Visibility = IsColorVisible ? Visibility.Visible : Visibility.Hidden;
-            btnChoice.Visibility = IsSelectable ? Visibility.Visible : Visibility.Hidden;
+            DataContext = this;
         }
 
 
         // Internal
 
         Tests.ThresholdTest.Pen _pen;
-
-        readonly Style _inactivePenStyle;
-        readonly Style _activePenStyle;
-
-        private void OnChoice_Click(object sender, RoutedEventArgs e)
-        {
-            Selected(this, new EventArgs());
-        }
 
         private Color GetPenColor(Tests.ThresholdTest.PenColor color) => color switch
         {
@@ -181,5 +140,12 @@ namespace Olfactory.Controls
             Tests.ThresholdTest.PenColor.Blue => Colors.Blue,
             _ => throw new NotImplementedException("Unrecognized pen color"),
         };
+
+        // UI
+
+        private void OnChoice_Click(object sender, RoutedEventArgs e)
+        {
+            Selected(this, new EventArgs());
+        }
     }
 }

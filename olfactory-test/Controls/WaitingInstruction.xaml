@@ -12,7 +12,7 @@
                        Margin="0,8"
                        TextWrapping="Wrap"
                        HorizontalAlignment="Center"
-                       Text="{Binding Instruction}"/>
+                       Text="{Binding Text}"/>
             <ProgressBar x:Name="prbProgress"
                          Height="2"
                          MinWidth="100"

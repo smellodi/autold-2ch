@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="600"
       Title="Setup"
-      WindowTitle="Odor Production">
+      WindowTitle="Odour pulses">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
 
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="10"
                    Style="{StaticResource PageTitle}"
-                   Text="Odor pulses - Setup"/>
+                   Text="Odour pulses - Setup"/>
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Form}">
@@ -36,7 +36,7 @@
                 <Label Style="{StaticResource FormHeader}"
                        Content="Settings"/>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="Fresh air">
+                <UserControl Style="{StaticResource FormRow}" Tag="Clean air">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="l/min">
                         <TextBox x:Name="txbFreshAir"
                                  Text="5"
@@ -44,7 +44,7 @@
                     </UserControl>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="Odor flow">
+                <UserControl Style="{StaticResource FormRow}" Tag="Odoured air">
                     <StackPanel>
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="ml/min">
                             <TextBox x:Name="txbOdorQuantities"
@@ -72,7 +72,7 @@
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
-                                     Tag="Odor flow">
+                                     Tag="Odour flow">
                             <TextBox x:Name="txbOdorFlowDuration"
                                      Text="10"
                                      ToolTip="a positive integer"/>
@@ -99,7 +99,7 @@
                                          Content="user"/>
                         </WrapPanel>
                         <TextBlock TextWrapping="Wrap"
-                                   Text="Controls the Valve #2 during odor flow. This valve is directed to waste during both pauses."/>
+                                   Text="Controls the Valve #2 during odour flow. This valve is directed to waste during both pauses."/>
                     </StackPanel>
                 </UserControl>
 

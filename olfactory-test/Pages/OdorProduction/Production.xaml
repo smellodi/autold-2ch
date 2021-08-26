@@ -3,21 +3,22 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
+      xmlns:local="clr-namespace:Olfactory.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Odor production"
-      WindowTitle="Odor Production">
+      Title="Odour pulses"
+      WindowTitle="Odour pulses">
     <Page.Resources>
         <Style x:Key="Setting" TargetType="Label">
             <Setter Property="Margin" Value="20,0"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
         </Style>
         <Style x:Key="Status" TargetType="Label">
             <Setter Property="FontSize" Value="16"/>
-            <Setter Property="Foreground" Value="#FF004581"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
         </Style>
         <Style x:Key="Interval" TargetType="StackPanel">
-            <Setter Property="Background" Value="#FFFFF3CB"/>
+            <Setter Property="Background" Value="{StaticResource BrushPanelLight}"/>
         </Style>
     </Page.Resources>
     <Grid>
@@ -29,7 +30,7 @@
 
         <TextBlock Grid.Row="0"
                    Style="{StaticResource PageTitle}"
-                   Text="Odor pulses - Production"/>
+                   Text="Odour pulses - Production"/>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
@@ -50,43 +51,71 @@
             </WrapPanel>
             
             <WrapPanel>
-                <StackPanel x:Name="stpInitialPause"
-                            Style="{StaticResource Interval}">
+                <StackPanel x:Name="stpInitialPause">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel" BasedOn="{StaticResource Interval}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Stage}" Value="InitWait">
+                                    <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <Label Grid.Row="0" Grid.Column="0"
                        Style="{StaticResource Setting}"
                        Content="Initial pause"/>
                     <Label Grid.Row="1" Grid.Column="0" x:Name="lblInitialPause"
+                       Style="{StaticResource Setting}"
                        HorizontalAlignment="Center"
                        Content="500"/>
                 </StackPanel>
-                <StackPanel x:Name="stpOdorFlowDuration"
-                            Style="{StaticResource Interval}">
+                <StackPanel x:Name="stpOdorFlowDuration">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel" BasedOn="{StaticResource Interval}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Stage}" Value="OdorFlow">
+                                    <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <Label Grid.Row="0" Grid.Column="1"
                        Style="{StaticResource Setting}"
-                       Content="Odor flow"/>
+                       Content="Odour flow"/>
                     <Label Grid.Row="1" Grid.Column="1" x:Name="lblOdorFlowDuration"
+                       Style="{StaticResource Setting}"
                        HorizontalAlignment="Center"
                        Content="500"/>
                 </StackPanel>
-                <StackPanel x:Name="stpFinalPause"
-                            Style="{StaticResource Interval}">
+                <StackPanel x:Name="stpFinalPause">
+                    <StackPanel.Style>
+                        <Style TargetType="StackPanel" BasedOn="{StaticResource Interval}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Stage}" Value="FinalWait">
+                                    <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </StackPanel.Style>
                     <Label Grid.Row="0" Grid.Column="2"
                        Style="{StaticResource Setting}"
                        Content="Final pause"/>
                     <Label Grid.Row="1" Grid.Column="2" x:Name="lblFinalPause"
+                       Style="{StaticResource Setting}"
                        HorizontalAlignment="Center"
                        Content="500"/>
                 </StackPanel>
             </WrapPanel>
-            
-            <WrapPanel HorizontalAlignment="Center"
+
+            <local:WaitingInstruction x:Name="wtiWaiting"/>
+            <!--WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
                 <Label Content="Time left:"/>
                 <Label x:Name="lblCountdown"
                       Content="300"/>
                 <Label Content="sec"/>
-            </WrapPanel>
-            
+            </WrapPanel-->
+
             <WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
                 <Label Margin="0,4,0,0"
@@ -97,7 +126,7 @@
                        VerticalContentAlignment="Bottom"
                        Content="0.0"
                        FontSize="26"
-                       Foreground="#FF1F6300"/>
+                       Foreground="{StaticResource BrushFontDark}"/>
             </WrapPanel>
         </StackPanel>
 

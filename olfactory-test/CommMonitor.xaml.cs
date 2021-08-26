@@ -60,33 +60,6 @@ namespace Olfactory
                 LogResult(LogSource.PID, new Result() { Error = Error.Success, Reason = "Stopped" });
             };
 
-            /*
-            _mfcTimer.Interval = 1000;
-            _mfcTimer.AutoReset = true;
-            _mfcTimer.Elapsed += (s, e) => {
-                Dispatcher.Invoke(() =>
-                {
-                    if (_mfc.IsOpen)
-                    {
-                        var result = _mfc.GetSample(out MFCSample sample);
-                        Log(txbMFC, LogSource.MFC, result, sample);
-                    }
-                });
-            };
-
-            _pidTimer.Interval = 1000;
-            _pidTimer.AutoReset = true;
-            _pidTimer.Elapsed += (s, e) => {
-                Dispatcher.Invoke(() =>
-                {
-                    if (_pid.IsOpen)
-                    {
-                        var result = _pid.GetSample(out PIDSample sample);
-                        Log(txbPID, LogSource.PID, result, sample);
-                    }
-                });
-            };*/
-
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
 
@@ -129,9 +102,6 @@ namespace Olfactory
 
 
         // Internal
-
-        //System.Timers.Timer _mfcTimer = new System.Timers.Timer();
-        //System.Timers.Timer _pidTimer = new System.Timers.Timer();
 
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;
@@ -180,18 +150,6 @@ namespace Olfactory
                 lmsPID.Add((double)data.Time / 1000, data.MainValue);
             }
         }
-        /*
-        private void ToggleMonitoring(CheckBox chk, System.Timers.Timer timer)
-        {
-            if (chk.IsChecked ?? false)
-            {
-                timer.Start();
-            }
-            else
-            {
-                timer.Stop();
-            }
-        }*/
 
         private void LogMessage(LogSource source, string message)
         {
@@ -199,7 +157,7 @@ namespace Olfactory
             txbDebug.AppendText($"{Timestamp.Ms} [{source}] {message}\r\n");
             txbDebug.ScrollToEnd();
         }
-
+        /*
         private void Log(TextBox output, LogSource source, Result result, ISample data)
         {
             if (result.Error == Error.Success)
@@ -216,7 +174,7 @@ namespace Olfactory
             }
 
             output.ScrollToEnd();
-        }
+        }*/
 
         private void UpdateUI()
         {
@@ -263,16 +221,6 @@ namespace Olfactory
         {
             _logger.SaveOnly(LogSource.PID, "data", $"PID_{DateTime.Now:u}.txt".ToPath());
         }
-        /*
-        private void chkMFCMonitor_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleMonitoring(e.Source as CheckBox, _mfcTimer);
-        }
-
-        private void chkPIDMonitor_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleMonitoring(e.Source as CheckBox, _pidTimer);
-        }*/
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -282,9 +230,6 @@ namespace Olfactory
 
         private void Window_Activated(object sender, EventArgs e)
         {
-            //chkMFCMonitor.IsEnabled = _mfc.IsOpen;
-            //chkPIDMonitor.IsEnabled = _pid.IsOpen;
-
             UpdateUI();
         }
 

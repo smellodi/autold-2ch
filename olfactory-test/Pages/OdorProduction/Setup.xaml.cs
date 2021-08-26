@@ -48,7 +48,7 @@ namespace Olfactory.Pages.OdorProduction
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbOdorQuantities, 1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM, EXPR_OPS),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbOdorFlowDuration, 1, 10000, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbOdorFlowDuration, 0.1, 10000, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
             };
@@ -108,7 +108,7 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.FreshAir = double.Parse(txbFreshAir.Text);
                 _settings.OdorQuantities = AsValues(txbOdorQuantities.Text.Split(LIST_DELIM));
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
-                _settings.OdorFlowDuration = int.Parse(txbOdorFlowDuration.Text);
+                _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.Valve2ToUser = rdbValve2ToUser.IsChecked ?? false;

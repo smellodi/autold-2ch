@@ -166,7 +166,8 @@ namespace Olfactory.Pages
                 }
             }
 
-            EnableChildren(grdPlayground, _mfc.IsOpen);
+            //EnableChildren(grdPlayground, _mfc.IsOpen);
+            grdPlayground.IsEnabled = _mfc.IsOpen;
         }
 
         private bool Toggle(CommPort port, string address)
@@ -248,7 +249,7 @@ namespace Olfactory.Pages
             settings.Save();
         }
 
-        private void GetSystemStates()
+        private void GetValveStates()
         {
             rdbValve1ToSystem.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.System);
             rdbValve1ToWaste.IsChecked = !rdbValve1ToSystem.IsChecked;
@@ -270,6 +271,7 @@ namespace Olfactory.Pages
             if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
+                GetValveStates();
             }
 
             if (_pid.IsOpen)
@@ -326,9 +328,13 @@ namespace Olfactory.Pages
             {
                 _mfcTimer.Start();
                 lmsOdor.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                GetValveStates();
+            }
+            else
+            {
+                _mfcTimer.Stop();
             }
 
-            GetSystemStates();
             UpdateUI();
         }
 
@@ -346,6 +352,10 @@ namespace Olfactory.Pages
                 {
                     lmsPIDValue.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL, */sample.PID);
                 }
+            }
+            else
+            {
+                _pidTimer.Stop();
             }
 
             UpdateUI();
@@ -393,6 +403,22 @@ namespace Olfactory.Pages
             _pidTimer.Stop();
 
             Next(this, Tests.Test.Threshold);
+        }
+
+        private void txbFreshAir_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                btnSetFreshAir_Click(sender, e);
+            }
+        }
+
+        private void txbOdor_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                btnSetOdor_Click(sender, e);
+            }
         }
     }
 }

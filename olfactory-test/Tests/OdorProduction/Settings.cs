@@ -8,7 +8,7 @@ namespace Olfactory.Tests.OdorProduction
         public double FreshAir;
         public double[] OdorQuantities;
         public int InitialPause;
-        public int OdorFlowDuration;
+        public double OdorFlowDuration;
         public int FinalPause;
         public int PIDReadingInterval;
         public bool Valve2ToUser;

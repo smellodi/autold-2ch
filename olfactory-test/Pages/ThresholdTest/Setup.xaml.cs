@@ -43,11 +43,11 @@ namespace Olfactory.Pages.ThresholdTest
 
         const char LIST_DELIM = ' ';
 
-        Dictionary<Tests.ThresholdTest.Procedure.FlowStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.FlowStart, string>()
+        Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string>()
         {
-            { Tests.ThresholdTest.Procedure.FlowStart.Immediately, "The odor flow starts immediately after the odor is ready" },
-            { Tests.ThresholdTest.Procedure.FlowStart.Manually, "Users have to press SPACE when they start inhaling" },
-            { Tests.ThresholdTest.Procedure.FlowStart.Automatically, "The odor flow starts after the inhale sensor detects a start of inhale" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, "The odor flow starts immediately after the odor is ready" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, "Users have to press SPACE when they start inhaling" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, "The odor flow starts after the inhale sensor detects a start of inhale" },
         };
 
         Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
@@ -112,7 +112,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
-                _settings.FlowStart = (Tests.ThresholdTest.Procedure.FlowStart)cmbProcedureFlow.SelectedIndex;
+                _settings.FlowStart = (Tests.ThresholdTest.Procedure.PenPresentationStart)cmbProcedureFlow.SelectedIndex;
 
                 _settings.Save();
 
