@@ -9,31 +9,60 @@ namespace Olfactory.Pages.OdorProduction
 {
     public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     {
-        #region Stage property
+        #region IsInitialPause property
 
-        public Procedure.Stage Stage
+        public bool IsInitialPause
         {
-            get => _stage;
-            set
-            {
-                _stage = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(Stage)));
-
-                var pause = value switch
-                {
-                    Procedure.Stage.InitWait => _settings.InitialPause,
-                    Procedure.Stage.OdorFlow => _settings.OdorFlowDuration,
-                    Procedure.Stage.FinalWait => _settings.FinalPause,
-                    Procedure.Stage.None => 0,
-                    _ => throw new NotImplementedException($"Stage '{_stage}' of Odour Pulses does not exist")
-                };
-
-                if (pause > 1)
-                {
-                    wtiWaiting.Start(pause);
-                }
-            }
+            get => _stage == Procedure.Stage.InitWait;
+            set => SetValue(IsInitialPauseProperty, value);
         }
+
+        public static readonly DependencyProperty IsInitialPauseProperty = DependencyProperty.Register(
+            nameof(IsInitialPause),
+            typeof(bool),
+            typeof(Production),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsInitialPause)))
+            ))
+        );
+
+        #endregion 
+
+        #region IsOdorFlow property
+
+        public bool IsOdorFlow
+        {
+            get => _stage == Procedure.Stage.OdorFlow;
+            set => SetValue(IsOdorFlowProperty, value);
+        }
+
+        public static readonly DependencyProperty IsOdorFlowProperty = DependencyProperty.Register(
+            nameof(IsOdorFlow),
+            typeof(bool),
+            typeof(Production),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsOdorFlow)))
+            ))
+        );
+
+        #endregion 
+
+        #region IsFinalPause property
+
+        public bool IsFinalPause
+        {
+            get => _stage == Procedure.Stage.FinalWait;
+            set => SetValue(IsFinalPauseProperty, value);
+        }
+
+        public static readonly DependencyProperty IsFinalPauseProperty = DependencyProperty.Register(
+            nameof(IsFinalPause),
+            typeof(bool),
+            typeof(Production),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsFinalPause)))
+            ))
+        );
 
         #endregion 
 
@@ -44,15 +73,15 @@ namespace Olfactory.Pages.OdorProduction
 
         public Production()
         {
+            DataContext = this;
+
             InitializeComponent();
 
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            DataContext = this;
-
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
-            _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => Stage = stage);
+            _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
             _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
         }
 
@@ -62,9 +91,9 @@ namespace Olfactory.Pages.OdorProduction
 
             lblOdorStatus.Content = _settings.OdorQuantities[0];
 
-            lblInitialPause.Content = $"{_settings.InitialPause} sec";
-            lblOdorFlowDuration.Content = $"{_settings.OdorFlowDuration} sec";
-            lblFinalPause.Content = $"{_settings.FinalPause} sec";
+            pdsInitialPause.Value = _settings.InitialPause;
+            pdsOdorFlow.Value = _settings.OdorFlowDuration;
+            pdsFinalPause.Value = _settings.FinalPause;
 
             _procedure.Start(settings);
         }
@@ -81,9 +110,32 @@ namespace Olfactory.Pages.OdorProduction
         Procedure _procedure = new Procedure();
         Procedure.Stage _stage = Procedure.Stage.None;
 
+        private void SetStage(Procedure.Stage stage)
+        {
+            _stage = stage;
+
+            var pause = _stage switch
+            {
+                Procedure.Stage.InitWait => _settings.InitialPause,
+                Procedure.Stage.OdorFlow => _settings.OdorFlowDuration,
+                Procedure.Stage.FinalWait => _settings.FinalPause,
+                Procedure.Stage.None => 0,
+                _ => throw new NotImplementedException($"Stage '{_stage}' of Odour Pulses does not exist")
+            };
+
+            IsInitialPause = _stage == Procedure.Stage.InitWait;
+            IsOdorFlow = _stage == Procedure.Stage.OdorFlow;
+            IsFinalPause = _stage == Procedure.Stage.FinalWait;
+
+            if (pause > 1)
+            {
+                wtiWaiting.Start(pause);
+            }
+        }
+
         private void FinilizeTrial(bool noMoreTrials)
         {
-            Stage = Procedure.Stage.None;
+            SetStage(Procedure.Stage.None);
 
             if (noMoreTrials)
             {

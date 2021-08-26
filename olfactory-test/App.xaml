@@ -7,24 +7,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <!-- Theme -->
-            <!--Control colors.-->
-            <Color x:Key="WindowColor">blue</Color>
-            <Color x:Key="ContentAreaColorLight">#FFC5CBF9</Color>
-            <Color x:Key="ContentAreaColorDark">#FF7381F9</Color>
-
-            <Color x:Key="DisabledControlLightColor">blue</Color>
-            <Color x:Key="DisabledControlDarkColor">#FFC5CBF9</Color>
-            <Color x:Key="DisabledForegroundColor">#FF888888</Color>
-
-            <Color x:Key="SelectedBackgroundColor">#FFC5CBF9</Color>
-            <Color x:Key="SelectedUnfocusedColor">#FFDDDDDD</Color>
-
-            <Color x:Key="ControlLightColor">White</Color>
-            <Color x:Key="ControlMediumColor">#FF7381F9</Color>
-            <Color x:Key="ControlDarkColor">#FF211AA9</Color>
-
-            <Color x:Key="ControlMouseOverColor">#FF3843C4</Color>
-            <Color x:Key="ControlPressedColor">#FF211AA9</Color>
             
             <!-- Custom colors -->
             <Color x:Key="ColorLight">#B2CECE</Color>
@@ -33,12 +15,13 @@
             <Color x:Key="ColorDark">#043F3F</Color>
             <Color x:Key="ColorDarkDarker">#001919</Color>
 
-            <Color x:Key="ColorDisabledLight">#B0B0B0</Color>
+            <Color x:Key="ColorDisabledLight">#E0E0E0</Color>
             <Color x:Key="ColorDisabledLightDarker">#959595</Color>
             <Color x:Key="ColorDisabledDarkLighter">#7F7F7F</Color>
             <Color x:Key="ColorDisabledDark">#696969</Color>
             <Color x:Key="ColorDisabledDarkDarker">#606060</Color>
 
+            <!-- Brushes -->
             <SolidColorBrush x:Key="BrushFont" Color="{StaticResource ColorLight}" />
             <SolidColorBrush x:Key="BrushFontDisabled" Color="{StaticResource ColorDisabledLight}" />
             <SolidColorBrush x:Key="BrushFontDark" Color="{StaticResource ColorDark}" />
@@ -56,6 +39,8 @@
             <SolidColorBrush x:Key="BrushBoxHeaderBackgroundDisabled" Color="{StaticResource ColorDisabledDark}" />
             <SolidColorBrush x:Key="BrushPanel" Color="{StaticResource ColorDark}" />
             <SolidColorBrush x:Key="BrushPanelLight" Color="{StaticResource ColorLightDarker}" />
+            <SolidColorBrush x:Key="BrushPanelDisabled" Color="{StaticResource ColorDisabledDark}" />
+            <SolidColorBrush x:Key="BrushPanelDisabledLight" Color="{StaticResource ColorDisabledLightDarker}" />
 
             <!-- Common app elements -->
             <Style x:Key="btn" TargetType="Button">
@@ -63,6 +48,7 @@
                 <Setter Property="BorderBrush" Value="Gray"/-->
                 <Setter Property="Background" Value="{StaticResource BrushButton}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+                <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Button">
@@ -95,9 +81,6 @@
                                 </Trigger-->
                                 <Trigger Property="IsKeyboardFocused" Value="true">
                                     <Setter Property="BorderBrush" Value="{StaticResource BrushBorderFocused}"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="True">
-                                    <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="BorderBrush" Value="{StaticResource BrushBorderDisabled}"/>
