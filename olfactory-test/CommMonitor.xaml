@@ -74,9 +74,7 @@
                    Content="MFC"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbMFCViewerType"
-                          VerticalAlignment="Center"
-                          MinWidth="60">
+                <ComboBox x:Name="cmbMFCViewerType" Style="{StaticResource cmb}">
                     <ComboBoxItem Content="Table"/>
                     <ComboBoxItem Content="Text"/>
                     <ComboBoxItem Content="Graph" IsSelected="True"/>
@@ -127,9 +125,7 @@
                    Content="PID"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbPIDViewerType"
-                          VerticalAlignment="Center"
-                          MinWidth="60">
+                <ComboBox x:Name="cmbPIDViewerType" Style="{StaticResource cmb}">
                     <ComboBoxItem Content="Table"/>
                     <ComboBoxItem Content="Text"/>
                     <ComboBoxItem Content="Graph" IsSelected="True"/>

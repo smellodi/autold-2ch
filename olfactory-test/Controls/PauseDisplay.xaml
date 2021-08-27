@@ -24,6 +24,6 @@
 
     <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PauseDisplay}}}">
         <Label Content="{Binding Text}"/>
-        <Label Content="{Binding Value}" ContentStringFormat="{}{0}"/>
+        <Label Content="{Binding Value}" ContentStringFormat="{}{0} seconds"/>
     </StackPanel>
 </UserControl>

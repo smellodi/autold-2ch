@@ -9,6 +9,10 @@
       Title="Setup"
       WindowTitle="Threshold test">
 
+    <Page.Resources>
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource cmb}"/>
+    </Page.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -52,23 +56,18 @@
                     </UserControl>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="Pen presentation">
-                    <ComboBox x:Name="cmbProcedureFlow">
-                        <ComboBox.ItemContainerStyle>
-                            <Style>
-                                <Setter Property="Control.ToolTip" Value="{Binding ToolTip}" />
-                            </Style>
-                        </ComboBox.ItemContainerStyle>
-                    </ComboBox>
+                    <ComboBox x:Name="cmbProcedureFlow"/>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="Durations in seconds">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="1.2*"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <UserControl Grid.Column="0"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Margin="0,0,4,0"
                                      Tag="Familiarization">
                             <TextBox x:Name="txbFamiliarizationDuration"
                                  Text="2"
@@ -76,7 +75,8 @@
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
-                                     Tag="Odour prepartion">
+                                     Margin="0,0,4,0"
+                                     Tag="Odour preparation">
                             <TextBox x:Name="txbOdorPreparationDuration"
                                  Text="15"
                                  ToolTip="a non-negative integer"/>
@@ -94,11 +94,12 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="1.2*"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <UserControl Grid.Column="0"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Margin="0,0,4,0"
                                      Tag="Recogn. in row">
                             <TextBox x:Name="txbRecognitionsInRow"
                                      Text="2"
@@ -106,6 +107,7 @@
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Margin="0,0,4,0"
                                      Tag="To collect">
                             <TextBox x:Name="txbTurningPoints"
                                      Text="7"
@@ -139,6 +141,7 @@
                         <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
                                   Content="to keep the target level"
                                   VerticalAlignment="Center"
+                                  Margin="2,0,0,0"
                                   IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
                     </StackPanel>
                 </UserControl>

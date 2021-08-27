@@ -16,6 +16,8 @@
             <ProgressBar x:Name="prbProgress"
                          Height="2"
                          MinWidth="100"
+                         BorderBrush="{StaticResource BrushInput}"
+                         Foreground="{StaticResource BrushPanel}"
                          Visibility="Hidden"/>
         </StackPanel>
     </Grid>

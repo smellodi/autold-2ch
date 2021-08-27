@@ -3,11 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.OdorProduction"
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="600"
       Title="Setup"
       WindowTitle="Odour pulses">
+
+    <Page.Resources>
+        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource rdb}"/>
+    </Page.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -65,6 +68,7 @@
                         </Grid.ColumnDefinitions>
                         <UserControl Grid.Column="0"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Margin="0,0,4,0"
                                      Tag="Initial pause">
                             <TextBox x:Name="txbInitialPause"
                                      Text="60"
@@ -72,6 +76,7 @@
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
+                                     Margin="0,0,4,0"
                                      Tag="Odour flow">
                             <TextBox x:Name="txbOdorFlowDuration"
                                      Text="10"
@@ -121,6 +126,7 @@
                         <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
                                   Content="to keep the target level"
                                   VerticalAlignment="Center"
+                                  Margin="8,0,0,0"
                                   IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
                     </StackPanel>
                 </UserControl>

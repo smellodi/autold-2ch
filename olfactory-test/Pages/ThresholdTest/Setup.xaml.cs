@@ -45,9 +45,9 @@ namespace Olfactory.Pages.ThresholdTest
 
         Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string>()
         {
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, "The odor flow starts immediately after the odor is ready" },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, "Users have to press SPACE when they start inhaling" },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, "The odor flow starts after the inhale sensor detects a start of inhale" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, "Odour flow starts immediately after the odour is ready" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, "Odour flow starts when a user pressed SPACE key" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, "Odour flow starts when inhale start is detected" },
         };
 
         Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
