@@ -88,6 +88,9 @@ namespace Olfactory.Pages.ThresholdTest
                 wtiInstruction.Reset();
                 wtiInstruction.Text = INSTRUCTION_SNIFF;
 
+                Utils.SoundPlayer waitingSounds = new Utils.SoundPlayer(Properties.Resources.WaitingSound);
+                waitingSounds.Play();
+
                 _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
                 _stateTimer.Interval = 1000 * _settings.FamiliarizationDuration;

@@ -34,6 +34,7 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     Content = item.Key.ToString().SeparateWords(),
                     ToolTip = item.Value,
+                    IsEnabled = item.Key != Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic,
                 });
             cmbProcedureFlow.SelectedIndex = (int)_settings.FlowStart;
         }

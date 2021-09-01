@@ -236,12 +236,14 @@ namespace Olfactory.Tests.ThresholdTest
         Settings _settings = new Settings();
         CommMonitor _monitor = CommMonitor.Instance;
 
+        BreathingDetector _breathingDetector = new BreathingDetector();
+        SoundPlayer _waitingSounds = new SoundPlayer(Properties.Resources.WaitingSound);
+        Random _rnd = new Random((int)DateTime.Now.Ticks);
+
         System.Timers.Timer _pidTimer = new System.Timers.Timer();
         System.Timers.Timer _mfcTimer = new System.Timers.Timer();
 
         bool _inProgress = false;
-
-        Random _rnd = new Random((int)DateTime.Now.Ticks);
 
         Pen[] _pens;
         int _currentPenID = -1;
@@ -257,8 +259,6 @@ namespace Olfactory.Tests.ThresholdTest
 
         double _odorPreparationStart = 0;
         bool _isAwaitingOdorFlowStart = false;
-
-        BreathingDetector _breathingDetector = new BreathingDetector();
 
         /// <summary>
         /// Called by PID measurement timer
@@ -364,6 +364,8 @@ namespace Olfactory.Tests.ThresholdTest
                     _isAwaitingOdorFlowStart = true;
                     break;
             }
+
+            _waitingSounds.Play();
 
             PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowStart));
         }
