@@ -33,8 +33,7 @@
                                       MinHeight="90"
                                       Text="Instructions..."/>
 
-            <Button Style="{StaticResource btn}"
-                    Height="32"
+            <Button Height="32"
                     Content="Open the odour valve"
                     Click="btnOpenValve_Click"/>
         </StackPanel>

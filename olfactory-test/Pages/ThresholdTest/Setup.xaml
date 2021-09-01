@@ -7,11 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="480" d:DesignWidth="600"
       Title="Setup"
-      WindowTitle="Threshold test">
-
-    <Page.Resources>
-        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource cmb}"/>
-    </Page.Resources>
+      WindowTitle="Threshold Test">
 
     <Grid>
         <Grid.ColumnDefinitions>

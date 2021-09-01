@@ -8,10 +8,6 @@
       Title="Setup"
       WindowTitle="Odour pulses">
 
-    <Page.Resources>
-        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource rdb}"/>
-    </Page.Resources>
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />

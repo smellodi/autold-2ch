@@ -96,7 +96,48 @@
                 <Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" />
             </ControlTemplate>
 
-            <Style x:Key="cmb" TargetType="{x:Type ComboBox}">
+            <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
+                <Setter Property="OverridesDefaultStyle" Value="true"/>
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
+                <Setter Property="Background" Value="{StaticResource BrushButton}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                            <Border Name="Border"
+                                    BorderBrush="{TemplateBinding Background}"
+                                    Background="{TemplateBinding Background}"
+                                    SnapsToDevicePixels="true">
+                                <ContentPresenter Margin="6,4"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource BrushBorderFocused}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonDisabled}"/>
+                                    <Setter Property="Foreground" Value="{StaticResource BrushFontDisabled}"/>
+                                </Trigger>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonFocused}"/>
+                                </Trigger>
+                                <!--MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsHighlighted" Value="True"/>
+                                        <Condition Property="IsSelected" Value="True"/>
+                                    </MultiTrigger.Conditions>
+                                    <MultiTrigger.Setters>
+                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonHover}"/>
+                                    </MultiTrigger.Setters>
+                                </MultiTrigger-->
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="{x:Type ComboBox}">
                 <Setter Property="OverridesDefaultStyle" Value="true"/>
                 <Setter Property="SnapsToDevicePixels" Value="true"/>
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
@@ -187,49 +228,8 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="{x:Type ComboBoxItem}" TargetType="{x:Type ComboBoxItem}">
-                <Setter Property="OverridesDefaultStyle" Value="true"/>
-                <Setter Property="SnapsToDevicePixels" Value="true"/>
-                <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
-                <Setter Property="Background" Value="{StaticResource BrushButton}"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ComboBoxItem}">
-                            <Border Name="Border"
-                                    BorderBrush="{TemplateBinding Background}"
-                                    Background="{TemplateBinding Background}"
-                                    SnapsToDevicePixels="true">
-                                <ContentPresenter Margin="6,4"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsHighlighted" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonHover}"/>
-                                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource BrushBorderFocused}"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonDisabled}"/>
-                                    <Setter Property="Foreground" Value="{StaticResource BrushFontDisabled}"/>
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonFocused}"/>
-                                </Trigger>
-                                <!--MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsHighlighted" Value="True"/>
-                                        <Condition Property="IsSelected" Value="True"/>
-                                    </MultiTrigger.Conditions>
-                                    <MultiTrigger.Setters>
-                                        <Setter TargetName="Border" Property="Background" Value="{StaticResource BrushButtonHover}"/>
-                                    </MultiTrigger.Setters>
-                                </MultiTrigger-->
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
             <!-- Button -->
-            <Style x:Key="btn" TargetType="Button">
+            <Style TargetType="{x:Type Button}">
                 <!--Setter Property="Background" Value="LightGray"/>
                 <Setter Property="BorderBrush" Value="Gray"/-->
                 <Setter Property="Background" Value="{StaticResource BrushButton}"/>
@@ -379,7 +379,7 @@
             </Style>
 
             <!-- Radio button-->
-            <Style x:Key="rdb" TargetType="RadioButton">
+            <Style TargetType="RadioButton">
                 <Setter Property="Background" Value="{StaticResource BrushInput}"/>
                 <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
                 <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
@@ -444,7 +444,7 @@
                 <Setter Property="Padding" Value="0,8" />
                 
             </Style>
-            <Style x:Key="Next" TargetType="Button" BasedOn="{StaticResource btn}">
+            <Style x:Key="Next" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
                 <Setter Property="HorizontalAlignment" Value="Right"/>
                 <Setter Property="MinWidth" Value="100"/>
                 <Setter Property="MinHeight" Value="32"/>

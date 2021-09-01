@@ -13,17 +13,17 @@
       Unloaded="Page_Unloaded">
 
     <Page.Resources>
-        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource btn}">
-            <Setter Property="Margin" Value="10,0" />
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="Width" Value="75" />
         </Style>
         <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource FormRowHeader}">
             <Setter Property="Width" Value="60" />
         </Style>
-        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource cmb}">
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Width" Value="90" />
         </Style>
-        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource rdb}">
+        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type RadioButton}}">
             <Setter Property="Height" Value="30" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
