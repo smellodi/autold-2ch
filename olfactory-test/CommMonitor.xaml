@@ -12,25 +12,23 @@
         Closing="Window_Closing"
         Activated="Window_Activated" Loaded="Window_Loaded">
     <Window.Resources>
-        <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource btn}">
+        <local:BlankConverter x:Key="BlankConverter" />
+        <local:ViewerVisibilityConverter x:Key="ViewerVisibilityConverter" />
+        <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Margin" Value="0,0,4,4" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="MinWidth" Value="50" />
+        </Style>
+        <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="MinHeight" Value="28" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
     </Window.Resources>
-    <Grid Margin="8">
-        <Grid.Resources>
-            <local:BlankConverter x:Key="BlankConverter" />
-            <local:ViewerVisibilityConverter x:Key="ViewerVisibilityConverter" />
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="Margin" Value="0,0,4,4" />
-                <Setter Property="Padding" Value="8,4" />
-                <Setter Property="MinWidth" Value="50" />
-            </Style>
-            <Style TargetType="{x:Type ComboBox}">
-                <Setter Property="MinHeight" Value="28" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-            </Style>
-        </Grid.Resources>
 
+    <Grid Margin="8">
         <Grid.LayoutTransform>
             <ScaleTransform x:Name="sctScale"/>
         </Grid.LayoutTransform>
@@ -74,7 +72,7 @@
                    Content="MFC"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbMFCViewerType" Style="{StaticResource cmb}">
+                <ComboBox x:Name="cmbMFCViewerType">
                     <ComboBoxItem Content="Table"/>
                     <ComboBoxItem Content="Text"/>
                     <ComboBoxItem Content="Graph" IsSelected="True"/>
@@ -125,7 +123,7 @@
                    Content="PID"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="Show as" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbPIDViewerType" Style="{StaticResource cmb}">
+                <ComboBox x:Name="cmbPIDViewerType">
                     <ComboBoxItem Content="Table"/>
                     <ComboBoxItem Content="Text"/>
                     <ComboBoxItem Content="Graph" IsSelected="True"/>

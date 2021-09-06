@@ -2,6 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Input;
+using WPFLocalizeExtension.Engine;
 
 namespace Olfactory
 {
@@ -18,6 +19,12 @@ namespace Olfactory
         public MainWindow()
         {
             InitializeComponent();
+
+            LocalizeDictionary.Instance.MergedAvailableCultures.RemoveAt(0);
+            LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
+            LocalizeDictionary.Instance.OutputMissingKeys = true;
+            LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
+            //LocalizeDictionary.Instance.PropertyChanged += (s, e) => { if (e.PropertyName == "Culture") UpdateStrings(); };
 
             _monitor.Hide();
 
@@ -177,6 +184,7 @@ namespace Olfactory
             settings.MainWindow_Y = Top;
             settings.MainWindow_Width = Width;
             settings.MainWindow_Height = Height;
+            settings.Language = LocalizeDictionary.Instance.Culture.Name;
             settings.Save();
 
             Application.Current.Shutdown();
