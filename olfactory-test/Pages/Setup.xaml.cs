@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Threading;
 using Olfactory.Comm;
 
 namespace Olfactory.Pages
 {
-    public partial class Setup : Page, IPage<Tests.Test>
+    public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged
     {
         public event EventHandler<Tests.Test> Next = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public double Scale { get; private set; } = 1;
+
+        public string MFCAction => _mfc?.IsOpen ?? false ? "Close" : "Open";        // keys in dictionaries
+        public string PIDAction => _pid?.IsOpen ?? false ? "Close" : "Open";        // keys in dictionaries
 
         public Setup()
         {
             InitializeComponent();
+
+            DataContext = this;
 
             Storage.Instance
                 .BindScaleToZoomLevel(sctScale1)
@@ -139,34 +145,15 @@ namespace Olfactory.Pages
 
         private void UpdateUI()
         {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(MFCAction)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PIDAction)));
+
             cmbPIDPort.IsEnabled = !_pid.IsOpen;
             cmbMFCPort.IsEnabled = !_mfc.IsOpen;
-
-            btnPIDToggle.IsEnabled = cmbPIDPort.SelectedIndex >= 0;
-            btnPIDToggle.Content = _pid.IsOpen ? "Close" : "Open";
-
-            btnMFCToggle.IsEnabled = cmbMFCPort.SelectedIndex >= 0;
-            btnMFCToggle.Content = _mfc.IsOpen ? "Close" : "Open";
 
             btnOdorProduction.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
             btnThresholdTest.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
-            void EnableChildren(Panel panel, bool enable)
-            {
-                foreach (var child in panel.Children)
-                {
-                    if (child is Control)
-                    {
-                        (child as Control).IsEnabled = _mfc.IsOpen;
-                    }
-                    else if (child is Panel)
-                    {
-                        EnableChildren(child as Panel, enable);
-                    }
-                }
-            }
-
-            //EnableChildren(grdPlayground, _mfc.IsOpen);
             grdPlayground.IsEnabled = _mfc.IsOpen;
         }
 
@@ -322,7 +309,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
             {
-                MessageBox.Show("Cannot open the port");
+                MessageBox.Show(Utils.L10n.T("ErrCannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else if (_mfc.IsOpen)
             {
@@ -342,7 +329,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
-                MessageBox.Show("Cannot open the port");
+                MessageBox.Show(Utils.L10n.T("ErrCannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else if (_pid.IsOpen)
             {

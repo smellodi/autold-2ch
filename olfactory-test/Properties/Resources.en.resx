@@ -117,7 +117,79 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="stpTitle" xml:space="preserve">
+  <data name="CleanAir" xml:space="preserve">
+    <value>Clean air</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="ErrCannotOpenPort" xml:space="preserve">
+    <value>Cannot open the port</value>
+  </data>
+  <data name="FloatingPos" xml:space="preserve">
+    <value>a single positive floating-point value</value>
+  </data>
+  <data name="InfoF2" xml:space="preserve">
+    <value>Press F2 to simulate COM ports.</value>
+  </data>
+  <data name="InfoF5" xml:space="preserve">
+    <value>Press F5 any time to show the logging window.</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LMin" xml:space="preserve">
+    <value>l/min</value>
+  </data>
+  <data name="MA" xml:space="preserve">
+    <value>mA</value>
+  </data>
+  <data name="MFCPlayground" xml:space="preserve">
+    <value>MFC Playground</value>
+  </data>
+  <data name="MlMin" xml:space="preserve">
+    <value>ml/min</value>
+  </data>
+  <data name="MV" xml:space="preserve">
+    <value>mV</value>
+  </data>
+  <data name="OdorPulses" xml:space="preserve">
+    <value>Odor pulses</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="PIDTemp" xml:space="preserve">
+    <value>Temperature detector current</value>
+  </data>
+  <data name="PIDVoltage" xml:space="preserve">
+    <value>PID voltage</value>
+  </data>
+  <data name="ScentedAir" xml:space="preserve">
+    <value>Scented air</value>
+  </data>
+  <data name="SerialPorts" xml:space="preserve">
+    <value>Serial ports</value>
+  </data>
+  <data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+  <data name="System" xml:space="preserve">
+    <value>system</value>
+  </data>
+  <data name="ThresholdTest" xml:space="preserve">
+    <value>Threshold Test</value>
+  </data>
+  <data name="Title" xml:space="preserve">
     <value>Setup</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>user</value>
+  </data>
+  <data name="Valves" xml:space="preserve">
+    <value>Valves</value>
+  </data>
+  <data name="Waste" xml:space="preserve">
+    <value>waste</value>
   </data>
 </root>

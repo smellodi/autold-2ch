@@ -431,7 +431,9 @@
                 <Setter Property="Foreground" Value="#FF720505"/>
                 <Setter Property="Content" Value="DEBUG MODE"/>
                 <Setter Property="VerticalContentAlignment" Value="Bottom"/>
+                <Setter Property="HorizontalContentAlignment" Value="Center"/>
                 <Setter Property="Grid.RowSpan" Value="64"/>
+                <Setter Property="Grid.ColumnSpan" Value="64"/>
                 <Setter Property="Panel.ZIndex" Value="-1"/>
             </Style>
             <Style x:Key="PageTitle" TargetType="TextBlock">
