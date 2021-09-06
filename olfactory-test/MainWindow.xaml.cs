@@ -109,7 +109,7 @@ namespace Olfactory
             if (!SaveLoggingData())
             {
                 _finishedPage.DisableSaving();
-                MessageBox.Show($"There is no data to save", Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show(Utils.L10n.T("WarnNoData"), Title, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

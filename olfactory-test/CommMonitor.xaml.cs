@@ -1,40 +1,12 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Threading;
 using Olfactory.Comm;
 using Olfactory.Utils;
 
 namespace Olfactory
 {
-    public class BlankConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return "";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class ViewerVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (value as ComboBoxItem).Content.ToString() == parameter.ToString() ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public partial class CommMonitor : Window
     {
         public static CommMonitor Instance { get; private set; }
@@ -157,24 +129,6 @@ namespace Olfactory
             txbDebug.AppendText($"{Timestamp.Ms} [{source}] {message}\r\n");
             txbDebug.ScrollToEnd();
         }
-        /*
-        private void Log(TextBox output, LogSource source, Result result, ISample data)
-        {
-            if (result.Error == Error.Success)
-            {
-                _logger.Add(source, "data", data.ToString());
-                output.AppendText(data.ToString() + "\r\n");
-                AddToList(source, data);
-                UpdateUI();
-            }
-            else
-            {
-                output.AppendText($"{Timestamp.Ms} ----- INVALID -----\r\n");
-                LogResult(source, result);
-            }
-
-            output.ScrollToEnd();
-        }*/
 
         private void UpdateUI()
         {
