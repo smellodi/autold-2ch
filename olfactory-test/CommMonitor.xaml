@@ -17,7 +17,7 @@
         Activated="Window_Activated" Loaded="Window_Loaded">
     <Window.Resources>
         <utils:AnyToBlankConverter x:Key="any2blank" />
-        <utils:ComboBoxItemToVisilityConverter x:Key="comboboxitem2visibility" />
+        <utils:ComboBoxItemToVisilityConverter x:Key="cbi2vis" />
         <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
@@ -76,10 +76,10 @@
                    Content="MFC"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="{lex:Loc ShowAs}" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbMFCViewerType">
-                    <ComboBoxItem Content="{lex:Loc Table}"/>
-                    <ComboBoxItem Content="{lex:Loc Text}"/>
-                    <ComboBoxItem Content="{lex:Loc Graph}" IsSelected="True"/>
+                <ComboBox x:Name="cmbMFC">
+                    <ComboBoxItem Content="{lex:Loc Table}" Tag="0"/>
+                    <ComboBoxItem Content="{lex:Loc Text}" Tag="1"/>
+                    <ComboBoxItem Content="{lex:Loc Graph}" Tag="2" IsSelected="True"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
@@ -93,10 +93,11 @@
         </Grid>
         
         <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbMFC"
+                 VerticalContentAlignment="Top"
                  VerticalScrollBarVisibility="Visible"
-                 Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Text, ElementName=cmbMFCViewerType}"/>
+                 Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=1, ElementName=cmbMFC}"/>
         <ListView Grid.Row="1" Grid.Column="1" x:Name="lsvMFC"
-                  Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Table, ElementName=cmbMFCViewerType}">
+                  Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=0, ElementName=cmbMFC}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="{lex:Loc Time}" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
@@ -114,7 +115,7 @@
         <!--controls:LiveMeasurement Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
                                   Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/-->
         <controls:LiveData Grid.Row="1" Grid.Column="1" x:Name="lmsMFC"
-                                Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Graph, ElementName=cmbMFCViewerType}"/>
+            Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=2, ElementName=cmbMFC}"/>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>
@@ -127,10 +128,10 @@
                    Content="PID"/>
             <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" Margin="0,0,8,0">
                 <Label Content="{lex:Loc ShowAs}" VerticalAlignment="Center"/>
-                <ComboBox x:Name="cmbPIDViewerType">
-                    <ComboBoxItem Content="{lex:Loc Table}"/>
-                    <ComboBoxItem Content="{lex:Loc Text}"/>
-                    <ComboBoxItem Content="{lex:Loc Graph}" IsSelected="True"/>
+                <ComboBox x:Name="cmbPID">
+                    <ComboBoxItem Content="{lex:Loc Table}" Tag="0"/>
+                    <ComboBoxItem Content="{lex:Loc Text}" Tag="1"/>
+                    <ComboBoxItem Content="{lex:Loc Graph}" Tag="2" IsSelected="True"/>
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
@@ -144,10 +145,11 @@
         </Grid>
 
         <TextBox Grid.Row="3" Grid.Column="1" x:Name="txbPID"
+                 VerticalContentAlignment="Top"
                  VerticalScrollBarVisibility="Visible"
-                 Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Text, ElementName=cmbPIDViewerType}"/>
+                 Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=1, ElementName=cmbPID}"/>
         <ListView Grid.Row="3" Grid.Column="1" x:Name="lsvPID"
-                  Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Table, ElementName=cmbPIDViewerType}">
+                  Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=0, ElementName=cmbPID}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="{lex:Loc Time}" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
@@ -163,6 +165,6 @@
         <!--controls:LiveMeasurement Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
                                   Visibility="{Binding SelectedItem, Converter={StaticResource ViewerVisibilityConverter}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/-->
         <controls:LiveData Grid.Row="3" Grid.Column="1" x:Name="lmsPID"
-                           Visibility="{Binding SelectedItem, Converter={StaticResource comboboxitem2visibility}, ConverterParameter=Graph, ElementName=cmbPIDViewerType}"/>
+            Visibility="{Binding SelectedItem, Converter={StaticResource cbi2vis}, ConverterParameter=2, ElementName=cmbPID}"/>
     </Grid>
 </Window>

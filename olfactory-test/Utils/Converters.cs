@@ -50,7 +50,7 @@ namespace Olfactory.Utils
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (value as ComboBoxItem).Content.ToString() == parameter.ToString() ? Visibility.Visible : Visibility.Collapsed;
+            return (value as ComboBoxItem).Tag.ToString() == parameter.ToString() ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

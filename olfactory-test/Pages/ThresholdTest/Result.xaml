@@ -3,11 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Result"
-      WindowTitle="Threshold Test">
+      Title="{lex:Loc Result}"
+      WindowTitle="{lex:Loc ThresholdTest}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,17 +23,21 @@
         </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Style="{StaticResource PageTitle}"
-                   Text="Threshold test - Result"/>
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc ThresholdTest}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc Result}"/>
+        </TextBlock>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center">
             <StackPanel.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </StackPanel.LayoutTransform>
+            
             <Label
                 HorizontalAlignment="Center"
-                Content="Your odour sensitivity (ml/min):"
+                Content="{lex:Loc OdorSensitivity}"
                 FontSize="14"/>
             <Label x:Name="lblContent"
                    HorizontalAlignment="Center"
@@ -41,7 +48,7 @@
         
         <Button Grid.Row="2"
                 Style="{StaticResource Next}"
-                Content="Continue"
+                Content="{lex:Loc Continue}"
                 Click="btnNext_Click"/>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>

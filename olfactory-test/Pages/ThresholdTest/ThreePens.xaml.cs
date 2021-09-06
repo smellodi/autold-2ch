@@ -101,12 +101,12 @@ namespace Olfactory.Pages.ThresholdTest
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
 
 
-        const string INSTRUCTION_SNIFF_THE_PEN_FIXED = "Sniff the pen";
-        const string INSTRUCTION_SNIFF_THE_PEN_MANUAL = "Press SPACE when start inhaling";
-        const string INSTRUCTION_SNIFF_THE_PEN_AUTO = "Make an inhale";
-        const string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = "Please wait until the odorant in ready.";
-        const string INSTRUCTION_CHOOSE_THE_PEN = "Please select the pen with the odorant.";
-        const string INSTRUCTION_DONE = "Thanks, your choice has been recorded.";
+        readonly string INSTRUCTION_SNIFF_THE_PEN_FIXED = Utils.L10n.T("ThTestInstrSniff");
+        readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
+        readonly string INSTRUCTION_SNIFF_THE_PEN_AUTO = Utils.L10n.T("ThTestInstrInhale");
+        readonly string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = Utils.L10n.T("ThTestInstrWait");
+        readonly string INSTRUCTION_CHOOSE_THE_PEN = Utils.L10n.T("ThTestInstrSelectPen");
+        readonly string INSTRUCTION_DONE = Utils.L10n.T("ThTestInstrDone");
 
         readonly Controls.Pen[] PENS;
 

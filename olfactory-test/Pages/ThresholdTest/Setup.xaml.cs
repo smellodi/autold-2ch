@@ -32,7 +32,7 @@ namespace Olfactory.Pages.ThresholdTest
             cmbProcedureFlow.ItemsSource = PROCEDURE_FLOW_TOOLTIPS
                 .Select(item => new ComboBoxItem()
                 {
-                    Content = item.Key.ToString().SeparateWords(),
+                    Content = L10n.T(item.Key.ToString()),
                     ToolTip = item.Value,
                     IsEnabled = item.Key != Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic,
                 });
@@ -46,9 +46,9 @@ namespace Olfactory.Pages.ThresholdTest
 
         Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string>()
         {
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, "Odour flow starts immediately after the odour is ready" },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, "Odour flow starts when a user pressed SPACE key" },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, "Odour flow starts when inhale start is detected" },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, L10n.T("OdorStartsImmediately") },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, L10n.T("OdorStartsAfterKeyPress") },
+            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, L10n.T("OdorStartsAfterInhale") },
         };
 
         Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
@@ -89,8 +89,9 @@ namespace Olfactory.Pages.ThresholdTest
             var validation = CheckInput();
             if (validation != null)
             {
+                var msg = L10n.T("CorrectAndTryAgain");
                 MessageBox.Show(
-                    $"{validation}.\nPlease correct and try again.",
+                    $"{validation}.\n{msg}",
                     Title,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);

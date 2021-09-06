@@ -57,11 +57,11 @@ namespace Olfactory.Pages.ThresholdTest
 
         const int VENTILATION_DURATION = 15;  // seconds
 
-        const string INSTRUCTION_OPEN_VALVE = "After opening the valve, please wait for few seconds before the odour reaches you, then spend some time memorizing it.";
-        const string INSTRUCTION_WAIT_UNTIL_READY = "Preparing the odour";
-        const string INSTRUCTION_SNIFF = "Odour is flowing now, sniff it!";
-        const string INSTRUCTION_WAIT_UNTIL_VENTILATED = "Please wait while the tube is ventilating...";
-        const string INSTRUCTION_CONTINUE = "Click 'Continue' to start the test.";
+        readonly string INSTRUCTION_OPEN_VALVE = Utils.L10n.T("FamilInstrOpenValve");
+        readonly string INSTRUCTION_WAIT_UNTIL_READY = Utils.L10n.T("FamilInstrPreparing");
+        readonly string INSTRUCTION_SNIFF = Utils.L10n.T("FamilInstrSniff");
+        readonly string INSTRUCTION_WAIT_UNTIL_VENTILATED = Utils.L10n.T("FamilInstrVentilating");
+        readonly string INSTRUCTION_CONTINUE = Utils.L10n.T("FamilInstrContinue");
 
         MFC _mfc = MFC.Instance;
         PID _pid = PID.Instance;

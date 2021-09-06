@@ -4,10 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Controls"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Familiarize with the odor"
-      WindowTitle="Threshold Test">
+      Title="{lex:Loc FamiliarizeOdor}"
+      WindowTitle="{lex:Loc ThresholdTest}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -17,8 +21,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Style="{StaticResource PageTitle}"
-                   Text="Threshold test - Familiarize with the odour"/>
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc ThresholdTest}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc FamiliarizeOdor}"/>
+        </TextBlock>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
@@ -34,13 +41,13 @@
                                       Text="Instructions..."/>
 
             <Button Height="32"
-                    Content="Open the odour valve"
+                    Content="{lex:Loc OpenValve}"
                     Click="btnOpenValve_Click"/>
         </StackPanel>
 
         <Button Grid.Row="2" x:Name="btnNext"
                 Style="{StaticResource Next}"
-                Content="Start the test"
+                Content="{lex:Loc StartTest}"
                 IsEnabled="false"
                 Click="btnNext_Click"/>
 

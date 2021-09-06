@@ -3,11 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Olfactory.Pages.ThresholdTest"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Instructions"
-      WindowTitle="Threshold Test">
+      Title="{lex:Loc Instructions}"
+      WindowTitle="{lex:Loc ThresholdTest}">
 
     <Page.Resources>
         <Style TargetType="{x:Type TextBlock}">
@@ -25,32 +28,29 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Style="{StaticResource PageTitle}"
-                   Text="Threshold test - Instructions"/>
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc ThresholdTest}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc Instructions}"/>
+        </TextBlock>
 
         <ScrollViewer Grid.Row="1"
                       HorizontalAlignment="Center"
                       MaxWidth="1000"
-                      Padding="24,0">
+                      Padding="24">
             <StackPanel Orientation="Vertical">
                 <StackPanel.LayoutTransform>
                     <ScaleTransform x:Name="sctScale"/>
                 </StackPanel.LayoutTransform>
-                <TextBlock/>
-                <TextBlock>Your sense of smell is to be tested. Repeatedly, three 
-pens will be presented to you one after another. Only one of these pens contains the odorant. 
-You have to find out the pen in which you think you have perceived the 
-odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess. 
-During the evaluation of the test it will be taken into account that you have been asked to come to a decision in any case.</TextBlock>
-                <TextBlock>The test will take approximately 30-40 minutes.
-All substances contained in the test are non-toxic and not harmful in the used concentrations.</TextBlock>
-                <TextBlock>More instruction to add here. We may collect personal data in this app as well.</TextBlock>
+                <TextBlock Text="{lex:Loc ThTestInstr1}"/>
+                <TextBlock Text="{lex:Loc ThTestInstr2}"/>
+                <TextBlock Text="{lex:Loc ThTestInstr3}"/>
             </StackPanel>
         </ScrollViewer>
 
         <Button Grid.Row="2"
                 Style="{StaticResource Next}"
-                Content="Continue"
+                Content="{lex:Loc Continue}"
                 Click="btnNext_Click"/>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>

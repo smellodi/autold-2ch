@@ -92,10 +92,18 @@ namespace Olfactory.Controls
             List<double> xi = new List<double>();
             List<double> yi = new List<double>();
 
-            foreach (var i in _data)
+            if (_data.Count > 0)
             {
-                xi.Add(i.Timestamp);
-                yi.Add(i.Value);
+                foreach (var i in _data)
+                {
+                    xi.Add(i.Timestamp);
+                    yi.Add(i.Value);
+                }
+            }
+            else
+            {
+                xi.Add(0);
+                yi.Add(0);
             }
 
             x = xi.ToArray();

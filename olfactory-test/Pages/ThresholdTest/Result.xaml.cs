@@ -18,7 +18,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void SetPPM(double ppm)
         {
-            lblContent.Content = ppm > 0 ? ppm.ToString("F2") : "unknown";
+            lblContent.Content = ppm > 0 ? ppm.ToString("F2") : Utils.L10n.T("Unknown");
         }
 
 
