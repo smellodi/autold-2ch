@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Olfactory.Controls" 
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+             lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d"
              d:DesignHeight="80" d:DesignWidth="200">
+    
     <UserControl.Resources>
         <Style TargetType="Label">
             <Setter Property="Margin" Value="20,0"/>
@@ -24,6 +29,11 @@
 
     <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PauseDisplay}}}">
         <Label Content="{Binding Text}"/>
-        <Label Content="{Binding Value}" ContentStringFormat="{}{0} seconds"/>
+        <Label>
+            <TextBlock>
+                <Run Text="{Binding Value}"/>
+                <Run Text="{lex:Loc Seconds}"/>
+            </TextBlock>
+        </Label>
     </StackPanel>
 </UserControl>

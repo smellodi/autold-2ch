@@ -92,7 +92,7 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (_inProgress)
                 {
-                    MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.",
+                    MessageBox.Show(string.Format(L10n.T("DeviceConnLost"), "MFC") + " " + L10n.T("AppTerminated"),
                         Application.Current.MainWindow.Title,
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
@@ -306,7 +306,7 @@ namespace Olfactory.Tests.ThresholdTest
                 // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
                 if (readinessDelay > _settings.OdorPreparationDuration)
                 {
-                    MessageBox.Show($"The odor flow rate is too high to be ready in {_settings.OdorPreparationDuration} seconds. The application is terminated.",
+                    MessageBox.Show(string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"),
                             Application.Current.MainWindow.Title,
                             MessageBoxButton.OK,
                             MessageBoxImage.Error);

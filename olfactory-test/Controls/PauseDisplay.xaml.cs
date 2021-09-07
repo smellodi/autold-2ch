@@ -10,7 +10,7 @@ namespace Olfactory.Controls
 
         #region IsCurrent property
 
-        [Category("Common Properties")]
+        [Description("Is current"), Category("Common Properties")]
         public bool IsCurrent
         {
             get => (bool)GetValue(IsCurrentProperty);
@@ -71,8 +71,6 @@ namespace Olfactory.Controls
         public PauseDisplay()
         {
             InitializeComponent();
-
-            //DataContext = this;
 
             IsCurrent = false;
             Text = "";

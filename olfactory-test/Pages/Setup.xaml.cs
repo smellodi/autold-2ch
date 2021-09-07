@@ -309,7 +309,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
             {
-                MessageBox.Show(Utils.L10n.T("ErrCannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Utils.L10n.T("CannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else if (_mfc.IsOpen)
             {
@@ -329,7 +329,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
-                MessageBox.Show(Utils.L10n.T("ErrCannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Utils.L10n.T("CannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else if (_pid.IsOpen)
             {
@@ -350,18 +350,12 @@ namespace Olfactory.Pages
 
         private void btnSetFreshAir_Click(object sender, RoutedEventArgs e)
         {
-            if (double.TryParse(txbFreshAir.Text, out double value))
-            {
-                _mfc.FreshAirSpeed = value;
-            }
+            Utils.Validation.Do(txbFreshAir, 0, 10, (object s, double value) => _mfc.FreshAirSpeed = value );
         }
 
         private void btnSetOdor_Click(object sender, RoutedEventArgs e)
         {
-            if (double.TryParse(txbOdor.Text, out double value))
-            {
-                _mfc.OdorSpeed = value;
-            }
+            Utils.Validation.Do(txbOdor, 0, 500, (object s, double value) => _mfc.OdorSpeed = value );
         }
 
         private void btnSetDirection_Click(object sender, RoutedEventArgs e)

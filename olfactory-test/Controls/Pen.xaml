@@ -4,6 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:utils="clr-namespace:Olfactory.Utils"
+             xmlns:lex="http://wpflocalizeextension.codeplex.com"
+             lex:LocalizeDictionary.DesignCulture="en"
+             lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+             lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d" 
              d:DesignHeight="200"
              d:DesignWidth="120">
@@ -31,9 +35,14 @@
 
     <StackPanel>
         <Label x:Name="lblPen"
-               Content="{Binding ID}"
-               ContentStringFormat="Pen #{0}"
                Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}">
+            <Label.Content>
+                <TextBlock>
+                    <Run Text="{lex:Loc Pen}"/>
+                    <Run Text=" #"/>
+                    <Run Text="{Binding ID}"/>
+                </TextBlock>
+            </Label.Content>
             <Label.Style>
                 <Style TargetType="Label" BasedOn="{StaticResource Pen}">
                     <Style.Triggers>
@@ -51,7 +60,7 @@
                    Style="{StaticResource Colorbox}"/>
         <Button Style="{StaticResource Choice}"
                 Visibility="{Binding IsSelectable, Converter={StaticResource bool2vis}}"
-                Content="Odourant was here"
+                Content="{lex:Loc OdorantHere}"
                 Click="OnChoice_Click"/>
     </StackPanel>
 </UserControl>

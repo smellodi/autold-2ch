@@ -127,11 +127,11 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="l/min">
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                                 <TextBox x:Name="txbFreshAir"
                                          VerticalContentAlignment="Center"
                                          Text="5.0"
-                                         ToolTip="{lex:Loc FloatingPos}"
+                                         ToolTip="{lex:Loc NumNotNeg}"
                                          KeyUp="txbFreshAir_KeyUp"/>
                             </UserControl>
                             <Button Grid.Column="1"
@@ -145,11 +145,11 @@
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="ml/min">
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                                 <TextBox x:Name="txbOdor"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"
-                                         ToolTip="{lex:Loc FloatingPos}"
+                                         ToolTip="{lex:Loc NumNotNeg}"
                                          KeyUp="txbOdor_KeyUp"/>
                             </UserControl>
                             <Button Grid.Column="1" 

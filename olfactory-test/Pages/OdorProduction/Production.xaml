@@ -4,10 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:Olfactory.Controls"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Pulse production"
-      WindowTitle="Odour pulses">
+      Title="{lex:Loc Pulses}"
+      WindowTitle="{lex:Loc OdorPulses}">
     
     <Page.Resources>
         <Style x:Key="Status" TargetType="Label">
@@ -24,8 +28,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Style="{StaticResource PageTitle}"
-                   Text="Odour pulses - Production"/>
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc OdorPulses}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc Pulses}"/>
+        </TextBlock>
 
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
@@ -36,24 +43,24 @@
             
             <WrapPanel Margin="0,12"
                        HorizontalAlignment="Center">
-                <Label Content="Pulse flow rate: "
+                <Label Content="{lex:Loc PulseFlowRate}"
                        Style="{StaticResource Status}"/>
                 <Label x:Name="lblOdorStatus"
                        Style="{StaticResource Status}"
                        Content="XX"/>
-                <Label Content="ml/min"
+                <Label Content="{lex:Loc MlMin}"
                        Style="{StaticResource Status}"/>
             </WrapPanel>
             
             <WrapPanel>
                 <local:PauseDisplay x:Name="pdsInitialPause"
-                                    Text="Initial pause"
+                                    Text="{lex:Loc InitialPause}"
                                     IsCurrent="{Binding IsInitialPause}"/>
                 <local:PauseDisplay x:Name="pdsOdorFlow"
-                                    Text="Odour flow"
+                                    Text="{lex:Loc OdorFlow}"
                                     IsCurrent="{Binding IsOdorFlow}"/>
                 <local:PauseDisplay x:Name="pdsFinalPause"
-                                    Text="Final pause"
+                                    Text="{lex:Loc FinalPause}"
                                     IsCurrent="{Binding IsFinalPause}"/>
             </WrapPanel>
 
@@ -63,8 +70,14 @@
                        Margin="0,12">
                 <Label Margin="0,4,0,0"
                        VerticalContentAlignment="Center"
-                       Content="PID value (mV)"
-                       FontSize="14"/>
+                       FontSize="14">
+                    <TextBlock>
+                        <Run Text="{lex:Loc PIDVoltage}"/>
+                        <Run Text=" ("/>
+                        <Run Text="{lex:Loc MV}"/>
+                        <Run Text=")"/>
+                    </TextBlock>
+                </Label>
                 <Label x:Name="lblPID"
                        VerticalContentAlignment="Bottom"
                        Content="0.0"
@@ -75,7 +88,7 @@
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
                 Style="{StaticResource Next}"
-                Content="Interrupt"
+                Content="{lex:Loc Interrupt}"
                 Click="btnInterrupt_Click"/>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>

@@ -11,7 +11,7 @@ namespace Olfactory.Tests.ThresholdTest
     {
         public event EventHandler PageDone = delegate { };
 
-        public string Name => "Threshold test";
+        public string Name => Utils.L10n.T("ThresholdTest");
 
         public Manager()
         {
@@ -46,7 +46,7 @@ namespace Olfactory.Tests.ThresholdTest
                 Familiarize _ => _threePensPage,
                 ThreePens _ => _resultPage,
                 Result _ => null,
-                _ => throw new NotImplementedException("Unhandled page in the Threhold Test"),
+                _ => throw new NotImplementedException($"Unhandled page in {Name}"),
             };
 
             if (_current != null)
@@ -93,7 +93,7 @@ namespace Olfactory.Tests.ThresholdTest
                 case EmulationCommand.EnableEmulation: emulator.EmulationInit(); break;
                 case EmulationCommand.ForceToFinishWithResult: emulator.EmulationFinilize(); break;
                 case EmulationCommand.ReportKey: _threePensPage.ConsumeKeyDown((System.Windows.Input.Key)args[0]); break;
-                default: throw new NotImplementedException("This emulation command is not recognized in Threshold Test");
+                default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }
 

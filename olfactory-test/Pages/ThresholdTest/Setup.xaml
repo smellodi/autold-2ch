@@ -47,14 +47,14 @@
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                         <TextBox x:Name="txbFreshAir"
                                  Text="5"
-                                 ToolTip="{lex:Loc FloatingPos}"/>
+                                 ToolTip="{lex:Loc NumPos}"/>
                     </UserControl>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorLevels}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                         <TextBox x:Name="txbPPMs"
                                  Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
-                                 ToolTip="{lex:Loc FloatingPosSpaceSep}"/>
+                                 ToolTip="{lex:Loc NumPosSpaceSep}"/>
                     </UserControl>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Procedure}">
@@ -73,7 +73,7 @@
                                      Tag="{lex:Loc Familiarization}">
                             <TextBox x:Name="txbFamiliarizationDuration"
                                  Text="2"
-                                 ToolTip="{lex:Loc FloatingPos}"/>
+                                 ToolTip="{lex:Loc IntPos}"/>
                         </UserControl>
                         <UserControl Grid.Column="1"
                                      Style="{StaticResource ValueWithLabelAbove}"
@@ -81,14 +81,14 @@
                                      Tag="{lex:Loc OdorPreparation}">
                             <TextBox x:Name="txbOdorPreparationDuration"
                                  Text="15"
-                                 ToolTip="{lex:Loc FloatingPos}"/>
+                                 ToolTip="{lex:Loc IntPos}"/>
                         </UserControl>
                         <UserControl Grid.Column="2"
                                      Style="{StaticResource ValueWithLabelAbove}"
                                      Tag="{lex:Loc PenSniffing}">
                             <TextBox x:Name="txbPenSniffingDuration"
                                      Text="5"
-                                     ToolTip="{lex:Loc FloatingPos}"/>
+                                     ToolTip="{lex:Loc NumPos}"/>
                         </UserControl>
                     </Grid>
                 </UserControl>

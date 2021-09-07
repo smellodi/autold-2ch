@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace Olfactory.Utils
@@ -23,6 +25,7 @@ namespace Olfactory.Utils
         public bool IsList => _listDelim != null;
         public bool AcceptsExpression => _expressionDelims != null;
         public string Value => _value;
+        public double? AsNumber => IsValid ? double.Parse(_value) : null;
 
         public bool IsValid
         {
@@ -67,13 +70,23 @@ namespace Olfactory.Utils
         {
             return _code switch
             {
-                ValidityViolationCode.EmptyList => "The list of values is empty",
-                ValidityViolationCode.InvalidExpression => $"The expression '{_value}' is invalid, only '{_expressionDelims}' operations are allow",
-                ValidityViolationCode.InvalidFormat => $"The type of value '{_value}' is invalid, it must be a '{Format}' number",
-                ValidityViolationCode.TooLarge => $"The value '{_value}' is too large, is must be no greater than '{Max}'",
-                ValidityViolationCode.TooSmall => $"The value '{_value}' is too small, is must be no smaller than '{Min}'",
+                ValidityViolationCode.EmptyList => L10n.T("EmptyList"),
+                ValidityViolationCode.InvalidExpression => string.Format(L10n.T("ExpressionNotValid"), _value, _expressionDelims),
+                ValidityViolationCode.InvalidFormat => string.Format(L10n.T("ValueFormatNotValid"), _value, Format),
+                ValidityViolationCode.TooLarge => string.Format(L10n.T("ValueTooLarge"), _value, Max),
+                ValidityViolationCode.TooSmall => string.Format(L10n.T("ValueTooSmall"), _value, Min),
                 _ => "unknown error",
             };
+        }
+
+        public static bool Do(TextBox textbox, double min, double max, EventHandler<int> action, char? listDelim = null, char[] expressionDelims = null)
+        {
+            return Do(textbox, min, max, ValueFormat.Integer, (object s, double e) => action(s, (int)e), listDelim, expressionDelims);
+        }
+
+        public static bool Do(TextBox textbox, double min, double max, EventHandler<double> action, char? listDelim = null, char[] expressionDelims = null)
+        {
+            return Do(textbox, min, max, ValueFormat.Float, (object s, double e) => action(s, e), listDelim, expressionDelims);
         }
 
         // Internal
@@ -92,6 +105,27 @@ namespace Olfactory.Utils
         string _value;
         char? _listDelim;
         char[] _expressionDelims;
+
+        private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action, char? listDelim = null, char[] expressionDelims = null)
+        {
+            var validation = new Validation(textbox, min, max, format, listDelim, expressionDelims);
+            if (!validation.IsValid)
+            {
+                var msg = L10n.T("CorrectAndTryAgain");
+                MessageBox.Show(
+                    $"{validation}.\n{msg}",
+                    Application.Current.MainWindow.Title,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                validation.Source.Focus();
+                validation.Source.SelectAll();
+
+                return false;
+            }
+
+            action(validation, validation.AsNumber ?? 0);
+            return true;
+        }
 
         private bool IsValidValueOrExpression(string value)
         {

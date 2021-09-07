@@ -39,7 +39,10 @@ namespace Olfactory.Tests.OdorProduction
                     _timer.Stop();
                     _runner?.Stop();
 
-                    MessageBox.Show("Connection with the MFC device was shut down. The application is terminated.");
+                    MessageBox.Show(string.Format(Utils.L10n.T("DeviceConnLost"), "MFC") + " " + Utils.L10n.T("AppTerminated"),
+                        Application.Current.MainWindow.Title,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     Application.Current.Shutdown();
                 }
             };
@@ -50,7 +53,10 @@ namespace Olfactory.Tests.OdorProduction
                     _timer.Stop();
                     _runner?.Stop();
 
-                    MessageBox.Show("Connection with the PID device was shut down. The application is terminated.");
+                    MessageBox.Show(string.Format(Utils.L10n.T("DeviceConnLost"), "PID") + " " + Utils.L10n.T("AppTerminated"),
+                        Application.Current.MainWindow.Title,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                     Application.Current.Shutdown();
                 }
             };

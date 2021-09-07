@@ -11,7 +11,7 @@ namespace Olfactory.Tests.OdorProduction
     {
         public event EventHandler PageDone = delegate { };
 
-        public string Name => "Odor pulses";
+        public string Name => Utils.L10n.T("OdorPulses");
 
         public Manager()
         {
@@ -30,7 +30,7 @@ namespace Olfactory.Tests.OdorProduction
                 null => _setupPage,
                 Setup _ => _productionPage,
                 Production _ => null,
-                _ => throw new NotImplementedException("Unhandled page in Odor Production"),
+                _ => throw new NotImplementedException($"Unhandled page in {Name}"),
             };
 
             if (_current is Production page)
@@ -62,7 +62,7 @@ namespace Olfactory.Tests.OdorProduction
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
                 case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
                 case EmulationCommand.ReportKey: /* ignore keypresses */ break;
-                default: throw new NotImplementedException("This emulation command is not recognized in Odor Production");
+                default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }
 

@@ -85,7 +85,7 @@ namespace Olfactory.Controls
 
         #region IsSelectable property
 
-        [Description("Is pen can be selected"), Category("Common Properties")]
+        [Description("Can the pen be selected"), Category("Common Properties")]
         public bool IsSelectable
         {
             get => (bool)GetValue(IsSelectableProperty);

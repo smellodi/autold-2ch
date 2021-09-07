@@ -50,8 +50,6 @@ namespace Olfactory
 
         string _folder;
 
-        string Title => "Olfactory data logger";
-
 
         protected Logger()
         {
@@ -69,9 +67,12 @@ namespace Olfactory
                 greeting += "\n";
             }
 
+            var saveInto = Utils.L10n.T("SaveDataInto");
+            var pressNo = Utils.L10n.T("PressNoToChangeNameFolder");
+            var pressCancel = Utils.L10n.T("PressCancelToDiscard");
             var dialogResult = MessageBox.Show(
-                $"{greeting}Would you like to save data into\n'{_folder}\\{filename}'?\n\nPress 'No' to change the name and/or folder.\nPress 'Cancel' to discard the data.",
-                Title,
+                $"{greeting}{saveInto}\n'{_folder}\\{filename}'?\n\n{pressNo}\n{pressCancel}",
+                Application.Current.MainWindow.Title,
                 MessageBoxButton.YesNoCancel,
                 MessageBoxImage.Question);
 
@@ -138,9 +139,10 @@ namespace Olfactory
 
                     writer.WriteLine(string.Join("\n", records));
 
+                    var dataSavedInto = Utils.L10n.T("DataSavedInto");
                     MessageBox.Show(
-                        $"Data saved into '{filename}'",
-                        Title,
+                        $"{dataSavedInto}\n'{filename}'",
+                        Application.Current.MainWindow.Title,
                         MessageBoxButton.OK,
                         MessageBoxImage.Information);
 
@@ -148,9 +150,11 @@ namespace Olfactory
                 }
                 catch (Exception ex)
                 {
+                    var failedToSave = Utils.L10n.T("FailedToSave");
+                    var retry = Utils.L10n.T("Retry");
                     var result = MessageBox.Show(
-                        $"Failed to save data into '{filename}' file:\n\n{ex.Message}\n\nRetry?",
-                        Title,
+                        $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
+                        Application.Current.MainWindow.Title,
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
                     if (result == MessageBoxResult.OK)
