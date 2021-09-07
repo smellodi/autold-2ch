@@ -114,7 +114,7 @@ namespace Olfactory.Utils
                 var msg = L10n.T("CorrectAndTryAgain");
                 MessageBox.Show(
                     $"{validation}.\n{msg}",
-                    Application.Current.MainWindow.Title,
+                    L10n.T("OlfactoryTestTool") + " - " + L10n.T("Validator"),
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 validation.Source.Focus();

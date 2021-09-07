@@ -81,7 +81,7 @@ namespace Olfactory.Controls
 
             _start = Timestamp.Sec;
 
-            _timer = DispatchOnce.Do(UPDATE_INTERVAL, () => Dispatcher.Invoke(UpdateProgress));
+            _timer = DispatchOnceUI.Do(UPDATE_INTERVAL, UpdateProgress);
         }
 
         public void Reset()
@@ -97,7 +97,7 @@ namespace Olfactory.Controls
         const double UPDATE_INTERVAL = 0.1;
 
         double _start = 0;
-        DispatchOnce _timer;
+        DispatchOnceUI _timer;
 
         private void UpdateProgress()
         {
@@ -110,7 +110,7 @@ namespace Olfactory.Controls
 
             if (progress < 1.0)
             {
-                _timer = DispatchOnce.Do(UPDATE_INTERVAL, () => Dispatcher.Invoke(UpdateProgress));
+                _timer = DispatchOnceUI.Do(UPDATE_INTERVAL, UpdateProgress);
             }
         }
     }

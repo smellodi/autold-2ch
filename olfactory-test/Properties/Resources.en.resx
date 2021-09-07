@@ -460,7 +460,7 @@
     <value>The list of values is empty</value>
   </data>
   <data name="ExpressionNotValid" xml:space="preserve">
-    <value>The expression '{0}' is invalid, only '{1}' operations are allow</value>
+    <value>The expression '{0}' is invalid, only '{1}' operations are allowed</value>
   </data>
   <data name="FailedToSave" xml:space="preserve">
     <value>Failed to save data into</value>
@@ -488,5 +488,14 @@
   </data>
   <data name="ValueTooSmall" xml:space="preserve">
     <value>The value '{0}' is too small, is must be no smaller than '{1}'</value>
+  </data>
+  <data name="Logger" xml:space="preserve">
+    <value>Logger</value>
+  </data>
+  <data name="OlfactoryTestTool" xml:space="preserve">
+    <value>Olfactory test tool</value>
+  </data>
+  <data name="Validator" xml:space="preserve">
+    <value>Validator</value>
   </data>
 </root>

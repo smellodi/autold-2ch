@@ -40,7 +40,7 @@ namespace Olfactory.Tests.OdorProduction
                     _runner?.Stop();
 
                     MessageBox.Show(string.Format(Utils.L10n.T("DeviceConnLost"), "MFC") + " " + Utils.L10n.T("AppTerminated"),
-                        Application.Current.MainWindow.Title,
+                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                     Application.Current.Shutdown();
@@ -54,7 +54,7 @@ namespace Olfactory.Tests.OdorProduction
                     _runner?.Stop();
 
                     MessageBox.Show(string.Format(Utils.L10n.T("DeviceConnLost"), "PID") + " " + Utils.L10n.T("AppTerminated"),
-                        Application.Current.MainWindow.Title,
+                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
                     Application.Current.Shutdown();
