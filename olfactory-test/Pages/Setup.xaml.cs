@@ -257,12 +257,19 @@ namespace Olfactory.Pages
 
             if (_mfc.IsOpen)
             {
+                lmsOdor.Reset();
+
                 _mfcTimer.Start();
                 GetValveStates();
             }
 
             if (_pid.IsOpen)
             {
+                if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
+                {
+                    lmsPIDValue.Reset(sample.PID);
+                }
+
                 _pidTimer.Start();
             }
         }
