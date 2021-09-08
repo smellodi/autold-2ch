@@ -148,6 +148,16 @@ namespace Olfactory
             {
                 _currentTest?.Emulate(Tests.EmulationCommand.ForceToFinishWithResult);
             }
+            else if (e.Key == Key.F12)
+            {
+                var dialog = new System.Windows.Forms.OpenFileDialog() { Filter = "CSV files|*.csv" };
+                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    var sb = Tests.ThresholdTest.BreathingDetector.Test(dialog.FileName);
+                    Clipboard.SetText(sb.ToString());
+                    MessageBox.Show("Done.\nThe resulting data is copied into clipboard", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
             else
             {
                 _currentTest?.Emulate(Tests.EmulationCommand.ReportKey, e.Key);

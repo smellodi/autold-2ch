@@ -271,7 +271,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _monitor.LogData(LogSource.PID, pidSample);
 
                 if (_settings.FlowStart == PenPresentationStart.Automatic &&
-                    _breathingDetector.Feed(pidSample.Loop) &&
+                    _breathingDetector.Feed(pidSample.Time, pidSample.Loop) &&
                     _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale &&
                     _isAwaitingOdorFlowStart)
                 {
