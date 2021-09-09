@@ -15,6 +15,8 @@ namespace Olfactory.Comm
         
         public double PID => _lastPID;
 
+        public float Loop => 11.5f + (float)Math.Sin((Utils.Timestamp.Ms % 5000) * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
+
         public OlfactoryDeviceModel()
         {
             _timer.Interval = EmulatorTimestamp.SAMPLING_INTERVAL * 1000;

@@ -119,7 +119,7 @@ namespace Olfactory.Comm
                     buffer[22] = temp.B2;
                     // currloop
                     var cl = new PID.BtoD();
-                    cl.f = 5.678f + (float)e(0.15);
+                    cl.f = _model.Loop + (float)e(0.05);
                     buffer[23] = cl.B1;
                     buffer[24] = cl.B0;
                     buffer[25] = cl.B3;

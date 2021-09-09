@@ -66,7 +66,7 @@ namespace Olfactory.Pages
                         //lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
                         //lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
                         _monitor.LogData(LogSource.MFC, sample);
-                        SetIndicatorGraphValue(sample);
+                        UpdateIndicators(sample);
                     }
                     else
                     {
@@ -91,7 +91,7 @@ namespace Olfactory.Pages
                         //lblPID_Loop.Content = sample.Loop.ToString("F2");
                         //lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
                         _monitor.LogData(LogSource.PID, sample);
-                        SetIndicatorGraphValue(sample);
+                        UpdateIndicators(sample);
                     }
                     else
                     {
@@ -257,8 +257,11 @@ namespace Olfactory.Pages
             rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
         }
 
-        private void SetIndicatorGraphValue(MFCSample sample)
+        private void UpdateIndicators(MFCSample sample)
         {
+            chiFreshAir.Value = sample.A.MassFlow;
+            chiOdor.Value = sample.B.MassFlow;
+
             if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.CleanAir)
             {
                 lmsGraph.Add((double)sample.Time / 1000, sample.A.MassFlow);
@@ -269,8 +272,11 @@ namespace Olfactory.Pages
             }
         }
 
-        private void SetIndicatorGraphValue(PIDSample sample)
+        private void UpdateIndicators(PIDSample sample)
         {
+            chiPIDTemp.Value = sample.Loop;
+            chiPIDVoltage.Value = sample.PID;
+
             if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.Loop)
             {
                 lmsGraph.Add((double)sample.Time / 1000, sample.Loop);
