@@ -70,7 +70,7 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// In addition closing the port, we have to  try to turn the lamp off (this will fail, if the PID SDK wasn't connected)
+        /// In addition closing the port, we have to try to turn the lamp off (this will fail, if the PID SDK wasn't connected)
         /// </summary>
         public override void Stop()
         {
@@ -114,7 +114,7 @@ namespace Olfactory.Comm
                 Stop();
                 return new Result()
                 {
-                    Error = !IsDebugging ? (Error)Marshal.GetLastWin32Error() : Error.AccessFailed,
+                    Error = !IsDebugging ? (Error)ex.HResult : Error.AccessFailed,
                     Reason = "PID IO error: " + ex.Message
                 };
             }
@@ -167,7 +167,7 @@ namespace Olfactory.Comm
                 Stop();
                 return new Result()
                 {
-                    Error = !IsDebugging ? (Error)Marshal.GetLastWin32Error() : Error.AccessFailed,
+                    Error = (Error)ex.HResult,
                     Reason = "PID lamp IO error: " + ex.Message
                 };
             }
@@ -185,7 +185,7 @@ namespace Olfactory.Comm
         static PID _instance;
 
         PIDEmulator _emulator;
-        PIDSample _lastSample = new PIDSample();
+        PIDSample _lastSample = new();
 
         [StructLayout(LayoutKind.Explicit)]
         internal struct BtoW                                                    // For convenient byte-level manipulation of 16b integers,
@@ -318,7 +318,7 @@ namespace Olfactory.Comm
         Error EnableLamp(bool enable)
         {
             Error error;
-            ModQueryPreset1Regs query = new ModQueryPreset1Regs()
+            ModQueryPreset1Regs query = new()
             {
                 SlaveAddr = MODBUS_ADDR_PID,
                 Function = MODBUS_FN_PRESET_INPUT_REGS,            // Query for setting registers
@@ -374,7 +374,7 @@ namespace Olfactory.Comm
 
             Error error;
 
-            ModQueryReadInputRegs queryRaw = new ModQueryReadInputRegs()
+            ModQueryReadInputRegs queryRaw = new()
             {
                 SlaveAddr = MODBUS_ADDR_PID,                          // Query for reading multiple registers (scaled ADC values)
                 Function = MODBUS_FN_READ_INPUT_REGS,
@@ -383,7 +383,7 @@ namespace Olfactory.Comm
                 NRegsHi = 0x00,
                 NRegsLo = MODBUS_GROUP_LEN * sizeof(uint) / sizeof(ushort),    // Read 6 DWORD values -> twice as many registers
             };
-            ModQueryReadInputRegs queryScaled = new ModQueryReadInputRegs()
+            ModQueryReadInputRegs queryScaled = new()
             {
                 SlaveAddr = MODBUS_ADDR_PID,
                 Function = MODBUS_FN_READ_INPUT_REGS,
@@ -456,7 +456,7 @@ namespace Olfactory.Comm
             byte[] bytes = ToBytes(query);
             int length = Marshal.SizeOf(query);
 
-            BtoW u = new BtoW();
+            var u = new BtoW();
 
             Thread.Sleep(3);                                                // Guarantees sufficient spacing between commands;
                                                                             // shouldn't be actually needed.
@@ -492,9 +492,16 @@ namespace Olfactory.Comm
         Error ReceiveReply<T>(out T reply) where T : new()
         {
             reply = new T();
-            var length = Marshal.SizeOf(reply);
 
-            BtoW u = new BtoW();
+            var length = Marshal.SizeOf(reply);
+            var u = new BtoW();
+
+            //var sw = System.Diagnostics.Stopwatch.StartNew();
+
+            /* this does not work even with _port.NewLine = "\r";
+            var received = _port.ReadLine();
+            var buffer = System.Text.Encoding.ASCII.GetBytes(received);
+            /*/
 
             byte[] buffer = new byte[length];
 
@@ -521,11 +528,15 @@ namespace Olfactory.Comm
                     Thread.Sleep(POLL_PERIOD);
                 }
             }
-
+            
             if (bytesRemaining > 0)
             {
                 return Error.Timeout;                    // Some data still missing -> operation timed out
             }
+            //*/
+
+            //System.Diagnostics.Debug.WriteLine("PID " + sw.ElapsedMilliseconds.ToString());
+            //sw.Stop();
 
             // Calculate checksum and compare it to the received one
             u.W = CRC16(buffer, length - sizeof(ushort));
@@ -542,7 +553,7 @@ namespace Olfactory.Comm
 
         // Utilities
 
-        static byte[] CRC_DATA_HI = new byte[256]
+        static readonly byte[] CRC_DATA_HI = new byte[256]
                                 { 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81,
                                   0x40, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0,
                                   0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x00, 0xC1, 0x81, 0x40, 0x01,
@@ -562,7 +573,7 @@ namespace Olfactory.Comm
                                   0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 0x80, 0x41, 0x00, 0xC1, 0x81,
                                   0x40 };
 
-        static byte[] CRC_DATA_LO = new byte[256]
+        static readonly byte[] CRC_DATA_LO = new byte[256]
                                 { 0x00, 0xC0, 0xC1, 0x01, 0xC3, 0x03, 0x02, 0xC2, 0xC6, 0x06, 0x07, 0xC7, 0x05, 0xC5, 0xC4,
                                   0x04, 0xCC, 0x0C, 0x0D, 0xCD, 0x0F, 0xCF, 0xCE, 0x0E, 0x0A, 0xCA, 0xCB, 0x0B, 0xC9, 0x09,
                                   0x08, 0xC8, 0xD8, 0x18, 0x19, 0xD9, 0x1B, 0xDB, 0xDA, 0x1A, 0x1E, 0xDE, 0xDF, 0x1F, 0xDD,
@@ -626,7 +637,7 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Make an array of bytes out of a structure
+        /// Makes an array of bytes out of a structure
         /// </summary>
         /// <typeparam name="T">Structure type to convert to bytes</typeparam>
         /// <param name="str">Structure instance</param>
@@ -652,7 +663,7 @@ namespace Olfactory.Comm
         /// <returns>Structure instance</returns>
         T FromBytes<T>(byte[] bytes) where T : new()
         {
-            T str = new T();
+            var str = new T();
 
             int size = Marshal.SizeOf(str);
             IntPtr ptr = Marshal.AllocHGlobal(size);

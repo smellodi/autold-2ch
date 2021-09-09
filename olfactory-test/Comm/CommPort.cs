@@ -198,17 +198,19 @@ namespace Olfactory.Comm
         /// <returns>The port</returns>
         SerialPort OpenSerialPort(string portName)
         {
-            var port = new SerialPort(portName);
-
-            port.StopBits = _portStopBits;
-            port.Parity = _portParity;
-            port.BaudRate = _portSpeed;
-            port.DataBits = 8;
-            port.DtrEnable = true;
-            port.RtsEnable = true;
-            port.DiscardNull = false;
-            port.WriteTimeout = PORT_TIMEOUT;
-            port.ReadTimeout = PORT_TIMEOUT; // int.MaxValue;
+            var port = new SerialPort(portName)
+            {
+                StopBits = _portStopBits,
+                Parity = _portParity,
+                BaudRate = _portSpeed,
+                DataBits = 8,
+                DtrEnable = true,
+                RtsEnable = true,
+                DiscardNull = false,
+                WriteTimeout = PORT_TIMEOUT,
+                ReadTimeout = PORT_TIMEOUT, // int.MaxValue;
+                NewLine = "\r"
+            };
 
             port.Open();
 
@@ -221,21 +223,5 @@ namespace Olfactory.Comm
 
             return port;
         }
-
-        /// <summary>
-        /// Creates and opens a serial port
-        /// </summary>
-        /// <param name="portNumber">1..255</param>
-        /// <returns>The port</returns>
-        SerialPort OpenSerialPort(int portNumber)
-        {
-            if (portNumber > PORT_MAX_ID)
-            {
-                throw new Exception($"Port number cannot exceed {PORT_MAX_ID}");
-            }
-
-            return OpenSerialPort($"COM{portNumber}");
-        }
-
     }
 }

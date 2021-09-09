@@ -309,8 +309,7 @@ namespace Olfactory.Comm
                 }
                 catch (Exception ex)
                 {
-                    error = (Error)Marshal.GetLastWin32Error();
-                    if (error == Error.Success) error = Error.ReadFault;        // just in case GetLastWin32Error returns 0
+                    error = (Error)ex.HResult;
                     reason = "IO error: " + ex.Message;
                 }
 
@@ -351,7 +350,7 @@ namespace Olfactory.Comm
         /// <returns>Error code and description</returns>
         protected override Result Initialize()
         {
-            MFCSample sample = new MFCSample();
+            MFCSample sample = new();
             Error error;
 
             _channels = Channels.None;
@@ -382,7 +381,7 @@ namespace Olfactory.Comm
                 Stop();
                 return new Result()
                 {
-                    Error = !IsDebugging ? (Error)Marshal.GetLastWin32Error() : Error.AccessFailed,
+                    Error = !IsDebugging ? (Error)ex.HResult : Error.AccessFailed,
                     Reason = "IO error: " + ex.Message
                 };
             }
@@ -424,7 +423,7 @@ namespace Olfactory.Comm
         double _odor = 4.0;
         OdorFlowsTo _odorDirection = OdorFlowsTo.SystemAndWaste;
 
-        Mutex _mutex = new Mutex();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
+        Mutex _mutex = new();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
         MFCEmulator _emulator = MFCEmulator.Instance;
 
         // constants
@@ -615,12 +614,16 @@ namespace Olfactory.Comm
         {
             string response = "";
 
-            int duration = 0;
-            int lastChar;
+            //var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var ts = Utils.Timestamp.Ms;
             try
             {
+                //* this works with _port.NewLine = "\r"
+                response = _port.ReadLine();
+                /*/
+                int duration = 0;
+                int lastChar;
+
                 while (duration < PORT_TIMEOUT)        // Wait for response; response ends in return
                 {
                     lastChar = _port.ReadChar();
@@ -640,11 +643,15 @@ namespace Olfactory.Comm
                         response += Convert.ToChar(lastChar);
                     }
                 }
+                */
             }
             catch
             {
                 response = "";
             }
+
+            //System.Diagnostics.Debug.WriteLine($"MFC {response} " + sw.ElapsedMilliseconds.ToString());
+            //sw.Stop();
 
             return response;
         }
