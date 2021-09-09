@@ -62,14 +62,15 @@ namespace Olfactory.Pages
                     if (_mfc.IsOpen)
                     {
                         var result = _mfc.GetSample(out MFCSample sample);
-                        lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
-                        lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                        lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                        //lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
+                        //lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
+                        //lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
                         _monitor.LogData(LogSource.MFC, sample);
+                        SetIndicatorGraphValue(sample);
                     }
                     else
                     {
-                        lmsOdor.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                        //lmsOdor.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
 
                         MFCSample sample = new MFCSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -86,14 +87,15 @@ namespace Olfactory.Pages
                     if (_pid.IsOpen)
                     {
                         var result = _pid.GetSample(out PIDSample sample);
-                        lblPID_PID.Content = sample.PID.ToString("F2");
-                        lblPID_Loop.Content = sample.Loop.ToString("F2");
-                        lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
+                        //lblPID_PID.Content = sample.PID.ToString("F2");
+                        //lblPID_Loop.Content = sample.Loop.ToString("F2");
+                        //lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
                         _monitor.LogData(LogSource.PID, sample);
+                        SetIndicatorGraphValue(sample);
                     }
                     else
                     {
-                        lmsPIDValue.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
+                        //lmsPIDValue.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
 
                         PIDSample sample = new PIDSample();
                         sample.Time = Utils.Timestamp.Ms;
@@ -102,20 +104,31 @@ namespace Olfactory.Pages
                 });
             };
 
+            // A selected channel indicator must exist!
+            foreach (var ctrl in stpIndicators.Children)
+            {
+                if (ctrl is Controls.ChannelIndicator chi && chi.IsActive)
+                {
+                    _currentIndicator = chi;
+                }
+            }
+
             UpdateUI();
         }
 
 
         // Internal
 
-        USB _usb = new USB();
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
+        readonly USB _usb = new();
+        readonly MFC _mfc = MFC.Instance;
+        readonly PID _pid = PID.Instance;
 
         CommMonitor _monitor;
 
-        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
-        System.Timers.Timer _pidTimer = new System.Timers.Timer();
+        readonly System.Timers.Timer _mfcTimer = new();
+        readonly System.Timers.Timer _pidTimer = new();
+
+        Controls.ChannelIndicator _currentIndicator;
 
         private void UpdatePortList(ComboBox cmb)
         {
@@ -124,7 +137,7 @@ namespace Olfactory.Pages
             cmb.Items.Clear();
 
             var availablePorts = System.IO.Ports.SerialPort.GetPortNames();
-            HashSet<string> ports = new HashSet<string>(availablePorts);
+            var ports = new HashSet<string>(availablePorts);
             foreach (var port in ports)
             {
                 cmb.Items.Add(port);
@@ -244,6 +257,55 @@ namespace Olfactory.Pages
             rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
         }
 
+        private void SetIndicatorGraphValue(MFCSample sample)
+        {
+            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.CleanAir)
+            {
+                lmsGraph.Add((double)sample.Time / 1000, sample.A.MassFlow);
+            }
+            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.ScentedAir)
+            {
+                lmsGraph.Add((double)sample.Time / 1000, sample.B.MassFlow);
+            }
+        }
+
+        private void SetIndicatorGraphValue(PIDSample sample)
+        {
+            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.Loop)
+            {
+                lmsGraph.Add((double)sample.Time / 1000, sample.Loop);
+            }
+            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.PID)
+            {
+                lmsGraph.Add((double)sample.Time / 1000, sample.PID);
+            }
+        }
+
+        private void ResetIndicatorGraphValue(MFCSample? sample)
+        {
+            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.CleanAir)
+            {
+                lmsGraph.Reset(sample?.A.MassFlow ?? 0);
+            }
+            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.ScentedAir)
+            {
+                lmsGraph.Reset(sample?.B.MassFlow ?? 0);
+            }
+        }
+
+        private void ResetIndicatorGraphValue(PIDSample? sample)
+        {
+            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.Loop)
+            {
+                lmsGraph.Reset(sample?.Loop ?? 0);
+            }
+            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.PID)
+            {
+                lmsGraph.Reset(sample?.PID ?? 0);
+            }
+        }
+
+
         // UI events
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -257,7 +319,8 @@ namespace Olfactory.Pages
 
             if (_mfc.IsOpen)
             {
-                lmsOdor.Reset();
+                //lmsOdor.Reset();
+                ResetIndicatorGraphValue((MFCSample?)null);
 
                 _mfcTimer.Start();
                 GetValveStates();
@@ -267,7 +330,8 @@ namespace Olfactory.Pages
             {
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    lmsPIDValue.Reset(sample.PID);
+                    //lmsPIDValue.Reset(sample.PID);
+                    ResetIndicatorGraphValue(sample);
                 }
 
                 _pidTimer.Start();
@@ -321,7 +385,8 @@ namespace Olfactory.Pages
             else if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
-                lmsOdor.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                //lmsOdor.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                ResetIndicatorGraphValue((MFCSample?)null);
                 GetValveStates();
             }
             else
@@ -344,7 +409,8 @@ namespace Olfactory.Pages
 
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    lmsPIDValue.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL, */sample.PID);
+                    //lmsPIDValue.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL, */sample.PID);
+                    ResetIndicatorGraphValue(sample);
                 }
             }
             else
@@ -406,6 +472,20 @@ namespace Olfactory.Pages
             if (e.Key == Key.Enter)
             {
                 btnSetOdor_Click(sender, e);
+            }
+        }
+
+        private void ChannelIndicator_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var chi = (Controls.ChannelIndicator)sender;
+            if (!chi.IsActive)
+            {
+                _currentIndicator.IsActive = false;
+                _currentIndicator = chi;
+                _currentIndicator.IsActive = true;
+
+                ResetIndicatorGraphValue((MFCSample?)null);
+                ResetIndicatorGraphValue((PIDSample?)null);
             }
         }
     }

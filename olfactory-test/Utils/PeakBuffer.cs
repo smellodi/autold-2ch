@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Olfactory.Utils
 {
     /// <summary>
     /// Generic buffer to store floating-point numbers
     /// </summary>
-    public class Buffer
+    public class PeakBuffer
     {
         /// <summary>
         /// Peak type
@@ -55,7 +53,7 @@ namespace Olfactory.Utils
         /// Constructor
         /// </summary>
         /// <param name="size">Buffer size</param>
-        public Buffer(int size = 10)
+        public PeakBuffer(int size = 10)
         {
             _size = size;
             _buffer = new double[_size];
@@ -97,11 +95,8 @@ namespace Olfactory.Utils
                 return (PeakType.None, 0);
             }
 
-            int i = _pointer;
+            int i = _pointer;       // _pointer always points to the next empty cell, i.e. the one that holds the oldest value
             int endIndex = (_pointer - 1) < 0 ? _size - 1 : _pointer - 1;
-
-            //double[] dempData = new double[_size];
-            //int j = 0;
 
             double? prevValue = null;
             double startValue = _buffer[i];
@@ -113,7 +108,7 @@ namespace Olfactory.Utils
             {
                 if (prevValue != null)
                 {
-                    double newValue = _buffer[i]; // * Damping + (double)prevValue * (1.0 - Damping);
+                    double newValue = _buffer[i];
 
                     min = Math.Min(newValue, min);
                     max = Math.Max(newValue, max);

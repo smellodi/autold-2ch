@@ -10,7 +10,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="470" d:DesignWidth="800"
+      d:DesignHeight="470" d:DesignWidth="1000"
       Title="{lex:Loc Setup}"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -39,11 +39,11 @@
         </Style>
 
         <!-- Indicator & graph area-->
-        <Style x:Key="Divider" TargetType="{x:Type Label}">
+        <!--Style x:Key="Divider" TargetType="{x:Type Label}">
             <Setter Property="BorderThickness" Value="0,1,0,0"/>
             <Setter Property="BorderBrush" Value="{StaticResource BrushBorderLight}"/>
             <Setter Property="Height" Value="1"/>
-        </Style>
+        </>
         <Style x:Key="NumericIndicator" TargetType="{x:Type Label}">
             <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
             <Setter Property="Margin" Value="0,2,0,0"/>
@@ -51,7 +51,7 @@
         </Style>
         <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
             <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
+        </Style-->
     </Page.Resources>
 
     <Grid>
@@ -206,6 +206,7 @@
                 <ScaleTransform x:Name="sctScale1"/>
             </StackPanel.LayoutTransform>
 
+            <!--
             <Label Style="{StaticResource Divider}"/>
             <WrapPanel Style="{StaticResource Indicator}">
                 <Label>
@@ -254,6 +255,49 @@
             </WrapPanel>
             <local:LiveData x:Name="lmsPIDValue"
                             Height="118"/>
+            -->
+            <ScrollViewer x:Name="scvIndicatorScroller" 
+                          HorizontalScrollBarVisibility="Auto" 
+                          VerticalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="stpIndicators"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center">
+                    <local:ChannelIndicator x:Name="chiFreshAir"
+                                            Title="{lex:Loc CleanAir}"
+                                            Units="{lex:Loc LMin}"
+                                            Precision="1"
+                                            Value="0.0"
+                                            Source="CleanAir"
+                                            Tag="FreshAir"
+                                            MouseDown="ChannelIndicator_MouseDown"/>
+                    <local:ChannelIndicator x:Name="chiOdor"
+                                            Title="{lex:Loc ScentedAir}"
+                                            Units="{lex:Loc MlMin}"
+                                            Precision="2"
+                                            Value="0.0"
+                                            Source="ScentedAir"
+                                            MouseDown="ChannelIndicator_MouseDown"/>
+                    <local:ChannelIndicator x:Name="chiPIDTemp"
+                                            Title="{lex:Loc Temperature}"
+                                            Units="C"
+                                            Precision="2"
+                                            Value="0.0"
+                                            Source="Loop"
+                                            MouseDown="ChannelIndicator_MouseDown"/>
+                    <local:ChannelIndicator x:Name="chiPIDVoltage"
+                                            Title="{lex:Loc PIDVoltage}"
+                                            Units="{lex:Loc MV}"
+                                            Precision="1"
+                                            Value="0.0"
+                                            Source="PID"
+                                            IsActive="True"
+                                            MouseDown="ChannelIndicator_MouseDown"/>
+                </StackPanel>
+            </ScrollViewer>
+            
+            <local:LiveData x:Name="lmsGraph"
+                            Margin="0,12,0,0"
+                            Height="234"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">

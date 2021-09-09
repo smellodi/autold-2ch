@@ -498,4 +498,7 @@
   <data name="Validator" xml:space="preserve">
     <value>Validator</value>
   </data>
+  <data name="Temperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
 </root>

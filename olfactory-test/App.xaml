@@ -37,6 +37,7 @@
             <SolidColorBrush x:Key="BrushHeaderBackgroundDisabled" Color="{StaticResource ColorDisabledDark}" />
             <SolidColorBrush x:Key="BrushPanel" Color="{StaticResource ColorDark}" />
             <SolidColorBrush x:Key="BrushPanelLight" Color="{StaticResource ColorLightDarker}" />
+            <SolidColorBrush x:Key="BrushPanelLightest" Color="{StaticResource ColorLight}" />
             <SolidColorBrush x:Key="BrushPanelDisabled" Color="{StaticResource ColorDisabledDark}" />
             <SolidColorBrush x:Key="BrushPanelDisabledLight" Color="{StaticResource ColorDisabledLightDarker}" />
 
