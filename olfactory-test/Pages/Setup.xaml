@@ -268,7 +268,7 @@
                                             Precision="1"
                                             Value="0.0"
                                             Source="CleanAir"
-                                            Tag="FreshAir"
+                                            Tag="MFC"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                     <local:ChannelIndicator x:Name="chiOdor"
                                             Title="{lex:Loc ScentedAir}"
@@ -276,6 +276,7 @@
                                             Precision="2"
                                             Value="0.0"
                                             Source="ScentedAir"
+                                            Tag="MFC"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                     <local:ChannelIndicator x:Name="chiPIDTemp"
                                             Title="{lex:Loc Temperature}"
@@ -283,6 +284,7 @@
                                             Precision="2"
                                             Value="0.0"
                                             Source="Loop"
+                                            Tag="PID"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                     <local:ChannelIndicator x:Name="chiPIDVoltage"
                                             Title="{lex:Loc PIDVoltage}"
@@ -290,7 +292,7 @@
                                             Precision="1"
                                             Value="0.0"
                                             Source="PID"
-                                            IsActive="True"
+                                            Tag="PID"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                 </StackPanel>
             </ScrollViewer>

@@ -37,6 +37,16 @@ namespace Olfactory.Controls
             chart.Plot.YAxis2.Hide();
         }
 
+        public void Empty()
+        {
+            _data.Clear();
+            
+            _scatter.Update(new double[] { 0 }, new double[] { 0 });
+            
+            chart.Plot.AxisAuto();
+            chart.Render();
+        }
+
         public void Reset(double baseline = 0)
         {
             _data.Clear();

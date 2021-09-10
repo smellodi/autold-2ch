@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using Olfactory.Comm;
+using IndicatorDataSource = Olfactory.Controls.ChannelIndicator.DataSource;
 
 namespace Olfactory.Pages
 {
@@ -49,8 +50,16 @@ namespace Olfactory.Pages
                     UpdatePortList(cmbMFCPort);
                 });
 
-            _mfc.Closed += (s, e) => UpdateUI();
-            _pid.Closed += (s, e) => UpdateUI();
+            _mfc.Closed += (s, e) =>
+            {
+                DisableIndicators("MFC");
+                UpdateUI();
+            };
+            _pid.Closed += (s, e) =>
+            {
+                DisableIndicators("PID");
+                UpdateUI();
+            };
 
 
             long startTs = Utils.Timestamp.Ms;
@@ -104,15 +113,6 @@ namespace Olfactory.Pages
                 });
             };
 
-            // A selected channel indicator must exist!
-            foreach (var ctrl in stpIndicators.Children)
-            {
-                if (ctrl is Controls.ChannelIndicator chi && chi.IsActive)
-                {
-                    _currentIndicator = chi;
-                }
-            }
-
             UpdateUI();
         }
 
@@ -128,7 +128,7 @@ namespace Olfactory.Pages
         readonly System.Timers.Timer _mfcTimer = new();
         readonly System.Timers.Timer _pidTimer = new();
 
-        Controls.ChannelIndicator _currentIndicator;
+        Controls.ChannelIndicator _currentIndicator = null;
 
         private void UpdatePortList(ComboBox cmb)
         {
@@ -168,6 +168,18 @@ namespace Olfactory.Pages
             btnThresholdTest.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             grdPlayground.IsEnabled = _mfc.IsOpen;
+
+            foreach (Controls.ChannelIndicator chi in stpIndicators.Children)
+            {
+                if ("MFC".Equals(chi.Tag))
+                {
+                    chi.IsEnabled = _mfc.IsOpen;
+                }
+                else if ("PID".Equals(chi.Tag))
+                {
+                    chi.IsEnabled = _pid.IsOpen;
+                }
+            }
         }
 
         private bool Toggle(CommPort port, string address)
@@ -257,19 +269,48 @@ namespace Olfactory.Pages
             rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
         }
 
+        private void DisableIndicators(string deviceType)
+        {
+            foreach (Controls.ChannelIndicator chi in stpIndicators.Children)
+            {
+                if (deviceType.Equals(chi.Tag))
+                {
+                    chi.Value = 0;
+                }
+            }
+
+            if (_currentIndicator != null && deviceType.Equals(_currentIndicator.Tag))
+            {
+                _currentIndicator.IsActive = false;
+                _currentIndicator = null;
+                lmsGraph.Empty();
+            }
+        }
+
+        private void UpdateGraph(IndicatorDataSource dataSource, double timestamp, double value)
+        {
+            if (_currentIndicator?.Source == dataSource)
+            {
+                lmsGraph.Add(timestamp, value);
+            }
+        }
+
+        private void ResetGraph(IndicatorDataSource dataSource, double baseValue)
+        {
+            if (_currentIndicator?.Source == dataSource)
+            {
+                lmsGraph.Reset(baseValue);
+            }
+        }
+
         private void UpdateIndicators(MFCSample sample)
         {
             chiFreshAir.Value = sample.A.MassFlow;
             chiOdor.Value = sample.B.MassFlow;
 
-            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.CleanAir)
-            {
-                lmsGraph.Add((double)sample.Time / 1000, sample.A.MassFlow);
-            }
-            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.ScentedAir)
-            {
-                lmsGraph.Add((double)sample.Time / 1000, sample.B.MassFlow);
-            }
+            double timestamp = (double)sample.Time / 1000;
+            UpdateGraph(IndicatorDataSource.CleanAir, timestamp, sample.A.MassFlow);
+            UpdateGraph(IndicatorDataSource.ScentedAir, timestamp, sample.B.MassFlow);
         }
 
         private void UpdateIndicators(PIDSample sample)
@@ -277,38 +318,21 @@ namespace Olfactory.Pages
             chiPIDTemp.Value = sample.Loop;
             chiPIDVoltage.Value = sample.PID;
 
-            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.Loop)
-            {
-                lmsGraph.Add((double)sample.Time / 1000, sample.Loop);
-            }
-            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.PID)
-            {
-                lmsGraph.Add((double)sample.Time / 1000, sample.PID);
-            }
+            double timestamp = (double)sample.Time / 1000;
+            UpdateGraph(IndicatorDataSource.Loop, timestamp, sample.Loop);
+            UpdateGraph(IndicatorDataSource.PID, timestamp, sample.PID);
         }
 
         private void ResetIndicatorGraphValue(MFCSample? sample)
         {
-            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.CleanAir)
-            {
-                lmsGraph.Reset(sample?.A.MassFlow ?? 0);
-            }
-            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.ScentedAir)
-            {
-                lmsGraph.Reset(sample?.B.MassFlow ?? 0);
-            }
+            ResetGraph(IndicatorDataSource.CleanAir, sample?.A.MassFlow ?? 0);
+            ResetGraph(IndicatorDataSource.ScentedAir, sample?.B.MassFlow ?? 0);
         }
 
         private void ResetIndicatorGraphValue(PIDSample? sample)
         {
-            if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.Loop)
-            {
-                lmsGraph.Reset(sample?.Loop ?? 0);
-            }
-            else if (_currentIndicator.Source == Controls.ChannelIndicator.DataSource.PID)
-            {
-                lmsGraph.Reset(sample?.PID ?? 0);
-            }
+            ResetGraph(IndicatorDataSource.Loop, sample?.Loop ?? 0);
+            ResetGraph(IndicatorDataSource.PID, sample?.PID ?? 0);
         }
 
 
@@ -486,7 +510,11 @@ namespace Olfactory.Pages
             var chi = (Controls.ChannelIndicator)sender;
             if (!chi.IsActive)
             {
-                _currentIndicator.IsActive = false;
+                if (_currentIndicator != null)
+                {
+                    _currentIndicator.IsActive = false;
+                }
+
                 _currentIndicator = chi;
                 _currentIndicator.IsActive = true;
 

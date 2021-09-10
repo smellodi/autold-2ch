@@ -27,6 +27,11 @@
                     <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
                     <Setter Property="BorderBrush" Value="{StaticResource BrushBorderFocused}"/>
                 </DataTrigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="{StaticResource BrushPanelDisabled}"/>
+                    <Setter Property="Foreground" Value="{StaticResource BrushFontDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrushBorderDisabled}"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="ChannelIndicator" TargetType="{x:Type TextBlock}">
