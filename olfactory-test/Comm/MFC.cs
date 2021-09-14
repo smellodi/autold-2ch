@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.Ports;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
@@ -91,6 +93,14 @@ namespace Olfactory.Comm
             A = 'a',
             B = 'b',
             Z = 'z',
+        }
+
+        public enum Register
+        {
+            PULL_IN_0 = 1,
+            PULL_IN_1 = 2,
+            HOLD_0 = 3,
+            HOLD_1 = 4
         }
 
         /// <summary>
@@ -343,6 +353,44 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
+        /// Creates a short pulse using MFC embedded functionality.
+        /// </summary>
+        /// <param name="duration">pulse duration in seconds</param>
+        /// <param name="valves">Valves to open</param>
+        /// <returns></returns>
+        public Result ShortPulse(double duration, OdorFlowsTo valves)
+        {
+            if (duration <= 0 || 1 <= duration)
+            {
+                return new Result() { Error = Error.InvalidData, Reason = "Short Pulse must be shorter than 1 second" };
+            }
+
+            var val = ((int)(1000 * duration)).ToString();
+
+            List<(Register, string)> cmdSets = new List<(Register, string)>();
+            if (valves.HasFlag(OdorFlowsTo.System) && !_odorDirection.HasFlag(OdorFlowsTo.System))
+            {
+                cmdSets.Add((Register.PULL_IN_0, val));
+            }
+
+            if (valves.HasFlag(OdorFlowsTo.User) && !_odorDirection.HasFlag(OdorFlowsTo.User))
+            {
+                cmdSets.Add((Register.PULL_IN_1, val));
+            }
+
+            Result result = SetRegisters(cmdSets.ToArray());
+
+            if (result.Error == Error.Success)
+            {
+                var priorOdorDirection = _odorDirection;
+                _odorDirection = OdorFlowsTo.SystemAndUser;
+                Utils.DispatchOnce.Do(duration, () => _odorDirection = priorOdorDirection);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Here, we check available channels (A and B).
         /// Note that there is channel Z that is maintaince output to user/waste,
         /// but we do not need to read it
@@ -374,6 +422,10 @@ namespace Olfactory.Comm
                     _odorDirection = OdorFlowsTo.Waste
                         | (isValve1Opened ? OdorFlowsTo.System : OdorFlowsTo.Waste)
                         | (isValve2Opened ? OdorFlowsTo.User : OdorFlowsTo.Waste);
+                }
+                if ((error = SetRegisters((Register.HOLD_0, "0"), (Register.HOLD_1, "0")).Error) != Error.Success)
+                {
+                    // should I report any error here?
                 }
             }
             catch (Exception ex)
@@ -423,8 +475,8 @@ namespace Olfactory.Comm
         double _odor = 4.0;
         OdorFlowsTo _odorDirection = OdorFlowsTo.SystemAndWaste;
 
-        Mutex _mutex = new();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
-        MFCEmulator _emulator = MFCEmulator.Instance;
+        readonly Mutex _mutex = new();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
+        readonly MFCEmulator _emulator = MFCEmulator.Instance;
 
         // constants
 
@@ -433,9 +485,10 @@ namespace Olfactory.Comm
         const Channel OUTPUT_CHANNEL = Channel.Z;
 
         public static readonly string CMD_SET = "s";
+        public static readonly string CMD_WRITE_REGISTER = "w";
         public static readonly string CMD_TARE_FLOW = "v";
 
-        const char DATA_END = '\r';
+        public const char DATA_END = '\r';
 
         const double ODOR_TUBE_LENGTH = 600;       // mm
         const double VALVE_MIXER_TUBE_LENGTH = 27; // mm
@@ -549,7 +602,32 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Sends a specific command to the port
+        /// Sets MFC registers of the output channel
+        /// </summary>
+        /// <param name="register">regsiter to set</param>
+        /// <param name="value">value to pass</param>
+        /// <returns>command execution result</returns>
+        Result SetRegister(Register register, string value)
+        {
+            return SetRegisters((register, value));
+        }
+
+        /// <summary>
+        /// Sets MFC registers of the output channel
+        /// </summary>
+        /// <param name="sets">a list of (register, value) pairs</param>
+        /// <returns>command execution result</returns>
+        Result SetRegisters(params (Register register, string value)[] sets)
+        {
+            var commands = sets.Select(set => $"{char.ToLower((char)OUTPUT_CHANNEL)}{CMD_WRITE_REGISTER}{(int)set.register}={set.value}");
+            var result = SendCommands(commands.ToArray());
+            CommandResult(this, new CommandResultArgs(string.Join(";", commands), "", result));
+            return result;
+        }
+
+        /// <summary>
+        /// Sends a specific command to the port.
+        /// All parameters are simply concatenated in the order they appear
         /// </summary>
         /// <param name="channel">channel to send to</param>
         /// <param name="cmd">command to send</param>
@@ -566,12 +644,22 @@ namespace Olfactory.Comm
                 };
             }
 
+            return SendCommands(new string[] { char.ToLower((char)channel) + cmd + value });
+        }
+
+        /// <summary>
+        /// Sends several commands to the port at once
+        /// </summary>
+        /// <param name="commands">commands</param>
+        /// <returns>Error type and description</returns>
+        Result SendCommands(string[] commands)
+        {
             Error error;
             string reason;
 
             lock (_mutex)
             {
-                string command = char.ToLower((char)channel) + cmd + value;
+                string command = string.Join(DATA_END, commands);
                 var bytes = System.Text.Encoding.ASCII.GetBytes(command + DATA_END);
                 if ((error = WriteBytes(bytes)) != Error.Success)
                 {
@@ -583,7 +671,7 @@ namespace Olfactory.Comm
                     reason = $"Command '{command}' sent successfully";
                 }
 
-                // we should have a response to our request
+                // we should have a response to some of out requests
                 if (!IsDebugging)
                 {
                     // Thread.Sleep(50);
@@ -602,7 +690,7 @@ namespace Olfactory.Comm
             return new Result()
             {
                 Error = error,
-                Reason = reason
+                Reason = reason.Replace(DATA_END, ';')
             };
         }
 

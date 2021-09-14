@@ -51,27 +51,13 @@ namespace Olfactory.Comm
                 throw new Exception("Simulating writing fault");
             }*/
 
-            var cmd = System.Text.Encoding.Default.GetString(command);
-            if (cmd.Length > 4)
+            var input = System.Text.Encoding.Default.GetString(command);
+            var cmds = input.Split(MFC.DATA_END);
+            foreach (var cmd in cmds)
             {
-                MFC.Channel channel = (MFC.Channel)Enum.Parse(typeof(MFC.Channel), cmd[0].ToString(), true);
-                string cmdID = cmd[1].ToString();
-                if (cmdID == MFC.CMD_SET)
+                if (cmd.Length > 4)
                 {
-                    double value = double.Parse(cmd.Substring(2, command.Length - 2));
-                    switch (channel)
-                    {
-                        case MFC.Channel.A:
-                            _massFlowA = value;
-                            break;
-                        case MFC.Channel.B:
-                            _massFlowB = value;
-                            break;
-                        case MFC.Channel.Z:
-                            _odorDirection = (MFC.OdorFlowsTo)value;
-                            break;
-                        default: break;
-                    }
+                    ExecuteCommand(cmd);
                 }
             }
         }
@@ -89,10 +75,59 @@ namespace Olfactory.Comm
         double _volFlowB = .05;
         MFC.OdorFlowsTo _odorDirection = MFC.OdorFlowsTo.Waste;
 
+        Utils.DispatchOnce _shortPulseTimer = null;
+
         private MFCEmulator() { }
 
         // emulates measurement inaccuracy
         private double e(double amplitude) => (_rnd.NextDouble() - 0.5) * 2 * amplitude;
         private int e(int amplitude) => _rnd.Next(-amplitude, amplitude);
+
+        private void ExecuteCommand(string cmd)
+        {
+            MFC.Channel channel = (MFC.Channel)Enum.Parse(typeof(MFC.Channel), cmd[0].ToString(), true);
+            string cmdID = cmd[1].ToString();
+            if (cmdID == MFC.CMD_SET)
+            {
+                var value = double.Parse(cmd.Substring(2, cmd.Length - 2));
+                switch (channel)
+                {
+                    case MFC.Channel.A:
+                        _massFlowA = value;
+                        break;
+                    case MFC.Channel.B:
+                        _massFlowB = value;
+                        break;
+                    case MFC.Channel.Z:
+                        _odorDirection = (MFC.OdorFlowsTo)value;
+                        break;
+                    default: break;
+                }
+            }
+            else if (cmdID == MFC.CMD_WRITE_REGISTER)
+            {
+                MFC.Register register = (MFC.Register)int.Parse(cmd.Substring(2, 1));
+                var ms = int.Parse(cmd.Substring(4, cmd.Length - 4));
+
+                var priorOdorDirection = _odorDirection;
+                _odorDirection = (register, _odorDirection) switch
+                {
+                    (MFC.Register.PULL_IN_0, MFC.OdorFlowsTo.Waste) => MFC.OdorFlowsTo.SystemAndWaste,
+                    (MFC.Register.PULL_IN_0, MFC.OdorFlowsTo.User) => MFC.OdorFlowsTo.SystemAndUser,
+                    (MFC.Register.PULL_IN_1, MFC.OdorFlowsTo.Waste) => MFC.OdorFlowsTo.WasteAndUser,
+                    (MFC.Register.PULL_IN_1, MFC.OdorFlowsTo.System) => MFC.OdorFlowsTo.SystemAndUser,
+                    _ => _odorDirection
+                };
+
+                if (priorOdorDirection != _odorDirection && _shortPulseTimer == null)
+                {
+                    _shortPulseTimer = Utils.DispatchOnce.Do((double)ms / 1000, () =>
+                    {
+                        _odorDirection = priorOdorDirection;
+                        _shortPulseTimer = null;
+                    });
+                }
+            }
+        }
     }
 }

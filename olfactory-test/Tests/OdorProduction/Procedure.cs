@@ -146,14 +146,23 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            _mfc.OdorDirection = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
-            //_logger.Add(LogSource.OdProd, "valves", "open", _settings.Valve2ToUser ? "1 2" : "1");
             _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
 
-            if (_settings.UseFeedbackLoopToReachLevel)
+            var direction = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
+
+            if (_settings.OdorFlowDuration < 1)
             {
-                var model = new OlfactoryDeviceModel();
-                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
+                _mfc.ShortPulse(_settings.OdorFlowDuration, direction);
+            }
+            else
+            {
+                _mfc.OdorDirection = direction;
+
+                if (_settings.UseFeedbackLoopToReachLevel)
+                {
+                    var model = new OlfactoryDeviceModel();
+                    model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
+                }
             }
 
             StageChanged(this, Stage.OdorFlow);
@@ -161,8 +170,11 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
-            //_logger.Add(LogSource.OdProd, "valves", "close");
+            if (_settings.OdorFlowDuration >= 1)
+            {
+                _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
+            }
+
             _logger.Add("V00");
 
             StageChanged(this, Stage.FinalWait);
