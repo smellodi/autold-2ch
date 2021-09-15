@@ -46,7 +46,7 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     Content = L10n.T(item.Key.ToString()),
                     ToolTip = item.Value,
-                    IsEnabled = item.Key == ProcedureType.ThreePens,
+                    IsEnabled = item.Key != ProcedureType.OnePuff,
                 });
             cmbProcedureType.SelectedIndex = (int)_settings.Type;
         }

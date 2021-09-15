@@ -42,16 +42,23 @@
                 <StackPanel.LayoutTransform>
                     <ScaleTransform x:Name="sctScale"/>
                 </StackPanel.LayoutTransform>
-                <TextBlock Text="{lex:Loc ThTestInstr1}"/>
-                <TextBlock Text="{lex:Loc ThTestInstr2}"/>
-                <TextBlock Text="{lex:Loc ThTestInstr3}"/>
+                <TextBlock Text="{lex:Loc ThTestInstrIntro}"/>
+                <TextBlock Text="{lex:Loc {Binding ProcedureInstruction, FallbackValue=ThTestInstrThreePens}}"/>
+                <TextBlock Text="{lex:Loc ThTestInstrFinal}"/>
+                <TextBlock Text="{lex:Loc ThTestInstrRN}" Margin="0,60"/>
             </StackPanel>
         </ScrollViewer>
 
-        <Button Grid.Row="2"
-                Style="{StaticResource Next}"
-                Content="{lex:Loc Continue}"
-                Click="btnNext_Click"/>
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Style="{StaticResource Next}"
+                    Content="{lex:Loc Cancel}"
+                    Click="Cancel_Click"/>
+            <Button Style="{StaticResource Next}"
+                    Content="{lex:Loc Continue}"
+                    Click="Next_Click"/>
+        </StackPanel>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>

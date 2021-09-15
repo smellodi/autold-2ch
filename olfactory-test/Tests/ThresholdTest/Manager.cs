@@ -21,7 +21,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _settings = e;
                 PageDone(this, _settings != null);
             };
-            _instructionsPage.Next += (s, e) => PageDone(this, true);
+            _instructionsPage.Next += (s, e) => PageDone(this, e != null);
             _familiarizePage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "familiarization", e.ToString());
@@ -55,6 +55,10 @@ namespace Olfactory.Tests.ThresholdTest
                 _logger.Add(LogSource.ThTest, "page", _current.Title);
             }
 
+            if (_current is Instructions instructions)
+            {
+                instructions.Init(_settings.Type);
+            }
             if (_current is ThreePensPage threePens)
             {
                 threePens.Init(_settings);

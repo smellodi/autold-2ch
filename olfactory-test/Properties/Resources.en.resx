@@ -384,13 +384,13 @@
   <data name="ThresholdTest" xml:space="preserve">
     <value>Threshold Test</value>
   </data>
-  <data name="ThTestInstr1" xml:space="preserve">
-    <value>Your sense of smell is to be tested. Repeatedly, three pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess. During the evaluation of the test it will be taken into account that you have been asked to come to a decision in any case.</value>
+  <data name="ThTestInstrIntro" xml:space="preserve">
+    <value>Your sense of smell is to be tested. The test will take approximately 30-40 minutes.</value>
   </data>
-  <data name="ThTestInstr2" xml:space="preserve">
-    <value>The test will take approximately 30-40 minutes. All substances contained in the test are non-toxic and not harmful in the used concentrations.</value>
+  <data name="ThTestInstrFinal" xml:space="preserve">
+    <value>All substances contained in the test are non-toxic and not harmful in the used concentrations.</value>
   </data>
-  <data name="ThTestInstr3" xml:space="preserve">
+  <data name="ThTestInstrRN" xml:space="preserve">
     <value>[RESEARCHER NOTE] More instruction can be added here. We could even collect personal data on this page to store it later in log files along the data.</value>
   </data>
   <data name="ThTestInstrDone" xml:space="preserve">
@@ -524,6 +524,15 @@
   </data>
   <data name="ThreePens" xml:space="preserve">
     <value>three pens</value>
+  </data>
+  <data name="ThTestInstrOnePuff" xml:space="preserve">
+    <value>Repeatedly, you will be asked to sniff an air flow directed to the mask. You have to find out whether you have perceived the odorant.</value>
+  </data>
+  <data name="ThTestInstrThreePens" xml:space="preserve">
+    <value>Repeatedly, three pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
+  </data>
+  <data name="ThTestInstrTwoPuffs" xml:space="preserve">
+    <value>Repeatedly, two pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
   <data name="TwoPuffs" xml:space="preserve">
     <value>two puffs</value>
