@@ -8,7 +8,7 @@ using Olfactory.Utils;
 
 namespace Olfactory.Tests.ThresholdTest
 {
-    public class ThreePens : ITestEmulator
+    public class ProcedurePens : ITestEmulator
     {
         public enum PPMChangeDirection { Increasing, Decreasing }
         
@@ -22,8 +22,6 @@ namespace Olfactory.Tests.ThresholdTest
                 FlowStart = flowStart;
             }
         }
-
-        public const int PEN_COUNT = 3;
 
         /// <summary>
         /// Fires on progressing the odor preparation
@@ -63,15 +61,14 @@ namespace Olfactory.Tests.ThresholdTest
 
         public Settings.FlowStartTrigger FlowStarts => _settings.FlowStart;
 
-        private string[] State => new string[] {
-            Step.ToString(),
-            Direction.ToString(),
-            PPMLevel.ToString(),
-            RecognitionsInRow.ToString(),
-            TurningPointCount.ToString()
+        public int PenCount => _settings.Type switch
+        {
+            Settings.ProcedureType.ThreePens => 3,
+            Settings.ProcedureType.TwoPens => 2,
+            _ => throw new NotImplementedException($"This number of pens ({_settings.Type}) is not supported"),
         };
 
-        public ThreePens()
+        public ProcedurePens()
         {
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += (s, e) =>
@@ -115,17 +112,19 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 _settings = settings;
                 _odorTubeFillingDuration = settings.OdorPreparationDuration - OUTPUT_READINESS_DURATION;
+
+                _pens.Clear();
+                _pens.Add(new Pen(PenColor.Red));
+                while (_pens.Count < PenCount)
+                {
+                    _pens.Add(new Pen(PenColor.Blue));
+                }
             }
 
             _currentPenID = -1;
             _inProgress = true;
             _isAwaitingOdorFlowStart = false;
 
-            _pens = new Pen[PEN_COUNT] {
-                new Pen(PenColor.Red),
-                new Pen(PenColor.Green),
-                new Pen(PenColor.Blue)
-            };
             _rnd.Shuffle(_pens);
 
             _logger.Add(LogSource.ThTest, "trial", State);
@@ -141,7 +140,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC..
                                                         // lets wait a little just in case, then continue
-            return _pens;
+            return _pens.ToArray();
         }
 
         public void Select(Pen pen)
@@ -217,9 +216,17 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Properties
 
-        PenColor CurrentColor => _pens != null && (0 <= _currentPenID && _currentPenID < _pens.Length)
+        PenColor CurrentColor => _pens != null && (0 <= _currentPenID && _currentPenID < _pens.Count)
             ? _pens[_currentPenID].Color
             : PenColor.None;
+
+        string[] State => new string[] {
+            Step.ToString(),
+            Direction.ToString(),
+            PPMLevel.ToString(),
+            RecognitionsInRow.ToString(),
+            TurningPointCount.ToString()
+        };
 
 
         // Members
@@ -240,7 +247,7 @@ namespace Olfactory.Tests.ThresholdTest
 
         bool _inProgress = false;
 
-        Pen[] _pens;
+        List<Pen> _pens = new List<Pen>();
         int _currentPenID = -1;
 
         int _stepID = -1;
@@ -336,7 +343,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _model.CloseFlow();
             }
 
-            if (++_currentPenID == _pens.Length)
+            if (++_currentPenID == _pens.Count)
             {
                 _currentPenID = -1;
                 _logger.Add(LogSource.ThTest, "awaiting");

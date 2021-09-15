@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using Olfactory.Pages.ThresholdTest;
-using ThreePensPage = Olfactory.Pages.ThresholdTest.ThreePens;
+using ThreePensPage = Olfactory.Pages.ThresholdTest.PenPresentation;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -44,7 +44,12 @@ namespace Olfactory.Tests.ThresholdTest
                 null => _setupPage,
                 Setup => _instructionsPage,
                 Instructions => _familiarizePage,
-                Familiarize => _threePensPage,
+                Familiarize => _settings.Type switch {
+                    Settings.ProcedureType.ThreePens => _threePensPage,
+                    Settings.ProcedureType.TwoPens => _threePensPage,
+                    Settings.ProcedureType.OnePen => _threePensPage,
+                    _ => throw new NotImplementedException($"Unhandled procedure type in {Name}"),
+                },
                 ThreePensPage => _resultPage,
                 Result => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),

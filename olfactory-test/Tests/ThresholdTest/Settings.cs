@@ -7,7 +7,7 @@ namespace Olfactory.Tests.ThresholdTest
     {
         public enum FlowStartTrigger { Immediate, Manual, Automatic }
 
-        public enum ProcedureType { ThreePens, TwoPuffs, OnePuff }
+        public enum ProcedureType { ThreePens, TwoPens, OnePen }
 
         public double FreshAir;
         public double[] PPMs;

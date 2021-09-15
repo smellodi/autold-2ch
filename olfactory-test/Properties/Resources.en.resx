@@ -507,34 +507,34 @@
   <data name="FlowStart" xml:space="preserve">
     <value>Flow start</value>
   </data>
-  <data name="OnePuff" xml:space="preserve">
-    <value>one puff</value>
+  <data name="OnePen" xml:space="preserve">
+    <value>one pen</value>
   </data>
   <data name="ProcedureType" xml:space="preserve">
     <value>Procedure type</value>
   </data>
-  <data name="ProcTypeOnePuff" xml:space="preserve">
-    <value>Users have to answer whether a puff smells or not</value>
+  <data name="ProcTypeOnePen" xml:space="preserve">
+    <value>Users have to answer whether the presented pen smells or not</value>
   </data>
   <data name="ProcTypeThreePens" xml:space="preserve">
     <value>Three pens are presented to users, they are forced to select the one that smells</value>
   </data>
-  <data name="ProcTypeTwoPuffs" xml:space="preserve">
+  <data name="ProcTypeTwoPens" xml:space="preserve">
     <value>Two pens are presented to users, they are forced to select the one that smells</value>
   </data>
   <data name="ThreePens" xml:space="preserve">
     <value>three pens</value>
   </data>
-  <data name="ThTestInstrOnePuff" xml:space="preserve">
+  <data name="ThTestInstrOnePen" xml:space="preserve">
     <value>Repeatedly, you will be asked to sniff an air flow directed to the mask. You have to find out whether you have perceived the odorant.</value>
   </data>
   <data name="ThTestInstrThreePens" xml:space="preserve">
     <value>Repeatedly, three pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
-  <data name="ThTestInstrTwoPuffs" xml:space="preserve">
+  <data name="ThTestInstrTwoPens" xml:space="preserve">
     <value>Repeatedly, two pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
-  <data name="TwoPuffs" xml:space="preserve">
-    <value>two puffs</value>
+  <data name="TwoPens" xml:space="preserve">
+    <value>two pens</value>
   </data>
 </root>

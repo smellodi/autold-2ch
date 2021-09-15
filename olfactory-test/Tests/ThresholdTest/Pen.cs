@@ -1,6 +1,6 @@
 ﻿namespace Olfactory.Tests.ThresholdTest
 {
-    public enum PenColor { None, Red, Green, Blue }
+    public enum PenColor { None, Red, Blue }
 
     public class Pen
     {

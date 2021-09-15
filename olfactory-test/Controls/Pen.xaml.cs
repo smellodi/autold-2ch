@@ -136,7 +136,6 @@ namespace Olfactory.Controls
         private Color GetPenColor(Tests.ThresholdTest.PenColor color) => color switch
         {
             Tests.ThresholdTest.PenColor.Red => Colors.Red,
-            Tests.ThresholdTest.PenColor.Green => Colors.Green,
             Tests.ThresholdTest.PenColor.Blue => Colors.Blue,
             _ => throw new NotImplementedException("Unrecognized pen color"),
         };

@@ -46,7 +46,7 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     Content = L10n.T(item.Key.ToString()),
                     ToolTip = item.Value,
-                    IsEnabled = item.Key != ProcedureType.OnePuff,
+                    IsEnabled = item.Key != ProcedureType.OnePen,
                 });
             cmbProcedureType.SelectedIndex = (int)_settings.Type;
         }
@@ -66,8 +66,8 @@ namespace Olfactory.Pages.ThresholdTest
         readonly Dictionary<ProcedureType, string> PROCEDURE_TYPE_TOOLTIPS = new()
         {
             { ProcedureType.ThreePens, L10n.T("ProcTypeThreePens") },
-            { ProcedureType.TwoPuffs, L10n.T("ProcTypeTwoPuffs") },
-            { ProcedureType.OnePuff, L10n.T("ProcTypeOnePuff") },
+            { ProcedureType.TwoPens, L10n.T("ProcTypeTwoPens") },
+            { ProcedureType.OnePen, L10n.T("ProcTypeOnePen") },
         };
 
         private Utils.Validation CheckInput()

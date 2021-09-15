@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ThreePensProc = Olfactory.Tests.ThresholdTest.ThreePens;
+using PenProc = Olfactory.Tests.ThresholdTest.ProcedurePens;
 using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
+using System.Collections.Generic;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class ThreePens : Page, IPage<double>
+    public partial class PenPresentation : Page, IPage<double>
     {
         public event EventHandler<double> Next = delegate { };
 
         public Tests.ITestEmulator Emulator => _procedure;
 
-        public ThreePens()
+        public PenPresentation()
         {
             InitializeComponent();
 
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            PENS = new Controls.Pen[ThreePensProc.PEN_COUNT] { pen1, pen2, pen3 };
+            _pens.Add(pen1);
 
             _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => wtiInstruction.Progress = e);
 
@@ -56,12 +57,30 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void Init(Tests.ThresholdTest.Settings settings = null)
         {
+            var pens = _procedure.Start(settings);
+
+            grdPens.MaxWidth = MAX_PEN_AREA_WIDTH * _procedure.PenCount;
+
+            while (grdPens.ColumnDefinitions.Count < _procedure.PenCount)
+            {
+                var pen = new Controls.Pen();
+                pen.ID = (grdPens.ColumnDefinitions.Count + 1).ToString();
+                pen.Selected += OnPen_Selected;
+
+                Grid.SetRow(pen, 1);
+                Grid.SetColumn(pen, grdPens.ColumnDefinitions.Count);
+
+                _pens.Add(pen);
+
+                grdPens.ColumnDefinitions.Add(new ColumnDefinition());
+                grdPens.Children.Add(pen);
+            }
+
             _currentPenID = -1;
 
-            var pens = _procedure.Start(settings);
-            for (int i = 0; i < PENS.Length; i++)
+            for (int i = 0; i < _pens.Count; i++)
             {
-                PENS[i].PenInstance = pens[i];
+                _pens[i].PenInstance = pens[i];
             }
 
             UpdateDisplay(Update.All);
@@ -96,11 +115,8 @@ namespace Olfactory.Pages.ThresholdTest
             All = Step | PPM | Recognitions | Turnings
         }
 
-        ThreePensProc _procedure = new();
-        int _currentPenID = -1;
 
-        Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < PENS.Length) ? PENS[_currentPenID] : null;
-
+        const int MAX_PEN_AREA_WIDTH = 300;
 
         readonly string INSTRUCTION_SNIFF_THE_PEN_FIXED = Utils.L10n.T("ThTestInstrSniff");
         readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
@@ -109,7 +125,13 @@ namespace Olfactory.Pages.ThresholdTest
         readonly string INSTRUCTION_CHOOSE_THE_PEN = Utils.L10n.T("ThTestInstrSelectPen");
         readonly string INSTRUCTION_DONE = Utils.L10n.T("ThTestInstrDone");
 
-        readonly Controls.Pen[] PENS;
+        readonly List<Controls.Pen> _pens = new List<Controls.Pen>();
+
+        PenProc _procedure = new();
+        int _currentPenID = -1;
+
+        Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < _pens.Count) ? _pens[_currentPenID] : null;
+
 
         private void ActivatePen(int penID, FlowStart flowStart)
         {
@@ -136,7 +158,7 @@ namespace Olfactory.Pages.ThresholdTest
         {
             wtiInstruction.Text = enable ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_DONE;
 
-            foreach (var pen in PENS)
+            foreach (var pen in _pens)
             {
                 pen.IsSelectable = enable;
             }
@@ -165,7 +187,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void ColorizePens(bool colorize)
         {
-            foreach (var pen in PENS)
+            foreach (var pen in _pens)
             {
                 pen.IsColorVisible = colorize;
             }

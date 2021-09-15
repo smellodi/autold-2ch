@@ -1,4 +1,4 @@
-﻿<Page x:Class="Olfactory.Pages.ThresholdTest.ThreePens"
+﻿<Page x:Class="Olfactory.Pages.ThresholdTest.PenPresentation"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -32,17 +32,14 @@
             <Run Text="{lex:Loc PenPresentation}"/>
         </TextBlock>
 
-        <Grid Grid.Row="1" Grid.Column="0"
+        <Grid Grid.Row="1" Grid.Column="0" x:Name="grdPens"
               HorizontalAlignment="Center"
-              MaxWidth="1000"
               Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}">
             <Grid.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Grid.LayoutTransform>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -51,19 +48,13 @@
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <local:WaitingInstruction x:Name="wtiInstruction" Grid.Row="0" Grid.ColumnSpan="3"
+            <local:WaitingInstruction x:Name="wtiInstruction" Grid.Row="0" Grid.ColumnSpan="10"
                                       Margin="0,36"
                                       VerticalContentAlignment="Bottom"
                                       Text="Instructions"/>
             
             <local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1"
                        ID="1"
-                       Selected="OnPen_Selected"/>
-            <local:Pen Grid.Row="1" Grid.Column="1" x:Name="pen2"
-                       ID="2"
-                       Selected="OnPen_Selected"/>
-            <local:Pen Grid.Row="1" Grid.Column="2" x:Name="pen3"
-                       ID="3"
                        Selected="OnPen_Selected"/>
 
             <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
