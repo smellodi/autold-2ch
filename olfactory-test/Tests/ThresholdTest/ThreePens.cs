@@ -8,20 +8,15 @@ using Olfactory.Utils;
 
 namespace Olfactory.Tests.ThresholdTest
 {
-    public class Procedure : ITestEmulator
+    public class ThreePens : ITestEmulator
     {
-        public enum PenPresentationStart
-        {
-            Immediate,
-            Manual,
-            Automatic
-        }
         public enum PPMChangeDirection { Increasing, Decreasing }
+        
         public class PenActivationArgs : EventArgs
         {
             public int ID { get; private set; }
-            public PenPresentationStart FlowStart { get; private set; }
-            public PenActivationArgs(int id, PenPresentationStart flowStart)
+            public Settings.FlowStartTrigger FlowStart { get; private set; }
+            public PenActivationArgs(int id, Settings.FlowStartTrigger flowStart)
             {
                 ID = id;
                 FlowStart = flowStart;
@@ -66,7 +61,7 @@ namespace Olfactory.Tests.ThresholdTest
         public int RecognitionsInRow => _recognitionsInRow;
         public int TurningPointCount => _turningPointPPMs.Count;
 
-        public PenPresentationStart FlowStarts => _settings.FlowStart;
+        public Settings.FlowStartTrigger FlowStarts => _settings.FlowStart;
 
         private string[] State => new string[] {
             Step.ToString(),
@@ -76,7 +71,7 @@ namespace Olfactory.Tests.ThresholdTest
             TurningPointCount.ToString()
         };
 
-        public Procedure()
+        public ThreePens()
         {
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += (s, e) =>
@@ -184,7 +179,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         public void EnablePenOdor()
         {
-            if (_settings.FlowStart != PenPresentationStart.Immediate && _isAwaitingOdorFlowStart)
+            if (_settings.FlowStart != Settings.FlowStartTrigger.Immediate && _isAwaitingOdorFlowStart)
             {
                 _isAwaitingOdorFlowStart = false;
                 StartOdorFlow();
@@ -270,7 +265,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _logger.Add(LogSource.PID, "data", pidSample.ToString());
                 _monitor.LogData(LogSource.PID, pidSample);
 
-                if (_settings.FlowStart == PenPresentationStart.Automatic &&
+                if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic &&
                     _breathingDetector.Feed(pidSample.Time, pidSample.Loop) &&
                     _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale &&
                     _isAwaitingOdorFlowStart)
@@ -354,13 +349,13 @@ namespace Olfactory.Tests.ThresholdTest
 
             switch (_settings.FlowStart)
             {
-                case PenPresentationStart.Immediate:
+                case Settings.FlowStartTrigger.Immediate:
                     StartOdorFlow();
                     break;
-                case PenPresentationStart.Manual:
+                case Settings.FlowStartTrigger.Manual:
                     _isAwaitingOdorFlowStart = true;
                     break;
-                case PenPresentationStart.Automatic:
+                case Settings.FlowStartTrigger.Automatic:
                     _isAwaitingOdorFlowStart = true;
                     break;
             }

@@ -90,7 +90,7 @@ namespace Olfactory.Pages.OdorProduction
 
         // UI events
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, RoutedEventArgs e)
         {
             var validation = CheckInput();
             if (validation != null)
@@ -120,6 +120,11 @@ namespace Olfactory.Pages.OdorProduction
 
                 Next(this, _settings);
             }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            Next(this, null);
         }
     }
 }

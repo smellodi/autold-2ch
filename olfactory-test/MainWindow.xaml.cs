@@ -113,19 +113,32 @@ namespace Olfactory
             }
         }
 
-        private void OnTest_PageDone(object sender, EventArgs args)
+        private void OnTest_PageDone(object sender, bool canContinue)
         {
-            var page = _currentTest.NextPage();
-            if (page == null)
+            if (!canContinue)
             {
-                _finishedPage.TestName = _currentTest.Name;
-                Content = _finishedPage;
+                _currentTest.Interrupt();
                 _currentTest = null;
-                DispatchOnceUI.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
+                Content = _setupPage;
+
+                SyncLogger.Instance.Finilize();
+                SyncLogger.Instance.Clear();
+                FlowLogger.Instance.Clear();
             }
             else
             {
-                Content = page;
+                var page = _currentTest.NextPage();
+                if (page == null)
+                {
+                    _finishedPage.TestName = _currentTest.Name;
+                    Content = _finishedPage;
+                    _currentTest = null;
+                    DispatchOnceUI.Do(0.3, () => SaveLoggingData());  // let the page to change, then try to save data
+                }
+                else
+                {
+                    Content = page;
+                }
             }
         }
 

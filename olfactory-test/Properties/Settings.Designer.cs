@@ -498,5 +498,17 @@ namespace Olfactory.Properties {
                 this["Language"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Test_TT_Type {
+            get {
+                return ((int)(this["Test_TT_Type"]));
+            }
+            set {
+                this["Test_TT_Type"] = value;
+            }
+        }
     }
 }

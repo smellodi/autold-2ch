@@ -139,5 +139,8 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">en</Value>
     </Setting>
+    <Setting Name="Test_TT_Type" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

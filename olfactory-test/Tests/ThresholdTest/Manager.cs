@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using Olfactory.Pages.ThresholdTest;
+using ThreePensPage = Olfactory.Pages.ThresholdTest.ThreePens;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -9,7 +10,7 @@ namespace Olfactory.Tests.ThresholdTest
     /// </summary>
     public class Manager : ITestManager
     {
-        public event EventHandler PageDone = delegate { };
+        public event EventHandler<bool> PageDone = delegate { };
 
         public string Name => Utils.L10n.T("ThresholdTest");
 
@@ -18,22 +19,22 @@ namespace Olfactory.Tests.ThresholdTest
             _setupPage.Next += (s, e) =>
             {
                 _settings = e;
-                PageDone(this, new EventArgs());
+                PageDone(this, _settings != null);
             };
-            _instructionsPage.Next += (s, e) => PageDone(this, new EventArgs());
+            _instructionsPage.Next += (s, e) => PageDone(this, true);
             _familiarizePage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "familiarization", e.ToString());
-                PageDone(this, new EventArgs());
+                PageDone(this, true);
             };
             _threePensPage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "finished", e.ToString("F1"));
 
                 _resultPage.SetPPM(e);
-                PageDone(this, new EventArgs());
+                PageDone(this, true);
             };
-            _resultPage.Next += (s, e) => PageDone(this, new EventArgs());
+            _resultPage.Next += (s, e) => PageDone(this, true);
         }
 
         public Page NextPage()
@@ -42,10 +43,10 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 null => _setupPage,
                 Setup => _instructionsPage,
-                Instructions _ => _familiarizePage,
-                Familiarize _ => _threePensPage,
-                ThreePens _ => _resultPage,
-                Result _ => null,
+                Instructions => _familiarizePage,
+                Familiarize => _threePensPage,
+                ThreePensPage => _resultPage,
+                Result => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),
             };
 
@@ -54,7 +55,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _logger.Add(LogSource.ThTest, "page", _current.Title);
             }
 
-            if (_current is ThreePens threePens)
+            if (_current is ThreePensPage threePens)
             {
                 threePens.Init(_settings);
             }
@@ -99,15 +100,16 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Internal
 
-        Setup _setupPage = new Setup();
-        Instructions _instructionsPage = new Instructions();
-        Familiarize _familiarizePage = new Familiarize();
-        ThreePens _threePensPage = new ThreePens();
-        Result _resultPage = new Result();
+        readonly FlowLogger _logger = FlowLogger.Instance;
+
+        readonly Setup _setupPage = new();
+        readonly Instructions _instructionsPage = new();
+        readonly Familiarize _familiarizePage = new();
+        readonly ThreePensPage _threePensPage = new();
+        readonly Result _resultPage = new();
 
         Page _current = null;
 
-        FlowLogger _logger = FlowLogger.Instance;
         Settings _settings;
     }
 }

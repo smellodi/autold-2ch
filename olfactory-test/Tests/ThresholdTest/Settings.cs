@@ -5,6 +5,10 @@ namespace Olfactory.Tests.ThresholdTest
 {
     public class Settings
     {
+        public enum FlowStartTrigger { Immediate, Manual, Automatic }
+
+        public enum ProcedureType { ThreePens, TwoPuffs, OnePuff }
+
         public double FreshAir;
         public double[] PPMs;
         public int OdorPreparationDuration;
@@ -16,7 +20,8 @@ namespace Olfactory.Tests.ThresholdTest
         public double FamiliarizationDuration; // seconds
         public bool UseFeedbackLoopToReachLevel;
         public bool UseFeedbackLoopToKeepLevel;
-        public Procedure.PenPresentationStart FlowStart;
+        public FlowStartTrigger FlowStart;
+        public ProcedureType Type;
 
         public Settings()
         {
@@ -32,7 +37,8 @@ namespace Olfactory.Tests.ThresholdTest
             FamiliarizationDuration = settings.Test_TT_FamiliarizationDuration;
             UseFeedbackLoopToReachLevel = settings.Test_TT_UseFeedbackLoopToReachLevel;
             UseFeedbackLoopToKeepLevel = settings.Test_TT_UseFeedbackLoopToKeepLevel;
-            FlowStart = (Procedure.PenPresentationStart)settings.Test_TT_FlowStart;
+            FlowStart = (FlowStartTrigger)settings.Test_TT_FlowStart;
+            Type = (ProcedureType)settings.Test_TT_Type;
 
             List<double> odorQuantities = new List<double>();
             foreach (var q in settings.Test_TT_PPMs)
@@ -56,7 +62,8 @@ namespace Olfactory.Tests.ThresholdTest
             settings.Test_TT_FamiliarizationDuration = FamiliarizationDuration;
             settings.Test_TT_UseFeedbackLoopToReachLevel = UseFeedbackLoopToReachLevel;
             settings.Test_TT_UseFeedbackLoopToKeepLevel = UseFeedbackLoopToKeepLevel;
-            settings.Test_TT_FlowStart = settings.Test_TT_FlowStart;
+            settings.Test_TT_FlowStart = (int)FlowStart;
+            settings.Test_TT_Type = (int)Type;
 
             settings.Test_TT_PPMs.Clear();
             settings.Test_TT_PPMs.AddRange(PPMs.Select(ppm => ppm.ToString()).ToArray());

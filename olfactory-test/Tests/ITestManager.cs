@@ -11,7 +11,7 @@ namespace Olfactory.Tests
 
     public interface ITestManager
     {
-        event EventHandler PageDone;
+        event EventHandler<bool> PageDone;  // bool: 'True' to continue, 'False' to quit
         string Name { get; }
         Page Start();
         Page NextPage();

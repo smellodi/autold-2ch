@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Olfactory.Utils;
+using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
+using ProcedureType = Olfactory.Tests.ThresholdTest.Settings.ProcedureType;
 
 namespace Olfactory.Pages.ThresholdTest
 {
@@ -29,14 +31,24 @@ namespace Olfactory.Pages.ThresholdTest
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
-            cmbProcedureFlow.ItemsSource = PROCEDURE_FLOW_TOOLTIPS
+
+            cmbFlowStart.ItemsSource = FLOW_START_TOOLTIPS
                 .Select(item => new ComboBoxItem()
                 {
                     Content = L10n.T(item.Key.ToString()),
                     ToolTip = item.Value,
-                    IsEnabled = item.Key != Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic,
+                    IsEnabled = item.Key != FlowStart.Automatic,
                 });
-            cmbProcedureFlow.SelectedIndex = (int)_settings.FlowStart;
+            cmbFlowStart.SelectedIndex = (int)_settings.FlowStart;
+
+            cmbProcedureType.ItemsSource = PROCEDURE_TYPE_TOOLTIPS
+                .Select(item => new ComboBoxItem()
+                {
+                    Content = L10n.T(item.Key.ToString()),
+                    ToolTip = item.Value,
+                    IsEnabled = item.Key == ProcedureType.ThreePens,
+                });
+            cmbProcedureType.SelectedIndex = (int)_settings.Type;
         }
 
 
@@ -44,14 +56,19 @@ namespace Olfactory.Pages.ThresholdTest
 
         const char LIST_DELIM = ' ';
 
-        Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string> PROCEDURE_FLOW_TOOLTIPS = new Dictionary<Tests.ThresholdTest.Procedure.PenPresentationStart, string>()
+        readonly Tests.ThresholdTest.Settings _settings = new();
+        readonly Dictionary<FlowStart, string> FLOW_START_TOOLTIPS = new()
         {
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Immediate, L10n.T("OdorStartsImmediately") },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Manual, L10n.T("OdorStartsAfterKeyPress") },
-            { Tests.ThresholdTest.Procedure.PenPresentationStart.Automatic, L10n.T("OdorStartsAfterInhale") },
+            { FlowStart.Immediate, L10n.T("OdorStartsImmediately") },
+            { FlowStart.Manual, L10n.T("OdorStartsAfterKeyPress") },
+            { FlowStart.Automatic, L10n.T("OdorStartsAfterInhale") },
         };
-
-        Tests.ThresholdTest.Settings _settings = new Tests.ThresholdTest.Settings();
+        readonly Dictionary<ProcedureType, string> PROCEDURE_TYPE_TOOLTIPS = new()
+        {
+            { ProcedureType.ThreePens, L10n.T("ProcTypeThreePens") },
+            { ProcedureType.TwoPuffs, L10n.T("ProcTypeTwoPuffs") },
+            { ProcedureType.OnePuff, L10n.T("ProcTypeOnePuff") },
+        };
 
         private Utils.Validation CheckInput()
         {
@@ -84,7 +101,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         // UI events
 
-        private void btnStart_Click(object sender, RoutedEventArgs e)
+        private void Start_Click(object sender, RoutedEventArgs e)
         {
             var validation = CheckInput();
             if (validation != null)
@@ -104,7 +121,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.PPMs = txbPPMs.Text
                     .Split(LIST_DELIM)
                     .Select(val => double.Parse(val))
-                    .ToArray(); 
+                    .ToArray();
                 _settings.OdorPreparationDuration = int.Parse(txbOdorPreparationDuration.Text);
                 _settings.PenSniffingDuration = double.Parse(txbPenSniffingDuration.Text);
                 _settings.TurningPoints = int.Parse(txbTurningPoints.Text);
@@ -114,12 +131,18 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
-                _settings.FlowStart = (Tests.ThresholdTest.Procedure.PenPresentationStart)cmbProcedureFlow.SelectedIndex;
+                _settings.FlowStart = (FlowStart)cmbFlowStart.SelectedIndex;
+                _settings.Type = (ProcedureType)cmbProcedureType.SelectedIndex;
 
                 _settings.Save();
 
                 Next(this, _settings);
             }
+        }
+ 
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            Next(this, null);
         }
     }
 }

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Automatic" xml:space="preserve">
-    <value>Automatic</value>
+    <value>automatic</value>
   </data>
   <data name="BackToHome" xml:space="preserve">
     <value>Back to home page</value>
@@ -205,7 +205,7 @@
     <value>Graph</value>
   </data>
   <data name="Immediate" xml:space="preserve">
-    <value>Immediate</value>
+    <value>immediate</value>
   </data>
   <data name="InfoF2" xml:space="preserve">
     <value>Press F2 to simulate COM ports.</value>
@@ -244,7 +244,7 @@
     <value>mA</value>
   </data>
   <data name="Manual" xml:space="preserve">
-    <value>Manual</value>
+    <value>manual</value>
   </data>
   <data name="MFCPlayground" xml:space="preserve">
     <value>MFC Playground</value>
@@ -500,5 +500,32 @@
   </data>
   <data name="Temperature" xml:space="preserve">
     <value>Temperature</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FlowStart" xml:space="preserve">
+    <value>Flow start</value>
+  </data>
+  <data name="OnePuff" xml:space="preserve">
+    <value>one puff</value>
+  </data>
+  <data name="ProcedureType" xml:space="preserve">
+    <value>Procedure type</value>
+  </data>
+  <data name="ProcTypeOnePuff" xml:space="preserve">
+    <value>Users have to answer whether a puff smells or not</value>
+  </data>
+  <data name="ProcTypeThreePens" xml:space="preserve">
+    <value>Three pens are presented to users, they are forced to select the one that smells</value>
+  </data>
+  <data name="ProcTypeTwoPuffs" xml:space="preserve">
+    <value>Two pens are presented to users, they are forced to select the one that smells</value>
+  </data>
+  <data name="ThreePens" xml:space="preserve">
+    <value>three pens</value>
+  </data>
+  <data name="TwoPuffs" xml:space="preserve">
+    <value>two puffs</value>
   </data>
 </root>
