@@ -20,8 +20,6 @@ namespace Olfactory.Pages.ThresholdTest
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            _pens.Add(pen1);
-
             _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => wtiInstruction.Progress = e);
 
             _procedure.PenActivated += (s, e) => Dispatcher.Invoke(() => {
@@ -30,18 +28,24 @@ namespace Olfactory.Pages.ThresholdTest
             });
 
             _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
-                if (_procedure.FlowStarts != FlowStart.Immediate)
+                if (_procedure.FlowStart != FlowStart.Immediate)
                 {
                     wtiInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
                 }
             });
 
-            _procedure.WaitingForPenSelection += (s, e) => Dispatcher.Invoke(() => {
+            _procedure.WaitingForAnswer += (s, e) => Dispatcher.Invoke(() => {
                 if (CurrentPen != null)
                 {
                     CurrentPen.IsActive = false;
                 }
-                EnableChoiceButtons(true);
+
+                wtiInstruction.Text = e == PenProc.AnswerType.HasOdor ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_CHOOSE_PEN_ODOR;
+
+                foreach (var pen in _pens)
+                {
+                    pen.IsSelectable = true;
+                }
             });
 
             _procedure.Next += (s, e) => Dispatcher.Invoke(() => {
@@ -63,8 +67,11 @@ namespace Olfactory.Pages.ThresholdTest
 
             while (grdPens.ColumnDefinitions.Count < _procedure.PenCount)
             {
-                var pen = new Controls.Pen();
-                pen.ID = (grdPens.ColumnDefinitions.Count + 1).ToString();
+                var pen = new Controls.Pen
+                {
+                    ID = (grdPens.ColumnDefinitions.Count + 1).ToString(),
+                    CanChoose = _procedure.CanChoose
+                };
                 pen.Selected += OnPen_Selected;
 
                 Grid.SetRow(pen, 1);
@@ -76,12 +83,12 @@ namespace Olfactory.Pages.ThresholdTest
                 grdPens.Children.Add(pen);
             }
 
-            _currentPenID = -1;
-
             for (int i = 0; i < _pens.Count; i++)
             {
                 _pens[i].PenInstance = pens[i];
             }
+
+            _currentPenID = -1;
 
             UpdateDisplay(Update.All);
 
@@ -95,8 +102,8 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void ConsumeKeyDown(Key e)
         {
-            if ((e == Key.Space && _procedure.FlowStarts == FlowStart.Manual) ||
-                (e == Key.Enter && _procedure.FlowStarts == FlowStart.Automatic))
+            if ((e == Key.Space && _procedure.FlowStart == FlowStart.Manual) ||
+                (e == Key.Enter && _procedure.FlowStart == FlowStart.Automatic))
             {
                 _procedure.EnablePenOdor();
             }
@@ -116,18 +123,19 @@ namespace Olfactory.Pages.ThresholdTest
         }
 
 
-        const int MAX_PEN_AREA_WIDTH = 300;
+        const int MAX_PEN_AREA_WIDTH = 320;
 
         readonly string INSTRUCTION_SNIFF_THE_PEN_FIXED = Utils.L10n.T("ThTestInstrSniff");
         readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
         readonly string INSTRUCTION_SNIFF_THE_PEN_AUTO = Utils.L10n.T("ThTestInstrInhale");
         readonly string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = Utils.L10n.T("ThTestInstrWait");
         readonly string INSTRUCTION_CHOOSE_THE_PEN = Utils.L10n.T("ThTestInstrSelectPen");
+        readonly string INSTRUCTION_CHOOSE_PEN_ODOR = Utils.L10n.T("ThTestInstrChooseOdor");
         readonly string INSTRUCTION_DONE = Utils.L10n.T("ThTestInstrDone");
 
-        readonly List<Controls.Pen> _pens = new List<Controls.Pen>();
+        readonly List<Controls.Pen> _pens = new();
+        readonly PenProc _procedure = new();
 
-        PenProc _procedure = new();
         int _currentPenID = -1;
 
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < _pens.Count) ? _pens[_currentPenID] : null;
@@ -139,6 +147,7 @@ namespace Olfactory.Pages.ThresholdTest
             {
                 CurrentPen.IsActive = false;
             }
+
             _currentPenID = penID;
 
             wtiInstruction.Text = flowStart switch
@@ -154,22 +163,12 @@ namespace Olfactory.Pages.ThresholdTest
 
         // UI actions
 
-        private void EnableChoiceButtons(bool enable)
-        {
-            wtiInstruction.Text = enable ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_DONE;
-
-            foreach (var pen in _pens)
-            {
-                pen.IsSelectable = enable;
-            }
-        }
-
         private void UpdateDisplay(Update update)
         {
             if (update.HasFlag(Update.PPM))
             {
                 lblDirection.Content = _procedure.Direction;
-                lblPPMLevel.Content = _procedure.PPMLevel;
+                lblPPM.Content = _procedure.PPM;
             }
             if (update.HasFlag(Update.Recognitions))
             {
@@ -196,12 +195,17 @@ namespace Olfactory.Pages.ThresholdTest
 
         // UI events
 
-        private void OnPen_Selected(object sender, EventArgs e)
+        private void OnPen_Selected(object sender, bool answer)
         {
-            EnableChoiceButtons(false);
+            wtiInstruction.Text = INSTRUCTION_DONE;
+
+            foreach (var pen in _pens)
+            {
+                pen.IsSelectable = false;
+            }
 
             var penControl = sender as Controls.Pen;
-            _procedure.Select(penControl.PenInstance);
+            _procedure.Select(answer ? penControl.PenInstance : null);
 
             ColorizePens(true);
 

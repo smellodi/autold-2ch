@@ -55,7 +55,7 @@ namespace Olfactory.Pages.ThresholdTest
             Finished
         }
 
-        const int VENTILATION_DURATION = 15;  // seconds
+        const int VENTILATION_DURATION = 1;  // seconds
 
         readonly string INSTRUCTION_OPEN_VALVE = Utils.L10n.T("FamilInstrOpenValve");
         readonly string INSTRUCTION_WAIT_UNTIL_READY = Utils.L10n.T("FamilInstrPreparing");
@@ -63,13 +63,13 @@ namespace Olfactory.Pages.ThresholdTest
         readonly string INSTRUCTION_WAIT_UNTIL_VENTILATED = Utils.L10n.T("FamilInstrVentilating");
         readonly string INSTRUCTION_CONTINUE = Utils.L10n.T("FamilInstrContinue");
 
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
-        CommMonitor _monitor = CommMonitor.Instance;
+        readonly MFC _mfc = MFC.Instance;
+        readonly PID _pid = PID.Instance;
+        readonly CommMonitor _monitor = CommMonitor.Instance;
 
-        System.Timers.Timer _stateTimer = new System.Timers.Timer();
-        System.Timers.Timer _directionChangeTimer = new System.Timers.Timer();
-        System.Timers.Timer _measurementTimer = new System.Timers.Timer();
+        readonly System.Timers.Timer _stateTimer = new();
+        readonly System.Timers.Timer _directionChangeTimer = new();
+        readonly System.Timers.Timer _measurementTimer = new();
 
         long _sniffingStartTimestamp = 0;
 
@@ -88,7 +88,7 @@ namespace Olfactory.Pages.ThresholdTest
                 wtiInstruction.Reset();
                 wtiInstruction.Text = INSTRUCTION_SNIFF;
 
-                Utils.SoundPlayer waitingSounds = new Utils.SoundPlayer(Properties.Resources.WaitingSound);
+                var waitingSounds = new Utils.SoundPlayer(Properties.Resources.WaitingSound);
                 waitingSounds.Play();
 
                 _sniffingStartTimestamp = Utils.Timestamp.Ms;
@@ -139,9 +139,9 @@ namespace Olfactory.Pages.ThresholdTest
             }
         }
 
-    // UI events
+        // UI events
 
-    private void btnOpenValve_Click(object sender, RoutedEventArgs e)
+        private void OpenValve_Click(object sender, RoutedEventArgs e)
         {
             _mfc.OdorSpeed = MFC.ODOR_MAX_SPEED;
 
@@ -160,7 +160,7 @@ namespace Olfactory.Pages.ThresholdTest
             (sender as Button).IsEnabled = false;
         }
 
-        private void btnNext_Click(object sender, RoutedEventArgs e)
+        private void Next_Click(object sender, RoutedEventArgs e)
         {
             _measurementTimer.Stop();
 

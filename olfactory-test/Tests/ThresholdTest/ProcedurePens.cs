@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -10,7 +9,20 @@ namespace Olfactory.Tests.ThresholdTest
 {
     public class ProcedurePens : ITestEmulator
     {
-        public enum PPMChangeDirection { Increasing, Decreasing }
+        /// <summary>
+        /// Expected answer type
+        /// </summary>
+        public enum AnswerType
+        {
+            /// <summary>
+            /// One button per pen: user presses it if think the order was on thin pen
+            /// </summary>
+            HasOdor,
+            /// <summary>
+            /// Two buttons per pen, "has-order" and "no-order"
+            /// </summary>
+            YesNo
+        }
         
         public class PenActivationArgs : EventArgs
         {
@@ -43,7 +55,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// <summary>
         /// Fires when all pens were active, and it is time select the pen with odorant
         /// </summary>
-        public event EventHandler WaitingForPenSelection = delegate { };
+        public event EventHandler<AnswerType> WaitingForAnswer = delegate { };
         /// <summary>
         /// Fires when the trial is finished and the next should follow, passes the trial result
         /// </summary>
@@ -53,19 +65,21 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         public event EventHandler<double> Finished = delegate { };
 
-        public int Step => _stepID + 1;
-        public PPMChangeDirection Direction => _direction;
-        public int PPMLevel => _currentPPMLevel + 1;
-        public int RecognitionsInRow => _recognitionsInRow;
-        public int TurningPointCount => _turningPointPPMs.Count;
+        public int Step => _rules.Step + 1;
+        public IProcState.PPMChangeDirection Direction => _rules.Direction;
+        public double PPM => _rules.PPM;
+        public int RecognitionsInRow => _rules.RecognitionsInRow;
+        public int TurningPointCount => _rules.TurningPointCount;
 
-        public Settings.FlowStartTrigger FlowStarts => _settings.FlowStart;
+        public Settings.FlowStartTrigger FlowStart => _settings.FlowStart;
+        public bool CanChoose => _settings.Type == Settings.ProcedureType.OnePen;
 
         public int PenCount => _settings.Type switch
         {
             Settings.ProcedureType.ThreePens => 3,
             Settings.ProcedureType.TwoPens => 2,
-            _ => throw new NotImplementedException($"This number of pens ({_settings.Type}) is not supported"),
+            Settings.ProcedureType.OnePen => 1,
+            _ => throw new NotImplementedException($"There are no pens in the procedure '{_settings.Type}'"),
         };
 
         public ProcedurePens()
@@ -113,22 +127,34 @@ namespace Olfactory.Tests.ThresholdTest
                 _settings = settings;
                 _odorTubeFillingDuration = settings.OdorPreparationDuration - OUTPUT_READINESS_DURATION;
 
-                _pens.Clear();
-                _pens.Add(new Pen(PenColor.Red));
-                while (_pens.Count < PenCount)
+                var pens = new Pen[PenCount];
+                pens[0] = new Pen(PenColor.Odor);
+
+                if (_settings.Type == Settings.ProcedureType.OnePen)
                 {
-                    _pens.Add(new Pen(PenColor.Blue));
+                    _rules = new TurningYesNo(_settings.PPMs, _settings.RecognitionsInRow);
                 }
+                else
+                {
+                    _rules = new TurningForcedChoice(_settings.PPMs, _settings.RecognitionsInRow);
+
+                    for (int i = 1; i < PenCount; i++)
+                    {
+                        pens[i] = new Pen(PenColor.NonOdor);
+                    }
+                }
+
+                _pens = pens.ToArray();
             }
 
             _currentPenID = -1;
             _inProgress = true;
             _isAwaitingOdorFlowStart = false;
 
-            _rnd.Shuffle(_pens);
+            _rules.Next(_pens);
 
             _logger.Add(LogSource.ThTest, "trial", State);
-            _logger.Add(LogSource.ThTest, "order", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
+            _logger.Add(LogSource.ThTest, "colors", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
 
             _pidTimer.Interval = _settings.PIDReadingInterval;
             _pidTimer.Start();
@@ -136,16 +162,21 @@ namespace Olfactory.Tests.ThresholdTest
             _mfcTimer.Interval = TIMER_MFC_INTERVAL;
             _mfcTimer.Start();
 
-            _stepID++;
-
             DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC..
                                                         // lets wait a little just in case, then continue
-            return _pens.ToArray();
+            return _pens;
         }
 
+        /// <summary>
+        /// When wating for <see cref="AnswerType.HasOdor"/> answer: the selected pen
+        /// When wating for <see cref="AnswerType.YesNo"/> answer: the pen if "yes" was selected, or null if "no" was selected
+        /// </summary>
+        /// <param name="pen">Selected pen, or no pen if no odor was perceived</param>
         public void Select(Pen pen)
         {
-            var isCorrectChoice = pen.Color == ODOR_PEN_COLOR;
+            var isCorrectChoice = pen == null
+                ? _pens[0].Color == PenColor.NonOdor
+                : pen.Color == PenColor.Odor;
             var canContinue = AdjustPPM(isCorrectChoice);
 
             _logger.Add(LogSource.ThTest, "result", isCorrectChoice.ToString());
@@ -154,7 +185,7 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
                 {
-                    var result = _currentPPMLevel < 0 ? -1 : _turningPointPPMs.TakeLast(_settings.TurningPointsToCount).Average();
+                    var result = _rules.Result(_settings.TurningPointsToCount);
                     Finished(this, result);
                     Stop();
                 }
@@ -189,16 +220,16 @@ namespace Olfactory.Tests.ThresholdTest
 
         public void EmulationInit()
         {
-            _odorTubeFillingDuration = 10;
-            _settings.OdorPreparationDuration = 2;
-            _settings.PenSniffingDuration = 1;
+            //_odorTubeFillingDuration = 10;
+            //_settings.OdorPreparationDuration = 2;
+            //_settings.PenSniffingDuration = 1;
         }
 
         public void EmulationFinilize()
         {
-            while (_inProgress && _turningPointPPMs.Count < _settings.TurningPoints)
+            while (_inProgress && _rules.TurningPointCount < _settings.TurningPoints)
             {
-                _turningPointPPMs.Add(_settings.PPMs[6]);
+                _rules._SimulateTurningPoint(_settings.PPMs[6]);
             }
         }
 
@@ -207,23 +238,21 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Contants / readonlies
 
-        const int PPM_LEVEL_STEP = 1;
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
-        const PenColor ODOR_PEN_COLOR = PenColor.Red;
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
         const int TIMER_MFC_INTERVAL = 1000;
 
         // Properties
 
-        PenColor CurrentColor => _pens != null && (0 <= _currentPenID && _currentPenID < _pens.Count)
+        PenColor CurrentColor => _pens != null && (0 <= _currentPenID && _currentPenID < _pens.Length)
             ? _pens[_currentPenID].Color
             : PenColor.None;
 
         string[] State => new string[] {
             Step.ToString(),
             Direction.ToString(),
-            PPMLevel.ToString(),
+            PPM.ToString("F2"),
             RecognitionsInRow.ToString(),
             TurningPointCount.ToString()
         };
@@ -231,31 +260,24 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Members
 
-        OlfactoryDeviceModel _model = new OlfactoryDeviceModel();
-        FlowLogger _logger = FlowLogger.Instance;
-        PID _pid = PID.Instance;
-        MFC _mfc = MFC.Instance;
-        Settings _settings = new Settings();
-        CommMonitor _monitor = CommMonitor.Instance;
+        readonly OlfactoryDeviceModel _model = new();
+        readonly BreathingDetector _breathingDetector = new();
+        readonly SoundPlayer _waitingSounds = new(Properties.Resources.WaitingSound);
+        readonly System.Timers.Timer _pidTimer = new();
+        readonly System.Timers.Timer _mfcTimer = new();
 
-        BreathingDetector _breathingDetector = new BreathingDetector();
-        SoundPlayer _waitingSounds = new SoundPlayer(Properties.Resources.WaitingSound);
-        Random _rnd = new Random((int)DateTime.Now.Ticks);
+        readonly FlowLogger _logger = FlowLogger.Instance;
+        readonly PID _pid = PID.Instance;
+        readonly MFC _mfc = MFC.Instance;
+        readonly CommMonitor _monitor = CommMonitor.Instance;
 
-        System.Timers.Timer _pidTimer = new System.Timers.Timer();
-        System.Timers.Timer _mfcTimer = new System.Timers.Timer();
+        Pen[] _pens;
+
+        Settings _settings = new();
+        TurningBase _rules;
 
         bool _inProgress = false;
-
-        List<Pen> _pens = new List<Pen>();
         int _currentPenID = -1;
-
-        int _stepID = -1;
-        int _currentPPMLevel = 0;
-
-        PPMChangeDirection _direction = PPMChangeDirection.Increasing;
-        int _recognitionsInRow = 0;
-        List<double> _turningPointPPMs = new List<double>();
 
         double _odorTubeFillingDuration = 10;
 
@@ -299,11 +321,11 @@ namespace Olfactory.Tests.ThresholdTest
         {
             if (_settings.UseFeedbackLoopToReachLevel)
             {
-                _model.Reach(_settings.PPMs[_currentPPMLevel], _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
+                _model.Reach(_rules.PPM, _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
             }
             else
             {
-                var readinessDelay = _model.GetReady(_settings.PPMs[_currentPPMLevel], _odorTubeFillingDuration);
+                var readinessDelay = _model.GetReady(_rules.PPM, _odorTubeFillingDuration);
 
                 // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
                 if (readinessDelay > _settings.OdorPreparationDuration)
@@ -338,17 +360,17 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void ActivateNextPen()
         {
-            if (CurrentColor == ODOR_PEN_COLOR)     // previous pen was with the odor - switch the mixer back to the fresh air
+            if (CurrentColor == PenColor.Odor)     // previous pen was with the odor - switch the mixer back to the fresh air
             {
                 _model.CloseFlow();
             }
 
-            if (++_currentPenID == _pens.Count)
+            if (++_currentPenID == _pens.Length)
             {
                 _currentPenID = -1;
                 _logger.Add(LogSource.ThTest, "awaiting");
 
-                WaitingForPenSelection(this, new EventArgs());
+                WaitingForAnswer(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
                 return;
             }
 
@@ -372,56 +394,38 @@ namespace Olfactory.Tests.ThresholdTest
             PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowStart));
         }
 
+        /// <summary>
+        /// For OnePen procedure type only:
+        /// Estimates whether the next trial has odored air
+        /// </summary>
+        /// <returns>'True' if odored</returns>
+        private bool IsNextTrialOdored()
+        {
+            // TODO
+            return true;
+        }
+
         private void StartOdorFlow()
         {
-            if (CurrentColor == ODOR_PEN_COLOR)
+            if (CurrentColor == PenColor.Odor)
             {
                 _model.OpenFlow();
             }
 
-            OdorFlowStarted(this, CurrentColor == ODOR_PEN_COLOR);
+            OdorFlowStarted(this, CurrentColor == PenColor.Odor);
 
             DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
         }
 
-        private void UpdatePPMLevelAndDirection(int ppmLevelChange, PPMChangeDirection direction)
-        {
-            if (_direction != direction)
-            {
-                _turningPointPPMs.Add(_settings.PPMs[_currentPPMLevel]);
-                _direction = direction;
-            }
-
-            _recognitionsInRow = 0;
-            _currentPPMLevel += ppmLevelChange;
-        }
-
         private bool AdjustPPM(bool odorWasRecognized)
         {
-            if (!odorWasRecognized)
-            {
-                UpdatePPMLevelAndDirection(
-                    _turningPointPPMs.Count == 0 ? 2 * PPM_LEVEL_STEP : PPM_LEVEL_STEP, // increase with x2 step before the first turning point
-                    PPMChangeDirection.Increasing
-                    );
-            }
-            else if (++_recognitionsInRow == _settings.RecognitionsInRow)               // decrease ppm only if recognized correctly few times in a row
-            {
-                UpdatePPMLevelAndDirection(
-                    -PPM_LEVEL_STEP,
-                    PPMChangeDirection.Decreasing
-                    );
-            }
-
-            bool isOverflow = _currentPPMLevel < 0 || _settings.PPMs.Length <= _currentPPMLevel;
-
-            if (_turningPointPPMs.Count >= _settings.TurningPoints)
+            if(!_rules.AcceptAnswer(odorWasRecognized))
             {
                 return false;
             }
-            else if (isOverflow)
+
+            if (_rules.TurningPointCount >= _settings.TurningPoints)
             {
-                _currentPPMLevel = -1;
                 return false;
             }
 

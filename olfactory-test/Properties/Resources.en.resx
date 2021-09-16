@@ -537,4 +537,13 @@
   <data name="TwoPens" xml:space="preserve">
     <value>two pens</value>
   </data>
+  <data name="ThTestInstrChooseOdor" xml:space="preserve">
+    <value>Did you smell the odour?</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
 </root>

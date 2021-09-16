@@ -107,7 +107,32 @@ namespace Olfactory.Controls
         }
 
         #endregion 
-        
+
+        #region CanChoose property
+
+        [Description("Has the pen one or two buttons"), Category("Common Properties")]
+        public bool CanChoose
+        {
+            get => (bool)GetValue(CanChooseProperty);
+            set => SetValue(CanChooseProperty, value);
+        }
+
+        public static readonly DependencyProperty CanChooseProperty = DependencyProperty.Register(
+            nameof(CanChoose),
+            typeof(bool),
+            typeof(Pen),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(CanChoosePropertyChanged)));
+
+        private static void CanChoosePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is Pen instance)
+            {
+                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(CanChoose)));
+            }
+        }
+
+        #endregion
+
         public Tests.ThresholdTest.Pen PenInstance
         {
             get => _pen;
@@ -118,7 +143,7 @@ namespace Olfactory.Controls
             }
         }
 
-        public event EventHandler Selected = delegate { };
+        public event EventHandler<bool> Selected = delegate { };
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
         public Pen()
@@ -135,8 +160,8 @@ namespace Olfactory.Controls
 
         private Color GetPenColor(Tests.ThresholdTest.PenColor color) => color switch
         {
-            Tests.ThresholdTest.PenColor.Red => Colors.Red,
-            Tests.ThresholdTest.PenColor.Blue => Colors.Blue,
+            Tests.ThresholdTest.PenColor.Odor => Colors.Red,
+            Tests.ThresholdTest.PenColor.NonOdor => Colors.Blue,
             _ => throw new NotImplementedException("Unrecognized pen color"),
         };
 
@@ -144,7 +169,12 @@ namespace Olfactory.Controls
 
         private void OnChoice_Click(object sender, RoutedEventArgs e)
         {
-            Selected(this, new EventArgs());
+            bool answer = true;
+            if (CanChoose)
+            {
+                answer = (sender as Button).Tag.Equals("Yes");
+            }
+            Selected(this, answer);
         }
     }
 }

@@ -23,6 +23,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
@@ -40,12 +41,10 @@
             </Grid.LayoutTransform>
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="auto"/>
-                <RowDefinition />
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
             </Grid.RowDefinitions>
 
             <local:WaitingInstruction x:Name="wtiInstruction" Grid.Row="0" Grid.ColumnSpan="10"
@@ -53,56 +52,56 @@
                                       VerticalContentAlignment="Bottom"
                                       Text="Instructions"/>
             
-            <local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1"
+            <!--local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1" 
                        ID="1"
-                       Selected="OnPen_Selected"/>
+                       Selected="OnPen_Selected"/-->
+        </Grid>
 
-            <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"
-                  VerticalAlignment="Bottom">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+        <Grid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
+              VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-                <WrapPanel Grid.Column="0"
-                           HorizontalAlignment="Center">
-                    <Label Style="{StaticResource IndicatorLabel}"
-                           Content="{lex:Loc Step}"/>
-                    <Label x:Name="lblStep"
-                           ContentStringFormat="#{0}"/>
-                </WrapPanel>
-                <WrapPanel Grid.Column="1"
-                           HorizontalAlignment="Center">
-                    <Label Style="{StaticResource IndicatorLabel}"
-                           Content="{lex:Loc Direction}"/>
-                    <Label x:Name="lblDirection"
-                           ContentStringFormat=": {0}"/>
-                </WrapPanel>
-                <WrapPanel Grid.Column="2"
-                           HorizontalAlignment="Center">
-                    <Label Style="{StaticResource IndicatorLabel}"
-                           Content="{lex:Loc OdorLevel}"/>
-                    <Label x:Name="lblPPMLevel"
-                           ContentStringFormat=": {0}"/>
-                </WrapPanel>
-                <WrapPanel Grid.Column="3"
-                           HorizontalAlignment="Center">
-                    <Label Style="{StaticResource IndicatorLabel}"
-                           Content="{lex:Loc Recognitions}"/>
-                    <Label x:Name="lblRecognitionsInRow"
-                           ContentStringFormat=": {0}"/>
-                </WrapPanel>
-                <WrapPanel Grid.Column="4"
-                           HorizontalAlignment="Center">
-                    <Label Style="{StaticResource IndicatorLabel}"
-                           Content="{lex:Loc Turnings}"/>
-                    <Label x:Name="lblTurningCount"
-                           ContentStringFormat=": {0}"/>
-                </WrapPanel>
-            </Grid>
+            <WrapPanel Grid.Column="0"
+                        HorizontalAlignment="Center">
+                <Label Style="{StaticResource IndicatorLabel}"
+                        Content="{lex:Loc Step}"/>
+                <Label x:Name="lblStep"
+                        ContentStringFormat="#{0}"/>
+            </WrapPanel>
+            <WrapPanel Grid.Column="1"
+                        HorizontalAlignment="Center">
+                <Label Style="{StaticResource IndicatorLabel}"
+                        Content="{lex:Loc Direction}"/>
+                <Label x:Name="lblDirection"
+                        ContentStringFormat=": {0}"/>
+            </WrapPanel>
+            <WrapPanel Grid.Column="2"
+                        HorizontalAlignment="Center">
+                <Label Style="{StaticResource IndicatorLabel}"
+                        Content="{lex:Loc OdorLevel}"/>
+                <Label x:Name="lblPPM"
+                        ContentStringFormat=": {0}"/>
+            </WrapPanel>
+            <WrapPanel Grid.Column="3"
+                        HorizontalAlignment="Center">
+                <Label Style="{StaticResource IndicatorLabel}"
+                        Content="{lex:Loc Recognitions}"/>
+                <Label x:Name="lblRecognitionsInRow"
+                        ContentStringFormat=": {0}"/>
+            </WrapPanel>
+            <WrapPanel Grid.Column="4"
+                        HorizontalAlignment="Center">
+                <Label Style="{StaticResource IndicatorLabel}"
+                        Content="{lex:Loc Turnings}"/>
+                <Label x:Name="lblTurningCount"
+                        ContentStringFormat=": {0}"/>
+            </WrapPanel>
         </Grid>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
