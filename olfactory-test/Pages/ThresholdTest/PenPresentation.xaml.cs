@@ -167,7 +167,7 @@ namespace Olfactory.Pages.ThresholdTest
         {
             if (update.HasFlag(Update.PPM))
             {
-                lblDirection.Content = _procedure.Direction;
+                lblDirection.Content = Utils.L10n.T(_procedure.Direction.ToString());
                 lblPPM.Content = _procedure.PPM;
             }
             if (update.HasFlag(Update.Recognitions))

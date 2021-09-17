@@ -77,30 +77,30 @@
             <WrapPanel Grid.Column="1"
                         HorizontalAlignment="Center">
                 <Label Style="{StaticResource IndicatorLabel}"
-                        Content="{lex:Loc Direction}"/>
-                <Label x:Name="lblDirection"
-                        ContentStringFormat=": {0}"/>
+                        Content="{lex:Loc Direction}"
+                        ContentStringFormat="{}{0}:"/>
+                <Label x:Name="lblDirection"/>
             </WrapPanel>
             <WrapPanel Grid.Column="2"
                         HorizontalAlignment="Center">
                 <Label Style="{StaticResource IndicatorLabel}"
-                        Content="{lex:Loc OdorLevel}"/>
-                <Label x:Name="lblPPM"
-                        ContentStringFormat=": {0}"/>
+                        Content="{lex:Loc OdorLevel}"
+                        ContentStringFormat="{}{0}:"/>
+                <Label x:Name="lblPPM"/>
             </WrapPanel>
             <WrapPanel Grid.Column="3"
                         HorizontalAlignment="Center">
                 <Label Style="{StaticResource IndicatorLabel}"
-                        Content="{lex:Loc Recognitions}"/>
-                <Label x:Name="lblRecognitionsInRow"
-                        ContentStringFormat=": {0}"/>
+                        Content="{lex:Loc RecognInRow}"
+                        ContentStringFormat="{}{0}:"/>
+                <Label x:Name="lblRecognitionsInRow"/>
             </WrapPanel>
             <WrapPanel Grid.Column="4"
                         HorizontalAlignment="Center">
                 <Label Style="{StaticResource IndicatorLabel}"
-                        Content="{lex:Loc Turnings}"/>
-                <Label x:Name="lblTurningCount"
-                        ContentStringFormat=": {0}"/>
+                        Content="{lex:Loc Turnings}"
+                        ContentStringFormat="{}{0}:"/>
+                <Label x:Name="lblTurningCount"/>
             </WrapPanel>
         </Grid>
 

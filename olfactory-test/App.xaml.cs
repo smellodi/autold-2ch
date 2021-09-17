@@ -16,7 +16,7 @@ namespace Olfactory
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
 
             EventManager.RegisterClassHandler(typeof(TextBox),
-                TextBox.GotFocusEvent,
+                UIElement.GotFocusEvent,
                 new RoutedEventHandler(TextBox_GotFocus));
         }
 

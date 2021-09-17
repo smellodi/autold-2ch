@@ -118,6 +118,408 @@
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
 	<data name="Setup" xml:space="preserve">
-    <value>Setuuppi</value>
+    <value>Asetukset</value>
   </data>
+	<data name="Automatic" xml:space="preserve">
+		<value>Automaattinen</value>
+	</data>
+	<data name="BackToHome" xml:space="preserve">
+		<value>Takaisin aloitussivulle</value>
+	</data>
+	<data name="CleanAir" xml:space="preserve">
+		<value>Puhdas ilma</value>
+	</data>
+	<data name="Clear" xml:space="preserve">
+		<value>Tyhjennä</value>
+	</data>
+	<data name="Close" xml:space="preserve">
+		<value>Sulje</value>
+	</data>
+	<data name="Continue" xml:space="preserve">
+		<value>Jatka</value>
+	</data>
+	<data name="Direction" xml:space="preserve">
+		<value>Suunta</value>
+	</data>
+	<data name="DurationsSec" xml:space="preserve">
+		<value>Kesto sekunteina</value>
+	</data>
+	<data name="CannotOpenPort" xml:space="preserve">
+		<value>Porttia ei voida avata</value>
+	</data>
+	<data name="Exit" xml:space="preserve">
+		<value>Sulje</value>
+	</data>
+	<data name="FamilInstrContinue" xml:space="preserve">
+		<value>Paina 'Aloita testi' jatkaaksesi.</value>
+	</data>
+	<data name="FamilInstrOpenValve" xml:space="preserve">
+		<value>Avattuasi venttiilin, odota muutama sekunti, jotta tuoksua erittyy maskiin. Kun tuoksua erittyy maskiin, haista sitä, ja paina tuoksu mieleesi. </value>
+	</data>
+	<data name="FamilInstrPreparing" xml:space="preserve">
+		<value>Valmistellaan tuoksua</value>
+	</data>
+	<data name="FamilInstrSniff" xml:space="preserve">
+		<value>Nyt voit haistaa tuoksua.</value>
+	</data>
+	<data name="FeedbackLoop" xml:space="preserve">
+		<value>Takaisinkytkentä</value>
+	</data>
+	<data name="Finished" xml:space="preserve">
+		<value>Valmis</value>
+	</data>
+	<data name="Graph" xml:space="preserve">
+		<value>Kuvaaja</value>
+	</data>
+	<data name="InfoF2" xml:space="preserve">
+		<value>Paina F2 simuloidaksesi sarjaportteja.</value>
+	</data>
+	<data name="InfoF5" xml:space="preserve">
+		<value>Paina F5 näyttääksesi monitorointi-ikkunan. </value>
+	</data>
+	<data name="Input" xml:space="preserve">
+		<value>Syöte</value>
+	</data>
+	<data name="Instructions" xml:space="preserve">
+		<value>Ohjeet</value>
+	</data>
+	<data name="LMin" xml:space="preserve">
+		<value>l/min</value>
+	</data>
+	<data name="MA" xml:space="preserve">
+		<value>mA</value>
+	</data>
+	<data name="Manual" xml:space="preserve">
+		<value>Manuaalinen</value>
+	</data>
+	<data name="MlMin" xml:space="preserve">
+		<value>ml/min</value>
+	</data>
+	<data name="Ms" xml:space="preserve">
+		<value>ms</value>
+	</data>
+	<data name="MV" xml:space="preserve">
+		<value>mV</value>
+	</data>
+	<data name="OdorPulses" xml:space="preserve">
+		<value>Tuoksupulssit</value>
+	</data>
+	<data name="OdorSensitivity" xml:space="preserve">
+		<value>Sinun tuoksuherkkyytesi on (ml/min):</value>
+	</data>
+	<data name="OdorStartsAfterInhale" xml:space="preserve">
+		<value>Tuoksuvirtaus alkaa, kun sisäänhengitys alkaa</value>
+	</data>
+	<data name="OdorStartsAfterKeyPress" xml:space="preserve">
+		<value>Tuoksuvirtaus alkaa, kun painat välilyöntiä</value>
+	</data>
+	<data name="OdorStartsImmediately" xml:space="preserve">
+		<value>Tuoksuvirtaus alkaa välittömästi, kun tuoksu on valmis</value>
+	</data>
+	<data name="Open" xml:space="preserve">
+		<value>Avaa</value>
+	</data>
+	<data name="OpenValve" xml:space="preserve">
+		<value>Avaa tuoksuventtiili</value>
+	</data>
+	<data name="Pen" xml:space="preserve">
+		<value>Kynä</value>
+	</data>
+	<data name="PIDTemp" xml:space="preserve">
+		<value>Lämpötila-anturin virta</value>
+	</data>
+	<data name="PIDVoltage" xml:space="preserve">
+		<value>PID jännite</value>
+	</data>
+	<data name="Pulses" xml:space="preserve">
+		<value>Pulssit</value>
+	</data>
+	<data name="Result" xml:space="preserve">
+		<value>Tulos</value>
+	</data>
+	<data name="Save" xml:space="preserve">
+		<value>Tallenna</value>
+	</data>
+	<data name="SaveData" xml:space="preserve">
+		<value>Tallenna tiedot</value>
+	</data>
+	<data name="ScentedAir" xml:space="preserve">
+		<value>Tuoksuva ilma</value>
+	</data>
+	<data name="Seconds" xml:space="preserve">
+		<value>sekuntia</value>
+	</data>
+	<data name="SerialPorts" xml:space="preserve">
+		<value>Sarjaportit</value>
+	</data>
+	<data name="Set" xml:space="preserve">
+		<value>Aseta</value>
+	</data>
+	<data name="Settings" xml:space="preserve">
+		<value>Asetukset</value>
+	</data>
+	<data name="Start" xml:space="preserve">
+		<value>Aloita</value>
+	</data>
+	<data name="StartTest" xml:space="preserve">
+		<value>Aloita testi</value>
+	</data>
+	<data name="Step" xml:space="preserve">
+		<value>Vaihe</value>
+	</data>
+	<data name="System" xml:space="preserve">
+		<value>järjestelmä</value>
+	</data>
+	<data name="Table" xml:space="preserve">
+		<value>Taulukko</value>
+	</data>
+	<data name="Temp" xml:space="preserve">
+		<value>Lämp (C)</value>
+	</data>
+	<data name="Text" xml:space="preserve">
+		<value>Teksti</value>
+	</data>
+	<data name="ThankYou" xml:space="preserve">
+		<value>Kiitos!</value>
+	</data>
+	<data name="ThresholdTest" xml:space="preserve">
+		<value>Kynnysarvomittaus</value>
+	</data>
+	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
+		<value>Lista pilkulla erotettuja arvoja tai lausekkeita. Lausekkeet ovat muodossa 'ARVOxLUKUMÄÄRÄ'. Esimerkiksi: '4, 8, 16x2, 32x3'</value>
+	</data>
+	<data name="CorrectAndTryAgain" xml:space="preserve">
+		<value>Korjaa virheellinen syöte ja yritä uudestaan.</value>
+	</data>
+	<data name="Events" xml:space="preserve">
+		<value>Tapahtumat</value>
+	</data>
+	<data name="Familiarization" xml:space="preserve">
+		<value>Totuttautuminen</value>
+	</data>
+	<data name="FamiliarizeOdor" xml:space="preserve">
+		<value>Totuttaudu tuoksuun</value>
+	</data>
+	<data name="FamilInstrVentilating" xml:space="preserve">
+		<value>Ole hyvä ja odota hetki, että tuoksu poistuu maskista...</value>
+	</data>
+	<data name="FinalPause" xml:space="preserve">
+		<value>Toinen tauko</value>
+	</data>
+	<data name="NumNotNeg" xml:space="preserve">
+		<value>ei-negatiivinen luku</value>
+	</data>
+	<data name="NumPos" xml:space="preserve">
+		<value>positiviinen luku</value>
+	</data>
+	<data name="NumPosSpaceSep" xml:space="preserve">
+		<value>välilyönnillä erotetut positiiviset luvut</value>
+	</data>
+	<data name="Immediate" xml:space="preserve">
+		<value>Välitön</value>
+	</data>
+	<data name="InitialPause" xml:space="preserve">
+		<value>Ensim. tauko</value>
+	</data>
+	<data name="Interrupt" xml:space="preserve">
+		<value>Keskeytä</value>
+	</data>
+	<data name="IntNotNeg" xml:space="preserve">
+		<value>ei-negatiivinen kokonaisluku</value>
+	</data>
+	<data name="IntPos" xml:space="preserve">
+		<value>positiivinen kokonaisluku</value>
+	</data>
+	<data name="Language" xml:space="preserve">
+		<value>Kieli</value>
+	</data>
+	<data name="Light" xml:space="preserve">
+		<value>Valo</value>
+	</data>
+	<data name="MFCPlayground" xml:space="preserve">
+		<value>MFC Kokeilukenttä</value>
+	</data>
+	<data name="OdorantHere" xml:space="preserve">
+		<value>Tuoksu oli tässä</value>
+	</data>
+	<data name="OdorFlow" xml:space="preserve">
+		<value>Tuoksuvirtaus</value>
+	</data>
+	<data name="OdorLevel" xml:space="preserve">
+		<value>Tuoksutaso</value>
+	</data>
+	<data name="OdorLevels" xml:space="preserve">
+		<value>Tuoksutasot</value>
+	</data>
+	<data name="OdorPreparation" xml:space="preserve">
+		<value>Tuoksun valmistaminen</value>
+	</data>
+	<data name="PenPresentation" xml:space="preserve">
+		<value>Kynän esittäminen</value>
+	</data>
+	<data name="PenSniffing" xml:space="preserve">
+		<value>Kynän haistaminen</value>
+	</data>
+	<data name="PIDSampling" xml:space="preserve">
+		<value>PID näytteenottoväli</value>
+	</data>
+	<data name="Procedure" xml:space="preserve">
+		<value>Toimenpide</value>
+	</data>
+	<data name="RecognInRow" xml:space="preserve">
+		<value>Tunnistusta peräkkäin</value>
+	</data>
+	<data name="ThTestInstrSelectPen" xml:space="preserve">
+		<value>Valitse kynä, jossa oli tuoksua.</value>
+	</data>
+	<data name="ThTestInstrSniff" xml:space="preserve">
+		<value>Haista kynää</value>
+	</data>
+	<data name="ThTestInstrWait" xml:space="preserve">
+		<value>Ole hyvä ja odota kunnes tuoksuaine on valmis.</value>
+	</data>
+	<data name="Time" xml:space="preserve">
+		<value>Aika</value>
+	</data>
+	<data name="ToCollect" xml:space="preserve">
+		<value>Käännöspisteet</value>
+	</data>
+	<data name="ToCount" xml:space="preserve">
+		<value>Huomioitavat</value>
+	</data>
+	<data name="ToKeepTargetLevel" xml:space="preserve">
+		<value>pitää tavoitetason</value>
+	</data>
+	<data name="ToReachTargetLevel" xml:space="preserve">
+		<value>saavuttaa tavoitetason</value>
+	</data>
+	<data name="Turnings" xml:space="preserve">
+		<value>Käännöspisteet</value>
+	</data>
+	<data name="Unknown" xml:space="preserve">
+		<value>tuntematon</value>
+	</data>
+	<data name="User" xml:space="preserve">
+		<value>käyttäjä</value>
+	</data>
+	<data name="Valves" xml:space="preserve">
+		<value>Venttiilit</value>
+	</data>
+	<data name="NoDataToSave" xml:space="preserve">
+		<value>Tallennettavaa tietoa ei ole</value>
+	</data>
+	<data name="Waste" xml:space="preserve">
+		<value>poisto</value>
+	</data>
+	<data name="AppTerminated" xml:space="preserve">
+		<value>Ohjelma on suljettu.</value>
+	</data>
+	<data name="ControlsValve2" xml:space="preserve">
+		<value>Ohjaa venttiiliä #2 tuoksuvirtauksen aikana. Tämä tuoksuvirta ohjataan poistoon molempien taukojen aikana.</value>
+	</data>
+	<data name="DataSavedInto" xml:space="preserve">
+		<value>Tiedot on tallennettu kohteeseen</value>
+	</data>
+	<data name="DeviceConnLost" xml:space="preserve">
+		<value>Yhteys laitteeseen {0} katkesi.</value>
+	</data>
+	<data name="EmptyList" xml:space="preserve">
+		<value>Listassa ei ole arvoja</value>
+	</data>
+	<data name="ExpressionNotValid" xml:space="preserve">
+		<value>Lauseke '{0}' ei kelpaa. Ainoastaan '{1}' operaatiot ovat sallittuja. </value>
+	</data>
+	<data name="FailedToSave" xml:space="preserve">
+		<value>Tietoja ei voitu tallentaa kohteeseen</value>
+	</data>
+	<data name="OdorFlowTooHigh" xml:space="preserve">
+		<value>Tuoksun virtausnopeus on liian suuri ollakseen valmis {0} sekunnissa.</value>
+	</data>
+	<data name="PressCancelToDiscard" xml:space="preserve">
+		<value>Paina 'Peruuta', jos et halua tallentaa tietoja.</value>
+	</data>
+	<data name="PressNoToChangeNameFolder" xml:space="preserve">
+		<value>Paina 'Ei', jos haluat vaihtaa tiedostonimen tai kohdekansion.</value>
+	</data>
+	<data name="Retry" xml:space="preserve">
+		<value>Aloita uudestaan?</value>
+	</data>
+	<data name="SaveDataInto" xml:space="preserve">
+		<value>Haluatko tallentaa tiedot kohteeseen</value>
+	</data>
+	<data name="OlfactoryTestTool" xml:space="preserve">
+		<value>Hajuaistin testaustyökalu</value>
+	</data>
+	<data name="ThTestInstrDone" xml:space="preserve">
+		<value>Kiitos, valintasi on tallennettu.</value>
+	</data>
+	<data name="ThTestInstrInhale" xml:space="preserve">
+		<value>Hengitä sisään</value>
+	</data>
+	<data name="ThTestInstrPressKey" xml:space="preserve">
+		<value>Paina VÄLILYÖNTIÄ, kun aloitat sisäänhengityksen</value>
+	</data>
+	<data name="COMMonitor" xml:space="preserve">
+		<value>Sarjaporttien monitorointi</value>
+	</data>
+	<data name="ShowAs" xml:space="preserve">
+		<value>Näytä</value>
+	</data>
+	<data name="ValueFormatNotValid" xml:space="preserve">
+		<value>Arvon '{0}' tietotyyyppi on väärä, sen täytyy olla '{1}' luku</value>
+	</data>
+	<data name="ValueTooLarge" xml:space="preserve">
+		<value>Arvo '{0}' on liian suuri, se ei saa olla suurempi kuin '{1}'</value>
+	</data>
+	<data name="ValueTooSmall" xml:space="preserve">
+		<value>Arvo '{0}' on liian pieni, sen ei saa olla pienempi kuin '{1}'</value>
+	</data>
+	<data name="CommaSeparatedValues" xml:space="preserve">
+		<value>pilkulla erotetut positiiviset liukuluvut tai lausekkeet. Lausekkeet muodossa 'ARVOxLUKUMÄÄRÄ'</value>
+	</data>
+	<data name="PulseFlowRate" xml:space="preserve">
+		<value>Pulssivirtauksen nopeus</value>
+	</data>
+	<data name="Logger" xml:space="preserve">
+		<value>Tietojen kerääjä</value>
+	</data>
+	<data name="Validator" xml:space="preserve">
+		<value>Validoija</value>
+	</data>
+	<data name="ThTestInstrIntro" xml:space="preserve">
+		<value>Seuraavaksi mitataan hajuaistisi toimintaa. Mittaus kestää noin 30-40 minuuttia.</value>
+	</data>
+	<data name="ThTestInstrFinal" xml:space="preserve">
+		<value>Kaikki käytetyt tuoksut ovat turvallisia hengittää. </value>
+	</data>
+	<data name="ThTestInstrRN" xml:space="preserve">
+		<value>[HUOMIO TUTKIJOILLE] Voit kirjoittaa tähän lisäohjeita. Tällä sivulla voi kerätä esimerkiksi henkilötietoja, jotka tallennetaan myöhemmin lokitiedostoon muun tiedon kanssa.</value>
+	</data>
+	<data name="ThTestInstrThreePens" xml:space="preserve">
+		<value>Sinulle esitetään vuoronperään kolme kynää. Vain yhdessä kynässä on tuoksua. Sinun tehtäväsi on kertoa missä kynässä oli tuoksua. Jos et osaa sanoa missä kynässä oli tuoksua, niin arvaa. </value>
+	</data>
+	<data name="Temperature" xml:space="preserve">
+		<value>Lämpötila</value>
+	</data>
+	<data name="Cancel" xml:space="preserve">
+		<value>Peruuta</value>
+	</data>
+	<data name="ThTestInstrTwoPens" xml:space="preserve">
+		<value>Sinulle esitetään vuoronperään kaksi kynää. Vain yhdessä kynässä on tuoksua. Sinun tehtäväsi on kertoa missä kynässä oli tuoksua. Jos et osaa sanoa missä kynässä oli tuoksua, niin arvaa. </value>
+	</data>
+	<data name="No" xml:space="preserve">
+		<value>Ei</value>
+	</data>
+	<data name="Yes" xml:space="preserve">
+		<value>Kyllä</value>
+	</data>
+	<data name="OnePen" xml:space="preserve">
+		<value>yksi kynä</value>
+	</data>
+	<data name="ThreePens" xml:space="preserve">
+		<value>kolme kynää</value>
+	</data>
+	<data name="TwoPens" xml:space="preserve">
+		<value>kaksi kynää</value>
+	</data>
 </root>

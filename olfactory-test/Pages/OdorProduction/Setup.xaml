@@ -8,7 +8,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="480" d:DesignWidth="600"
+      d:DesignHeight="530" d:DesignWidth="600"
       Title="{lex:Loc Setup}"
       WindowTitle="{lex:Loc OdorPulses}">
 
@@ -58,11 +58,12 @@
                                      ToolTip="{lex:Loc CommaSeparatedValues}"/>
                         </UserControl>
                         <TextBlock TextWrapping="Wrap"
+                                   Margin="0,4,0,0"
                                    Text="{lex:Loc CommaSeparatedListWithExpressions}"/>
                     </StackPanel>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc DurationsSec}">
+                <UserControl Style="{StaticResource FormRowLow}" Tag="{lex:Loc DurationsSec}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
@@ -122,14 +123,14 @@
 
                 <Border Style="{StaticResource HorizontalLine}"/>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc FeedbackLoop}">
-                    <StackPanel Orientation="Horizontal">
+                    <StackPanel>
                         <CheckBox x:Name="chkFeedbackLoopToReachLevel"
                                   Content="{lex:Loc ToReachTargetLevel}"
                                   VerticalAlignment="Center"/>
                         <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
                                   Content="{lex:Loc ToKeepTargetLevel}"
                                   VerticalAlignment="Center"
-                                  Margin="8,0,0,0"
+                                  Margin="0,4,0,0"
                                   IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
                     </StackPanel>
                 </UserControl>

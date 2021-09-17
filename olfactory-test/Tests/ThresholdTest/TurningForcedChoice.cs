@@ -5,7 +5,7 @@ namespace Olfactory.Tests.ThresholdTest
 {
     /// <summary>
     /// Sniffin' Sticks procedure.
-    /// Requires a full list of PPM values
+    /// Requires a full list of PPM values.
     /// </summary>
     public class TurningForcedChoice : TurningBase
     {
@@ -13,7 +13,15 @@ namespace Olfactory.Tests.ThresholdTest
 
         public override bool IsValid => _ppmLevel >= 0;
 
-        public TurningForcedChoice(double[] ppms, int requiredRecognitions) : base(ppms, requiredRecognitions) { }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="ppms">A list of PPM values at each level (typically, 10-16 values)</param>
+        /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
+        public TurningForcedChoice(double[] ppms, int requiredRecognitions) : base(requiredRecognitions)
+        {
+            _ppms = ppms;
+        }
 
         public override void Next(Pen[] pens)
         {
@@ -42,9 +50,10 @@ namespace Olfactory.Tests.ThresholdTest
 
         const int PPM_LEVEL_STEP = 1;
 
-        int _ppmLevel = 0;
-
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
+
+        double[] _ppms;
+        int _ppmLevel = 0;
 
         private void Update(int levelChange, IProcState.PPMChangeDirection direction)
         {

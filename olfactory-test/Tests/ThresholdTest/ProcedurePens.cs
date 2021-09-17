@@ -130,18 +130,19 @@ namespace Olfactory.Tests.ThresholdTest
                 var pens = new Pen[PenCount];
                 pens[0] = new Pen(PenColor.Odor);
 
-                if (_settings.Type == Settings.ProcedureType.OnePen)
+                var ppms = _settings.PPMs;
+                var recInRow = _settings.RecognitionsInRow;
+                _rules = _settings.Type switch
                 {
-                    _rules = new TurningYesNo(_settings.PPMs, _settings.RecognitionsInRow);
-                }
-                else
-                {
-                    _rules = new TurningForcedChoice(_settings.PPMs, _settings.RecognitionsInRow);
+                    Settings.ProcedureType.OnePen => new TurningYesNo(ppms.First(), ppms.Last(), recInRow),
+                    Settings.ProcedureType.TwoPens => new TurningForcedChoiceDynamic(ppms.First(), ppms.Last(), recInRow, 1),
+                    Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow),
+                    _ => throw new NotImplementedException($"No rules are implemented for '{_settings.Type}' procedure type")
+                };
 
-                    for (int i = 1; i < PenCount; i++)
-                    {
-                        pens[i] = new Pen(PenColor.NonOdor);
-                    }
+                for (int i = 1; i < PenCount; i++)
+                {
+                    pens[i] = new Pen(PenColor.NonOdor);
                 }
 
                 _pens = pens.ToArray();

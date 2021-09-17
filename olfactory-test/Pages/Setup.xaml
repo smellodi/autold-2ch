@@ -10,7 +10,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="470" d:DesignWidth="1000"
+      d:DesignHeight="500" d:DesignWidth="1000"
       Title="{lex:Loc Setup}"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -24,7 +24,7 @@
             <Setter Property="Width" Value="75" />
         </Style>
         <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource FormRowHeader}">
-            <Setter Property="Width" Value="60" />
+            <Setter Property="Width" Value="80" />
         </Style>
         <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Width" Value="90" />
@@ -105,13 +105,17 @@
                                     Click="btnPIDToggle_Click"/>
                         </StackPanel>
                     </UserControl>
-                    <TextBlock Margin="8,2,0,2"
+                    <Separator/>
+                    <TextBlock Margin="8,0"
+                               MaxWidth="265"
                                HorizontalAlignment="Left"
-                               TextWrapping="Wrap">
-                        <Run Text="{lex:Loc InfoF5}"/>
-                        <LineBreak/>
-                        <Run Text="{lex:Loc InfoF2}"/>
-                    </TextBlock>
+                               Text="{lex:Loc InfoF2}"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Margin="8,4"
+                               MaxWidth="265"
+                               HorizontalAlignment="Left"
+                               Text="{lex:Loc InfoF5}"
+                               TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 
@@ -167,7 +171,7 @@
 
                             <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
                                 <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="#1: "/>
+                                    <Label Style="{StaticResource RadioLabel}" Content="1: "/>
                                     <RadioButton x:Name="rdbValve1ToWaste"
                                                  GroupName="valve1"
                                                  Content="{lex:Loc Waste}"
@@ -179,7 +183,7 @@
                                                  Click="btnSetDirection_Click"/>
                                 </WrapPanel>
                                 <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="#2: "/>
+                                    <Label Style="{StaticResource RadioLabel}" Content="2: "/>
                                     <RadioButton x:Name="rdbValve2ToWaste"
                                                  GroupName="valve2"
                                                  Content="{lex:Loc Waste}"
@@ -302,14 +306,16 @@
                             Height="234"/>
         </StackPanel>
 
-        <WrapPanel Grid.Row="4" Grid.Column="0" VerticalAlignment="Center">
+        <WrapPanel Grid.Row="4" Grid.Column="0"
+                   VerticalAlignment="Center">
             <TextBlock VerticalAlignment="Center"
+                       Width="80"
                        Margin="12,0"
                        Text="{lex:Loc Language}"/>
             <ComboBox HorizontalAlignment="Left"
                       ItemsSource="{Binding Source={x:Static lex:LocalizeDictionary.Instance}, Path=MergedAvailableCultures}"
                       SelectedItem="{Binding Source={x:Static lex:LocalizeDictionary.Instance}, Path=Culture}"
-                      DisplayMemberPath="NativeName"/>
+                      DisplayMemberPath="NativeName" SelectionChanged="Language_SelectionChanged"/>
         </WrapPanel>
 
         <WrapPanel Grid.Row="4" Grid.Column="0"

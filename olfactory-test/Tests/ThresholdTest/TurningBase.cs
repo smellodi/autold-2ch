@@ -9,27 +9,25 @@ namespace Olfactory.Tests.ThresholdTest
 
         public IProcState.PPMChangeDirection Direction => _direction;
 
-        public abstract double PPM { get; }
+        public int TurningPointCount => _turningPointPPMs.Count;
 
         public int RecognitionsInRow => _recognitionsInRow;
 
-        public int TurningPointCount => _turningPointPPMs.Count;
+        public abstract double PPM { get; }
 
         public abstract bool IsValid { get; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="ppms">PPM values</param>
-        /// <param name="requiredRecognitions">required number of recognitions to decrease concentration of the odor</param>
-        public TurningBase(double[] ppms, int requiredRecognitions)
+        /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
+        public TurningBase(int requiredRecognitions)
         {
-            _ppms = ppms;
             _requiredRecognitions = requiredRecognitions;
         }
 
         /// <summary>
-        /// Propares the next step
+        /// Prepares the next trial
         /// </summary>
         /// <param name="pens">list of pens to update</param>
         public virtual void Next(Pen[] pens)
@@ -73,8 +71,7 @@ namespace Olfactory.Tests.ThresholdTest
         protected int _stepID = -1;
         protected IProcState.PPMChangeDirection _direction = IProcState.PPMChangeDirection.Increasing;
         protected int _recognitionsInRow = 0;
-        
-        protected double[] _ppms;
+
         protected int _requiredRecognitions;
     }
 }

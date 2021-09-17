@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Olfactory.Utils;
 
 namespace Olfactory.Tests.ThresholdTest
 {
     /// <summary>
-    /// Yes-No procedure.
-    /// Requires min and max PPM values only
+    /// A force choice from 2+ alternatives with dynamic step.
+    /// Requires min and max PPM values only.
     /// </summary>
-    public class TurningYesNo : TurningBase
+    public class TurningForcedChoiceDynamic : TurningBase
     {
         public override double PPM => _ppmValue;
 
@@ -19,12 +21,14 @@ namespace Olfactory.Tests.ThresholdTest
         /// <param name="minPPM">minimal PPM value</param>
         /// <param name="maxPPM">maximal PPM value</param>
         /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
-        public TurningYesNo(double minPPM, double maxPPM, int requiredRecognitions) : base(requiredRecognitions)
+        /// <param name="allowedWrongAnswers">max number of allowed wrong answers that do not reset the PPM value recognition chain</param>
+        public TurningForcedChoiceDynamic(double minPPM, double maxPPM, int requiredRecognitions, int allowedWrongAnswers) : 
+            base(requiredRecognitions)
         {
             _minPPM = minPPM;
             _maxPPM = maxPPM;
 
-            _requiredRecognitions = requiredRecognitions;
+            _answersBufferSize = requiredRecognitions + allowedWrongAnswers;
 
             _ppmValue = _minPPM + 0.25 * (_maxPPM - _minPPM);
             _ppmStep = (_maxPPM - _minPPM) / 8;
@@ -34,36 +38,28 @@ namespace Olfactory.Tests.ThresholdTest
         {
             base.Next(pens);
 
-            var color = _odoredPenInRow switch
-            {
-                0 => PenColor.Odor,
-                >= 4 => PenColor.NonOdor,
-                _ => _rnd.NextDouble() < 0.25 ? PenColor.NonOdor : PenColor.Odor
-            };
-
-            pens[0].Color = color;
-
-            _odoredPenInRow = color == PenColor.Odor ? _odoredPenInRow + 1 : 0;
+            _rnd.Shuffle(pens);
         }
 
         public override bool AcceptAnswer(bool wasRecognized)
         {
-            if (PenSmells)
+            _lastAnswers.Enqueue(wasRecognized);
+            while (_lastAnswers.Count > _answersBufferSize)
             {
-                if (!wasRecognized)
-                {
-                    UpdateDirection(IProcState.PPMChangeDirection.Increasing);
-                    UpdatePPMValue();
-                }
-                else if (++_recognitionsInRow == _requiredRecognitions)    // decrease ppm only if recognized correctly few times in a row
-                {
-                    UpdateDirection(IProcState.PPMChangeDirection.Decreasing);
-                    UpdatePPMValue();
-                }
+                _lastAnswers.Dequeue();
             }
-            else if (!wasRecognized)
+
+            _recognitionsInRow = CorrectAnswerCount;
+
+            if ((!wasRecognized && _lastAnswers.Count == 1) ||                      // the only answer so far, and it is not correct
+                WrongAnswerCount > (_answersBufferSize - _requiredRecognitions))    // exceeds the number of allowed wrong answers
             {
-                Penalize();
+                UpdateDirection(IProcState.PPMChangeDirection.Increasing);
+                UpdatePPMValue();
+            }
+            else if (_recognitionsInRow >= _requiredRecognitions)
+            {
+                UpdateDirection(IProcState.PPMChangeDirection.Decreasing);
                 UpdatePPMValue();
             }
 
@@ -73,16 +69,18 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Internal
 
-        bool PenSmells => _odoredPenInRow > 0;
-
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
+        readonly Queue<bool> _lastAnswers = new();
 
-        int _odoredPenInRow = 0;
+        int _answersBufferSize;
 
         double _minPPM;
         double _maxPPM;
         double _ppmValue;
         double _ppmStep;
+
+        int CorrectAnswerCount => _lastAnswers.Where(answer => answer == true).Count();
+        int WrongAnswerCount => _lastAnswers.Where(answer => answer == false).Count();
 
         private void UpdateDirection(IProcState.PPMChangeDirection direction)
         {
@@ -93,26 +91,18 @@ namespace Olfactory.Tests.ThresholdTest
 
                 _ppmStep /= 2;
             }
-
-            _recognitionsInRow = 0;
         }
 
         private void UpdatePPMValue()
         {
             _ppmValue += _direction == IProcState.PPMChangeDirection.Increasing ? _ppmStep : -_ppmStep;
 
+            _lastAnswers.Clear();
+
             if (_ppmValue > _maxPPM)
             {
                 _ppmValue = -1;
             }
-        }
-
-        private void Penalize()
-        {
-            // penalty for answering "I smell odor" when there was no odor
-            _direction = IProcState.PPMChangeDirection.Increasing;
-            _recognitionsInRow = 0;
-            _ppmStep *= 2;
         }
     }
 }
