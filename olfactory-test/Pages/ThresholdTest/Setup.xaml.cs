@@ -37,7 +37,6 @@ namespace Olfactory.Pages.ThresholdTest
                 {
                     Content = L10n.T(item.Key.ToString()),
                     ToolTip = item.Value,
-                    IsEnabled = item.Key != FlowStart.Automatic,
                 });
             cmbFlowStart.SelectedIndex = (int)_settings.FlowStart;
 

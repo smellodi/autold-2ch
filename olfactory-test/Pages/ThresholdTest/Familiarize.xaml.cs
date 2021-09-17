@@ -55,7 +55,7 @@ namespace Olfactory.Pages.ThresholdTest
             Finished
         }
 
-        const int VENTILATION_DURATION = 1;  // seconds
+        const int VENTILATION_DURATION = 15;  // seconds
 
         readonly string INSTRUCTION_OPEN_VALVE = Utils.L10n.T("FamilInstrOpenValve");
         readonly string INSTRUCTION_WAIT_UNTIL_READY = Utils.L10n.T("FamilInstrPreparing");

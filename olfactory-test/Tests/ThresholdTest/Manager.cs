@@ -64,13 +64,13 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 instructions.Init(_settings.Type);
             }
-            if (_current is ThreePensPage threePens)
-            {
-                threePens.Init(_settings);
-            }
             else if (_current is Familiarize famil)
             {
                 famil.Init(_settings);
+            }
+            else if (_current is ThreePensPage threePens)
+            {
+                threePens.Init(_settings);
             }
 
             return _current;
