@@ -122,14 +122,20 @@ namespace Olfactory.Utils
                 }
             }
 
-            if ((startValue - min) > ChangeThreshold && (endValue - min) > ChangeThreshold)
-            {
-                return (PeakType.Lower, min);
-            }
+            // The order for the next trwo comparisons is important.
+            // Now, the upper peak detection is prioterized, as it is connected
+            // with temprerature starting to drop, i.e. with inhale
 
-            if ((max - startValue) > ChangeThreshold && (max - endValue) > ChangeThreshold)
+            var halfThreshold = ChangeThreshold / 2;
+
+            if ((max - startValue) > halfThreshold && (max - endValue) > ChangeThreshold)
             {
                 return (PeakType.Upper, max);
+            }
+
+            if ((startValue - min) > halfThreshold && (endValue - min) > ChangeThreshold)
+            {
+                return (PeakType.Lower, min);
             }
 
             return (PeakType.None, 0);

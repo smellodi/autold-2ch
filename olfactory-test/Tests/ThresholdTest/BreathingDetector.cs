@@ -41,15 +41,15 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 var breathingStage = type switch
                 {
-                    Utils.PeakBuffer.PeakType.Lower => Stage.Inhale,
-                    Utils.PeakBuffer.PeakType.Upper => Stage.Exhale,
+                    Utils.PeakBuffer.PeakType.Lower => Stage.Exhale,
+                    Utils.PeakBuffer.PeakType.Upper => Stage.Inhale,
                     _ => BreathingStage
                 };
 
                 if (breathingStage != BreathingStage)
                 {
-                    _peakMin = breathingStage == Stage.Inhale ? peak : _peakMin;
-                    _peakMax = breathingStage == Stage.Exhale? peak : _peakMax;
+                    _peakMax = breathingStage == Stage.Inhale ? peak : _peakMin;
+                    _peakMin = breathingStage == Stage.Exhale ? peak : _peakMax;
                     if (_peakMin > 0 && _peakMax > 0)
                     {
                         AdjustThreshold();
@@ -76,7 +76,7 @@ namespace Olfactory.Tests.ThresholdTest
         public static StringBuilder Test(string filename)
         {
             var det = new BreathingDetector();
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             using (var stream = new StreamReader(filename))
             {
@@ -106,7 +106,8 @@ namespace Olfactory.Tests.ThresholdTest
         const double PEAK_SHARE_FROM_EXTREAMS = 0.1; // threshold is 1/10 from the diff of extream values
         const double NEW_PEAK_WEIGHT = 0.2;          // the new threshold has small weight, so the threshold change is not very dramatic after each inhale/exhale
 
-        Utils.PeakBuffer _buffer = new Utils.PeakBuffer(20); // 5 samples = 1 second
+        readonly Utils.PeakBuffer _buffer = new(18); // 5 samples = 1 second
+
         Utils.PeakBuffer.PeakType _currentPeakType = Utils.PeakBuffer.PeakType.None;
 
         double _peakMin = 0;

@@ -79,6 +79,22 @@ namespace Olfactory.Utils
             Show(title, message, MsgIcon.Warning, new string[] { customButton }, stdButtons);
 
 
+        public new bool? ShowDialog()
+        {
+            var sysSound = _icon switch
+            {
+                MsgIcon.Info => System.Media.SystemSounds.Asterisk,
+                MsgIcon.Error => System.Media.SystemSounds.Hand,
+                MsgIcon.Question => System.Media.SystemSounds.Question,
+                MsgIcon.Warning => System.Media.SystemSounds.Exclamation,
+                _ => throw new NotImplementedException("Unknown icon")
+            };
+
+            sysSound.Play();
+
+            return base.ShowDialog();
+        }
+
         // Internal
 
         enum MsgIcon
@@ -89,8 +105,10 @@ namespace Olfactory.Utils
             Warning,
         }
 
-        private const int GWL_STYLE = -16;
-        private const int WS_SYSMENU = 0x80000;
+        readonly MsgIcon _icon;
+
+        const int GWL_STYLE = -16;
+        const int WS_SYSMENU = 0x80000;
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
@@ -105,6 +123,8 @@ namespace Olfactory.Utils
             {
                 throw new ArgumentException("Cannot show message box wit no buttons.");
             }
+
+            _icon = icon;
 
             Title = title;
             txbMessage.Text = message;
@@ -168,9 +188,11 @@ namespace Olfactory.Utils
             {
                 return Application.Current.Dispatcher.Invoke(() =>
                 {
-                    var box = new MsgBox(title, message, icon, customButtons, stdButtons);
-                    box.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-                    box.ShowInTaskbar = true;
+                    var box = new MsgBox(title, message, icon, customButtons, stdButtons)
+                    {
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                        ShowInTaskbar = true
+                    };
                     box.ShowDialog();
 
                     return new Result(box.ClickedButton, box.CustomButtonID);
