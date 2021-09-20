@@ -546,4 +546,7 @@
 	<data name="Decreasing" xml:space="preserve">
 		<value>Abnehmend</value>
 	</data>
+	<data name="Increasing" xml:space="preserve">
+		<value>Zunehemend</value>
+	</data>
 </root>

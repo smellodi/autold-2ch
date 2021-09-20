@@ -96,11 +96,7 @@ namespace Olfactory.Pages.OdorProduction
             if (validation != null)
             {
                 var msg = Utils.L10n.T("CorrectAndTryAgain");
-                MessageBox.Show(
-                    $"{validation}.\n{msg}",
-                    Title,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                Utils.MsgBox.Error(Title, $"{validation}.\n{msg}");
                 validation.Source.Focus();
                 validation.Source.SelectAll();
             }

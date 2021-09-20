@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows;
 
 namespace Olfactory
 {
@@ -17,18 +16,25 @@ namespace Olfactory
         OdProd = 8,
     }
 
+    public enum SavingResult
+    {
+        Save,
+        Discard,
+        Cancel,
+    }
+
     public abstract class Logger<T> where T : class
     {
-        public bool SaveTo(string defaultFileName, string greeting = "")
+        public SavingResult SaveTo(string defaultFileName, string greeting = "")
         {
-            bool result = false;
             var filename = defaultFileName;
-            if (PromptToSave(ref filename, greeting))
+            var result = PromptToSave(ref filename, greeting);
+            if (result == SavingResult.Save)
             {
-                result = Save(filename, _records, Header);
+                result = Save(filename, _records, Header) ? SavingResult.Save : SavingResult.Cancel;
             }
 
-            if (result)
+            if (result == SavingResult.Save || result == SavingResult.Discard)
             {
                 _records.Clear();
             }
@@ -44,7 +50,7 @@ namespace Olfactory
 
         // Internal
 
-        protected readonly List<T> _records = new List<T>();
+        protected readonly List<T> _records = new();
 
         protected abstract string Header { get; }
 
@@ -60,7 +66,7 @@ namespace Olfactory
             }
         }
 
-        protected bool PromptToSave(ref string filename, string greeting = "")
+        protected SavingResult PromptToSave(ref string filename, string greeting = "")
         {
             if (!string.IsNullOrEmpty(greeting))
             {
@@ -69,28 +75,29 @@ namespace Olfactory
 
             var saveInto = Utils.L10n.T("SaveDataInto");
             var pressNo = Utils.L10n.T("PressNoToChangeNameFolder");
-            var pressCancel = Utils.L10n.T("PressCancelToDiscard");
-            var dialogResult = MessageBox.Show(
-                $"{greeting}{saveInto}\n'{_folder}\\{filename}'?\n\n{pressNo}\n{pressCancel}",
+            var pressDicard = Utils.L10n.T("PressDiscard");
+            var pressCancel = Utils.L10n.T("PressCancel");
+            var answer = Utils.MsgBox.Ask(
                 Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
-                MessageBoxButton.YesNoCancel,
-                MessageBoxImage.Question);
+                $"{greeting}{saveInto}\n'{_folder}\\{filename}'?\n\n{pressNo}\n{pressDicard}\n{pressCancel}",
+                Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No, Utils.MsgBox.Button.Discard, Utils.MsgBox.Button.Cancel);
 
-            if (dialogResult == MessageBoxResult.Cancel)
+            if (answer == Utils.MsgBox.Button.Discard)
             {
-                return false;
+                return SavingResult.Discard;
             }
-            else if (dialogResult == MessageBoxResult.No)
+            else if (answer == Utils.MsgBox.Button.No)
             {
                 filename = AskFileName(filename);
-                return !string.IsNullOrEmpty(filename);
+                return string.IsNullOrEmpty(filename) ? SavingResult.Cancel : SavingResult.Save;
             }
-            else
+            else if (answer == Utils.MsgBox.Button.Yes)
             {
                 filename = Path.Combine(_folder, filename);
+                return SavingResult.Save;
             }
 
-            return true;
+            return SavingResult.Cancel;
         }
 
         protected string AskFileName(string defaultFileName)
@@ -140,11 +147,10 @@ namespace Olfactory
                     writer.WriteLine(string.Join("\n", records));
 
                     var dataSavedInto = Utils.L10n.T("DataSavedInto");
-                    MessageBox.Show(
-                        $"{dataSavedInto}\n'{filename}'",
+                    Utils.MsgBox.Notify(
                         Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Information);
+                        $"{dataSavedInto}\n'{filename}'",
+                        Utils.MsgBox.Button.OK);
 
                     return true;
                 }
@@ -152,12 +158,11 @@ namespace Olfactory
                 {
                     var failedToSave = Utils.L10n.T("FailedToSave");
                     var retry = Utils.L10n.T("Retry");
-                    var result = MessageBox.Show(
-                        $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
+                    var answer = Utils.MsgBox.Ask(
                         Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-                    if (result == MessageBoxResult.OK)
+                        $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
+                        Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No);
+                    if (answer == Utils.MsgBox.Button.Yes)
                     {
                         return Save(AskFileName(filename), records, header);
                     }

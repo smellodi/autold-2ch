@@ -98,10 +98,9 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (_inProgress)
                 {
-                    MessageBox.Show(string.Format(L10n.T("DeviceConnLost"), "MFC") + " " + L10n.T("AppTerminated"),
-                        L10n.T("OlfactoryTestTool") + " - " + L10n.T("Logger"),
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error);
+                    MsgBox.Error(
+                        L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
+                        string.Format(L10n.T("DeviceConnLost"), "MFC") + " " + L10n.T("AppTerminated"));
                     Application.Current.Shutdown();
                 }
             };
@@ -331,10 +330,9 @@ namespace Olfactory.Tests.ThresholdTest
                 // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
                 if (readinessDelay > _settings.OdorPreparationDuration)
                 {
-                    MessageBox.Show(string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"),
-                            L10n.T("OlfactoryTestTool") + " - " + L10n.T("Logger"),
-                            MessageBoxButton.OK,
-                            MessageBoxImage.Error);
+                    MsgBox.Error(
+                        L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
+                        string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"));
                     Application.Current.Shutdown();
                     return;
                 }

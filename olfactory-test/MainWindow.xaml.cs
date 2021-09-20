@@ -8,13 +8,14 @@ namespace Olfactory
 {
     public partial class MainWindow : Window
     {
-        Pages.Setup _setupPage = new Pages.Setup();
-        Pages.Finished _finishedPage = new Pages.Finished();
+        readonly Pages.Setup _setupPage = new();
+        readonly Pages.Finished _finishedPage = new();
 
-        CommMonitor _monitor = new CommMonitor();
+        readonly CommMonitor _monitor;
+
         Tests.ITestManager _currentTest = null;
 
-        Storage _storage = Storage.Instance;
+        readonly Storage _storage = Storage.Instance;
 
         public MainWindow()
         {
@@ -24,8 +25,8 @@ namespace Olfactory
             LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
-            //LocalizeDictionary.Instance.PropertyChanged += (s, e) => { if (e.PropertyName == "Culture") UpdateStrings(); };
 
+            _monitor = new CommMonitor();
             _monitor.Hide();
 
             _setupPage.Next += OnSetupPage_Next;
@@ -42,32 +43,36 @@ namespace Olfactory
             }
         }
 
-        private bool SaveLoggingData()
+        private SavingResult? SaveLoggingData()
         {
-            bool hasData = false;
+            SavingResult? result = null;
 
-            FlowLogger logger = FlowLogger.Instance;
-            if (logger.HasTestRecords)
+            FlowLogger flowLogger = FlowLogger.Instance;
+            if (flowLogger.HasTestRecords)
             {
-                hasData = true;
-                if (logger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath()))
+                var savingResult = flowLogger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+                if (savingResult != SavingResult.Cancel)
                 {
                     _finishedPage.DisableSaving();
                 }
+
+                result = savingResult;
             }
 
             SyncLogger syncLogger = SyncLogger.Instance;
             syncLogger.Finilize();
             if (syncLogger.HasRecords)
             {
-                hasData = true;
-                if (syncLogger.SaveTo($"olfactory_sync_{DateTime.Now:u}.txt".ToPath()))
+                var savingResult = syncLogger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+                if (savingResult != SavingResult.Cancel)
                 {
                     _finishedPage.DisableSaving();
                 }
+
+                result = savingResult;
             }
 
-            return hasData;
+            return result;
         }
 
         private void OnSetupPage_Next(object sender, Tests.Test test)
@@ -91,25 +96,26 @@ namespace Olfactory
 
         private void OnFinishedPage_Next(object sender, bool exit)
         {
-            FlowLogger.Instance.Clear();
-            SyncLogger.Instance.Clear();
-
             if (exit)
             {
                 Close();
             }
             else
             {
+                FlowLogger.Instance.Clear();
+                SyncLogger.Instance.Clear();
+
                 Content = _setupPage;
             }
         }
 
         private void OnFinishedPage_RequestSaving(object sender, EventArgs e)
         {
-            if (!SaveLoggingData())
+            var savingResult = SaveLoggingData();
+            if (savingResult == null)
             {
                 _finishedPage.DisableSaving();
-                MessageBox.Show(L10n.T("NoDataToSave"), Title, MessageBoxButton.OK, MessageBoxImage.Warning);
+                MsgBox.Warn(Title, L10n.T("NoDataToSave"), MsgBox.Button.OK);
             }
         }
 
@@ -168,7 +174,7 @@ namespace Olfactory
                 {
                     var sb = Tests.ThresholdTest.BreathingDetector.Test(dialog.FileName);
                     Clipboard.SetText(sb.ToString());
-                    MessageBox.Show("Done.\nThe resulting data is copied into clipboard", Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MsgBox.Notify(Title, "Done.\nThe resulting data is copied into clipboard", MsgBox.Button.OK);
                 }
             }
             else
@@ -197,20 +203,24 @@ namespace Olfactory
             if (_currentTest != null)
             {
                 _currentTest.Interrupt();
-                SaveLoggingData();
             }
 
-            _storage.Dispose();
+            e.Cancel = SaveLoggingData() == SavingResult.Cancel;
 
-            var settings = Properties.Settings.Default;
-            settings.MainWindow_X = Left;
-            settings.MainWindow_Y = Top;
-            settings.MainWindow_Width = Width;
-            settings.MainWindow_Height = Height;
-            settings.Language = LocalizeDictionary.Instance.Culture.Name;
-            settings.Save();
+            if (!e.Cancel)
+            {
+                _storage.Dispose();
 
-            Application.Current.Shutdown();
+                var settings = Properties.Settings.Default;
+                settings.MainWindow_X = Left;
+                settings.MainWindow_Y = Top;
+                settings.MainWindow_Width = Width;
+                settings.MainWindow_Height = Height;
+                settings.Language = LocalizeDictionary.Instance.Culture.Name;
+                settings.Save();
+
+                Application.Current.Shutdown();
+            }
         }
     }
 }

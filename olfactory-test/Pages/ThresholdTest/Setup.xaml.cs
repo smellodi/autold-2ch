@@ -105,11 +105,7 @@ namespace Olfactory.Pages.ThresholdTest
             if (validation != null)
             {
                 var msg = L10n.T("CorrectAndTryAgain");
-                MessageBox.Show(
-                    $"{validation}.\n{msg}",
-                    Title,
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                MsgBox.Error(Title, $"{validation}.\n{msg}");
                 validation.Source.Focus();
                 validation.Source.SelectAll();
             }

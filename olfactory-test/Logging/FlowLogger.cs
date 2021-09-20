@@ -57,7 +57,8 @@ namespace Olfactory
         {
             var filename = defaultFileName;
 
-            if (PromptToSave(ref filename))
+            var result = PromptToSave(ref filename);
+            if (result == SavingResult.Save)
             {
                 var header = source switch
                 {

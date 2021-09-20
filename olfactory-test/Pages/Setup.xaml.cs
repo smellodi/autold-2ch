@@ -411,7 +411,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
             {
-                MessageBox.Show(Utils.L10n.T("CannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.MsgBox.Error(Title, Utils.L10n.T("CannotOpenPort"));
             }
             else if (_mfc.IsOpen)
             {
@@ -432,7 +432,7 @@ namespace Olfactory.Pages
         {
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
-                MessageBox.Show(Utils.L10n.T("CannotOpenPort"), Title, MessageBoxButton.OK, MessageBoxImage.Error);
+                Utils.MsgBox.Error(Title, Utils.L10n.T("CannotOpenPort"));
             }
             else if (_pid.IsOpen)
             {
