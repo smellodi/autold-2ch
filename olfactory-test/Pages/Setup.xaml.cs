@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Olfactory.Comm;
 using IndicatorDataSource = Olfactory.Controls.ChannelIndicator.DataSource;
+using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingDetector.Stage;
 
 namespace Olfactory.Pages
 {
@@ -18,8 +19,8 @@ namespace Olfactory.Pages
 
         public double Scale { get; private set; } = 1;
 
-        public string MFCAction => _mfc?.IsOpen ?? false ? "Close" : "Open";        // keys in dictionaries
-        public string PIDAction => _pid?.IsOpen ?? false ? "Close" : "Open";        // keys in dictionaries
+        public string MFCAction => _mfc?.IsOpen ?? false ? "Close" : "Open";        // keys in L10n dictionaries
+        public string PIDAction => _pid?.IsOpen ?? false ? "Close" : "Open";        // keys in L10n dictionaries
 
         public Setup()
         {
@@ -66,53 +67,54 @@ namespace Olfactory.Pages
             long startTs = Utils.Timestamp.Ms;
             _mfcTimer.Interval = 1000;
             _mfcTimer.AutoReset = true;
-            _mfcTimer.Elapsed += (s, e) => {
-                Dispatcher.Invoke(() =>
+            _mfcTimer.Elapsed += (s, e) => Dispatcher.Invoke(() =>
+            {
+                if (_mfc.IsOpen)
                 {
-                    if (_mfc.IsOpen)
+                    var result = _mfc.GetSample(out MFCSample sample);
+                    _monitor.LogData(LogSource.MFC, sample);
+                    UpdateIndicators(sample);
+                }
+                else
+                {
+                    var sample = new MFCSample
                     {
-                        var result = _mfc.GetSample(out MFCSample sample);
-                        //lblMFC_FreshAir.Content = sample.A.MassFlow.ToString("F2");
-                        //lblMFC_OdorFlow.Content = sample.B.MassFlow.ToString("F2");
-                        //lmsOdor.Add((double)sample.Time / 1000, sample.B.MassFlow/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
-                        _monitor.LogData(LogSource.MFC, sample);
-                        UpdateIndicators(sample);
-                    }
-                    else
-                    {
-                        //lmsOdor.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+                        Time = Utils.Timestamp.Ms
+                    };
+                    _monitor.LogData(LogSource.MFC, sample);
+                }
+            });
 
-                        MFCSample sample = new MFCSample();
-                        sample.Time = Utils.Timestamp.Ms;
-                        _monitor.LogData(LogSource.MFC, sample);
-                    }
-                });
-            };
-
-            _pidTimer.Interval = 1000;
+            _pidTimer.Interval = 200;
             _pidTimer.AutoReset = true;
-            _pidTimer.Elapsed += (s, e) => {
-                Dispatcher.Invoke(() =>
+            _pidTimer.Elapsed += (s, e) => Dispatcher.Invoke(() =>
+            {
+                if (_pid.IsOpen)
                 {
-                    if (_pid.IsOpen)
+                    var result = _pid.GetSample(out PIDSample sample);
+                    _monitor.LogData(LogSource.PID, sample);
+                    UpdateIndicators(sample);
+                }
+                else
+                {
+                    var sample = new PIDSample
                     {
-                        var result = _pid.GetSample(out PIDSample sample);
-                        //lblPID_PID.Content = sample.PID.ToString("F2");
-                        //lblPID_Loop.Content = sample.Loop.ToString("F2");
-                        //lmsPIDValue.Add((double)sample.Time / 1000, sample.PID);
-                        _monitor.LogData(LogSource.PID, sample);
-                        UpdateIndicators(sample);
-                    }
-                    else
-                    {
-                        //lmsPIDValue.Add(Utils.Timestamp.Sec, 0/*, Controls.LiveMeasurement.BRUSH_NEUTRAL*/);
+                        Time = Utils.Timestamp.Ms
+                    };
+                    _monitor.LogData(LogSource.PID, sample);
+                }
+            });
 
-                        PIDSample sample = new PIDSample();
-                        sample.Time = Utils.Timestamp.Ms;
-                        _monitor.LogData(LogSource.PID, sample);
-                    }
-                });
-            };
+            _breathingDetector.StageChanged += (s, e) => Dispatcher.Invoke(() =>
+            {
+                rctBreathingStage.Fill = e switch
+                {
+                    BreathingStage.Inhale => Tests.ThresholdTest.BreathingDetector.InhaleBrush,
+                    BreathingStage.Exhale => Tests.ThresholdTest.BreathingDetector.ExhaleBrush,
+                    _ => null
+                };
+                lblBreathingStage.Text = Utils.L10n.T(e.ToString());
+            });
 
             UpdateUI();
         }
@@ -128,6 +130,8 @@ namespace Olfactory.Pages
 
         readonly System.Timers.Timer _mfcTimer = new();
         readonly System.Timers.Timer _pidTimer = new();
+
+        readonly Tests.ThresholdTest.BreathingDetector _breathingDetector = new();
 
         Controls.ChannelIndicator _currentIndicator = null;
 
@@ -322,6 +326,8 @@ namespace Olfactory.Pages
             double timestamp = (double)sample.Time / 1000;
             UpdateGraph(IndicatorDataSource.Loop, timestamp, sample.Loop);
             UpdateGraph(IndicatorDataSource.PID, timestamp, sample.PID);
+
+            _breathingDetector.Feed(sample.Time, sample.Loop);
         }
 
         private void ResetIndicatorGraphValue(MFCSample? sample)
@@ -334,6 +340,9 @@ namespace Olfactory.Pages
         {
             ResetGraph(IndicatorDataSource.Loop, sample?.Loop ?? 0);
             ResetGraph(IndicatorDataSource.PID, sample?.PID ?? 0);
+
+            rctBreathingStage.Fill = null;
+            lblBreathingStage.Text = "";
         }
 
 
@@ -402,12 +411,12 @@ namespace Olfactory.Pages
             }
         }
 
-        private void cmbPort_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Port_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateUI();
         }
 
-        private void btnMFCToggle_Click(object sender, RoutedEventArgs e)
+        private void MFCToggle_Click(object sender, RoutedEventArgs e)
         {
             if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
             {
@@ -428,7 +437,7 @@ namespace Olfactory.Pages
             UpdateUI();
         }
 
-        private void btnPIDToggle_Click(object sender, RoutedEventArgs e)
+        private void PIDToggle_Click(object sender, RoutedEventArgs e)
         {
             if (!Toggle(_pid, (string)cmbPIDPort.SelectedItem))
             {
@@ -452,17 +461,17 @@ namespace Olfactory.Pages
             UpdateUI();
         }
 
-        private void btnSetFreshAir_Click(object sender, RoutedEventArgs e)
+        private void SetFreshAir_Click(object sender, RoutedEventArgs e)
         {
             Utils.Validation.Do(txbFreshAir, 0, 10, (object s, double value) => _mfc.FreshAirSpeed = value );
         }
 
-        private void btnSetOdor_Click(object sender, RoutedEventArgs e)
+        private void SetOdor_Click(object sender, RoutedEventArgs e)
         {
             Utils.Validation.Do(txbOdor, 0, 500, (object s, double value) => _mfc.OdorSpeed = value );
         }
 
-        private void btnSetDirection_Click(object sender, RoutedEventArgs e)
+        private void SetDirection_Click(object sender, RoutedEventArgs e)
         {
             _mfc.OdorDirection = (rdbValve1ToWaste.IsChecked, rdbValve2ToWaste.IsChecked) switch
             {
@@ -474,7 +483,7 @@ namespace Olfactory.Pages
             };
         }
 
-        private void btnOdorProduction_Click(object sender, RoutedEventArgs e)
+        private void OdorProduction_Click(object sender, RoutedEventArgs e)
         {
             _mfcTimer.Stop();
             _pidTimer.Stop();
@@ -482,7 +491,7 @@ namespace Olfactory.Pages
             Next(this, Tests.Test.OdorProduction);
         }
 
-        private void btnThresholdTest_Click(object sender, RoutedEventArgs e)
+        private void ThresholdTest_Click(object sender, RoutedEventArgs e)
         {
             _mfcTimer.Stop();
             _pidTimer.Stop();
@@ -490,19 +499,19 @@ namespace Olfactory.Pages
             Next(this, Tests.Test.Threshold);
         }
 
-        private void txbFreshAir_KeyUp(object sender, KeyEventArgs e)
+        private void FreshAir_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                btnSetFreshAir_Click(sender, e);
+                SetFreshAir_Click(sender, e);
             }
         }
 
-        private void txbOdor_KeyUp(object sender, KeyEventArgs e)
+        private void Odor_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                btnSetOdor_Click(sender, e);
+                SetOdor_Click(sender, e);
             }
         }
 

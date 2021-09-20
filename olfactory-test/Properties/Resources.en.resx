@@ -570,4 +570,13 @@
   <data name="PressCancel" xml:space="preserve">
     <value>Press 'Cancel' to continue without saving</value>
   </data>
+  <data name="BreathingStage" xml:space="preserve">
+    <value>Breatings stage</value>
+  </data>
+  <data name="Exhale" xml:space="preserve">
+    <value>Exhale</value>
+  </data>
+  <data name="Inhale" xml:space="preserve">
+    <value>Inhale</value>
+  </data>
 </root>

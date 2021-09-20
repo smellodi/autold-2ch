@@ -74,6 +74,8 @@ namespace Olfactory.Tests.ThresholdTest
         public Settings.FlowStartTrigger FlowStart => _settings.FlowStart;
         public bool CanChoose => _settings.Type == Settings.ProcedureType.OnePen;
 
+        public BreathingDetector BreathingDetector => _breathingDetector;
+
         public int PenCount => _settings.Type switch
         {
             Settings.ProcedureType.ThreePens => 3,

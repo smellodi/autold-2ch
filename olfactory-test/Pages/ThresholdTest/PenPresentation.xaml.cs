@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using PenProc = Olfactory.Tests.ThresholdTest.ProcedurePens;
 using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
+using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingDetector.Stage;
 using System.Collections.Generic;
 
 namespace Olfactory.Pages.ThresholdTest
@@ -57,6 +58,15 @@ namespace Olfactory.Pages.ThresholdTest
                 ColorizePens(false);
                 Next(this, e);
             });
+
+            _procedure.BreathingDetector.StageChanged += (s, e) => Dispatcher.Invoke(() => {
+                elpBreathingStage.Fill = e switch
+                {
+                    BreathingStage.Inhale => Tests.ThresholdTest.BreathingDetector.InhaleBrush,
+                    BreathingStage.Exhale => Tests.ThresholdTest.BreathingDetector.ExhaleBrush,
+                    _ => System.Windows.Media.Brushes.White
+                };
+            });
         }
 
         public void Init(Tests.ThresholdTest.Settings settings = null)
@@ -91,6 +101,8 @@ namespace Olfactory.Pages.ThresholdTest
             _currentPenID = -1;
 
             UpdateDisplay(Update.All);
+
+            elpBreathingStage.Visibility = _procedure.FlowStart == FlowStart.Automatic ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
 
             wtiInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
         }

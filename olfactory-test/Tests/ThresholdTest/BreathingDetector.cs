@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Windows.Media;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -18,6 +19,12 @@ namespace Olfactory.Tests.ThresholdTest
             Inhale,
             Exhale
         }
+
+        public static Brush InhaleBrush => Brushes.LightSkyBlue;
+        public static Brush ExhaleBrush => Brushes.Pink;
+
+        public event EventHandler<Stage> StageChanged;
+
 
         /// <summary>
         /// Breathing stage
@@ -39,7 +46,9 @@ namespace Olfactory.Tests.ThresholdTest
 
             if (type != _currentPeakType)
             {
-                var breathingStage = type switch
+                _currentPeakType = type;
+
+                var breathingStage = _currentPeakType switch
                 {
                     Utils.PeakBuffer.PeakType.Lower => Stage.Exhale,
                     Utils.PeakBuffer.PeakType.Upper => Stage.Inhale,
@@ -57,9 +66,9 @@ namespace Olfactory.Tests.ThresholdTest
 
                     isStageChanged = true;
                     BreathingStage = breathingStage;
-                }
 
-                _currentPeakType = type;
+                    StageChanged?.Invoke(this, BreathingStage);
+                }
             }
 
             return isStageChanged;

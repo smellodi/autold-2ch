@@ -33,6 +33,11 @@
             <Run Text="{lex:Loc PenPresentation}"/>
         </TextBlock>
 
+        <Ellipse x:Name="elpBreathingStage"
+                 HorizontalAlignment="Left"
+                 Margin="8"
+                 Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Fill="White"/>
+
         <Grid Grid.Row="1" Grid.Column="0" x:Name="grdPens"
               HorizontalAlignment="Center"
               Width="{Binding ActualWidth, ElementName=grid, Mode=OneWay}">
