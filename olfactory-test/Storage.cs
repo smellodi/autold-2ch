@@ -23,7 +23,7 @@ namespace Olfactory
             ZoomLevel,
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         // Variables
 
@@ -35,7 +35,7 @@ namespace Olfactory
                 if (_isDebugging != value)
                 {
                     _isDebugging = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(IsDebugging)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDebugging)));
                 }
             }
         }
@@ -48,7 +48,7 @@ namespace Olfactory
                 if (_zoomLevel != value)
                 {
                     _zoomLevel = value;
-                    PropertyChanged(this, new PropertyChangedEventArgs(nameof(ZoomLevel)));
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ZoomLevel)));
                 }
             }
         }
@@ -69,9 +69,11 @@ namespace Olfactory
 
         public Storage BindVisibilityToDebug(DependencyObject obj)
         {
-            var isDebuggingBinding = new Binding("IsDebugging");
-            isDebuggingBinding.Source = this;
-            isDebuggingBinding.Converter = new BooleanToVisibilityConverter();
+            var isDebuggingBinding = new Binding(nameof(IsDebugging))
+            {
+                Source = this,
+                Converter = new BooleanToVisibilityConverter()
+            };
 
             BindingOperations.SetBinding(obj, UIElement.VisibilityProperty, isDebuggingBinding);
 
@@ -80,8 +82,10 @@ namespace Olfactory
 
         public Storage BindScaleToZoomLevel(DependencyObject obj)
         {
-            var zoomLevelBinding = new Binding("ZoomLevel");
-            zoomLevelBinding.Source = this;
+            var zoomLevelBinding = new Binding(nameof(ZoomLevel))
+            {
+                Source = this
+            };
 
             BindingOperations.SetBinding(obj, ScaleTransform.ScaleXProperty, zoomLevelBinding);
             BindingOperations.SetBinding(obj, ScaleTransform.ScaleYProperty, zoomLevelBinding);

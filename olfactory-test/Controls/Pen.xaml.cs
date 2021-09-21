@@ -21,15 +21,10 @@ namespace Olfactory.Controls
             nameof(ID),
             typeof(string),
             typeof(Pen),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIDPropertyChanged)));
-
-        private static void OnIDPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is Pen instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(ID)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Pen)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(ID)))
+            ))
+        );
 
         #endregion 
 
@@ -46,15 +41,10 @@ namespace Olfactory.Controls
             nameof(IsActive),
             typeof(bool),
             typeof(Pen),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsActivePropertyChanged)));
-
-        private static void OnIsActivePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is Pen instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsActive)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Pen)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsActive)))
+            ))
+        );
 
         #endregion
 
@@ -71,15 +61,10 @@ namespace Olfactory.Controls
             nameof(IsColorVisible),
             typeof(bool),
             typeof(Pen),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsColorVisiblePropertyChanged)));
-
-        private static void OnIsColorVisiblePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is Pen instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsColorVisible)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Pen)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsColorVisible)))
+            ))
+        );
 
         #endregion 
 
@@ -96,15 +81,10 @@ namespace Olfactory.Controls
             nameof(IsSelectable),
             typeof(bool),
             typeof(Pen),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsSelectablePropertyChanged)));
-
-        private static void OnIsSelectablePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is Pen instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsSelectable)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Pen)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsSelectable)))
+            ))
+        );
 
         #endregion 
 
@@ -121,15 +101,10 @@ namespace Olfactory.Controls
             nameof(CanChoose),
             typeof(bool),
             typeof(Pen),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(CanChoosePropertyChanged)));
-
-        private static void CanChoosePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is Pen instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(CanChoose)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as Pen)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(CanChoose)))
+            ))
+        );
 
         #endregion
 
@@ -143,8 +118,8 @@ namespace Olfactory.Controls
             }
         }
 
-        public event EventHandler<bool> Selected = delegate { };
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event EventHandler<bool> Selected;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Pen()
         {
@@ -174,7 +149,7 @@ namespace Olfactory.Controls
             {
                 answer = (sender as Button).Tag.Equals("Yes");
             }
-            Selected(this, answer);
+            Selected?.Invoke(this, answer);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Olfactory.Utils
         /// <summary>
         /// Fires when the sound stops playing
         /// </summary>
-        public event EventHandler Finished = delegate { };
+        public event EventHandler Finished;
 
         /// <summary>
         /// True if the sound is playing or paused
@@ -102,10 +102,12 @@ namespace Olfactory.Utils
 
         // Internal
 
-        WaveOut _player = new WaveOut();
-        Mp3FileReader _mp3;
+        readonly WaveOut _player = new();
+        readonly List<Action> _onFinished = new();
+
+        readonly Mp3FileReader _mp3;
+
         bool _cyclic = false;
-        List<Action> _onFinished = new List<Action>();
 
         private void OnPlaybackStopped(object sender, StoppedEventArgs e)
         {
@@ -117,7 +119,7 @@ namespace Olfactory.Utils
             }
             else
             {
-                Finished(this, new EventArgs());
+                Finished?.Invoke(this, new EventArgs());
 
                 if (_onFinished.Count > 0)
                 {

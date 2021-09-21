@@ -6,7 +6,7 @@ namespace Olfactory.Controls
 {
     public partial class PauseDisplay : UserControl, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region IsCurrent property
 
@@ -22,7 +22,7 @@ namespace Olfactory.Controls
             typeof(bool),
             typeof(PauseDisplay),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as PauseDisplay)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsCurrent)))
+                (s, e) => (s as PauseDisplay)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsCurrent)))
             ))
         );
 
@@ -42,7 +42,7 @@ namespace Olfactory.Controls
             typeof(string),
             typeof(PauseDisplay),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as PauseDisplay)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(Text)))
+                (s, e) => (s as PauseDisplay)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(Text)))
             ))
         );
 
@@ -62,7 +62,7 @@ namespace Olfactory.Controls
             typeof(double),
             typeof(PauseDisplay),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as PauseDisplay)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(Value)))
+                (s, e) => (s as PauseDisplay)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(Value)))
             ))
         );
 

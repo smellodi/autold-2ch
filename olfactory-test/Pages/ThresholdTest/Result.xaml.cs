@@ -6,7 +6,7 @@ namespace Olfactory.Pages.ThresholdTest
 {
     public partial class Result : Page, IPage<EventArgs>
     {
-        public event EventHandler<EventArgs> Next = delegate { };
+        public event EventHandler<EventArgs> Next;
 
         public Result()
         {
@@ -26,7 +26,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, new EventArgs());
+            Next?.Invoke(this, new EventArgs());
         }
     }
 }

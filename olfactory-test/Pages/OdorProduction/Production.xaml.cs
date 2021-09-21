@@ -22,7 +22,7 @@ namespace Olfactory.Pages.OdorProduction
             typeof(bool),
             typeof(Production),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsInitialPause)))
+                (s, e) => (s as Production)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsInitialPause)))
             ))
         );
 
@@ -41,7 +41,7 @@ namespace Olfactory.Pages.OdorProduction
             typeof(bool),
             typeof(Production),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsOdorFlow)))
+                (s, e) => (s as Production)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsOdorFlow)))
             ))
         );
 
@@ -60,14 +60,14 @@ namespace Olfactory.Pages.OdorProduction
             typeof(bool),
             typeof(Production),
             new FrameworkPropertyMetadata(new PropertyChangedCallback(
-                (s, e) => (s as Production)?.PropertyChanged(s, new PropertyChangedEventArgs(nameof(IsFinalPause)))
+                (s, e) => (s as Production)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(IsFinalPause)))
             ))
         );
 
         #endregion 
 
-        public event EventHandler<EventArgs> Next = delegate { };
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event EventHandler<EventArgs> Next;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Tests.ITestEmulator Emulator => _procedure;
 
@@ -107,7 +107,7 @@ namespace Olfactory.Pages.OdorProduction
         // Internal
 
         Settings _settings;
-        Procedure _procedure = new Procedure();
+        readonly Procedure _procedure = new();
         Procedure.Stage _stage = Procedure.Stage.None;
 
         private void SetStage(Procedure.Stage stage)
@@ -139,7 +139,7 @@ namespace Olfactory.Pages.OdorProduction
 
             if (noMoreTrials)
             {
-                Next(this, new EventArgs());
+                Next?.Invoke(this, new EventArgs());
             }
             else
             {
@@ -151,11 +151,11 @@ namespace Olfactory.Pages.OdorProduction
 
         // UI
 
-        private void btnInterrupt_Click(object sender, RoutedEventArgs e)
+        private void Interrupt_Click(object sender, RoutedEventArgs e)
         {
             // Do I need to show a confirmation dialog here?
             _procedure.Interrupt();
-            Next(this, new EventArgs());
+            Next?.Invoke(this, new EventArgs());
         }
     }
 }

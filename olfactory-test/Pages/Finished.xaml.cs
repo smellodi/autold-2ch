@@ -7,9 +7,9 @@ namespace Olfactory.Pages
 {
     public partial class Finished : Page, IPage<bool>, INotifyPropertyChanged
     {
-        public event EventHandler<bool> Next = delegate { }; // true: exit, false: return to the fornt page
-        public event EventHandler RequestSaving = delegate { };
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event EventHandler<bool> Next;       // true: exit, false: return to the fornt page
+        public event EventHandler RequestSaving;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public string TestName
         {
@@ -17,7 +17,7 @@ namespace Olfactory.Pages
             set
             {
                 _testName = value;
-                PropertyChanged(this, new PropertyChangedEventArgs(nameof(TestName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TestName)));
             }
         }
 
@@ -49,17 +49,17 @@ namespace Olfactory.Pages
 
         private void OnSaveData_Click(object sender, RoutedEventArgs e)
         {
-            RequestSaving(this, new EventArgs());
+            RequestSaving?.Invoke(this, new EventArgs());
         }
 
         private void OnReturn_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, false);
+            Next?.Invoke(this, false);
         }
 
         private void OnExit_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, true);
+            Next?.Invoke(this, true);
         }
     }
 }

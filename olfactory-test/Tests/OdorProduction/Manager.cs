@@ -9,7 +9,7 @@ namespace Olfactory.Tests.OdorProduction
     /// </summary>
     public class Manager : ITestManager
     {
-        public event EventHandler<bool> PageDone = delegate { };
+        public event EventHandler<bool> PageDone;
 
         public string Name => Utils.L10n.T("OdorPulses");
 
@@ -18,9 +18,9 @@ namespace Olfactory.Tests.OdorProduction
             _setupPage.Next += (s, e) =>
             {
                 _settings = e;
-                PageDone(this, _settings != null);
+                PageDone?.Invoke(this, _settings != null);
             };
-            _productionPage.Next += (s, e) => PageDone(this, true);
+            _productionPage.Next += (s, e) => PageDone?.Invoke(this, true);
         }
 
         public Page NextPage()
@@ -68,8 +68,8 @@ namespace Olfactory.Tests.OdorProduction
 
         // Internal
 
-        Setup _setupPage = new Setup();
-        Production _productionPage = new Production();
+        readonly Setup _setupPage = new();
+        readonly Production _productionPage = new();
 
         Page _current = null;
 

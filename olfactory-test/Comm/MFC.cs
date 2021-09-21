@@ -131,7 +131,7 @@ namespace Olfactory.Comm
             Mixer
         }
 
-        public event EventHandler<CommandResultArgs> CommandResult = delegate { };
+        public event EventHandler<CommandResultArgs> CommandResult;
         public event EventHandler<string> Message = delegate { };
 
         public override string Name => "MFC";
@@ -157,7 +157,7 @@ namespace Olfactory.Comm
                 {
                     _freshAir = value;
                 }
-                CommandResult(this, new CommandResultArgs(FRESH_AIR_CHANNEL + CMD_SET, val, result));
+                CommandResult?.Invoke(this, new CommandResultArgs(FRESH_AIR_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -190,7 +190,7 @@ namespace Olfactory.Comm
                 {
                     _odorDirection = value;
                 }
-                CommandResult(this, new CommandResultArgs(OUTPUT_CHANNEL + CMD_SET, val, result));
+                CommandResult?.Invoke(this, new CommandResultArgs(OUTPUT_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -621,7 +621,7 @@ namespace Olfactory.Comm
         {
             var commands = sets.Select(set => $"{char.ToLower((char)OUTPUT_CHANNEL)}{CMD_WRITE_REGISTER}{(int)set.register}={set.value}");
             var result = SendCommands(commands.ToArray());
-            CommandResult(this, new CommandResultArgs(string.Join(";", commands), "", result));
+            CommandResult?.Invoke(this, new CommandResultArgs(string.Join(";", commands), "", result));
             return result;
         }
 

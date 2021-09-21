@@ -14,7 +14,7 @@ namespace Olfactory.Pages
 {
     public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged
     {
-        public event EventHandler<Tests.Test> Next = delegate { };
+        public event EventHandler<Tests.Test> Next;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public double Scale { get; private set; } = 1;
@@ -488,7 +488,7 @@ namespace Olfactory.Pages
             _mfcTimer.Stop();
             _pidTimer.Stop();
 
-            Next(this, Tests.Test.OdorProduction);
+            Next?.Invoke(this, Tests.Test.OdorProduction);
         }
 
         private void ThresholdTest_Click(object sender, RoutedEventArgs e)
@@ -496,7 +496,7 @@ namespace Olfactory.Pages
             _mfcTimer.Stop();
             _pidTimer.Stop();
 
-            Next(this, Tests.Test.Threshold);
+            Next?.Invoke(this, Tests.Test.Threshold);
         }
 
         private void FreshAir_KeyUp(object sender, KeyEventArgs e)

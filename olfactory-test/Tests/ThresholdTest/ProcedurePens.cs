@@ -38,32 +38,28 @@ namespace Olfactory.Tests.ThresholdTest
         /// <summary>
         /// Fires on progressing the odor preparation
         /// </summary>
-        public event EventHandler<double> OdorPreparation = delegate { };
+        public event EventHandler<double> OdorPreparation;
         /// <summary>
         /// Fires when some pen is activated, passes its ID
         /// </summary>
-        public event EventHandler<PenActivationArgs> PenActivated = delegate { };
+        public event EventHandler<PenActivationArgs> PenActivated;
         /// <summary>
         /// Fires when a pen flow starts in automatic/manual mode.
         /// The boolean parameter indicates whether the odor is really flowing to the participant
         /// </summary>
-        public event EventHandler<bool> OdorFlowStarted = delegate { };
-        /// <summary>
-        /// Inhale start event
-        /// </summary>
-        public event EventHandler InhaleStarts = delegate { };
+        public event EventHandler<bool> OdorFlowStarted;
         /// <summary>
         /// Fires when all pens were active, and it is time select the pen with odorant
         /// </summary>
-        public event EventHandler<AnswerType> WaitingForAnswer = delegate { };
+        public event EventHandler<AnswerType> WaitingForAnswer;
         /// <summary>
         /// Fires when the trial is finished and the next should follow, passes the trial result
         /// </summary>
-        public event EventHandler<bool> Next = delegate { };
+        public event EventHandler<bool> Next;
         /// <summary>
         /// Fires when all trials are finished, passes the test result
         /// </summary>
-        public event EventHandler<double> Finished = delegate { };
+        public event EventHandler<double> Finished;
 
         public int Step => _rules.Step + 1;
         public IProcState.PPMChangeDirection Direction => _rules.Direction;
@@ -188,12 +184,12 @@ namespace Olfactory.Tests.ThresholdTest
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
                 {
                     var result = _rules.Result(_settings.TurningPointsToCount);
-                    Finished(this, result);
+                    Finished?.Invoke(this, result);
                     Stop();
                 }
                 else
                 {
-                    Next(this, isCorrectChoice);
+                    Next?.Invoke(this, isCorrectChoice);
                 }
             });
         }
@@ -371,7 +367,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _currentPenID = -1;
                 _logger.Add(LogSource.ThTest, "awaiting");
 
-                WaitingForAnswer(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
+                WaitingForAnswer?.Invoke(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
                 return;
             }
 
@@ -392,18 +388,7 @@ namespace Olfactory.Tests.ThresholdTest
 
             _waitingSounds.Play();
 
-            PenActivated(this, new PenActivationArgs(_currentPenID, _settings.FlowStart));
-        }
-
-        /// <summary>
-        /// For OnePen procedure type only:
-        /// Estimates whether the next trial has odored air
-        /// </summary>
-        /// <returns>'True' if odored</returns>
-        private bool IsNextTrialOdored()
-        {
-            // TODO
-            return true;
+            PenActivated?.Invoke(this, new PenActivationArgs(_currentPenID, _settings.FlowStart));
         }
 
         private void StartOdorFlow()
@@ -413,7 +398,7 @@ namespace Olfactory.Tests.ThresholdTest
                 _model.OpenFlow();
             }
 
-            OdorFlowStarted(this, CurrentColor == PenColor.Odor);
+            OdorFlowStarted?.Invoke(this, CurrentColor == PenColor.Odor);
 
             DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
         }
@@ -439,7 +424,7 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 var duration = Timestamp.Sec - _odorPreparationStart;
                 var progress = Math.Min(1.0, duration / _settings.OdorPreparationDuration);
-                OdorPreparation(this, progress);
+                OdorPreparation?.Invoke(this, progress);
 
                 if (progress < 1)
                 {

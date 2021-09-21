@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+	<!-- 
     Microsoft ResX Schema 
     
     Version 2.0
@@ -59,527 +59,527 @@
             : using a System.ComponentModel.TypeConverter
             : and then encoded with base64 encoding.
     -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="Automatic" xml:space="preserve">
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="metadata">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" />
+							</xsd:sequence>
+							<xsd:attribute name="name" use="required" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="assembly">
+						<xsd:complexType>
+							<xsd:attribute name="alias" type="xsd:string" />
+							<xsd:attribute name="name" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+							<xsd:attribute ref="xml:space" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="Automatic" xml:space="preserve">
     <value>automatic</value>
   </data>
-  <data name="BackToHome" xml:space="preserve">
+	<data name="BackToHome" xml:space="preserve">
     <value>Back to home page</value>
   </data>
-  <data name="CleanAir" xml:space="preserve">
+	<data name="CleanAir" xml:space="preserve">
     <value>Clean air</value>
   </data>
-  <data name="Clear" xml:space="preserve">
+	<data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
-  <data name="Close" xml:space="preserve">
+	<data name="Close" xml:space="preserve">
     <value>Close</value>
   </data>
-  <data name="CommaSeparatedListWithExpressions" xml:space="preserve">
+	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
     <value>A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'</value>
   </data>
-  <data name="CommaSeparatedValues" xml:space="preserve">
+	<data name="CommaSeparatedValues" xml:space="preserve">
     <value>comma-separated positive floating-point values or expressions in a form 'VALUExCOUNT'</value>
   </data>
-  <data name="COMMonitor" xml:space="preserve">
+	<data name="COMMonitor" xml:space="preserve">
     <value>COM Monitor</value>
   </data>
-  <data name="Continue" xml:space="preserve">
+	<data name="Continue" xml:space="preserve">
     <value>Continue</value>
   </data>
-  <data name="CorrectAndTryAgain" xml:space="preserve">
+	<data name="CorrectAndTryAgain" xml:space="preserve">
     <value>Please correct and try again.</value>
   </data>
-  <data name="Direction" xml:space="preserve">
+	<data name="Direction" xml:space="preserve">
     <value>Direction</value>
   </data>
-  <data name="DurationsSec" xml:space="preserve">
+	<data name="DurationsSec" xml:space="preserve">
     <value>Durations in seconds</value>
   </data>
-  <data name="CannotOpenPort" xml:space="preserve">
+	<data name="CannotOpenPort" xml:space="preserve">
     <value>Cannot open the port</value>
   </data>
-  <data name="Events" xml:space="preserve">
+	<data name="Events" xml:space="preserve">
     <value>Events</value>
   </data>
-  <data name="Exit" xml:space="preserve">
+	<data name="Exit" xml:space="preserve">
     <value>Exit</value>
   </data>
-  <data name="Familiarization" xml:space="preserve">
+	<data name="Familiarization" xml:space="preserve">
     <value>Familiarization</value>
   </data>
-  <data name="FamiliarizeOdor" xml:space="preserve">
+	<data name="FamiliarizeOdor" xml:space="preserve">
     <value>Familiarize with the odour</value>
   </data>
-  <data name="FamilInstrContinue" xml:space="preserve">
+	<data name="FamilInstrContinue" xml:space="preserve">
     <value>Click 'Start the test' to continue.</value>
   </data>
-  <data name="FamilInstrOpenValve" xml:space="preserve">
+	<data name="FamilInstrOpenValve" xml:space="preserve">
     <value>After opening the valve, please wait for few seconds before the odour reaches you, then spend some time memorizing it.</value>
   </data>
-  <data name="FamilInstrPreparing" xml:space="preserve">
+	<data name="FamilInstrPreparing" xml:space="preserve">
     <value>Preparing the odour</value>
   </data>
-  <data name="FamilInstrSniff" xml:space="preserve">
+	<data name="FamilInstrSniff" xml:space="preserve">
     <value>Odour is flowing now, sniff it!</value>
   </data>
-  <data name="FamilInstrVentilating" xml:space="preserve">
+	<data name="FamilInstrVentilating" xml:space="preserve">
     <value>Please wait while the tube is ventilating...</value>
   </data>
-  <data name="FeedbackLoop" xml:space="preserve">
+	<data name="FeedbackLoop" xml:space="preserve">
     <value>Feedback loop</value>
   </data>
-  <data name="FinalPause" xml:space="preserve">
+	<data name="FinalPause" xml:space="preserve">
     <value>Final pause</value>
   </data>
-  <data name="Finished" xml:space="preserve">
+	<data name="Finished" xml:space="preserve">
     <value>Finished</value>
   </data>
-  <data name="NumNotNeg" xml:space="preserve">
+	<data name="NumNotNeg" xml:space="preserve">
     <value>a non-negative number</value>
   </data>
-  <data name="NumPos" xml:space="preserve">
+	<data name="NumPos" xml:space="preserve">
     <value>a positive number</value>
   </data>
-  <data name="NumPosSpaceSep" xml:space="preserve">
+	<data name="NumPosSpaceSep" xml:space="preserve">
     <value>space-separated positive numbers</value>
   </data>
-  <data name="Graph" xml:space="preserve">
+	<data name="Graph" xml:space="preserve">
     <value>Graph</value>
   </data>
-  <data name="Immediate" xml:space="preserve">
+	<data name="Immediate" xml:space="preserve">
     <value>immediate</value>
   </data>
-  <data name="InfoF2" xml:space="preserve">
+	<data name="InfoF2" xml:space="preserve">
     <value>Press F2 to simulate COM ports.</value>
   </data>
-  <data name="InfoF5" xml:space="preserve">
+	<data name="InfoF5" xml:space="preserve">
     <value>Press F5 any time to show the logging window.</value>
   </data>
-  <data name="InitialPause" xml:space="preserve">
+	<data name="InitialPause" xml:space="preserve">
     <value>Initial pause</value>
   </data>
-  <data name="Input" xml:space="preserve">
+	<data name="Input" xml:space="preserve">
     <value>Input</value>
   </data>
-  <data name="Instructions" xml:space="preserve">
+	<data name="Instructions" xml:space="preserve">
     <value>Instructions</value>
   </data>
-  <data name="Interrupt" xml:space="preserve">
+	<data name="Interrupt" xml:space="preserve">
     <value>Interrupt</value>
   </data>
-  <data name="IntNotNeg" xml:space="preserve">
+	<data name="IntNotNeg" xml:space="preserve">
     <value>a non-negative integer value</value>
   </data>
-  <data name="IntPos" xml:space="preserve">
+	<data name="IntPos" xml:space="preserve">
     <value>a positive integer number</value>
   </data>
-  <data name="Language" xml:space="preserve">
+	<data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
-  <data name="Light" xml:space="preserve">
+	<data name="Light" xml:space="preserve">
     <value>Light</value>
   </data>
-  <data name="LMin" xml:space="preserve">
+	<data name="LMin" xml:space="preserve">
     <value>l/min</value>
   </data>
-  <data name="MA" xml:space="preserve">
+	<data name="MA" xml:space="preserve">
     <value>mA</value>
   </data>
-  <data name="Manual" xml:space="preserve">
+	<data name="Manual" xml:space="preserve">
     <value>manual</value>
   </data>
-  <data name="MFCPlayground" xml:space="preserve">
+	<data name="MFCPlayground" xml:space="preserve">
     <value>MFC Playground</value>
   </data>
-  <data name="MlMin" xml:space="preserve">
+	<data name="MlMin" xml:space="preserve">
     <value>ml/min</value>
   </data>
-  <data name="Ms" xml:space="preserve">
+	<data name="Ms" xml:space="preserve">
     <value>ms</value>
   </data>
-  <data name="MV" xml:space="preserve">
+	<data name="MV" xml:space="preserve">
     <value>mV</value>
   </data>
-  <data name="OdorantHere" xml:space="preserve">
+	<data name="OdorantHere" xml:space="preserve">
     <value>Odourant was here</value>
   </data>
-  <data name="OdorFlow" xml:space="preserve">
+	<data name="OdorFlow" xml:space="preserve">
     <value>Odour flow</value>
   </data>
-  <data name="OdorLevel" xml:space="preserve">
+	<data name="OdorLevel" xml:space="preserve">
     <value>Odour level</value>
   </data>
-  <data name="OdorLevels" xml:space="preserve">
+	<data name="OdorLevels" xml:space="preserve">
     <value>Odour levels</value>
   </data>
-  <data name="OdorPreparation" xml:space="preserve">
+	<data name="OdorPreparation" xml:space="preserve">
     <value>Odour preparation</value>
   </data>
-  <data name="OdorPulses" xml:space="preserve">
+	<data name="OdorPulses" xml:space="preserve">
     <value>Odour Pulses</value>
   </data>
-  <data name="OdorSensitivity" xml:space="preserve">
+	<data name="OdorSensitivity" xml:space="preserve">
     <value>Your odour sensitivity (ml/min):</value>
   </data>
-  <data name="OdorStartsAfterInhale" xml:space="preserve">
+	<data name="OdorStartsAfterInhale" xml:space="preserve">
     <value>Odour flow starts when inhale start is detected</value>
   </data>
-  <data name="OdorStartsAfterKeyPress" xml:space="preserve">
-    <value>Odour flow starts when a user pressed SPACE key</value>
+	<data name="OdorStartsAfterKeyPress" xml:space="preserve">
+    <value>Odour flow starts when a user presses SPACE key</value>
   </data>
-  <data name="OdorStartsImmediately" xml:space="preserve">
+	<data name="OdorStartsImmediately" xml:space="preserve">
     <value>Odour flow starts immediately after the odour is ready</value>
   </data>
-  <data name="Open" xml:space="preserve">
+	<data name="Open" xml:space="preserve">
     <value>Open</value>
   </data>
-  <data name="OpenValve" xml:space="preserve">
+	<data name="OpenValve" xml:space="preserve">
     <value>Open the odour valve</value>
   </data>
-  <data name="Pen" xml:space="preserve">
+	<data name="Pen" xml:space="preserve">
     <value>Pen</value>
   </data>
-  <data name="PenPresentation" xml:space="preserve">
+	<data name="PenPresentation" xml:space="preserve">
     <value>Pen presentation</value>
   </data>
-  <data name="PenSniffing" xml:space="preserve">
+	<data name="PenSniffing" xml:space="preserve">
     <value>Sniffing</value>
   </data>
-  <data name="PIDSampling" xml:space="preserve">
+	<data name="PIDSampling" xml:space="preserve">
     <value>PID sampling</value>
   </data>
-  <data name="PIDTemp" xml:space="preserve">
+	<data name="PIDTemp" xml:space="preserve">
     <value>Temperature detector current</value>
   </data>
-  <data name="PIDVoltage" xml:space="preserve">
+	<data name="PIDVoltage" xml:space="preserve">
     <value>PID voltage</value>
   </data>
-  <data name="Procedure" xml:space="preserve">
+	<data name="Procedure" xml:space="preserve">
     <value>Procedure</value>
   </data>
-  <data name="PulseFlowRate" xml:space="preserve">
+	<data name="PulseFlowRate" xml:space="preserve">
     <value>Pulse flow rate</value>
   </data>
-  <data name="Pulses" xml:space="preserve">
+	<data name="Pulses" xml:space="preserve">
     <value>Pulses</value>
   </data>
-  <data name="RecognInRow" xml:space="preserve">
+	<data name="RecognInRow" xml:space="preserve">
     <value>Recognitions in row</value>
   </data>
-  <data name="Result" xml:space="preserve">
+	<data name="Result" xml:space="preserve">
     <value>Result</value>
   </data>
-  <data name="Save" xml:space="preserve">
+	<data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="SaveData" xml:space="preserve">
+	<data name="SaveData" xml:space="preserve">
     <value>Save data</value>
   </data>
-  <data name="ScentedAir" xml:space="preserve">
+	<data name="ScentedAir" xml:space="preserve">
     <value>Scented air</value>
   </data>
-  <data name="Seconds" xml:space="preserve">
+	<data name="Seconds" xml:space="preserve">
     <value>seconds</value>
   </data>
-  <data name="SerialPorts" xml:space="preserve">
+	<data name="SerialPorts" xml:space="preserve">
     <value>Serial ports</value>
   </data>
-  <data name="Set" xml:space="preserve">
+	<data name="Set" xml:space="preserve">
     <value>Set</value>
   </data>
-  <data name="Settings" xml:space="preserve">
+	<data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="Setup" xml:space="preserve">
+	<data name="Setup" xml:space="preserve">
     <value>Setup</value>
   </data>
-  <data name="ShowAs" xml:space="preserve">
+	<data name="ShowAs" xml:space="preserve">
     <value>Show as</value>
   </data>
-  <data name="Start" xml:space="preserve">
+	<data name="Start" xml:space="preserve">
     <value>Start</value>
   </data>
-  <data name="StartTest" xml:space="preserve">
+	<data name="StartTest" xml:space="preserve">
     <value>Start the test</value>
   </data>
-  <data name="Step" xml:space="preserve">
+	<data name="Step" xml:space="preserve">
     <value>Step</value>
   </data>
-  <data name="System" xml:space="preserve">
+	<data name="System" xml:space="preserve">
     <value>system</value>
   </data>
-  <data name="Table" xml:space="preserve">
+	<data name="Table" xml:space="preserve">
     <value>Table</value>
   </data>
-  <data name="Temp" xml:space="preserve">
+	<data name="Temp" xml:space="preserve">
     <value>Temp (C)</value>
   </data>
-  <data name="Text" xml:space="preserve">
+	<data name="Text" xml:space="preserve">
     <value>Text</value>
   </data>
-  <data name="ThankYou" xml:space="preserve">
+	<data name="ThankYou" xml:space="preserve">
     <value>Thank you!</value>
   </data>
-  <data name="ThresholdTest" xml:space="preserve">
+	<data name="ThresholdTest" xml:space="preserve">
     <value>Threshold Test</value>
   </data>
-  <data name="ThTestInstrIntro" xml:space="preserve">
+	<data name="ThTestInstrIntro" xml:space="preserve">
     <value>Your sense of smell is to be tested. The test will take approximately 30-40 minutes.</value>
   </data>
-  <data name="ThTestInstrFinal" xml:space="preserve">
+	<data name="ThTestInstrFinal" xml:space="preserve">
     <value>All substances contained in the test are non-toxic and not harmful in the used concentrations.</value>
   </data>
-  <data name="ThTestInstrRN" xml:space="preserve">
+	<data name="ThTestInstrRN" xml:space="preserve">
     <value>[RESEARCHER NOTE] More instruction can be added here. We could even collect personal data on this page to store it later in log files along the data.</value>
   </data>
-  <data name="ThTestInstrDone" xml:space="preserve">
+	<data name="ThTestInstrDone" xml:space="preserve">
     <value>Thanks, your choice has been recorded.</value>
   </data>
-  <data name="ThTestInstrInhale" xml:space="preserve">
+	<data name="ThTestInstrInhale" xml:space="preserve">
     <value>Make an inhale</value>
   </data>
-  <data name="ThTestInstrPressKey" xml:space="preserve">
+	<data name="ThTestInstrPressKey" xml:space="preserve">
     <value>Press SPACE when start inhaling</value>
   </data>
-  <data name="ThTestInstrSelectPen" xml:space="preserve">
+	<data name="ThTestInstrSelectPen" xml:space="preserve">
     <value>Please select the scented pen.</value>
   </data>
-  <data name="ThTestInstrSniff" xml:space="preserve">
+	<data name="ThTestInstrSniff" xml:space="preserve">
     <value>Sniff the pen</value>
   </data>
-  <data name="ThTestInstrWait" xml:space="preserve">
+	<data name="ThTestInstrWait" xml:space="preserve">
     <value>Please wait until the odorant is ready.</value>
   </data>
-  <data name="Time" xml:space="preserve">
+	<data name="Time" xml:space="preserve">
     <value>Time</value>
   </data>
-  <data name="ToCollect" xml:space="preserve">
+	<data name="ToCollect" xml:space="preserve">
     <value>To collect</value>
   </data>
-  <data name="ToCount" xml:space="preserve">
+	<data name="ToCount" xml:space="preserve">
     <value>To count</value>
   </data>
-  <data name="ToKeepTargetLevel" xml:space="preserve">
+	<data name="ToKeepTargetLevel" xml:space="preserve">
     <value>to keep the target level</value>
   </data>
-  <data name="ToReachTargetLevel" xml:space="preserve">
+	<data name="ToReachTargetLevel" xml:space="preserve">
     <value>to reach the target level</value>
   </data>
-  <data name="Turnings" xml:space="preserve">
+	<data name="Turnings" xml:space="preserve">
     <value>Turnings</value>
   </data>
-  <data name="Unknown" xml:space="preserve">
+	<data name="Unknown" xml:space="preserve">
     <value>unknown</value>
   </data>
-  <data name="User" xml:space="preserve">
+	<data name="User" xml:space="preserve">
     <value>user</value>
   </data>
-  <data name="Valves" xml:space="preserve">
+	<data name="Valves" xml:space="preserve">
     <value>Valves</value>
   </data>
-  <data name="NoDataToSave" xml:space="preserve">
+	<data name="NoDataToSave" xml:space="preserve">
     <value>There is no data to save</value>
   </data>
-  <data name="Waste" xml:space="preserve">
+	<data name="Waste" xml:space="preserve">
     <value>waste</value>
   </data>
-  <data name="AppTerminated" xml:space="preserve">
+	<data name="AppTerminated" xml:space="preserve">
     <value>The application is terminated.</value>
   </data>
-  <data name="ControlsValve2" xml:space="preserve">
+	<data name="ControlsValve2" xml:space="preserve">
     <value>Controls the Valve #2 during odour flow. This valve is directed to waste during both pauses.</value>
   </data>
-  <data name="DataSavedInto" xml:space="preserve">
+	<data name="DataSavedInto" xml:space="preserve">
     <value>Data saved into</value>
   </data>
-  <data name="DeviceConnLost" xml:space="preserve">
+	<data name="DeviceConnLost" xml:space="preserve">
     <value>Connection with the {0} device was shut down.</value>
   </data>
-  <data name="EmptyList" xml:space="preserve">
+	<data name="EmptyList" xml:space="preserve">
     <value>The list of values is empty</value>
   </data>
-  <data name="ExpressionNotValid" xml:space="preserve">
+	<data name="ExpressionNotValid" xml:space="preserve">
     <value>The expression '{0}' is invalid, only '{1}' operations are allowed</value>
   </data>
-  <data name="FailedToSave" xml:space="preserve">
+	<data name="FailedToSave" xml:space="preserve">
     <value>Failed to save data into</value>
   </data>
-  <data name="OdorFlowTooHigh" xml:space="preserve">
+	<data name="OdorFlowTooHigh" xml:space="preserve">
     <value>The odor flow rate is too high to be ready in {0} seconds.</value>
   </data>
-  <data name="PressCancelToDiscard" xml:space="preserve">
+	<data name="PressCancelToDiscard" xml:space="preserve">
     <value>Press 'Cancel' to discard the data.</value>
   </data>
-  <data name="PressNoToChangeNameFolder" xml:space="preserve">
+	<data name="PressNoToChangeNameFolder" xml:space="preserve">
     <value>Press 'No' to change the name and/or folder.</value>
   </data>
-  <data name="Retry" xml:space="preserve">
+	<data name="Retry" xml:space="preserve">
     <value>Retry?</value>
   </data>
-  <data name="SaveDataInto" xml:space="preserve">
+	<data name="SaveDataInto" xml:space="preserve">
     <value>Would you like to save data into</value>
   </data>
-  <data name="ValueFormatNotValid" xml:space="preserve">
+	<data name="ValueFormatNotValid" xml:space="preserve">
     <value>The type of value '{0}' is invalid, it must be a '{1}' number</value>
   </data>
-  <data name="ValueTooLarge" xml:space="preserve">
+	<data name="ValueTooLarge" xml:space="preserve">
     <value>The value '{0}' is too large, is must be no greater than '{1}'</value>
   </data>
-  <data name="ValueTooSmall" xml:space="preserve">
+	<data name="ValueTooSmall" xml:space="preserve">
     <value>The value '{0}' is too small, is must be no smaller than '{1}'</value>
   </data>
-  <data name="Logger" xml:space="preserve">
+	<data name="Logger" xml:space="preserve">
     <value>Logger</value>
   </data>
-  <data name="OlfactoryTestTool" xml:space="preserve">
+	<data name="OlfactoryTestTool" xml:space="preserve">
     <value>Olfactory test tool</value>
   </data>
-  <data name="Validator" xml:space="preserve">
+	<data name="Validator" xml:space="preserve">
     <value>Validator</value>
   </data>
-  <data name="Temperature" xml:space="preserve">
+	<data name="Temperature" xml:space="preserve">
     <value>Temperature</value>
   </data>
-  <data name="Cancel" xml:space="preserve">
+	<data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="FlowStart" xml:space="preserve">
+	<data name="FlowStart" xml:space="preserve">
     <value>Flow start</value>
   </data>
-  <data name="OnePen" xml:space="preserve">
+	<data name="OnePen" xml:space="preserve">
     <value>one pen</value>
   </data>
-  <data name="ProcedureType" xml:space="preserve">
+	<data name="ProcedureType" xml:space="preserve">
     <value>Procedure type</value>
   </data>
-  <data name="ProcTypeOnePen" xml:space="preserve">
+	<data name="ProcTypeOnePen" xml:space="preserve">
     <value>Users have to answer whether the presented pen smells or not</value>
   </data>
-  <data name="ProcTypeThreePens" xml:space="preserve">
+	<data name="ProcTypeThreePens" xml:space="preserve">
     <value>Three pens are presented to users, they are forced to select the one that smells</value>
   </data>
-  <data name="ProcTypeTwoPens" xml:space="preserve">
+	<data name="ProcTypeTwoPens" xml:space="preserve">
     <value>Two pens are presented to users, they are forced to select the one that smells</value>
   </data>
-  <data name="ThreePens" xml:space="preserve">
+	<data name="ThreePens" xml:space="preserve">
     <value>three pens</value>
   </data>
-  <data name="ThTestInstrOnePen" xml:space="preserve">
+	<data name="ThTestInstrOnePen" xml:space="preserve">
     <value>Repeatedly, you will be asked to sniff an air flow directed to the mask. You have to find out whether you have perceived the odorant.</value>
   </data>
-  <data name="ThTestInstrThreePens" xml:space="preserve">
+	<data name="ThTestInstrThreePens" xml:space="preserve">
     <value>Repeatedly, three pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
-  <data name="ThTestInstrTwoPens" xml:space="preserve">
+	<data name="ThTestInstrTwoPens" xml:space="preserve">
     <value>Repeatedly, two pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
-  <data name="TwoPens" xml:space="preserve">
+	<data name="TwoPens" xml:space="preserve">
     <value>two pens</value>
   </data>
-  <data name="ThTestInstrChooseOdor" xml:space="preserve">
+	<data name="ThTestInstrChooseOdor" xml:space="preserve">
     <value>Did you smell the odour?</value>
   </data>
-  <data name="No" xml:space="preserve">
+	<data name="No" xml:space="preserve">
     <value>No</value>
   </data>
-  <data name="Yes" xml:space="preserve">
+	<data name="Yes" xml:space="preserve">
     <value>Yes</value>
   </data>
-  <data name="Decreasing" xml:space="preserve">
+	<data name="Decreasing" xml:space="preserve">
     <value>Decreasing</value>
   </data>
-  <data name="Increasing" xml:space="preserve">
+	<data name="Increasing" xml:space="preserve">
     <value>Increasing</value>
   </data>
-  <data name="OK" xml:space="preserve">
+	<data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
-  <data name="Discard" xml:space="preserve">
+	<data name="Discard" xml:space="preserve">
     <value>Discard</value>
   </data>
-  <data name="SaveAs" xml:space="preserve">
+	<data name="SaveAs" xml:space="preserve">
     <value>Save as...</value>
   </data>
-  <data name="Abort" xml:space="preserve">
+	<data name="Abort" xml:space="preserve">
     <value>Abort</value>
   </data>
-  <data name="Ignore" xml:space="preserve">
+	<data name="Ignore" xml:space="preserve">
     <value>Ignore</value>
   </data>
-  <data name="PressDiscard" xml:space="preserve">
+	<data name="PressDiscard" xml:space="preserve">
     <value>Press 'Discard' to discard the data.</value>
   </data>
-  <data name="PressCancel" xml:space="preserve">
+	<data name="PressCancel" xml:space="preserve">
     <value>Press 'Cancel' to continue without saving</value>
   </data>
-  <data name="BreathingStage" xml:space="preserve">
+	<data name="BreathingStage" xml:space="preserve">
     <value>Breathing stage</value>
   </data>
-  <data name="Exhale" xml:space="preserve">
+	<data name="Exhale" xml:space="preserve">
     <value>Exhale</value>
   </data>
-  <data name="Inhale" xml:space="preserve">
+	<data name="Inhale" xml:space="preserve">
     <value>Inhale</value>
   </data>
-  <data name="StartOdorFlow" xml:space="preserve">
+	<data name="StartOdorFlow" xml:space="preserve">
     <value>Start odor flow</value>
   </data>
 </root>

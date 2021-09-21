@@ -10,7 +10,7 @@ namespace Olfactory.Pages.ThresholdTest
 {
     public partial class PenPresentation : Page, IPage<double>
     {
-        public event EventHandler<double> Next = delegate { };
+        public event EventHandler<double> Next;
 
         public Tests.ITestEmulator Emulator => _procedure;
 
@@ -58,7 +58,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             _procedure.Finished += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
-                Next(this, e);
+                Next?.Invoke(this, e);
             });
 
             _procedure.BreathingDetector.StageChanged += (s, e) => Dispatcher.Invoke(() => {

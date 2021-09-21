@@ -8,7 +8,7 @@ namespace Olfactory.Controls
 {
     public partial class WaitingInstruction : UserControl, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         #region Text property
 
@@ -23,15 +23,10 @@ namespace Olfactory.Controls
             nameof(Text),
             typeof(string),
             typeof(WaitingInstruction),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTextPropertyChanged)));
-
-        private static void OnTextPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is WaitingInstruction instance)
-            {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Text)));
-            }
-        }
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(
+                (s, e) => (s as WaitingInstruction)?.PropertyChanged?.Invoke(s, new PropertyChangedEventArgs(nameof(Text)))
+            ))
+        );
 
         #endregion
 

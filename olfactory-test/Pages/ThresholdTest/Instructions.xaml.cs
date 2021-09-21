@@ -8,7 +8,7 @@ namespace Olfactory.Pages.ThresholdTest
 {
     public partial class Instructions : Page, IPage<EventArgs>, INotifyPropertyChanged
     {
-        public event EventHandler<EventArgs> Next = delegate { };
+        public event EventHandler<EventArgs> Next;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string ProcedureInstruction => "ThTestInstr" + _procType.ToString();
@@ -37,12 +37,12 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, new EventArgs());
+            Next?.Invoke(this, new EventArgs());
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, null);
+            Next?.Invoke(this, null);
         }
     }
 }

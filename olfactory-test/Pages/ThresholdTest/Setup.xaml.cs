@@ -11,7 +11,7 @@ namespace Olfactory.Pages.ThresholdTest
 {
     public partial class Setup : Page, IPage<Tests.ThresholdTest.Settings>
     {
-        public event EventHandler<Tests.ThresholdTest.Settings> Next = delegate { };
+        public event EventHandler<Tests.ThresholdTest.Settings> Next;
 
         public Setup()
         {
@@ -130,13 +130,13 @@ namespace Olfactory.Pages.ThresholdTest
 
                 _settings.Save();
 
-                Next(this, _settings);
+                Next?.Invoke(this, _settings);
             }
         }
  
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, null);
+            Next?.Invoke(this, null);
         }
     }
 }

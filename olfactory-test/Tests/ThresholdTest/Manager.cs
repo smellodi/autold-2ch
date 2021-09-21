@@ -10,7 +10,7 @@ namespace Olfactory.Tests.ThresholdTest
     /// </summary>
     public class Manager : ITestManager
     {
-        public event EventHandler<bool> PageDone = delegate { };
+        public event EventHandler<bool> PageDone;
 
         public string Name => Utils.L10n.T("ThresholdTest");
 
@@ -19,22 +19,22 @@ namespace Olfactory.Tests.ThresholdTest
             _setupPage.Next += (s, e) =>
             {
                 _settings = e;
-                PageDone(this, _settings != null);
+                PageDone?.Invoke(this, _settings != null);
             };
-            _instructionsPage.Next += (s, e) => PageDone(this, e != null);
+            _instructionsPage.Next += (s, e) => PageDone?.Invoke(this, e != null);
             _familiarizePage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "familiarization", e.ToString());
-                PageDone(this, true);
+                PageDone?.Invoke(this, true);
             };
             _threePensPage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "finished", e.ToString("F1"));
 
                 _resultPage.SetPPM(e);
-                PageDone(this, true);
+                PageDone?.Invoke(this, true);
             };
-            _resultPage.Next += (s, e) => PageDone(this, true);
+            _resultPage.Next += (s, e) => PageDone?.Invoke(this, true);
         }
 
         public Page NextPage()

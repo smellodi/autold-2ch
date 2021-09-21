@@ -11,7 +11,7 @@ namespace Olfactory.Comm
         /// The boolean parameter indicates if the feedback loop procedure was interrupted 
         /// due to the timeout
         /// </summary>
-        public event EventHandler<bool> TargetOdorLevelReached = delegate { };
+        public event EventHandler<bool> TargetOdorLevelReached;
         
         public double PID => _lastPID;
 
@@ -97,7 +97,7 @@ namespace Olfactory.Comm
                     _mfc.OdorSpeed = targetOdor;
 
                     Clipboard.SetText(string.Join('\n', log));
-                    TargetOdorLevelReached(this, isTimeout);
+                    TargetOdorLevelReached?.Invoke(this, isTimeout);
                 }
             }
 

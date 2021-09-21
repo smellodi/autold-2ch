@@ -8,7 +8,7 @@ namespace Olfactory.Pages.ThresholdTest
 {
     public partial class Familiarize : Page, IPage<long>
     {
-        public event EventHandler<long> Next = delegate { };    // passes duration of sniffing in milliseconds
+        public event EventHandler<long> Next;    // passes duration of sniffing in milliseconds
 
         public Familiarize()
         {
@@ -166,7 +166,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             if (_settings.FamiliarizationDuration > 0)
             {
-                Next(this, (long)(_settings.FamiliarizationDuration * 1000));
+                Next?.Invoke(this, (long)(_settings.FamiliarizationDuration * 1000));
             }
             else
             {
@@ -174,7 +174,7 @@ namespace Olfactory.Pages.ThresholdTest
 
                 _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
                 Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
-                Utils.DispatchOnce.Do(1, () => Next(this, Utils.Timestamp.Ms - _sniffingStartTimestamp));
+                Utils.DispatchOnce.Do(1, () => Next?.Invoke(this, Utils.Timestamp.Ms - _sniffingStartTimestamp));
             }
         }
     }

@@ -17,9 +17,9 @@ namespace Olfactory.Tests.OdorProduction
 
         public int Step => _step;
 
-        public event EventHandler<double> Data = delegate { };
-        public event EventHandler<Stage> StageChanged = delegate { };
-        public event EventHandler<bool> Finished = delegate { };         // provides 'true' if there is no more trials to run
+        public event EventHandler<double> Data;
+        public event EventHandler<Stage> StageChanged;
+        public event EventHandler<bool> Finished;         // provides 'true' if there is no more trials to run
 
 
         public Procedure()
@@ -67,7 +67,7 @@ namespace Olfactory.Tests.OdorProduction
                     {
                         _logger.Add(pidSample);
                         _monitor.LogData(LogSource.PID, pidSample);
-                        Data(this, pidSample.PID);
+                        Data?.Invoke(this, pidSample.PID);
                     }
                     if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                     {
@@ -110,7 +110,7 @@ namespace Olfactory.Tests.OdorProduction
                 .Do(0.1, () =>
                 {
                     _mfc.OdorSpeed = _settings.OdorQuantities[_step];
-                    StageChanged(this, Stage.InitWait);
+                    StageChanged?.Invoke(this, Stage.InitWait);
                 })
                 .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
                 .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
@@ -163,7 +163,7 @@ namespace Olfactory.Tests.OdorProduction
                 }
             }
 
-            StageChanged(this, Stage.OdorFlow);
+            StageChanged?.Invoke(this, Stage.OdorFlow);
         }
 
         private void StopOdorFlow()
@@ -175,7 +175,7 @@ namespace Olfactory.Tests.OdorProduction
 
             _logger.Add("V00");
 
-            StageChanged(this, Stage.FinalWait);
+            StageChanged?.Invoke(this, Stage.FinalWait);
         }
 
         private void Finilize()
@@ -189,7 +189,7 @@ namespace Olfactory.Tests.OdorProduction
                 _timer.Stop();
             }
 
-            Finished(this, noMoreTrials);
+            Finished?.Invoke(this, noMoreTrials);
         }
     }
 }

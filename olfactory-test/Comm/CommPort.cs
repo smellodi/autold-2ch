@@ -60,12 +60,12 @@ namespace Olfactory.Comm
         /// <summary>
         /// Fires when COM port is closed
         /// </summary>
-        public virtual event EventHandler Closed = delegate { };
+        public virtual event EventHandler Closed;
 
         /// <summary>
         /// Fires when high-level error (Sistem.IO.Ports.SerialPort) is received from COM port
         /// </summary>
-        public virtual event EventHandler<Result> RequestResult = delegate { };
+        public virtual event EventHandler<Result> RequestResult;
 
         public bool IsOpen { get; protected set; } = false;
         public bool IsDebugging { get; set; } = false;
@@ -91,7 +91,7 @@ namespace Olfactory.Comm
             if (IsOpen)
             {
                 IsOpen = false;
-                Closed(this, new EventArgs());
+                Closed?.Invoke(this, new EventArgs());
             }
         }
 
@@ -131,7 +131,7 @@ namespace Olfactory.Comm
                     _port.ErrorReceived += (s, e) =>
                     {
                         _error = e.EventType;
-                        RequestResult(this, new Result()
+                        RequestResult?.Invoke(this, new Result()
                         {
                             Error = (Error)Marshal.GetLastWin32Error(),
                             Reason = $"COM internal error ({e.EventType})"

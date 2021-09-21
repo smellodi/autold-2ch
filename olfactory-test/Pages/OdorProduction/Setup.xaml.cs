@@ -8,7 +8,7 @@ namespace Olfactory.Pages.OdorProduction
 {
     public partial class Setup : Page, IPage<Tests.OdorProduction.Settings>, Tests.ITestEmulator
     {
-        public event EventHandler<Tests.OdorProduction.Settings> Next = delegate { };
+        public event EventHandler<Tests.OdorProduction.Settings> Next;
 
         public Setup()
         {
@@ -39,7 +39,7 @@ namespace Olfactory.Pages.OdorProduction
         readonly char LIST_DELIM = ',';
         readonly char[] EXPR_OPS = new char[] { 'x', '*' };
 
-        Tests.OdorProduction.Settings _settings = new Tests.OdorProduction.Settings();
+        readonly Tests.OdorProduction.Settings _settings = new();
 
         private Utils.Validation CheckInput()
         {
@@ -77,7 +77,7 @@ namespace Olfactory.Pages.OdorProduction
                 {
                     var value = double.Parse(exprValues[0]);
                     var count = double.Parse(exprValues[1]);
-                    List<double> values = new List<double>();
+                    var values = new List<double>();
                     for (int i = 0; i < count; i++)
                     {
                         values.Add(value);
@@ -114,13 +114,13 @@ namespace Olfactory.Pages.OdorProduction
 
                 _settings.Save();
 
-                Next(this, _settings);
+                Next?.Invoke(this, _settings);
             }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Next(this, null);
+            Next?.Invoke(this, null);
         }
     }
 }

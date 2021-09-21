@@ -5,8 +5,8 @@ namespace Olfactory
 {
     internal class USB
     {
-        public event EventHandler<string> Inserted = delegate { };
-        public event EventHandler<string> Removed = delegate { };
+        public event EventHandler<string> Inserted;
+        public event EventHandler<string> Removed;
 
         public USB()
         {
@@ -24,8 +24,8 @@ namespace Olfactory
 
         private void Listen(string evt, string target, ActionType actionType)
         {
-            WqlEventQuery query = new WqlEventQuery($"SELECT * FROM {evt} WITHIN 2 WHERE TargetInstance ISA '{target}'");
-            ManagementEventWatcher watcher = new ManagementEventWatcher(query);
+            var query = new WqlEventQuery($"SELECT * FROM {evt} WITHIN 2 WHERE TargetInstance ISA '{target}'");
+            var watcher = new ManagementEventWatcher(query);
             
             watcher.EventArrived += (s, e) =>
             {
@@ -41,10 +41,10 @@ namespace Olfactory
                 switch (actionType)
                 {
                     case ActionType.Inserted:
-                        Inserted(this, portName);
+                        Inserted?.Invoke(this, portName);
                         break;
                     case ActionType.Removed:
-                        Removed(this, portName);
+                        Removed?.Invoke(this, portName);
                         break;
                 }
             };

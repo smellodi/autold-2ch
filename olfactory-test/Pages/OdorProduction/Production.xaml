@@ -89,7 +89,7 @@
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
                 Style="{StaticResource Next}"
                 Content="{lex:Loc Interrupt}"
-                Click="btnInterrupt_Click"/>
+                Click="Interrupt_Click"/>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
     </Grid>
