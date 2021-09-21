@@ -30,10 +30,10 @@ namespace Olfactory.Tests.ThresholdTest
 
             _answersBufferSize = requiredRecognitions + allowedWrongAnswers;
 
-            _ppmValue = _minPPM + 0.25 * (_maxPPM - _minPPM);
-            _ppmStep = (_maxPPM - _minPPM) / 8;
+            _ppmValue = _minPPM + (_maxPPM - _minPPM) * INITIAL_REL_PPM_VALUE;
+            _ppmStep = (_maxPPM - _minPPM) * INITIAL_REL_PPM_STEP;
         }
-
+        
         public override void Next(Pen[] pens)
         {
             base.Next(pens);
@@ -68,6 +68,9 @@ namespace Olfactory.Tests.ThresholdTest
 
 
         // Internal
+
+        const double INITIAL_REL_PPM_VALUE = 0.25;
+        const double INITIAL_REL_PPM_STEP = 1d / 8;
 
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
         readonly Queue<bool> _lastAnswers = new();

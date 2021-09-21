@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -26,8 +25,8 @@ namespace Olfactory.Tests.ThresholdTest
 
             _requiredRecognitions = requiredRecognitions;
 
-            _ppmValue = _minPPM + 0.25 * (_maxPPM - _minPPM);
-            _ppmStep = (_maxPPM - _minPPM) / 8;
+            _ppmValue = _minPPM + (_maxPPM - _minPPM) * INITIAL_REL_PPM_VALUE;
+            _ppmStep = (_maxPPM - _minPPM) * INITIAL_REL_PPM_STEP;
         }
 
         public override void Next(Pen[] pens)
@@ -37,8 +36,8 @@ namespace Olfactory.Tests.ThresholdTest
             var color = _odoredPenInRow switch
             {
                 0 => PenColor.Odor,
-                >= 4 => PenColor.NonOdor,
-                _ => _rnd.NextDouble() < 0.25 ? PenColor.NonOdor : PenColor.Odor
+                >= ODORED_PEN_COUNT_PER_ODORLESS_PEN => PenColor.NonOdor,
+                _ => _rnd.NextDouble() < 1d / ODORED_PEN_COUNT_PER_ODORLESS_PEN ? PenColor.NonOdor : PenColor.Odor
             };
 
             pens[0].Color = color;
@@ -72,6 +71,10 @@ namespace Olfactory.Tests.ThresholdTest
 
 
         // Internal
+
+        const double INITIAL_REL_PPM_VALUE = 0.25;
+        const double INITIAL_REL_PPM_STEP = 1d / 8;
+        const int ODORED_PEN_COUNT_PER_ODORLESS_PEN = 4;
 
         bool PenSmells => _odoredPenInRow > 0;
 
