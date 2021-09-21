@@ -56,7 +56,15 @@
                                       Margin="0,36"
                                       VerticalContentAlignment="Bottom"
                                       Text="Instructions"/>
-            
+            <Button x:Name="btnStartManualOdorFlow" Grid.Row="0"
+                    VerticalAlignment="Bottom"
+                    Margin="0,0,0,8"
+                    Content="{lex:Loc StartOdorFlow}"
+                    MaxWidth="120"
+                    Height="28"
+                    Visibility="Collapsed"
+                    Click="StartManualOdorFlow_Click"/>
+
             <!--local:Pen Grid.Row="1" Grid.Column="0" x:Name="pen1" 
                        ID="1"
                        Selected="OnPen_Selected"/-->

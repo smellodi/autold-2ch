@@ -29,8 +29,9 @@ namespace Olfactory.Pages.ThresholdTest
             });
 
             _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
-                if (_procedure.FlowStart != FlowStart.Immediate)
+                if (_procedure.FlowStart != FlowStart.Immediate && CurrentPen != null)
                 {
+                    CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden; 
                     wtiInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
                 }
             });
@@ -39,6 +40,7 @@ namespace Olfactory.Pages.ThresholdTest
                 if (CurrentPen != null)
                 {
                     CurrentPen.IsActive = false;
+                    CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden;
                 }
 
                 wtiInstruction.Text = e == PenProc.AnswerType.HasOdor ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_CHOOSE_PEN_ODOR;
@@ -77,20 +79,17 @@ namespace Olfactory.Pages.ThresholdTest
 
             while (grdPens.ColumnDefinitions.Count < _procedure.PenCount)
             {
-                var pen = new Controls.Pen
-                {
-                    ID = (grdPens.ColumnDefinitions.Count + 1).ToString(),
-                    CanChoose = _procedure.CanChoose
-                };
-                pen.Selected += OnPen_Selected;
-
-                Grid.SetRow(pen, 1);
-                Grid.SetColumn(pen, grdPens.ColumnDefinitions.Count);
-
+                var columnIndex = grdPens.ColumnDefinitions.Count;
+                
+                var pen = CreatePen(columnIndex);
                 _pens.Add(pen);
+
+                var sniffInstruction = CreateInstruction(columnIndex);
+                pens[columnIndex].Instruction = sniffInstruction;
 
                 grdPens.ColumnDefinitions.Add(new ColumnDefinition());
                 grdPens.Children.Add(pen);
+                grdPens.Children.Add(sniffInstruction);
             }
 
             for (int i = 0; i < _pens.Count; i++)
@@ -114,10 +113,9 @@ namespace Olfactory.Pages.ThresholdTest
 
         public void ConsumeKeyDown(Key e)
         {
-            if ((e == Key.Space && _procedure.FlowStart == FlowStart.Manual) ||
-                (e == Key.Enter && _procedure.FlowStart == FlowStart.Automatic))
+            if (e == Key.Space)
             {
-                _procedure.EnablePenOdor();
+                StartOdorFlowManually();
             }
         }
 
@@ -150,6 +148,8 @@ namespace Olfactory.Pages.ThresholdTest
 
         int _currentPenID = -1;
 
+        bool _isAwaitingInput = false;
+
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < _pens.Count) ? _pens[_currentPenID] : null;
 
 
@@ -158,19 +158,33 @@ namespace Olfactory.Pages.ThresholdTest
             if (CurrentPen != null)
             {
                 CurrentPen.IsActive = false;
+                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden;
             }
 
             _currentPenID = penID;
 
-            wtiInstruction.Text = flowStart switch
+            CurrentPen.IsActive = true;
+
+            if (flowStart == FlowStart.Manual)
+            {
+                wtiInstruction.Text = INSTRUCTION_SNIFF_THE_PEN_MANUAL;
+                _isAwaitingInput = true;
+
+                var column = Grid.GetColumn(CurrentPen.PenInstance.Instruction);
+                Grid.SetColumn(btnStartManualOdorFlow, column);
+                btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Visible;
+            }
+            /* flowStart switch
             {
                 FlowStart.Immediate => INSTRUCTION_SNIFF_THE_PEN_FIXED,
                 FlowStart.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
                 FlowStart.Automatic => INSTRUCTION_SNIFF_THE_PEN_AUTO,
                 _ => ""
-            };
-
-            CurrentPen.IsActive = true;
+            };*/
         }
 
         // UI actions
@@ -204,6 +218,54 @@ namespace Olfactory.Pages.ThresholdTest
             }
         }
 
+        private Controls.Pen CreatePen(int columnIndex)
+        {
+            var pen = new Controls.Pen
+            {
+                ID = (columnIndex + 1).ToString(),
+                CanChoose = _procedure.CanChoose
+            };
+            pen.Selected += OnPen_Selected;
+
+            Grid.SetRow(pen, 1);
+            Grid.SetColumn(pen, columnIndex);
+
+            return pen;
+        }
+
+        private Label CreateInstruction(int columnIndex)
+        {
+            var sniffInstruction = new Label()
+            {
+                VerticalAlignment = System.Windows.VerticalAlignment.Bottom,
+                Visibility = System.Windows.Visibility.Hidden,
+                HorizontalAlignment = System.Windows.HorizontalAlignment.Center,
+                Margin = new System.Windows.Thickness(8),
+            };
+            sniffInstruction.Content = _procedure.FlowStart switch
+            {
+                FlowStart.Immediate => INSTRUCTION_SNIFF_THE_PEN_FIXED,
+                FlowStart.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
+                FlowStart.Automatic => INSTRUCTION_SNIFF_THE_PEN_AUTO,
+                _ => ""
+            };
+
+            Grid.SetRow(sniffInstruction, 0);
+            Grid.SetColumn(sniffInstruction, columnIndex);
+
+            return sniffInstruction;
+        }
+
+        private void StartOdorFlowManually()
+        {
+            if (_procedure.FlowStart == FlowStart.Manual && _isAwaitingInput)
+            {
+                _isAwaitingInput = false;
+                _procedure.EnablePenOdor();
+
+                btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Collapsed;
+            }
+        }
 
         // UI events
 
@@ -222,6 +284,11 @@ namespace Olfactory.Pages.ThresholdTest
             ColorizePens(true);
 
             UpdateDisplay(Update.Recognitions | Update.Turnings);
+        }
+
+        private void StartManualOdorFlow_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            StartOdorFlowManually();
         }
     }
 }

@@ -571,12 +571,15 @@
     <value>Press 'Cancel' to continue without saving</value>
   </data>
   <data name="BreathingStage" xml:space="preserve">
-    <value>Breatings stage</value>
+    <value>Breathing stage</value>
   </data>
   <data name="Exhale" xml:space="preserve">
     <value>Exhale</value>
   </data>
   <data name="Inhale" xml:space="preserve">
     <value>Inhale</value>
+  </data>
+  <data name="StartOdorFlow" xml:space="preserve">
+    <value>Start odor flow</value>
   </data>
 </root>

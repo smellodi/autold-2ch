@@ -1,10 +1,13 @@
-﻿namespace Olfactory.Tests.ThresholdTest
+﻿using System.Windows.Controls;
+
+namespace Olfactory.Tests.ThresholdTest
 {
     public enum PenColor { None, Odor, NonOdor }
 
     public class Pen
     {
         public PenColor Color { get; set; }
+        public Label Instruction { get; set; }
 
         public Pen(PenColor color = PenColor.None)
         {

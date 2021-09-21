@@ -15,6 +15,7 @@
     <UserControl.Resources>
         <utils:BoolToVisibilityConverter x:Key="bool2vis"/>
         <utils:NotBoolToVisibilityConverter x:Key="notBool2vis"/>
+        
         <Style x:Key="Pen" TargetType="{x:Type Label}">
             <Setter Property="Width" Value="120"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -22,10 +23,12 @@
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
-        </Style>
-        <Style x:Key="Colorbox" TargetType="{x:Type Rectangle}">
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="Height" Value="10"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsActive}" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
+                    <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="Choice" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Width" Value="120"/>
@@ -35,9 +38,10 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <Label x:Name="lblPen"
-               Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}">
-            <Label.Content>
+        <Grid>
+            <Label x:Name="lblPen"
+                   Style="{StaticResource Pen}"
+                   Height="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource Self}}">
                 <TextBlock>
                     <Run Text="{lex:Loc Pen}"/>
                     <Run Text=" #"
@@ -45,22 +49,30 @@
                     <Run Text="{Binding ID}"
                          IsEnabled="{Binding CanChoose, Converter={StaticResource notBool2vis}}"/>
                 </TextBlock>
-            </Label.Content>
-            <Label.Style>
-                <Style TargetType="Label" BasedOn="{StaticResource Pen}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsActive}" Value="True">
-                            <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
-                            <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-        </Label>
+            </Label>
+            <Image Source="/Assets/images/pen.png"
+                   Margin="0,0,0,-50"
+                   Height="110"
+                   HorizontalAlignment="Center"
+                   Stretch="Uniform"
+                   Visibility="{Binding IsActive, Converter={StaticResource bool2vis}}"
+                   RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="-90"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+        
         <Rectangle x:Name="rctPenColor"
                    Fill="Wheat"
                    Visibility="{Binding IsColorVisible, Converter={StaticResource bool2vis}}"
-                   Style="{StaticResource Colorbox}"/>
+                   Width="{Binding Width, ElementName=lblPen}"
+                   Height="10"/>
         <StackPanel Width="160"
                     Visibility="{Binding CanChoose, Converter={StaticResource notBool2vis}}">
             <Button Style="{StaticResource Choice}"

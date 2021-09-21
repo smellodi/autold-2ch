@@ -16,6 +16,7 @@
     <None Remove="Assets\images\error.png" />
     <None Remove="Assets\images\exclamation.png" />
     <None Remove="Assets\images\information.png" />
+    <None Remove="Assets\images\pen.png" />
     <None Remove="Assets\images\question.png" />
     <None Remove="Assets\main.png" />
   </ItemGroup>
@@ -35,6 +36,7 @@
     <Resource Include="Assets\images\error.png" />
     <Resource Include="Assets\images\exclamation.png" />
     <Resource Include="Assets\images\information.png" />
+    <Resource Include="Assets\images\pen.png" />
     <Resource Include="Assets\images\question.png" />
   </ItemGroup>
 
