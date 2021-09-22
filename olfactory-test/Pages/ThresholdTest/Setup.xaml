@@ -38,7 +38,7 @@
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Border.LayoutTransform>
-            <StackPanel Width="480">
+            <StackPanel Width="490">
                 <Label Grid.ColumnSpan="3"
                        Style="{StaticResource FormHeader}"
                        Content="{lex:Loc Settings}"/>

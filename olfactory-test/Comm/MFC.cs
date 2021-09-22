@@ -58,7 +58,7 @@ namespace Olfactory.Comm
         {
             get
             {
-                var list = new System.Collections.Generic.List<string>();
+                var list = new List<string>();
                 list.AddRange(new string[] { "", "|", "A", "", "|", "B", "", "|\r\nTime" });
                 list.AddRange(MFCChannel.Header);       // A
                 list.AddRange(MFCChannel.Header);       // B
@@ -367,7 +367,8 @@ namespace Olfactory.Comm
 
             var val = ((int)(1000 * duration)).ToString();
 
-            List<(Register, string)> cmdSets = new List<(Register, string)>();
+            var cmdSets = new List<(Register, string)>();
+
             if (valves.HasFlag(OdorFlowsTo.System) && !_odorDirection.HasFlag(OdorFlowsTo.System))
             {
                 cmdSets.Add((Register.PULL_IN_0, val));

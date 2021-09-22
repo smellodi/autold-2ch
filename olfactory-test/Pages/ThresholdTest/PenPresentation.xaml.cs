@@ -167,7 +167,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             if (flowStart == FlowStart.Manual)
             {
-                wtiInstruction.Text = INSTRUCTION_SNIFF_THE_PEN_MANUAL;
+                wtiInstruction.Text = ""; //INSTRUCTION_SNIFF_THE_PEN_MANUAL;
                 _isAwaitingInput = true;
 
                 var column = Grid.GetColumn(CurrentPen.PenInstance.Instruction);
@@ -245,7 +245,7 @@ namespace Olfactory.Pages.ThresholdTest
             sniffInstruction.Content = _procedure.FlowStart switch
             {
                 FlowStart.Immediate => INSTRUCTION_SNIFF_THE_PEN_FIXED,
-                FlowStart.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
+                FlowStart.Manual => INSTRUCTION_SNIFF_THE_PEN_FIXED,
                 FlowStart.Automatic => INSTRUCTION_SNIFF_THE_PEN_AUTO,
                 _ => ""
             };
@@ -264,6 +264,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _procedure.EnablePenOdor();
 
                 btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Collapsed;
+                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Visible;
             }
         }
 

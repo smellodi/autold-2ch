@@ -549,4 +549,37 @@
 	<data name="Increasing" xml:space="preserve">
 		<value>Zunehemend</value>
 	</data>
+	<data name="OK" xml:space="preserve">
+		<value>Ok</value>
+	</data>
+	<data name="Discard" xml:space="preserve">
+		<value>Löschen</value>
+	</data>
+	<data name="SaveAs" xml:space="preserve">
+		<value>Speichern als…</value>
+	</data>
+	<data name="Abort" xml:space="preserve">
+		<value>Abbrechen</value>
+	</data>
+	<data name="Ignore" xml:space="preserve">
+		<value>Ignorieren</value>
+	</data>
+	<data name="PressDiscard" xml:space="preserve">
+		<value>Drücken Sie ‘Löschen’ um die Daten zu löschen.</value>
+	</data>
+	<data name="PressCancel" xml:space="preserve">
+		<value>Drücken Sie ‘Abbrechen’ um ohne zu speichern fortzufahren.</value>
+	</data>
+	<data name="BreathingStage" xml:space="preserve">
+		<value>Atemphase</value>
+	</data>
+	<data name="Exhale" xml:space="preserve">
+		<value>Ausatmen</value>
+	</data>
+	<data name="Inhale" xml:space="preserve">
+		<value>Einatmen</value>
+	</data>
+	<data name="StartOdorFlow" xml:space="preserve">
+		<value>Geruchspräsentation starten</value>
+	</data>
 </root>

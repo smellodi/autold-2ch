@@ -549,4 +549,37 @@
 	<data name="Increasing" xml:space="preserve">
 		<value>Nouseva</value>
 	</data>
+	<data name="OK" xml:space="preserve">
+		<value>OK</value>
+	</data>
+	<data name="Discard" xml:space="preserve">
+		<value>Hylkää</value>
+	</data>
+	<data name="SaveAs" xml:space="preserve">
+		<value>Tallenna nimellä...</value>
+	</data>
+	<data name="Abort" xml:space="preserve">
+		<value>Keskeytä</value>
+	</data>
+	<data name="Ignore" xml:space="preserve">
+		<value>Ohita</value>
+	</data>
+	<data name="PressDiscard" xml:space="preserve">
+		<value>Paina “Hylkää”, jos et halua tallentaa tietoja</value>
+	</data>
+	<data name="PressCancel" xml:space="preserve">
+		<value>Paina “Peruuta”, jos haluat jatkaa tallentamatta</value>
+	</data>
+	<data name="BreathingStage" xml:space="preserve">
+		<value>Hengitysvaihe</value>
+	</data>
+	<data name="Exhale" xml:space="preserve">
+		<value>Uloshengitys</value>
+	</data>
+	<data name="Inhale" xml:space="preserve">
+		<value>Sisäänhengitys</value>
+	</data>
+	<data name="StartOdorFlow" xml:space="preserve">
+		<value>Käynnistä tuoksuvirtaus</value>
+	</data>
 </root>
