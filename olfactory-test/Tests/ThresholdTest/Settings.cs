@@ -40,7 +40,7 @@ namespace Olfactory.Tests.ThresholdTest
             FlowStart = (FlowStartTrigger)settings.Test_TT_FlowStart;
             Type = (ProcedureType)settings.Test_TT_Type;
 
-            List<double> odorQuantities = new List<double>();
+            var odorQuantities = new List<double>();
             foreach (var q in settings.Test_TT_PPMs)
             {
                 odorQuantities.Add(double.Parse(q));

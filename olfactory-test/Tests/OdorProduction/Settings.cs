@@ -28,7 +28,7 @@ namespace Olfactory.Tests.OdorProduction
             UseFeedbackLoopToReachLevel = settings.Test_OP_UseFeedbackLoopToReachLevel;
             UseFeedbackLoopToKeepLevel = settings.Test_OP_UseFeedbackLoopToKeepLevel;
 
-            List<double> odorQuantities = new List<double>();
+            var odorQuantities = new List<double>();
             foreach (var q in settings.Test_OP_OdorQuantities)
             {
                 odorQuantities.Add(double.Parse(q));

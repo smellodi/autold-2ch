@@ -76,16 +76,16 @@ namespace Olfactory.Tests.ThresholdTest
         const double INITIAL_REL_PPM_STEP = 1d / 8;
         const int ODORED_PEN_COUNT_PER_ODORLESS_PEN = 4;
 
-        bool PenSmells => _odoredPenInRow > 0;
-
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
+        readonly double _minPPM;
+        readonly double _maxPPM;
 
         int _odoredPenInRow = 0;
 
-        double _minPPM;
-        double _maxPPM;
         double _ppmValue;
         double _ppmStep;
+
+        bool PenSmells => _odoredPenInRow > 0;
 
         private void UpdateDirection(IProcState.PPMChangeDirection direction)
         {

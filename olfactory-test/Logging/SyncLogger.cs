@@ -42,7 +42,7 @@ namespace Olfactory
             // Internal
 
             readonly string[] _fields;
-            long _time;
+            readonly long _time;
         }
 
         public static SyncLogger Instance => _instance ??= new();
@@ -94,13 +94,12 @@ namespace Olfactory
 
         protected override string Header => Record.HEADER;
 
-        System.Timers.Timer _timer = new System.Timers.Timer();
+        readonly List<string> _events = new();
+        readonly System.Timers.Timer _timer = new();
+        readonly Mutex _mutex = new();
 
         MFCSample _mfcSample;
         PIDSample _pidSample;
-        List<string> _events = new List<string>();
-
-        Mutex _mutex = new Mutex();
 
         protected SyncLogger() : base()
         {

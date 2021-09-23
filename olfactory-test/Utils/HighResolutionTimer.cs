@@ -142,7 +142,7 @@ namespace Olfactory.Utils
         {
             float nextTrigger = 0f;
 
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
 
             while (_isRunning)

@@ -17,9 +17,11 @@ namespace Olfactory.Controls
         {
             InitializeComponent();
 
-            _scatter = new ScottPlot.Plottable.ScatterPlot(new double[] { 0 }, new double[] { 0 });
-            _scatter.Color = LINE_COLOR;
-            _scatter.MarkerSize = 4f;
+            _scatter = new ScottPlot.Plottable.ScatterPlot(new double[] { 0 }, new double[] { 0 })
+            {
+                Color = LINE_COLOR,
+                MarkerSize = 4f
+            };
 
             chart.Plot.Add(_scatter);
             chart.Plot.XAxis.Color(COLOR_GRAY);
@@ -70,7 +72,7 @@ namespace Olfactory.Controls
             chart.Render();
         }
 
-        public void Add(double timestamp, double value, System.Drawing.Color? brush = null)
+        public void Add(double timestamp, double value)
         {
             while (_data.Count > ActualWidth / PIXELS_PER_POINT)
             {
@@ -90,17 +92,15 @@ namespace Olfactory.Controls
         // Internal 
 
         const int PIXELS_PER_POINT = 4;
+
         readonly System.Drawing.Color COLOR_GRAY = System.Drawing.Color.FromArgb(80, 80, 80);
-
-
-        ScottPlot.Plottable.ScatterPlot _scatter;
-
-        List<MeasureModel> _data = new List<MeasureModel>();
+        readonly List<MeasureModel> _data = new();
+        readonly ScottPlot.Plottable.ScatterPlot _scatter;
 
         private void Data2XY(out double[] x, out double[] y)
         {
-            List<double> xi = new List<double>();
-            List<double> yi = new List<double>();
+            var xi = new List<double>();
+            var yi = new List<double>();
 
             if (_data.Count > 0)
             {

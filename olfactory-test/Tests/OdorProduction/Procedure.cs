@@ -129,16 +129,16 @@ namespace Olfactory.Tests.OdorProduction
 
         // Internal
 
+        readonly MFC _mfc = MFC.Instance;
+        readonly PID _pid = PID.Instance;
+        readonly SyncLogger _logger = SyncLogger.Instance;
+        readonly CommMonitor _monitor = CommMonitor.Instance;
+        readonly System.Timers.Timer _timer = new();
+
         Settings _settings;
 
         int _step = 0;
 
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
-        SyncLogger _logger = SyncLogger.Instance;
-        CommMonitor _monitor = CommMonitor.Instance;
-
-        System.Timers.Timer _timer = new System.Timers.Timer();
         Utils.DispatchOnce _runner;
 
 

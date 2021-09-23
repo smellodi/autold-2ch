@@ -57,7 +57,7 @@
                    Content="{lex:Loc Events}"/>
             <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource ActionButton}"
                     Content="{lex:Loc Clear}"
-                    Click="btnClearDebug_Click"/>
+                    Click="ClearDebug_Click"/>
         </Grid>
 
         <TextBox x:Name="txbDebug" Grid.Row="1" Grid.Column="0" Grid.RowSpan="3"
@@ -85,10 +85,10 @@
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
                 <Button x:Name="btnMFCSave" Style="{StaticResource ActionButton}"
                         Content="{lex:Loc Save}"
-                        Click="btnSaveMFC_Click"/>
+                        Click="SaveMFC_Click"/>
                 <Button x:Name="btnMFCClear" Style="{StaticResource ActionButton}"
                         Content="{lex:Loc Clear}"
-                        Click="btnClearMFC_Click"/>
+                        Click="ClearMFC_Click"/>
             </StackPanel>
         </Grid>
         
@@ -137,10 +137,10 @@
             <StackPanel Grid.Row="0" Grid.Column="3" Orientation="Horizontal">
                 <Button x:Name="btnPIDSave" Style="{StaticResource ActionButton}"
                         Content="{lex:Loc Save}"
-                        Click="btnSavePID_Click"/>
+                        Click="SavePID_Click"/>
                 <Button x:Name="btnPIDClear" Style="{StaticResource ActionButton}"
                         Content="{lex:Loc Clear}"
-                        Click="btnClearPID_Click"/>
+                        Click="ClearPID_Click"/>
             </StackPanel>
         </Grid>
 

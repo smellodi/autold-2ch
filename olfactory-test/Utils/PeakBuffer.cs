@@ -146,8 +146,9 @@ namespace Olfactory.Utils
 
         const long MAX_ALLOWED_PAUSE = 500; // ms
 
-        double[] _buffer;
-        int _size;
+        readonly double[] _buffer;
+        readonly int _size;
+        
         int _pointer = 0;
         bool _isFull = false;
         long _timestamp = 0;

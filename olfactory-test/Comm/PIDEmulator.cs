@@ -12,11 +12,11 @@ namespace Olfactory.Comm
         {
             if (query is PID.ModQueryPreset1Regs preset)
             {
-                presetQuery = preset;
+                _presetQuery = preset;
             }
             else if (query is PID.ModQueryReadInputRegs input)
             {
-                inputQuery = input;
+                _inputQuery = input;
             }
         }
 
@@ -40,7 +40,7 @@ namespace Olfactory.Comm
             }
             else if (count == 29) // query-input
             {
-                var addr = (inputQuery.AddressHi << 8) | inputQuery.AddressLo;
+                var addr = (_inputQuery.AddressHi << 8) | _inputQuery.AddressLo;
 
                 buffer[0] = PID.MODBUS_ADDR_PID;
                 buffer[1] = PID.MODBUS_FN_READ_INPUT_REGS;
@@ -59,7 +59,7 @@ namespace Olfactory.Comm
                     buffer[9] = 0;
                     buffer[10] = 0;
                     // pid
-                    PID.BtoD pid = new PID.BtoD() { D = (uint)(_model.PID + e(2.5)) };
+                    var pid = new PID.BtoD() { D = (uint)(_model.PID + e(2.5)) };
                     buffer[11] = pid.B1;
                     buffer[12] = pid.B0;
                     buffer[13] = pid.B3;
@@ -83,51 +83,65 @@ namespace Olfactory.Comm
                 else if (addr == PID.MODBUS_REG_SIGNAL_GROUP)
                 {
                     // rtd
-                    var rtd = new PID.BtoD();
-                    rtd.f = 25f + (float)e(0.15);
+                    var rtd = new PID.BtoD
+                    {
+                        f = 25f + (float)e(0.15)
+                    };
                     buffer[3] = rtd.B1;
                     buffer[4] = rtd.B0;
                     buffer[5] = rtd.B3;
                     buffer[6] = rtd.B2;
                     // ref
-                    var ref10V = new PID.BtoD();
-                    ref10V.f = 20f;
+                    var ref10V = new PID.BtoD
+                    {
+                        f = 20f
+                    };
                     buffer[7] = ref10V.B1;
                     buffer[8] = ref10V.B0;
                     buffer[9] = ref10V.B3;
                     buffer[10] = ref10V.B2;
                     // pid
-                    var pid = new PID.BtoD();
-                    pid.f = 45f + (float)e(1.5);
+                    var pid = new PID.BtoD
+                    {
+                        f = 45f + (float)e(1.5)
+                    };
                     buffer[11] = pid.B1;
                     buffer[12] = pid.B0;
                     buffer[13] = pid.B3;
                     buffer[14] = pid.B2;
                     // light
-                    var light = new PID.BtoD();
-                    light.f = 1f;
+                    var light = new PID.BtoD
+                    {
+                        f = 1f
+                    };
                     buffer[15] = light.B1;
                     buffer[16] = light.B0;
                     buffer[17] = light.B3;
                     buffer[18] = light.B2;
                     // temp
-                    var temp = new PID.BtoD();
-                    temp.f = 29f;
+                    var temp = new PID.BtoD
+                    {
+                        f = 29f
+                    };
                     buffer[19] = temp.B1;
                     buffer[20] = temp.B0;
                     buffer[21] = temp.B3;
                     buffer[22] = temp.B2;
                     // currloop
-                    var cl = new PID.BtoD();
-                    cl.f = _model.Loop + (float)e(0.05);
+                    var cl = new PID.BtoD
+                    {
+                        f = _model.Loop + (float)e(0.05)
+                    };
                     buffer[23] = cl.B1;
                     buffer[24] = cl.B0;
                     buffer[25] = cl.B3;
                     buffer[26] = cl.B2;
                 }
                 // crc
-                var crc = new PID.BtoW();
-                crc.W = PID.CRC16(buffer, count - sizeof(ushort));
+                var crc = new PID.BtoW
+                {
+                    W = PID.CRC16(buffer, count - sizeof(ushort))
+                };
                 buffer[offset + count - 2] = crc.B1;
                 buffer[offset + count - 1] = crc.B0;
             }
@@ -143,16 +157,16 @@ namespace Olfactory.Comm
 
         static PIDEmulator _instance;
 
-        Random rnd = new Random((int)DateTime.Now.Ticks);
-        OlfactoryDeviceModel _model = new OlfactoryDeviceModel();
+        readonly Random _rnd = new((int)DateTime.Now.Ticks);
+        readonly OlfactoryDeviceModel _model = new();
 
-        PID.ModQueryPreset1Regs presetQuery;
-        PID.ModQueryReadInputRegs inputQuery;
+        PID.ModQueryPreset1Regs _presetQuery;
+        PID.ModQueryReadInputRegs _inputQuery;
 
         private PIDEmulator() { }
 
         // emulates measurement inaccuracy
-        double e(double amplitude) => (rnd.NextDouble() - 0.5) * 2 * amplitude;
-        int e(int amplitude) => rnd.Next(-amplitude, amplitude);
+        double e(double amplitude) => (_rnd.NextDouble() - 0.5) * 2 * amplitude;
+        int e(int amplitude) => _rnd.Next(-amplitude, amplitude);
     }
 }

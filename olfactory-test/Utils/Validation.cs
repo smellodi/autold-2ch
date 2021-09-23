@@ -101,10 +101,11 @@ namespace Olfactory.Utils
             InvalidExpression
         }
 
+        readonly char? _listDelim;
+        readonly char[] _expressionDelims;
+
         ValidityViolationCode _code = ValidityViolationCode.OK;
         string _value;
-        char? _listDelim;
-        char[] _expressionDelims;
 
         private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action, char? listDelim = null, char[] expressionDelims = null)
         {

@@ -39,7 +39,7 @@ namespace Olfactory.Utils
             public Action Action;
         }
 
-        Queue<ScheduledAction> _actions = new Queue<ScheduledAction>();
+        readonly Queue<ScheduledAction> _actions = new();
 
         private void Execute()
         {
@@ -95,7 +95,7 @@ namespace Olfactory.Utils
             public Action Action;
         }
 
-        Queue<ScheduledAction> _actions = new Queue<ScheduledAction>();
+        readonly Queue<ScheduledAction> _actions = new();
 
         private void Execute()
         {

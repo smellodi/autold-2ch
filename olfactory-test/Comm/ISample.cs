@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Olfactory.Comm
+﻿namespace Olfactory.Comm
 {
     public interface ISample
     {

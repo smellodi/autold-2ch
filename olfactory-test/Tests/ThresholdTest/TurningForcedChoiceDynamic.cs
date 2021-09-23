@@ -74,11 +74,10 @@ namespace Olfactory.Tests.ThresholdTest
 
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
         readonly Queue<bool> _lastAnswers = new();
+        readonly double _minPPM;
+        readonly double _maxPPM;
+        readonly int _answersBufferSize;
 
-        int _answersBufferSize;
-
-        double _minPPM;
-        double _maxPPM;
         double _ppmValue;
         double _ppmStep;
 

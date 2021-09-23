@@ -20,7 +20,7 @@ namespace Olfactory.Comm
         public OlfactoryDeviceModel()
         {
             _timer.Interval = EmulatorTimestamp.SAMPLING_INTERVAL * 1000;
-            _timer.Elapsed += (s, e) => UpdatePID(EmulatorTimestamp.Value);
+            _timer.Elapsed += (s, e) => UpdatePID();
             _timer.Start();
         }
 
@@ -66,8 +66,11 @@ namespace Olfactory.Comm
                 }
             }
 
-            List<string> log = new List<string>();
-            log.Add("Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV");
+            var log = new List<string>
+            {
+                "Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV"
+            };
+
             var input = _mfc.OdorSpeed * ((int)_mfc.OdorDirection / 10);
             var logRecord = $"0\t{targetPID:F4}\t{input:F4}\t{targetPID - _pid.Value:F4}\t{_dbg1:F4}\t{_dbg2}\t{_pid.Value}";
             log.Add(logRecord);
@@ -177,8 +180,10 @@ namespace Olfactory.Comm
             _odorInPIDInnerTube = 0;
             _lastPID = PID_P2_C;
 
-            List<string> log = new List<string>();
-            log.Add("Time\tInput\tAccum\tTube\tPID In\tPID Od\tPID mV");
+            var log = new List<string>
+            {
+                "Time\tInput\tAccum\tTube\tPID In\tPID Od\tPID mV"
+            };
 
             double ts = EmulatorTimestamp.Start();
 
@@ -186,7 +191,7 @@ namespace Olfactory.Comm
 
             while (ts < 56)
             {
-                UpdatePID(ts);
+                UpdatePID();
 
                 var input = _mfc.OdorSpeed * ((int)_mfc.OdorDirection / 10);
                 var logRecord = $"{ts:F2}\t{input:F4}\t{_odorFlowed:F4}\t{_odorInTube:F4}\t{_dbg1:F4}\t{_dbg2:F6}\t{_lastPID}";
@@ -243,8 +248,10 @@ namespace Olfactory.Comm
             _flStableLevelSampleCount = 0;
             _isFlStableLevelReached = false;
 
-            List<string> log = new List<string>();
-            log.Add("Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV");
+            var log = new List<string>
+            {
+                "Time\tTarget PID\tInput\tError\tDBG\tDBG2\tPID mV"
+            };
 
             double ts = EmulatorTimestamp.Start();
 
@@ -261,7 +268,7 @@ namespace Olfactory.Comm
             // Emulate 60 seconds, with valve closed after 30 seconds
             while (ts < 60)
             {
-                UpdatePID(ts);
+                UpdatePID();
 
                 if (ts > nextMFCUpdateTs) // every half a second.. 
                 {
@@ -315,11 +322,11 @@ namespace Olfactory.Comm
         }
 
 
-        MFC _mfc = MFC.Instance;
-        PID _pid = Comm.PID.Instance;
+        readonly MFC _mfc = MFC.Instance;
+        readonly PID _pid = Comm.PID.Instance;
 
-        System.Timers.Timer _timer = new System.Timers.Timer();
-        System.Timers.Timer _flTimer = new System.Timers.Timer();
+        readonly System.Timers.Timer _timer = new();
+        readonly System.Timers.Timer _flTimer = new();
 
         double _lastPID = 0;
 
@@ -414,9 +421,8 @@ namespace Olfactory.Comm
         /// <summary>
         /// Estimates the PID output value
         /// </summary>
-        /// <param name="timestamp">Current timestamp</param>
         /// <returns>PID input and PID odor</returns>
-        private void UpdatePID(double timestamp)
+        private void UpdatePID()
         {
             var isValveOpened = _mfc.OdorDirection >= MFC.OdorFlowsTo.SystemAndWaste;
             if (isValveOpened != _isValveOpened)

@@ -65,7 +65,7 @@ namespace Olfactory.Utils
 
         public static string SeparateWords(this string s)
         {
-            Regex r = new Regex(@"[A-Z][a-z]*");
+            var r = new Regex(@"[A-Z][a-z]*");
             var words = r.Matches(s).Select(m => m.Value.ToLower());
             return string.Join(' ', words);
         }

@@ -45,7 +45,7 @@ namespace Olfactory.Controls
                 .Stroke(v => v.Brush)
                 /*.Fill(v => v.Brush)*/;
 
-            SeriesCollection = new SeriesCollection(mapper);
+            SeriesCollection = new(mapper);
             SeriesCollection.Add(new LineSeries
                 {
                     Title = "",

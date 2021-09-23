@@ -136,7 +136,7 @@ namespace Olfactory.Pages.ThresholdTest
         const int MAX_PEN_AREA_WIDTH = 320;
 
         readonly string INSTRUCTION_SNIFF_THE_PEN_FIXED = Utils.L10n.T("ThTestInstrSniff");
-        readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
+        // readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
         readonly string INSTRUCTION_SNIFF_THE_PEN_AUTO = Utils.L10n.T("ThTestInstrInhale");
         readonly string INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START = Utils.L10n.T("ThTestInstrWait");
         readonly string INSTRUCTION_CHOOSE_THE_PEN = Utils.L10n.T("ThTestInstrSelectPen");

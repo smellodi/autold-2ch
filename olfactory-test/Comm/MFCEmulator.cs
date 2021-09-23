@@ -66,13 +66,16 @@ namespace Olfactory.Comm
 
         static MFCEmulator _instance;
 
-        Random _rnd = new Random((int)DateTime.Now.Ticks);
-        int _pressureA = 1200;
-        int _pressureB = 1800;
+        readonly Random _rnd = new((int)DateTime.Now.Ticks);
+
+        const int _pressureA = 1200;
+        const int _pressureB = 1800;
+        const double _volFlowA = .05;
+        const double _volFlowB = .05;
+
         double _massFlowA = 1.0;
         double _massFlowB = 0.02;
-        double _volFlowA = .05;
-        double _volFlowB = .05;
+
         MFC.OdorFlowsTo _odorDirection = MFC.OdorFlowsTo.Waste;
 
         Utils.DispatchOnce _shortPulseTimer = null;
@@ -89,7 +92,7 @@ namespace Olfactory.Comm
             string cmdID = cmd[1].ToString();
             if (cmdID == MFC.CMD_SET)
             {
-                var value = double.Parse(cmd.Substring(2, cmd.Length - 2));
+                var value = double.Parse(cmd[2..]);
                 switch (channel)
                 {
                     case MFC.Channel.A:
@@ -107,7 +110,7 @@ namespace Olfactory.Comm
             else if (cmdID == MFC.CMD_WRITE_REGISTER)
             {
                 MFC.Register register = (MFC.Register)int.Parse(cmd.Substring(2, 1));
-                var ms = int.Parse(cmd.Substring(4, cmd.Length - 4));
+                var ms = int.Parse(cmd[4..]);
 
                 var priorOdorDirection = _odorDirection;
                 _odorDirection = (register, _odorDirection) switch

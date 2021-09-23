@@ -75,10 +75,10 @@ namespace Olfactory
 
         // Internal
 
-        MFC _mfc = MFC.Instance;
-        PID _pid = PID.Instance;
+        readonly MFC _mfc = MFC.Instance;
+        readonly PID _pid = PID.Instance;
 
-        FlowLogger _logger = FlowLogger.Instance;
+        readonly FlowLogger _logger = FlowLogger.Instance;
 
         bool _preventClosing = true;
 
@@ -141,12 +141,12 @@ namespace Olfactory
 
         // UI events
 
-        private void btnClearDebug_Click(object sender, RoutedEventArgs e)
+        private void ClearDebug_Click(object sender, RoutedEventArgs e)
         {
             txbDebug.Clear();
         }
 
-        private void btnClearMFC_Click(object sender, RoutedEventArgs e)
+        private void ClearMFC_Click(object sender, RoutedEventArgs e)
         {
             txbMFC.Clear();
             txbMFC.Text = string.Join('\t', _mfc.DataColumns) + "\r\n";
@@ -156,12 +156,12 @@ namespace Olfactory
             UpdateUI();
         }
 
-        private void btnSaveMFC_Click(object sender, RoutedEventArgs e)
+        private void SaveMFC_Click(object sender, RoutedEventArgs e)
         {
             _logger.SaveOnly(LogSource.MFC, "data", $"MFC_{DateTime.Now:u}.txt".ToPath());
         }
 
-        private void btnClearPID_Click(object sender, RoutedEventArgs e)
+        private void ClearPID_Click(object sender, RoutedEventArgs e)
         {
             txbPID.Clear();
             txbPID.Text = string.Join('\t', _pid.DataColumns) + "\r\n";
@@ -171,7 +171,7 @@ namespace Olfactory
             UpdateUI();
         }
 
-        private void btnSavePID_Click(object sender, RoutedEventArgs e)
+        private void SavePID_Click(object sender, RoutedEventArgs e)
         {
             _logger.SaveOnly(LogSource.PID, "data", $"PID_{DateTime.Now:u}.txt".ToPath());
         }

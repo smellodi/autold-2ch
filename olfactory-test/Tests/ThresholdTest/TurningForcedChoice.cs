@@ -51,8 +51,8 @@ namespace Olfactory.Tests.ThresholdTest
         const int PPM_LEVEL_STEP = 1;
 
         readonly Random _rnd = new((int)DateTime.Now.Ticks);
+        readonly double[] _ppms;
 
-        double[] _ppms;
         int _ppmLevel = 0;
 
         private void Update(int levelChange, IProcState.PPMChangeDirection direction)
