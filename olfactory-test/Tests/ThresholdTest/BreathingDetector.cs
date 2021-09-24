@@ -67,6 +67,8 @@ namespace Olfactory.Tests.ThresholdTest
                     isStageChanged = true;
                     BreathingStage = breathingStage;
 
+                    _logger.Add(LogSource.ThTest, "breathing", breathingStage.ToString());
+
                     StageChanged?.Invoke(this, BreathingStage);
                 }
             }
@@ -116,6 +118,8 @@ namespace Olfactory.Tests.ThresholdTest
         const double NEW_PEAK_WEIGHT = 0.2;          // the new threshold has small weight, so the threshold change is not very dramatic after each inhale/exhale
 
         readonly Utils.PeakBuffer _buffer = new(18); // 5 samples = 1 second
+
+        readonly FlowLogger _logger = FlowLogger.Instance;
 
         Utils.PeakBuffer.PeakType _currentPeakType = Utils.PeakBuffer.PeakType.None;
 

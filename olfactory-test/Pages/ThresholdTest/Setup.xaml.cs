@@ -28,7 +28,6 @@ namespace Olfactory.Pages.ThresholdTest
             txbTurningPointsToCount.Text = _settings.TurningPointsToCount.ToString();
             txbRecognitionsInRow.Text = _settings.RecognitionsInRow.ToString();
             txbFamiliarizationDuration.Text = _settings.FamiliarizationDuration.ToString();
-            txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
 
@@ -47,12 +46,17 @@ namespace Olfactory.Pages.ThresholdTest
                     ToolTip = item.Value,
                 });
             cmbProcedureType.SelectedIndex = (int)_settings.Type;
+
+            FlowStart_SelectionChanged(null, null);
+
+            _pidSampling = _settings.PIDReadingInterval;
         }
 
 
         // Internal
 
         const char LIST_DELIM = ' ';
+        const int PID_SAMPLING_INTERVAL_FOR_INHALE_DETECTOR = 200;
 
         readonly Tests.ThresholdTest.Settings _settings = new();
         readonly Dictionary<FlowStart, string> FLOW_START_TOOLTIPS = new()
@@ -67,6 +71,10 @@ namespace Olfactory.Pages.ThresholdTest
             { ProcedureType.TwoPens, L10n.T("ProcTypeTwoPens") },
             { ProcedureType.OnePen, L10n.T("ProcTypeOnePen") },
         };
+
+        int _pidSampling;
+
+        bool IsAutomaticFlowStart => (FlowStart)cmbFlowStart.SelectedIndex == FlowStart.Automatic;
 
         private Utils.Validation CheckInput()
         {
@@ -122,13 +130,22 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.TurningPointsToCount = int.Parse(txbTurningPointsToCount.Text);
                 _settings.RecognitionsInRow = int.Parse(txbRecognitionsInRow.Text);
                 _settings.FamiliarizationDuration = double.Parse(txbFamiliarizationDuration.Text);
-                _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
+                if (!IsAutomaticFlowStart)
+                {
+                    _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
+                }
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
                 _settings.FlowStart = (FlowStart)cmbFlowStart.SelectedIndex;
                 _settings.Type = (ProcedureType)cmbProcedureType.SelectedIndex;
 
                 _settings.Save();
+
+                if (IsAutomaticFlowStart)
+                {
+                    // it will not be saved into settings file
+                    _settings.PIDReadingInterval = PID_SAMPLING_INTERVAL_FOR_INHALE_DETECTOR;
+                }
 
                 Next?.Invoke(this, _settings);
             }
@@ -137,6 +154,20 @@ namespace Olfactory.Pages.ThresholdTest
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, null);
+        }
+
+        private void PIDSamplingInterval_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (!IsAutomaticFlowStart && int.TryParse(txbPIDSamplingInterval.Text, out int pidSampling))
+            {
+                _pidSampling = pidSampling;
+            }
+        }
+
+        private void FlowStart_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            txbPIDSamplingInterval.IsEnabled = !IsAutomaticFlowStart;
+            txbPIDSamplingInterval.Text = (IsAutomaticFlowStart ? PID_SAMPLING_INTERVAL_FOR_INHALE_DETECTOR : _pidSampling).ToString();
         }
     }
 }

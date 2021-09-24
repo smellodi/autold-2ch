@@ -58,7 +58,7 @@
                     </UserControl>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc FlowStart}">
-                    <ComboBox x:Name="cmbFlowStart"/>
+                    <ComboBox x:Name="cmbFlowStart" SelectionChanged="FlowStart_SelectionChanged"/>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ProcedureType}">
                     <ComboBox x:Name="cmbProcedureType"/>
@@ -133,7 +133,8 @@
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Ms}">
                         <TextBox x:Name="txbPIDSamplingInterval"
                                  Text="1000"
-                                 ToolTip="{lex:Loc IntPos}"/>
+                                 ToolTip="{lex:Loc IntPos}"
+                                 TextChanged="PIDSamplingInterval_TextChanged"/>
                     </UserControl>
                 </UserControl>
 
