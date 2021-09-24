@@ -195,6 +195,30 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
+        /// The flag that can be set on when creating flow pulses using valve controller own timer. 
+        /// Only the output valve is allowed to operate in short-pulse mode, and gas-mixer valve always operates in "normal" mode.
+        /// A pulse must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/> seconds.
+        /// Note that even though the valve is closed automatically, the <see cref="OdorDirection"/> must be set manually
+        /// when a pulse ends.
+        /// </summary>
+        public bool IsInShortPulseMode
+        {
+            get => _isInShortPulseMode;
+            set
+            {
+                if (value && !_isInShortPulseMode)
+                {
+                    // only the output valve can operate in short-pulse mode
+                    _isInShortPulseMode = SetRegisters((Register.HOLD_1, 0)).Error == Error.Success;
+                }
+                else if (!value && _isInShortPulseMode)
+                {
+                    _isInShortPulseMode = !(SetRegisters((Register.HOLD_1, 255), (Register.PULL_IN_1, 0)).Error == Error.Success);
+                }
+            }
+        }
+
+        /// <summary>
         /// Private constructor, use Instance property to get the instance.
         /// Needs only to set the port stops bits
         /// </summary>
@@ -353,39 +377,36 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Creates a short pulse using MFC embedded functionality.
+        /// Prepares the output valve for a short flow pulse to the user using the valves controller timer.
+        /// Note that gas-mixer valve is not affected.
+        /// A pulse must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/> seconds.
+        /// Note that even though the valve is closed automatically, the <see cref="OdorDirection"/> must be set manually
+        /// when a pulse ends.
         /// </summary>
         /// <param name="duration">pulse duration in seconds</param>
-        /// <param name="valves">Valves to open</param>
         /// <returns></returns>
-        public Result ShortPulse(double duration, OdorFlowsTo valves)
+        public Result PrepareForShortPulse(double duration)
         {
-            if (duration <= 0 || 1 <= duration)
+            if (duration <= 0 || MAX_SHORT_PULSE_DURATION < duration)
             {
-                return new Result() { Error = Error.InvalidData, Reason = "Short Pulse must be shorter than 1 second" };
+                return new Result() { Error = Error.InvalidData, Reason = $"Short Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} seconds" };
             }
 
-            var val = ((int)(1000 * duration)).ToString();
+            var cmdSets = new List<(Register, int)>();
 
-            var cmdSets = new List<(Register, string)>();
-
-            if (valves.HasFlag(OdorFlowsTo.System) && !_odorDirection.HasFlag(OdorFlowsTo.System))
+            if (!_isInShortPulseMode)
             {
-                cmdSets.Add((Register.PULL_IN_0, val));
+                cmdSets.Add((Register.HOLD_1, 0));
             }
 
-            if (valves.HasFlag(OdorFlowsTo.User) && !_odorDirection.HasFlag(OdorFlowsTo.User))
-            {
-                cmdSets.Add((Register.PULL_IN_1, val));
-            }
+            var ms = (int)(1000 * duration);
+            cmdSets.Add((Register.PULL_IN_1, ms));
 
             Result result = SetRegisters(cmdSets.ToArray());
 
             if (result.Error == Error.Success)
             {
-                var priorOdorDirection = _odorDirection;
-                _odorDirection = OdorFlowsTo.SystemAndUser;
-                Utils.DispatchOnce.Do(duration, () => _odorDirection = priorOdorDirection);
+                _isInShortPulseMode = true;
             }
 
             return result;
@@ -418,16 +439,12 @@ namespace Olfactory.Comm
                     _channels |= Channels.B;
                     _odor = sample.B.MassFlow;
                 }
-                if ((error = ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)) == Error.Success)
+                /*if ((error = ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)) == Error.Success)
                 {
                     _odorDirection = OdorFlowsTo.Waste
                         | (isValve1Opened ? OdorFlowsTo.System : OdorFlowsTo.Waste)
                         | (isValve2Opened ? OdorFlowsTo.User : OdorFlowsTo.Waste);
-                }
-                if ((error = SetRegisters((Register.HOLD_0, "0"), (Register.HOLD_1, "0")).Error) != Error.Success)
-                {
-                    // should I report any error here?
-                }
+                }*/
             }
             catch (Exception ex)
             {
@@ -474,7 +491,8 @@ namespace Olfactory.Comm
 
         double _freshAir = 5.0;
         double _odor = 4.0;
-        OdorFlowsTo _odorDirection = OdorFlowsTo.SystemAndWaste;
+        OdorFlowsTo _odorDirection = OdorFlowsTo.Waste;
+        bool _isInShortPulseMode = false;
 
         readonly Mutex _mutex = new();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
         readonly MFCEmulator _emulator = MFCEmulator.Instance;
@@ -484,6 +502,8 @@ namespace Olfactory.Comm
         const Channel FRESH_AIR_CHANNEL = Channel.A;
         const Channel ODOR_CHANNEL = Channel.B;
         const Channel OUTPUT_CHANNEL = Channel.Z;
+
+        const double MAX_SHORT_PULSE_DURATION = 60;
 
         public static readonly string CMD_SET = "s";
         public static readonly string CMD_WRITE_REGISTER = "w";
@@ -558,12 +578,13 @@ namespace Olfactory.Comm
 
             return Error.Success;
         }
-
+        /*
         Error ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)
         {
-            var mfcAddr = Channel.Z.ToString()[0];
             isValve1Opened = false;
             isValve2Opened = false;
+
+            var mfcAddr = Channel.Z.ToString()[0];
 
             if (!IsDebugging)
             {
@@ -574,7 +595,7 @@ namespace Olfactory.Comm
             {
                 return (Error)Marshal.GetLastWin32Error();
             }
-
+            
             var response = !IsDebugging ? ReadBytes() : _emulator.EmulateReading(mfcAddr);
 
             if (_error != null)
@@ -595,12 +616,12 @@ namespace Olfactory.Comm
             {
                 return Error.WrongDevice;
             }
-
+            
             isValve1Opened = values[1][0] == '1';
             isValve2Opened = values[2][0] == '1';
 
             return Error.Success;
-        }
+        }*/
 
         /// <summary>
         /// Sets MFC registers of the output channel
@@ -608,7 +629,7 @@ namespace Olfactory.Comm
         /// <param name="register">regsiter to set</param>
         /// <param name="value">value to pass</param>
         /// <returns>command execution result</returns>
-        Result SetRegister(Register register, string value)
+        Result SetRegister(Register register, int value)
         {
             return SetRegisters((register, value));
         }
@@ -618,7 +639,7 @@ namespace Olfactory.Comm
         /// </summary>
         /// <param name="sets">a list of (register, value) pairs</param>
         /// <returns>command execution result</returns>
-        Result SetRegisters(params (Register register, string value)[] sets)
+        Result SetRegisters(params (Register register, int value)[] sets)
         {
             var commands = sets.Select(set => $"{char.ToLower((char)OUTPUT_CHANNEL)}{CMD_WRITE_REGISTER}{(int)set.register}={set.value}");
             var result = SendCommands(commands.ToArray());
@@ -660,7 +681,8 @@ namespace Olfactory.Comm
 
             lock (_mutex)
             {
-                string command = string.Join(DATA_END, commands);
+                var command = string.Join(DATA_END, commands);
+                var readResponse = command[0] != (char)OUTPUT_CHANNEL;
                 var bytes = System.Text.Encoding.ASCII.GetBytes(command + DATA_END);
                 if ((error = WriteBytes(bytes)) != Error.Success)
                 {
@@ -673,13 +695,17 @@ namespace Olfactory.Comm
                 }
 
                 // we should have a response to some of out requests
-                if (!IsDebugging)
+                if (!IsDebugging && readResponse)
                 {
                     // Thread.Sleep(50);
 
                     // if (_port.BytesToRead > 0)
                     // {
                     string response = ReadBytes();
+                    if (commands.Length > 1)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[RESP] [N={response.Length}] {response}");
+                    }
                     if (_error != null)
                     {
                         error = (Error)Marshal.GetLastWin32Error();

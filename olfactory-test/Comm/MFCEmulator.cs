@@ -78,7 +78,10 @@ namespace Olfactory.Comm
 
         MFC.OdorFlowsTo _odorDirection = MFC.OdorFlowsTo.Waste;
 
-        Utils.DispatchOnce _shortPulseTimer = null;
+        Utils.DispatchOnce _valve1ShortPulseTimer = null;
+        Utils.DispatchOnce _valve2ShortPulseTimer = null;
+        bool _isValve1InShortPulseMode = false;
+        bool _isValve2InShortPulseMode = false;
 
         private MFCEmulator() { }
 
@@ -110,25 +113,34 @@ namespace Olfactory.Comm
             else if (cmdID == MFC.CMD_WRITE_REGISTER)
             {
                 MFC.Register register = (MFC.Register)int.Parse(cmd.Substring(2, 1));
-                var ms = int.Parse(cmd[4..]);
+                var value = int.Parse(cmd[4..]);
 
-                var priorOdorDirection = _odorDirection;
-                _odorDirection = (register, _odorDirection) switch
+                switch (register)
                 {
-                    (MFC.Register.PULL_IN_0, MFC.OdorFlowsTo.Waste) => MFC.OdorFlowsTo.SystemAndWaste,
-                    (MFC.Register.PULL_IN_0, MFC.OdorFlowsTo.User) => MFC.OdorFlowsTo.SystemAndUser,
-                    (MFC.Register.PULL_IN_1, MFC.OdorFlowsTo.Waste) => MFC.OdorFlowsTo.WasteAndUser,
-                    (MFC.Register.PULL_IN_1, MFC.OdorFlowsTo.System) => MFC.OdorFlowsTo.SystemAndUser,
-                    _ => _odorDirection
-                };
-
-                if (priorOdorDirection != _odorDirection && _shortPulseTimer == null)
-                {
-                    _shortPulseTimer = Utils.DispatchOnce.Do((double)ms / 1000, () =>
-                    {
-                        _odorDirection = priorOdorDirection;
-                        _shortPulseTimer = null;
-                    });
+                    case MFC.Register.HOLD_0:
+                        _isValve1InShortPulseMode = value < 255;
+                        break;
+                    case MFC.Register.HOLD_1:
+                        _isValve2InShortPulseMode = value < 255;
+                        break;
+                    case MFC.Register.PULL_IN_0:
+                        if (_isValve1InShortPulseMode && value > 0 && value <= 0xFFFF && _valve1ShortPulseTimer == null)
+                        {
+                            _valve1ShortPulseTimer = Utils.DispatchOnce.Do((double)value / 1000, () =>
+                            {
+                                _valve1ShortPulseTimer = null;
+                            });
+                        }
+                        break;
+                    case MFC.Register.PULL_IN_1:
+                        if (_isValve2InShortPulseMode && value > 0 && value <= 0xFFFF && _valve2ShortPulseTimer == null)
+                        {
+                            _valve2ShortPulseTimer = Utils.DispatchOnce.Do((double)value / 1000, () =>
+                            {
+                                _valve2ShortPulseTimer = null;
+                            });
+                        }
+                        break;
                 }
             }
         }

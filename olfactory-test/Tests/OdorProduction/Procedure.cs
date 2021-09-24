@@ -148,19 +148,21 @@ namespace Olfactory.Tests.OdorProduction
 
             var direction = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
 
-            if (_settings.OdorFlowDuration < 1)
+            if (_settings.OdorFlowDuration < 1 && direction.HasFlag(MFC.OdorFlowsTo.User))
             {
-                _mfc.ShortPulse(_settings.OdorFlowDuration, direction);
+                _mfc.PrepareForShortPulse(_settings.OdorFlowDuration);
             }
             else
             {
-                _mfc.OdorDirection = direction;
+                _mfc.IsInShortPulseMode = false;
+            }
 
-                if (_settings.UseFeedbackLoopToReachLevel)
-                {
-                    var model = new OlfactoryDeviceModel();
-                    model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
-                }
+            _mfc.OdorDirection = direction;
+
+            if (_settings.UseFeedbackLoopToReachLevel)
+            {
+                var model = new OlfactoryDeviceModel();
+                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
             }
 
             StageChanged?.Invoke(this, Stage.OdorFlow);
@@ -168,10 +170,7 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
-            if (_settings.OdorFlowDuration >= 1)
-            {
-                _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
-            }
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
 
             _logger.Add("V00");
 
@@ -185,6 +184,7 @@ namespace Olfactory.Tests.OdorProduction
             var noMoreTrials = ++_step >= _settings.OdorQuantities.Length;
             if (noMoreTrials)
             {
+                _mfc.IsInShortPulseMode = false;
                 _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
                 _timer.Stop();
             }
