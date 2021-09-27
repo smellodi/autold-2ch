@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Settings = Olfactory.Tests.OdorProduction.Settings;
 
 namespace Olfactory.Pages.OdorProduction
 {
-    public partial class Setup : Page, IPage<Tests.OdorProduction.Settings>, Tests.ITestEmulator
+    public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
     {
-        public event EventHandler<Tests.OdorProduction.Settings> Next;
+        public event EventHandler<Settings> Next;
 
         public Setup()
         {
@@ -18,7 +17,7 @@ namespace Olfactory.Pages.OdorProduction
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");
-            txbOdorQuantities.Text = string.Join(LIST_DELIM + " ", _settings.OdorQuantities);
+            txbOdorQuantities.Text = _settings.OdorQuantitiesAsString();
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbFinalPause.Text = _settings.FinalPause.ToString();
@@ -36,21 +35,18 @@ namespace Olfactory.Pages.OdorProduction
 
         // Internal
 
-        readonly char LIST_DELIM = ',';
-        readonly char[] EXPR_OPS = new char[] { 'x', '*' };
-
-        readonly Tests.OdorProduction.Settings _settings = new();
+        readonly Settings _settings = new();
 
         private Utils.Validation CheckInput()
         {
             var validations = new Utils.Validation[]
             {
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
-                new Utils.Validation(txbOdorQuantities, 1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM, EXPR_OPS),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorFlowDuration, 0.1, 10000, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
+                new Utils.Validation(txbOdorQuantities, 1, 60000, Utils.Validation.ValueFormat.Float, Settings.LIST_DELIM, Settings.EXPR_OPS),
             };
 
             foreach (var v in validations)
@@ -61,30 +57,14 @@ namespace Olfactory.Pages.OdorProduction
                 }
             }
 
-            return null;
-        }
-
-        private double[] AsValues(string[] expressions)
-        {
-            return expressions.SelectMany<string, double>(expression =>
+            var longestDuration = (double)Settings.GetOdorQuantitiesLongestDuration(txbOdorQuantities.Text) / 1000;
+            var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, longestDuration, 10000, Utils.Validation.ValueFormat.Float);
+            if (!isOdorFlowDurationLongEnough.IsValid)
             {
-                var exprValues = expression.Split(EXPR_OPS);
-                if (exprValues.Length == 1)
-                {
-                    return new double[] { double.Parse(expression) };
-                }
-                else
-                {
-                    var value = double.Parse(exprValues[0]);
-                    var count = double.Parse(exprValues[1]);
-                    var values = new List<double>();
-                    for (int i = 0; i < count; i++)
-                    {
-                        values.Add(value);
-                    }
-                    return values;
-                };
-            }).ToArray();
+                return isOdorFlowDurationLongEnough;
+            }
+
+            return null;
         }
 
 
@@ -103,7 +83,7 @@ namespace Olfactory.Pages.OdorProduction
             else
             {
                 _settings.FreshAir = double.Parse(txbFreshAir.Text);
-                _settings.OdorQuantities = AsValues(txbOdorQuantities.Text.Split(LIST_DELIM));
+                _settings.OdorQuantities = Settings.ParseOdorQuantinies(txbOdorQuantities.Text);
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);

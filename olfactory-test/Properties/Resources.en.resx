@@ -133,10 +133,10 @@
     <value>Close</value>
   </data>
 	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>A list of comma-separated values or expressions. Expressions are of the form 'VALUE x COUNT'. Example: '4, 8, 16x2, 32x3'</value>
+    <value>A list of comma-separated values or expressions. Expressions are of the form 'MLMIN x [MS ≥ 10] x [COUNT &lt; 10]'. Example: '4, 8x500, 16x500x2, 32x5'</value>
   </data>
 	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>comma-separated positive floating-point values or expressions in a form 'VALUExCOUNT'</value>
+    <value>comma-separated positive floating-point values or expressions in a form 'MLMIN x [MS] x [COUNT]'</value>
   </data>
 	<data name="COMMonitor" xml:space="preserve">
     <value>COM Monitor</value>
@@ -582,4 +582,26 @@
 	<data name="StartOdorFlow" xml:space="preserve">
     <value>Start odor flow</value>
   </data>
+	<data name="OdorPulsesExpressionNote" xml:space="preserve">
+		<value>Notes: 
+
+1. Valve #2 (output to user) is controlled by MFC embedded timer only if an expression contains pulse duration, otherwise it is controlled by the software timer that closed the valve after [Odour flow] seconds.
+
+2. Valve #1 (gas mixer) is always controlled by the software timer.
+
+3. Pulse duration defined in an expression must not exceed the general duration defined as "Odour flow".
+
+4. Minimum pulse duration is 10ms. Maximum repetition count is 9. 
+
+
+Examples described:
+
+4 - the pulse of 4 ml/min lasting [Odour flow] seconds; the software timer is used,
+
+8x500 - the pulse of 8 ml/min lasting 500 ms; the MFC timer is used,
+
+16x500x2 - two pulse of 16 ml/min, each lasting 500 ms; the MFC timer is used,
+
+32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
+	</data>
 </root>

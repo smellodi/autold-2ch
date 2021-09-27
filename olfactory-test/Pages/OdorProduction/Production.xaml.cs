@@ -89,10 +89,11 @@ namespace Olfactory.Pages.OdorProduction
         {
             _settings = settings;
 
-            lblOdorStatus.Content = _settings.OdorQuantities[0];
+            var (mlmin, ms) = _settings.OdorQuantities[0];
+            lblOdorStatus.Content = mlmin.ToString();
 
             pdsInitialPause.Value = _settings.InitialPause;
-            pdsOdorFlow.Value = _settings.OdorFlowDuration;
+            pdsOdorFlow.Value = ms > 0 ? (double)ms/1000 : _settings.OdorFlowDuration;
             pdsFinalPause.Value = _settings.FinalPause;
 
             _procedure.Start(settings);
@@ -143,7 +144,9 @@ namespace Olfactory.Pages.OdorProduction
             }
             else
             {
-                lblOdorStatus.Content = _settings.OdorQuantities[_procedure.Step];
+                var (mlmin, ms) = _settings.OdorQuantities[_procedure.Step];
+                lblOdorStatus.Content = mlmin.ToString();
+                pdsOdorFlow.Value = ms > 0 ? (double)ms / 1000 : _settings.OdorFlowDuration;
                 Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
             }
         }

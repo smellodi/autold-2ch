@@ -136,10 +136,10 @@
     <value>Schliessen</value>
   </data>
 	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>Eine Liste von Zahlen und Zahlenfolgen, getrennt mittels Kommas. Folgen sind in der Form 'WERT x ANZAHL'. Beispiele: '4, 8, 16x2, 32x3'</value>
+    <value>Eine Liste von Zahlen und Zahlenfolgen, getrennt mittels Kommas. Folgen sind in der Form 'MLMIN x [MS ≥ 10] x [ANZAHL &lt; 10]'. Beispiele: '4, 8x500, 16x500x2, 32x5'</value>
   </data>
 	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>Durch Komma getrennte, positive Gleitkommazahlen oder Zahlenfolgen in der Form 'WERTxANZAHL</value>
+    <value>Durch Komma getrennte, positive Gleitkommazahlen oder Zahlenfolgen in der Form MLMIN x [MS] x [ANZAHL]</value>
   </data>
 	<data name="COMMonitor" xml:space="preserve">
     <value>COM Monitor</value>

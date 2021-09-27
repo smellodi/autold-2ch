@@ -103,13 +103,15 @@ namespace Olfactory.Tests.OdorProduction
 
         public void Next()
         {
+            var (mlmin, ms) = _settings.OdorQuantities[_step];
+
             //_logger.Add(LogSource.OdProd, "trial", "start", _settings.OdorQuantities[_step].ToString());
-            _logger.Add("S" + _settings.OdorQuantities[_step].ToString());
+            _logger.Add($"S{mlmin}" + (ms > 0 ? $"{ms}" : ""));
 
             _runner = Utils.DispatchOnce
                 .Do(0.1, () =>
                 {
-                    _mfc.OdorSpeed = _settings.OdorQuantities[_step];
+                    _mfc.OdorSpeed = mlmin;
                     StageChanged?.Invoke(this, Stage.InitWait);
                 })
                 .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
@@ -122,6 +124,7 @@ namespace Olfactory.Tests.OdorProduction
             _timer.Stop();
             _runner?.Stop();
 
+            _mfc.IsInShortPulseMode = false;
             _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
             _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
         }
@@ -147,10 +150,13 @@ namespace Olfactory.Tests.OdorProduction
             _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
 
             var direction = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
+            var (mlmin, ms) = _settings.OdorQuantities[_step];
+            var duration = ms == 0 ? _settings.OdorFlowDuration : (double)ms / 1000;
+            var useShortPulse = 0 < ms && ms <= (1000 * MFC.MAX_SHORT_PULSE_DURATION) && direction.HasFlag(MFC.OdorFlowsTo.User);
 
-            if (_settings.OdorFlowDuration < 1 && direction.HasFlag(MFC.OdorFlowsTo.User))
+            if (useShortPulse)
             {
-                _mfc.PrepareForShortPulse(_settings.OdorFlowDuration);
+                _mfc.PrepareForShortPulse(duration);
             }
             else
             {
@@ -162,7 +168,7 @@ namespace Olfactory.Tests.OdorProduction
             if (_settings.UseFeedbackLoopToReachLevel)
             {
                 var model = new OlfactoryDeviceModel();
-                model.Reach(_settings.OdorQuantities[_step], _settings.OdorFlowDuration, _settings.UseFeedbackLoopToKeepLevel);
+                model.Reach(mlmin, duration, _settings.UseFeedbackLoopToKeepLevel);
             }
 
             StageChanged?.Invoke(this, Stage.OdorFlow);

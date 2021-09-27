@@ -31,7 +31,7 @@
         <Label Content="{Binding Text}"/>
         <Label>
             <TextBlock>
-                <Run Text="{Binding Value}"/>
+                <Run Text="{Binding Value, StringFormat=0.##}"/>
                 <Run Text="{lex:Loc Seconds}"/>
             </TextBlock>
         </Label>

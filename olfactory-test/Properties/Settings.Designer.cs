@@ -37,15 +37,13 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>4</string>\r\n  <string>8</string>\r\n  <string>16</string>\r\n</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Test_OP_OdorQuantities {
+        [global::System.Configuration.DefaultSettingValueAttribute("4, 8x500, 16x500x2, 32x2")]
+        public string Test_OP_OdorQuantityList {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Test_OP_OdorQuantities"]));
+                return ((string)(this["Test_OP_OdorQuantityList"]));
             }
             set {
-                this["Test_OP_OdorQuantities"] = value;
+                this["Test_OP_OdorQuantityList"] = value;
             }
         }
         

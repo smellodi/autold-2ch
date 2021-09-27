@@ -286,7 +286,7 @@
     <value>Kynnysarvomittaus</value>
   </data>
 	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>Lista pilkulla erotettuja arvoja tai lausekkeita. Lausekkeet ovat muodossa 'ARVOxLUKUMÄÄRÄ'. Esimerkiksi: '4, 8, 16x2, 32x3'</value>
+    <value>Lista pilkulla erotettuja arvoja tai lausekkeita. Lausekkeet ovat muodossa MLMIN x [MS ≥ 10] x [LUKUMÄÄRÄ &lt; 10]'. Esimerkiksi: '4, 8x500, 16x500x2, 32x5'</value>
   </data>
 	<data name="CorrectAndTryAgain" xml:space="preserve">
     <value>Korjaa virheellinen syöte ja yritä uudestaan.</value>
@@ -475,7 +475,7 @@
     <value>Arvo '{0}' on liian pieni, sen ei saa olla pienempi kuin '{1}'</value>
   </data>
 	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>pilkulla erotetut positiiviset liukuluvut tai lausekkeet. Lausekkeet muodossa 'ARVOxLUKUMÄÄRÄ'</value>
+    <value>pilkulla erotetut positiiviset liukuluvut tai lausekkeet. Lausekkeet muodossa MLMIN x [MS] x [LUKUMÄÄRÄ]'</value>
   </data>
 	<data name="PulseFlowRate" xml:space="preserve">
     <value>Pulssivirtauksen nopeus</value>

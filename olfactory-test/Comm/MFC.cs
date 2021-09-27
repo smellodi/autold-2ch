@@ -140,6 +140,14 @@ namespace Olfactory.Comm
         public const double ODOR_MAX_SPEED = 90.0;
         public const double ODOR_MIN_SPEED = 0.0;
 
+        public const double MAX_SHORT_PULSE_DURATION = 60; // seconds
+
+        public static readonly string CMD_SET = "s";
+        public static readonly string CMD_WRITE_REGISTER = "w";
+        public static readonly string CMD_TARE_FLOW = "v";
+
+        public const char DATA_END = '\r';
+
 
         // Control
 
@@ -389,7 +397,11 @@ namespace Olfactory.Comm
         {
             if (duration <= 0 || MAX_SHORT_PULSE_DURATION < duration)
             {
-                return new Result() { Error = Error.InvalidData, Reason = $"Short Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} seconds" };
+                return new Result()
+                {
+                    Error = Error.InvalidData,
+                    Reason = $"Short Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} seconds"
+                };
             }
 
             var cmdSets = new List<(Register, int)>();
@@ -502,14 +514,6 @@ namespace Olfactory.Comm
         const Channel FRESH_AIR_CHANNEL = Channel.A;
         const Channel ODOR_CHANNEL = Channel.B;
         const Channel OUTPUT_CHANNEL = Channel.Z;
-
-        const double MAX_SHORT_PULSE_DURATION = 60;
-
-        public static readonly string CMD_SET = "s";
-        public static readonly string CMD_WRITE_REGISTER = "w";
-        public static readonly string CMD_TARE_FLOW = "v";
-
-        public const char DATA_END = '\r';
 
         const double ODOR_TUBE_LENGTH = 600;       // mm
         const double VALVE_MIXER_TUBE_LENGTH = 27; // mm

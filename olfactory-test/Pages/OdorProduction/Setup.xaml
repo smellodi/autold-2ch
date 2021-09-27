@@ -54,12 +54,17 @@
                     <StackPanel>
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                             <TextBox x:Name="txbOdorQuantities"
-                                     Text="4, 8, 16, 32, 64, 128"
+                                     TextWrapping="Wrap"
+                                     MaxLines="4"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Text="4, 8x500, 16x500x2, 32x2"
                                      ToolTip="{lex:Loc CommaSeparatedValues}"/>
                         </UserControl>
                         <TextBlock TextWrapping="Wrap"
                                    Margin="0,4,0,0"
-                                   Text="{lex:Loc CommaSeparatedListWithExpressions}"/>
+                                   Text="{lex:Loc CommaSeparatedListWithExpressions}"
+                                   ToolTip="{lex:Loc OdorPulsesExpressionNote}"
+                                   ToolTipService.ShowDuration="60000"/>
                     </StackPanel>
                 </UserControl>
 
