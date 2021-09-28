@@ -7,34 +7,34 @@ using Olfactory.Utils;
 
 namespace Olfactory.Tests.ThresholdTest
 {
-    public class ProcedurePens : ITestEmulator
+    /// <summary>
+    /// Expected answer type
+    /// </summary>
+    public enum AnswerType
     {
         /// <summary>
-        /// Expected answer type
+        /// One button per pen: user presses it if think the order was on thin pen
         /// </summary>
-        public enum AnswerType
-        {
-            /// <summary>
-            /// One button per pen: user presses it if think the order was on thin pen
-            /// </summary>
-            HasOdor,
-            /// <summary>
-            /// Two buttons per pen, "has-order" and "no-order"
-            /// </summary>
-            YesNo
-        }
-        
-        public class PenActivationArgs : EventArgs
-        {
-            public int ID { get; private set; }
-            public Settings.FlowStartTrigger FlowStart { get; private set; }
-            public PenActivationArgs(int id, Settings.FlowStartTrigger flowStart)
-            {
-                ID = id;
-                FlowStart = flowStart;
-            }
-        }
+        HasOdor,
+        /// <summary>
+        /// Two buttons per pen, "has-order" and "no-order"
+        /// </summary>
+        YesNo
+    }
 
+    public class PenActivationArgs : EventArgs
+    {
+        public int ID { get; private set; }
+        public Settings.FlowStartTrigger FlowStart { get; private set; }
+        public PenActivationArgs(int id, Settings.FlowStartTrigger flowStart)
+        {
+            ID = id;
+            FlowStart = flowStart;
+        }
+    }
+
+    public class ProcedurePens : ITestEmulator
+    {
         /// <summary>
         /// Fires on progressing the odor preparation
         /// </summary>
@@ -80,85 +80,90 @@ namespace Olfactory.Tests.ThresholdTest
             _ => throw new NotImplementedException($"There are no pens in the procedure '{_settings.Type}'"),
         };
 
-        public ProcedurePens()
+        public ProcedurePens(bool isPracticing)
         {
-            // catch window closing event, so we do not display termination message due to MFC comm closed
-            Application.Current.MainWindow.Closing += (s, e) =>
+            _isPracticing = isPracticing;
+
+            _pidTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasurePID);
+
+            if (!_isPracticing)
             {
-                _inProgress = false;
-                _pidTimer.Stop();
-                _mfcTimer.Stop();
+                _mfcTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasureMFC);
+
+                _model.TargetOdorLevelReached += (s, e) =>
+                {
+                    System.Diagnostics.Debug.WriteLine("FL" + (e ? "0" : "1"));
+                };
+            }
+            else
+            {
+                _mfc = null;
+                _model = null;
+            }
+        }
+
+        /// <summary>
+        /// Initializes the procedure. This must be called before starting trials
+        /// </summary>
+        /// <param name="settings">Settings</param>
+        public void Init(Settings settings)
+        {
+            _settings = settings;
+            _odorTubeFillingDuration = settings.OdorPreparationDuration - OUTPUT_READINESS_DURATION;
+
+            var ppms = _settings.PPMs;
+            var recInRow = _settings.RecognitionsInRow;
+            _rules = _settings.Type switch
+            {
+                Settings.ProcedureType.OnePen => new TurningYesNo(ppms.First(), ppms.Last(), recInRow),
+                Settings.ProcedureType.TwoPens => new TurningForcedChoiceDynamic(ppms.First(), ppms.Last(), recInRow, 1),
+                Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow),
+                _ => throw new NotImplementedException($"No rules are implemented for '{_settings.Type}' procedure type")
             };
+
+            _pens = new Pen[PenCount];
+            _pens[0] = new Pen(PenColor.Odor);
+
+            for (int i = 1; i < PenCount; i++)
+            {
+                _pens[i] = new Pen(PenColor.NonOdor);
+            }
+
+            // catch window closing event, so we do not display termination message due to MFC comm closed
+            Application.Current.MainWindow.Closing += MainWindow_Closing;
 
             // If the test is in progress, display warning message and quit the app:
             // Or can we recover here by trying to open the COM port again?
-            MFC.Instance.Closed += (s, e) =>
-            {
-                if (_inProgress)
-                {
-                    MsgBox.Error(
-                        L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
-                        string.Format(L10n.T("DeviceConnLost"), "MFC") + " " + L10n.T("AppTerminated"));
-                    Application.Current.Shutdown();
-                }
-            };
-
-            _pidTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasurePID);
-            _mfcTimer.Elapsed += (s, e) => Dispatcher.CurrentDispatcher.Invoke(MeasureMFC);
-
-            _model.TargetOdorLevelReached += (s, e) =>
-            {
-                System.Diagnostics.Debug.WriteLine("FL" + (e ? "0" : "1"));
-            };
+            MFC.Instance.Closed += MFC_Closed;
         }
 
         /// <summary>
         /// Starts a new trial
         /// </summary>
-        /// <param name="settings">Settings</param>
         /// <returns>A set of pens</returns>
-        public Pen[] Start(Settings settings)
+        public Pen[] StartTrial()
         {
-            if (settings != null)
-            {
-                _settings = settings;
-                _odorTubeFillingDuration = settings.OdorPreparationDuration - OUTPUT_READINESS_DURATION;
-
-                var pens = new Pen[PenCount];
-                pens[0] = new Pen(PenColor.Odor);
-
-                var ppms = _settings.PPMs;
-                var recInRow = _settings.RecognitionsInRow;
-                _rules = _settings.Type switch
-                {
-                    Settings.ProcedureType.OnePen => new TurningYesNo(ppms.First(), ppms.Last(), recInRow),
-                    Settings.ProcedureType.TwoPens => new TurningForcedChoiceDynamic(ppms.First(), ppms.Last(), recInRow, 1),
-                    Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow),
-                    _ => throw new NotImplementedException($"No rules are implemented for '{_settings.Type}' procedure type")
-                };
-
-                for (int i = 1; i < PenCount; i++)
-                {
-                    pens[i] = new Pen(PenColor.NonOdor);
-                }
-
-                _pens = pens.ToArray();
-            }
-
             _currentPenID = -1;
             _inProgress = true;
             _isAwaitingOdorFlowStart = false;
 
             _rules.Next(_pens);
 
+            if (_isPracticing)
+            {
+                _logger.Add(LogSource.ThTest, "practice", "start");
+            }
+            else
+            { 
+                _mfcTimer.Interval = TIMER_MFC_INTERVAL;
+                _mfcTimer.Start();
+            }
+
             _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "colors", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
 
             _pidTimer.Interval = _settings.PIDReadingInterval;
             _pidTimer.Start();
-
-            _mfcTimer.Interval = TIMER_MFC_INTERVAL;
-            _mfcTimer.Start();
 
             DispatchOnce.Do(0.5, () => PrepareOdor());  // the previous page finsihed with a command issued to MFC..
                                                         // lets wait a little just in case, then continue
@@ -175,6 +180,7 @@ namespace Olfactory.Tests.ThresholdTest
             var isCorrectChoice = pen == null
                 ? _pens[0].Color == PenColor.NonOdor
                 : pen.Color == PenColor.Odor;
+
             var canContinue = AdjustPPM(isCorrectChoice);
 
             _logger.Add(LogSource.ThTest, "result", isCorrectChoice.ToString());
@@ -186,6 +192,11 @@ namespace Olfactory.Tests.ThresholdTest
                     var result = _rules.Result(_settings.TurningPointsToCount);
                     Finished?.Invoke(this, result);
                     Stop();
+
+                    if (_isPracticing)
+                    {
+                        _logger.Add(LogSource.ThTest, "practice", "end");
+                    }
                 }
                 else
                 {
@@ -196,10 +207,17 @@ namespace Olfactory.Tests.ThresholdTest
 
         public void Stop()
         {
+            if (!_isPracticing)
+            {
+                _mfcTimer.Stop();
+            }
+
             _pidTimer.Stop();
-            _mfcTimer.Stop();
             _inProgress = false;
             _isAwaitingOdorFlowStart = false;
+
+            Application.Current.MainWindow.Closing -= MainWindow_Closing;
+            MFC.Instance.Closed -= MFC_Closed;
         }
 
         /// <summary>
@@ -269,6 +287,8 @@ namespace Olfactory.Tests.ThresholdTest
         readonly MFC _mfc = MFC.Instance;
         readonly CommMonitor _monitor = CommMonitor.Instance;
 
+        readonly bool _isPracticing = false;
+
         Pen[] _pens;
 
         Settings _settings = new();
@@ -289,7 +309,11 @@ namespace Olfactory.Tests.ThresholdTest
         {
             if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
             {
-                _logger.Add(LogSource.PID, "data", pidSample.ToString());
+                if (!_isPracticing)
+                {
+                    _logger.Add(LogSource.PID, "data", pidSample.ToString());
+                }
+
                 _monitor.LogData(LogSource.PID, pidSample);
 
                 if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic &&
@@ -317,22 +341,25 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void PrepareOdor()
         {
-            if (_settings.UseFeedbackLoopToReachLevel)
+            if (!_isPracticing)
             {
-                _model.Reach(_rules.PPM, _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
-            }
-            else
-            {
-                var readinessDelay = _model.GetReady(_rules.PPM, _odorTubeFillingDuration);
-
-                // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
-                if (readinessDelay > _settings.OdorPreparationDuration)
+                if (_settings.UseFeedbackLoopToReachLevel)
                 {
-                    MsgBox.Error(
-                        L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
-                        string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"));
-                    Application.Current.Shutdown();
-                    return;
+                    _model.Reach(_rules.PPM, _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
+                }
+                else
+                {
+                    var readinessDelay = _model.GetReady(_rules.PPM, _odorTubeFillingDuration);
+
+                    // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
+                    if (readinessDelay > _settings.OdorPreparationDuration)
+                    {
+                        MsgBox.Error(
+                            L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
+                            string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"));
+                        Application.Current.Shutdown();
+                        return;
+                    }
                 }
             }
 
@@ -357,7 +384,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void ActivateNextPen()
         {
-            if (CurrentColor == PenColor.Odor)     // previous pen was with the odor - switch the mixer back to the fresh air
+            if (!_isPracticing && CurrentColor == PenColor.Odor)     // previous pen was with the odor - switch the mixer back to the fresh air
             {
                 _model.CloseFlow();
             }
@@ -393,7 +420,7 @@ namespace Olfactory.Tests.ThresholdTest
 
         private void StartOdorFlow()
         {
-            if (CurrentColor == PenColor.Odor)
+            if (!_isPracticing && CurrentColor == PenColor.Odor)
             {
                 _model.OpenFlow();
             }
@@ -403,6 +430,11 @@ namespace Olfactory.Tests.ThresholdTest
             DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
         }
 
+        /// <summary>
+        /// Adjusts PPM if need and returns the test continuation flag
+        /// </summary>
+        /// <param name="odorWasRecognized">whether a user correctly recognized the presense/absence of odor</param>
+        /// <returns>'True' is the test must be continued with another trial, 'False' if the test is finished</returns>
         private bool AdjustPPM(bool odorWasRecognized)
         {
             if(!_rules.AcceptAnswer(odorWasRecognized))
@@ -430,6 +462,30 @@ namespace Olfactory.Tests.ThresholdTest
                 {
                     DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress());
                 }
+            }
+        }
+
+        // Event handlers
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _inProgress = false;
+            _pidTimer.Stop();
+
+            if (!_isPracticing)
+            {
+                _mfcTimer.Stop();
+            }
+        }
+
+        private void MFC_Closed(object sender, EventArgs e)
+        {
+            if (_inProgress)
+            {
+                MsgBox.Error(
+                    L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
+                    string.Format(L10n.T("DeviceConnLost"), "MFC") + " " + L10n.T("AppTerminated"));
+                Application.Current.Shutdown();
             }
         }
     }

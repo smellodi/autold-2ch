@@ -26,12 +26,16 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Style="{StaticResource PageTitle}">
+        <TextBlock Grid.Column="0" Style="{StaticResource PageTitle}">
             <Run Text="{lex:Loc ThresholdTest}"/>
             <Run Text=" - "/>
             <Run Text="{lex:Loc PenPresentation}"/>
         </TextBlock>
+
+        <TextBlock x:Name="tblPractice" Grid.Row="1"
+                   Style="{StaticResource PageTitle}"
+                   VerticalAlignment="Top"
+                   Text="{lex:Loc Practice}"/>
 
         <Ellipse x:Name="elpBreathingStage"
                  HorizontalAlignment="Left"

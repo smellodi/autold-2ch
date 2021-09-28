@@ -1,25 +1,31 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Input;
 using PenProc = Olfactory.Tests.ThresholdTest.ProcedurePens;
 using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
 using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingDetector.Stage;
-using System.Collections.Generic;
 
 namespace Olfactory.Pages.ThresholdTest
 {
     public partial class PenPresentation : Page, IPage<double>
     {
+        public const int MAX_PEN_AREA_WIDTH = 320;
+
         public event EventHandler<double> Next;
 
         public Tests.ITestEmulator Emulator => _procedure;
 
-        public PenPresentation()
+        public PenPresentation(bool isPracticing)
         {
             InitializeComponent();
 
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
+
+            tblPractice.Visibility = isPracticing ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            _procedure = new(isPracticing);
 
             _procedure.OdorPreparation += (s, e) => Dispatcher.Invoke(() => wtiInstruction.Progress = e);
 
@@ -31,7 +37,7 @@ namespace Olfactory.Pages.ThresholdTest
             _procedure.OdorFlowStarted += (s, e) => Dispatcher.Invoke(() => {
                 if (_procedure.FlowStart != FlowStart.Immediate && CurrentPen != null)
                 {
-                    CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden; 
+                    _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Hidden; 
                     wtiInstruction.Text = "";   // clear the instruction that tells to press the SPACE key / make inhale
                 }
             });
@@ -40,10 +46,10 @@ namespace Olfactory.Pages.ThresholdTest
                 if (CurrentPen != null)
                 {
                     CurrentPen.IsActive = false;
-                    CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden;
+                    _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Hidden;
                 }
 
-                wtiInstruction.Text = e == PenProc.AnswerType.HasOdor ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_CHOOSE_PEN_ODOR;
+                wtiInstruction.Text = e == Tests.ThresholdTest.AnswerType.HasOdor ? INSTRUCTION_CHOOSE_THE_PEN : INSTRUCTION_CHOOSE_PEN_ODOR;
 
                 foreach (var pen in _pens)
                 {
@@ -53,7 +59,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             _procedure.Next += (s, e) => Dispatcher.Invoke(() => {
                 ColorizePens(false);
-                Utils.DispatchOnceUI.Do(0.1, () => Init());
+                Utils.DispatchOnceUI.Do(0.1, () => RunTrial());
             });
 
             _procedure.Finished += (s, e) => Dispatcher.Invoke(() => {
@@ -71,9 +77,19 @@ namespace Olfactory.Pages.ThresholdTest
             });
         }
 
-        public void Init(Tests.ThresholdTest.Settings settings = null)
+        public void Start(Tests.ThresholdTest.Settings settings)
         {
-            var pens = _procedure.Start(settings);
+            foreach (var (pen, instructions) in _penInstructions)
+            {
+                grdPens.Children.Remove(pen);
+                grdPens.Children.Remove(instructions);
+            }
+
+            _pens.Clear();
+            _penInstructions.Clear();
+            grdPens.ColumnDefinitions.Clear();
+
+            _procedure.Init(settings);
 
             grdPens.MaxWidth = MAX_PEN_AREA_WIDTH * _procedure.PenCount;
 
@@ -82,28 +98,17 @@ namespace Olfactory.Pages.ThresholdTest
                 var columnIndex = grdPens.ColumnDefinitions.Count;
                 
                 var pen = CreatePen(columnIndex);
-                _pens.Add(pen);
-
                 var sniffInstruction = CreateInstruction(columnIndex);
-                pens[columnIndex].Instruction = sniffInstruction;
+
+                _penInstructions.Add(pen, sniffInstruction);
+                _pens.Add(pen);
 
                 grdPens.ColumnDefinitions.Add(new ColumnDefinition());
                 grdPens.Children.Add(pen);
                 grdPens.Children.Add(sniffInstruction);
             }
 
-            for (int i = 0; i < _pens.Count; i++)
-            {
-                _pens[i].PenInstance = pens[i];
-            }
-
-            _currentPenID = -1;
-
-            UpdateDisplay(Update.All);
-
-            elpBreathingStage.Visibility = _procedure.FlowStart == FlowStart.Automatic ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
-
-            wtiInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
+            RunTrial();
         }
 
         public void Interrupt()
@@ -133,8 +138,6 @@ namespace Olfactory.Pages.ThresholdTest
         }
 
 
-        const int MAX_PEN_AREA_WIDTH = 320;
-
         readonly string INSTRUCTION_SNIFF_THE_PEN_FIXED = Utils.L10n.T("ThTestInstrSniff");
         // readonly string INSTRUCTION_SNIFF_THE_PEN_MANUAL = Utils.L10n.T("ThTestInstrPressKey");
         readonly string INSTRUCTION_SNIFF_THE_PEN_AUTO = Utils.L10n.T("ThTestInstrInhale");
@@ -144,7 +147,8 @@ namespace Olfactory.Pages.ThresholdTest
         readonly string INSTRUCTION_DONE = Utils.L10n.T("ThTestInstrDone");
 
         readonly List<Controls.Pen> _pens = new();
-        readonly PenProc _procedure = new();
+        readonly Dictionary<Controls.Pen, Label> _penInstructions = new();
+        readonly PenProc _procedure;
 
         int _currentPenID = -1;
 
@@ -152,13 +156,29 @@ namespace Olfactory.Pages.ThresholdTest
 
         Controls.Pen CurrentPen => (0 <= _currentPenID && _currentPenID < _pens.Count) ? _pens[_currentPenID] : null;
 
+        private void RunTrial()
+        {
+            var pens = _procedure.StartTrial();
+            for (int i = 0; i < _pens.Count; i++)
+            {
+                _pens[i].PenInstance = pens[i];
+            }
+
+            _currentPenID = -1;
+
+            UpdateDisplay(Update.All);
+
+            elpBreathingStage.Visibility = _procedure.FlowStart == FlowStart.Automatic ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+
+            wtiInstruction.Text = INSTRUCTION_WAIT_FOR_THE_TRIAL_TO_START;
+        }
 
         private void ActivatePen(int penID, FlowStart flowStart)
         {
             if (CurrentPen != null)
             {
                 CurrentPen.IsActive = false;
-                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Hidden;
+                _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Hidden;
             }
 
             _currentPenID = penID;
@@ -170,21 +190,14 @@ namespace Olfactory.Pages.ThresholdTest
                 wtiInstruction.Text = ""; //INSTRUCTION_SNIFF_THE_PEN_MANUAL;
                 _isAwaitingInput = true;
 
-                var column = Grid.GetColumn(CurrentPen.PenInstance.Instruction);
+                var column = Grid.GetColumn(_penInstructions[CurrentPen]);
                 Grid.SetColumn(btnStartManualOdorFlow, column);
                 btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Visible;
             }
             else
             {
-                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Visible;
+                _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
             }
-            /* flowStart switch
-            {
-                FlowStart.Immediate => INSTRUCTION_SNIFF_THE_PEN_FIXED,
-                FlowStart.Manual => INSTRUCTION_SNIFF_THE_PEN_MANUAL,
-                FlowStart.Automatic => INSTRUCTION_SNIFF_THE_PEN_AUTO,
-                _ => ""
-            };*/
         }
 
         // UI actions
@@ -264,7 +277,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _procedure.EnablePenOdor();
 
                 btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Collapsed;
-                CurrentPen.PenInstance.Instruction.Visibility = System.Windows.Visibility.Visible;
+                _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
             }
         }
 

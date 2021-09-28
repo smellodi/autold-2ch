@@ -56,6 +56,9 @@
                     Content="{lex:Loc Cancel}"
                     Click="Cancel_Click"/>
             <Button Style="{StaticResource Next}"
+                    Content="{lex:Loc Practice}"
+                    Click="Practice_Click"/>
+            <Button Style="{StaticResource Next}"
                     Content="{lex:Loc Continue}"
                     Click="Next_Click"/>
         </StackPanel>

@@ -2,13 +2,14 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using Navigation = Olfactory.Tests.ThresholdTest.Navigation;
 using ProcedureType = Olfactory.Tests.ThresholdTest.Settings.ProcedureType;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class Instructions : Page, IPage<EventArgs>, INotifyPropertyChanged
+    public partial class Instructions : Page, IPage<Navigation>, INotifyPropertyChanged
     {
-        public event EventHandler<EventArgs> Next;
+        public event EventHandler<Navigation> Next;
         public event PropertyChangedEventHandler PropertyChanged;
 
         public string ProcedureInstruction => "ThTestInstr" + _procType.ToString();
@@ -37,12 +38,17 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            Next?.Invoke(this, new EventArgs());
+            Next?.Invoke(this, Navigation.Familiarization);
+        }
+
+        private void Practice_Click(object sender, RoutedEventArgs e)
+        {
+            Next?.Invoke(this, Navigation.Practice);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            Next?.Invoke(this, null);
+            Next?.Invoke(this, Navigation.Back);
         }
     }
 }

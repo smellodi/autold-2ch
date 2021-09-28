@@ -604,4 +604,7 @@ Examples described:
 
 32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
 	</data>
+	<data name="Practice" xml:space="preserve">
+		<value>Practice</value>
+	</data>
 </root>

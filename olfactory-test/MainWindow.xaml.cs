@@ -119,9 +119,9 @@ namespace Olfactory
             }
         }
 
-        private void OnTest_PageDone(object sender, bool canContinue)
+        private void OnTest_PageDone(object sender, Tests.PageDoneEventArgs e)
         {
-            if (!canContinue)
+            if (!e.CanContinue)
             {
                 _currentTest.Interrupt();
                 _currentTest = null;
@@ -133,7 +133,7 @@ namespace Olfactory
             }
             else
             {
-                var page = _currentTest.NextPage();
+                var page = _currentTest.NextPage(e.Data);
                 if (page == null)
                 {
                     _finishedPage.TestName = _currentTest.Name;

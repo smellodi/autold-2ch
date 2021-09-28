@@ -7,7 +7,6 @@ namespace Olfactory.Tests.ThresholdTest
     public class Pen
     {
         public PenColor Color { get; set; }
-        public Label Instruction { get; set; }
 
         public Pen(PenColor color = PenColor.None)
         {
