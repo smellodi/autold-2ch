@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
       xmlns:local="clr-namespace:Olfactory.Controls"
       xmlns:lex="http://wpflocalizeextension.codeplex.com"
       lex:LocalizeDictionary.DesignCulture="en"
@@ -40,7 +41,8 @@
         <Ellipse x:Name="elpBreathingStage"
                  HorizontalAlignment="Left"
                  Margin="8"
-                 Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Fill="White"/>
+                 Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                 Fill="White"/>
 
         <Grid Grid.Row="1" Grid.Column="0" x:Name="grdPens"
               HorizontalAlignment="Center"

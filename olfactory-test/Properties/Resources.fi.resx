@@ -223,7 +223,7 @@
     <value>Avaa tuoksuventtiili</value>
   </data>
 	<data name="Pen" xml:space="preserve">
-    <value>Kynä</value>
+    <value>Laatikko</value>
   </data>
 	<data name="PIDTemp" xml:space="preserve">
     <value>Lämpötila-anturin virta</value>
@@ -250,7 +250,7 @@
     <value>sekuntia</value>
   </data>
 	<data name="SerialPorts" xml:space="preserve">
-    <value>Sarjaportit</value>
+    <value>Laitteet</value>
   </data>
 	<data name="Set" xml:space="preserve">
     <value>Aseta</value>
@@ -355,10 +355,10 @@
     <value>Tuoksun valmistaminen</value>
   </data>
 	<data name="PenPresentation" xml:space="preserve">
-    <value>Kynän esittäminen</value>
+    <value>Tuoksun esittäminen</value>
   </data>
 	<data name="PenSniffing" xml:space="preserve">
-    <value>Kynän haistaminen</value>
+    <value>Tuoksun haistaminen</value>
   </data>
 	<data name="PIDSampling" xml:space="preserve">
     <value>PID näytteenottoväli</value>
@@ -370,10 +370,10 @@
     <value>Tunnistusta peräkkäin</value>
   </data>
 	<data name="ThTestInstrSelectPen" xml:space="preserve">
-    <value>Valitse kynä, jossa oli tuoksua.</value>
+    <value>Valitse laatikko, jossa oli tuoksua.</value>
   </data>
 	<data name="ThTestInstrSniff" xml:space="preserve">
-    <value>Haista kynää</value>
+    <value>Haista laatikkoa</value>
   </data>
 	<data name="ThTestInstrWait" xml:space="preserve">
     <value>Ole hyvä ja odota kunnes tuoksuaine on valmis.</value>
@@ -496,7 +496,7 @@
     <value>[HUOMIO TUTKIJOILLE] Voit kirjoittaa tähän lisäohjeita. Tällä sivulla voi kerätä esimerkiksi henkilötietoja, jotka tallennetaan myöhemmin lokitiedostoon muun tiedon kanssa.</value>
   </data>
 	<data name="ThTestInstrThreePens" xml:space="preserve">
-    <value>Sinulle esitetään vuoronperään kolme kynää. Vain yhdessä kynässä on tuoksua. Sinun tehtäväsi on kertoa missä kynässä oli tuoksua. Jos et osaa sanoa missä kynässä oli tuoksua, niin arvaa. </value>
+    <value>Sinulle esitetään vuoronperään kolme laatikkoa. Vain yhdessä laatikossa on tuoksua. Sinun tehtäväsi on kertoa missä laatikossa oli tuoksua. Jos et osaa sanoa missä laatikossa oli tuoksua, niin arvaa. </value>
   </data>
 	<data name="Temperature" xml:space="preserve">
     <value>Lämpötila</value>
@@ -505,7 +505,7 @@
     <value>Peruuta</value>
   </data>
 	<data name="ThTestInstrTwoPens" xml:space="preserve">
-    <value>Sinulle esitetään vuoronperään kaksi kynää. Vain yhdessä kynässä on tuoksua. Sinun tehtäväsi on kertoa missä kynässä oli tuoksua. Jos et osaa sanoa missä kynässä oli tuoksua, niin arvaa. </value>
+    <value>Sinulle esitetään vuoronperään kaksi laatikkoa. Vain yhdessä laatikossa on tuoksua. Sinun tehtäväsi on kertoa missä laatikossa oli tuoksua. Jos et osaa sanoa missä laatikossa oli tuoksua, niin arvaa. </value>
   </data>
 	<data name="No" xml:space="preserve">
     <value>Ei</value>
@@ -514,13 +514,13 @@
     <value>Kyllä</value>
   </data>
 	<data name="OnePen" xml:space="preserve">
-    <value>yksi kynä</value>
+    <value>yksi laatikko</value>
   </data>
 	<data name="ThreePens" xml:space="preserve">
-    <value>kolme kynää</value>
+    <value>kolme laatikkoa</value>
   </data>
 	<data name="TwoPens" xml:space="preserve">
-    <value>kaksi kynää</value>
+    <value>kaksi laatikkoa</value>
   </data>
 	<data name="ProcedureType" xml:space="preserve">
     <value>Menettelytapa</value>
@@ -529,13 +529,13 @@
 		<value>Virtauksen aloittaminen</value>
 	</data>
 	<data name="ProcTypeOnePen" xml:space="preserve">
-		<value>Käyttäjän tulee vastata, oliko kynässä tuoksua vai ei</value>
+		<value>Käyttäjän tulee vastata, oliko laatikossa tuoksua vai ei</value>
 	</data>
 	<data name="ProcTypeThreePens" xml:space="preserve">
-		<value>Käyttäjälle esitetään kolme kynää. Hänen tulee valita kynä, jossa oli tuoksua.</value>
+		<value>Käyttäjälle esitetään kolme laatikkoa. Hänen tulee valita laatikko, jossa oli tuoksua.</value>
 	</data>
 	<data name="ProcTypeTwoPens" xml:space="preserve">
-		<value>Käyttäjälle esitetään kaksi kynää. Hänen tulee valita kynä, jossa oli tuoksua.</value>
+		<value>Käyttäjälle esitetään kaksi laatikkoa. Hänen tulee valita laatikko, jossa oli tuoksua.</value>
 	</data>
 	<data name="ThTestInstrOnePen" xml:space="preserve">
 		<value>Kohta sinua pyydetään toistuvasti haistamaan maskiin tulevaa ilmaa ja vastaamaan haistoitko tuoksua.</value>

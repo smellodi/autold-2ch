@@ -298,10 +298,10 @@
     <value>Öffnet das Ventil zum Duft</value>
   </data>
 	<data name="Pen" xml:space="preserve">
-    <value>Stift</value>
+    <value>Kiste</value>
   </data>
 	<data name="PenPresentation" xml:space="preserve">
-    <value>Stiftpräsentation</value>
+    <value>Duftpräsentation</value>
   </data>
 	<data name="PenSniffing" xml:space="preserve">
     <value>Schnuppern</value>
@@ -343,7 +343,7 @@
     <value>Sekunden</value>
   </data>
 	<data name="SerialPorts" xml:space="preserve">
-    <value>Serielle Schnittstelle</value>
+    <value>Geräte</value>
   </data>
 	<data name="Set" xml:space="preserve">
     <value>Einstellen</value>
@@ -391,10 +391,10 @@
     <value>Bitte drücken Sie die Leertaste when Sie anfangen einzuatmen</value>
   </data>
 	<data name="ThTestInstrSelectPen" xml:space="preserve">
-    <value>Bitte wählen Sie einen Stift.</value>
+    <value> Bitte wählen Sie die Kiste mit Geruch.</value>
   </data>
 	<data name="ThTestInstrSniff" xml:space="preserve">
-    <value>Schnuppern Sie an dem Stift</value>
+    <value>Schnuppern Sie an der Kiste</value>
   </data>
 	<data name="ThTestInstrWait" xml:space="preserve">
     <value>Bitte warten Sie bis der Duft bereit ist.</value>
@@ -496,7 +496,7 @@
     <value>[BEMERKUNG AN FORSCHER] Weitere Anweisungen können hier hinzugefügt werden. Wir könnten sogar persönliche Daten auf dieser Seite sammeln um sie später in den log Dateien zusammen mit den Daten zu speichern.</value>
   </data>
 	<data name="ThTestInstrThreePens" xml:space="preserve">
-    <value>Ihnen werden wiederholt drei Stifte präsentiert. Nur einer dieser Drei enthält den Geruchsstoff. Ihre Aufgabe ist es den Stift zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
+    <value>Ihnen werden wiederholt drei Kisten präsentiert. Nur einer dieser Drei enthält den Geruchsstoff. Ihre Aufgabe ist es die Kiste zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
   </data>
 	<data name="Temperature" xml:space="preserve">
     <value>Temperatur</value>
@@ -505,7 +505,7 @@
     <value>Abbrechen</value>
   </data>
 	<data name="ThTestInstrTwoPens" xml:space="preserve">
-    <value>Ihnen werden wiederholt drei Stifte präsentiert. Nur einer dieser Zwei enthält den Geruchsstoff. Ihre Aufgabe ist es den Stift zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
+    <value>Ihnen werden wiederholt zwei Kisten präsentiert. Nur einer dieser Zwei enthält den Geruchsstoff. Ihre Aufgabe ist es die Kiste zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
   </data>
 	<data name="No" xml:space="preserve">
     <value>Nein</value>
@@ -514,13 +514,13 @@
     <value>Ja</value>
   </data>
 	<data name="OnePen" xml:space="preserve">
-		<value>ein Stift</value>
+		<value>eine Kiste</value>
 	</data>
 	<data name="ThreePens" xml:space="preserve">
-		<value>drei Stifte</value>
+		<value>drei Kisten</value>
 	</data>
 	<data name="TwoPens" xml:space="preserve">
-		<value>zwei Stifte</value>
+		<value>zwei Kisten</value>
 	</data>
 	<data name="FlowStart" xml:space="preserve">
 		<value>Beginn der Zirkulation</value>
@@ -529,13 +529,13 @@
 		<value>Prozedurtyp</value>
 	</data>
 	<data name="ProcTypeOnePen" xml:space="preserve">
-		<value>Nutzer antworten, ob sie den präsentierten Stift gerochen haben oder nicht</value>
+		<value>Nutzer antworten, ob die präsentierte Kiste gerochen hat oder nicht</value>
 	</data>
 	<data name="ProcTypeThreePens" xml:space="preserve">
-		<value>Den Nutzern werden drei Stifte präsentiert. Sie müssen sich für einen entscheiden, der ihrer Meinung nach riecht</value>
+		<value>Den Nutzern werden drei Kisten präsentiert. Sie müssen sich für eine entscheiden, die ihrer Meinung nach riecht</value>
 	</data>
 	<data name="ProcTypeTwoPens" xml:space="preserve">
-		<value>Den Nutzern werden zwei Stifte präsentiert. Sie müssen sich für einen entscheiden, der ihrer Meinung nach riecht</value>
+		<value>Den Nutzern werden zwei Kisten präsentiert. Sie müssen sich für eine entscheiden, die ihrer Meinung nach riecht</value>
 	</data>
 	<data name="ThTestInstrOnePen" xml:space="preserve">
 		<value>Sie werden wiederholt aufgefordert die Luft, welche zu der Maske geleitet wird, zu schnuppern. Ihre Aufgabe ist es zu entscheiden, ob Sie einen Geruch wahrgenommen haben.</value>

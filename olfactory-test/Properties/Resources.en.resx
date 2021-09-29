@@ -295,10 +295,10 @@
     <value>Open the odour valve</value>
   </data>
 	<data name="Pen" xml:space="preserve">
-    <value>Pen</value>
+    <value>Box</value>
   </data>
 	<data name="PenPresentation" xml:space="preserve">
-    <value>Pen presentation</value>
+    <value>Scent presentation</value>
   </data>
 	<data name="PenSniffing" xml:space="preserve">
     <value>Sniffing</value>
@@ -340,7 +340,7 @@
     <value>seconds</value>
   </data>
 	<data name="SerialPorts" xml:space="preserve">
-    <value>Serial ports</value>
+    <value>Devices</value>
   </data>
 	<data name="Set" xml:space="preserve">
     <value>Set</value>
@@ -400,10 +400,10 @@
     <value>Press SPACE when start inhaling</value>
   </data>
 	<data name="ThTestInstrSelectPen" xml:space="preserve">
-    <value>Please select the scented pen.</value>
+    <value>Please select the scented box.</value>
   </data>
 	<data name="ThTestInstrSniff" xml:space="preserve">
-    <value>Sniff the pen</value>
+    <value>Sniff the box</value>
   </data>
 	<data name="ThTestInstrWait" xml:space="preserve">
     <value>Please wait until the odorant is ready.</value>
@@ -505,34 +505,34 @@
     <value>Flow start</value>
   </data>
 	<data name="OnePen" xml:space="preserve">
-    <value>one pen</value>
+    <value>one box</value>
   </data>
 	<data name="ProcedureType" xml:space="preserve">
     <value>Procedure type</value>
   </data>
 	<data name="ProcTypeOnePen" xml:space="preserve">
-    <value>Users have to answer whether the presented pen smells or not</value>
+    <value>Users have to answer whether the presented box smells or not</value>
   </data>
 	<data name="ProcTypeThreePens" xml:space="preserve">
-    <value>Three pens are presented to users, they are forced to select the one that smells</value>
+    <value>Three boxes are presented to users, they are forced to select the one that smells</value>
   </data>
 	<data name="ProcTypeTwoPens" xml:space="preserve">
-    <value>Two pens are presented to users, they are forced to select the one that smells</value>
+    <value>Two boxes are presented to users, they are forced to select the one that smells</value>
   </data>
 	<data name="ThreePens" xml:space="preserve">
-    <value>three pens</value>
+    <value>three boxes</value>
   </data>
 	<data name="ThTestInstrOnePen" xml:space="preserve">
     <value>Repeatedly, you will be asked to sniff an air flow directed to the mask. You have to find out whether you have perceived the odorant.</value>
   </data>
 	<data name="ThTestInstrThreePens" xml:space="preserve">
-    <value>Repeatedly, three pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
+    <value>Repeatedly, three boxes will be presented to you one after another. Only one of them contains the scent. You have to find out the box in which you think you have perceived the scent. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
 	<data name="ThTestInstrTwoPens" xml:space="preserve">
-    <value>Repeatedly, two pens will be presented to you one after another. Only one of these pens contains the odorant. You have to find out the pen in which you think you have perceived the odorant. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
+    <value>Repeatedly, two boxes will be presented to you one after another. Only one of them contains the scent. You have to find out the box in which you think you have perceived the scent. If you should not be able to smell and thus cannot decide on an answer, please just guess.</value>
   </data>
 	<data name="TwoPens" xml:space="preserve">
-    <value>two pens</value>
+    <value>two boxes</value>
   </data>
 	<data name="ThTestInstrChooseOdor" xml:space="preserve">
     <value>Did you smell the odour?</value>
