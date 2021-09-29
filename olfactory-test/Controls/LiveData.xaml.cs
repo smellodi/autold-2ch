@@ -49,18 +49,18 @@ namespace Olfactory.Controls
             chart.Render();
         }
 
-        public void Reset(double baseline = 0)
+        public void Reset(double step, double baseline = 0)
         {
             _data.Clear();
 
-            var count = ActualWidth / PIXELS_PER_POINT;
+            var count = ActualWidth / PIXELS_PER_POINT / step;
             var ts = Utils.Timestamp.Sec;
 
             while (_data.Count < count)
             {
                 _data.Add(new MeasureModel
                 {
-                    Timestamp = ts + _data.Count - count,
+                    Timestamp = ts + step * (_data.Count - count),
                     Value = baseline,
                 });
             }

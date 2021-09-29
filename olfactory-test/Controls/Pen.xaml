@@ -50,7 +50,7 @@
                          IsEnabled="{Binding CanChoose, Converter={StaticResource notBool2vis}}"/>
                 </TextBlock>
             </Label>
-            <Image Source="/Assets/images/pen.png"
+            <!--Image Source="/Assets/images/pen.png"
                    Margin="0,0,0,-50"
                    Height="110"
                    HorizontalAlignment="Center"
@@ -65,7 +65,7 @@
                         <TranslateTransform/>
                     </TransformGroup>
                 </Image.RenderTransform>
-            </Image>
+            </Image-->
         </Grid>
         
         <Rectangle x:Name="rctPenColor"

@@ -582,4 +582,29 @@
 	<data name="StartOdorFlow" xml:space="preserve">
 		<value>Käynnistä tuoksuvirtaus</value>
 	</data>
+	<data name="OdorPulsesExpressionNote" xml:space="preserve">
+		<value>Notes: 
+
+1. Valve #2 (output to user) is controlled by MFC embedded timer only if an expression contains pulse duration, otherwise it is controlled by the software timer that closed the valve after [Odour flow] seconds.
+
+2. Valve #1 (gas mixer) is always controlled by the software timer.
+
+3. Pulse duration defined in an expression must not exceed the general duration defined as "Odour flow".
+
+4. Minimum pulse duration is 10ms. Maximum repetition count is 9. 
+
+
+Examples described:
+
+4 - the pulse of 4 ml/min lasting [Odour flow] seconds; the software timer is used,
+
+8x500 - the pulse of 8 ml/min lasting 500 ms; the MFC timer is used,
+
+16x500x2 - two pulse of 16 ml/min, each lasting 500 ms; the MFC timer is used,
+
+32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
+	</data>
+	<data name="Practice" xml:space="preserve">
+		<value>Harjoittele</value>
+	</data>
 </root>

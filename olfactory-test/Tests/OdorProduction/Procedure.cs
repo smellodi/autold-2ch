@@ -89,6 +89,10 @@ namespace Olfactory.Tests.OdorProduction
         {
             _settings = settings;
 
+            var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
+            _monitor.MFCUpdateInterval = updateIntervalInSeconds;
+            _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+
             _mfc.FreshAirSpeed = _settings.FreshAir;
             _mfc.OdorDirection = MFC.OdorFlowsTo.Waste; // should I add delay here?
 

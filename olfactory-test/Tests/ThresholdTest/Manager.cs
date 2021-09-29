@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using Olfactory.Pages.ThresholdTest;
-using ThreePensPage = Olfactory.Pages.ThresholdTest.PenPresentation;
+using PenPresentation = Olfactory.Pages.ThresholdTest.PenPresentation;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -63,11 +63,11 @@ namespace Olfactory.Tests.ThresholdTest
                     Settings.ProcedureType.OnePen => _threePensPage,
                     _ => throw new NotImplementedException($"Unhandled procedure type in {Name}"),
                 },
-                ThreePensPage => (Navigation?)param switch
+                PenPresentation => (Navigation?)param switch
                 {
                     Navigation.Back => _instructionsPage,
                     null => _resultPage,
-                    _ => throw new NotImplementedException($"Unhandled instruction navigation type in {Name}"),
+                    _ => throw new NotImplementedException($"Unhandled pen proc type navigation type in {Name}"),
                 },
                 Result => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),
@@ -86,11 +86,11 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 famil.Init(_settings);
             }
-            else if (_current is ThreePensPage threePens)
+            else if (_current is PenPresentation threePens)
             {
                 threePens.Start(_settings);
 
-                if ((Navigation?)param != null)
+                if (threePens == _practicingPage)
                 {
                     threePens.Emulator.EmulationFinilize();
                 }
@@ -137,8 +137,8 @@ namespace Olfactory.Tests.ThresholdTest
         readonly Setup _setupPage = new();
         readonly Instructions _instructionsPage = new();
         readonly Familiarize _familiarizePage = new();
-        readonly ThreePensPage _practicingPage = new(true);
-        readonly ThreePensPage _threePensPage = new(false);
+        readonly PenPresentation _practicingPage = new(true);
+        readonly PenPresentation _threePensPage = new(false);
         readonly Result _resultPage = new();
 
         Page _current = null;

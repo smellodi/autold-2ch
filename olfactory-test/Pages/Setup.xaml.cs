@@ -65,7 +65,7 @@ namespace Olfactory.Pages
 
 
             long startTs = Utils.Timestamp.Ms;
-            _mfcTimer.Interval = 1000;
+            _mfcTimer.Interval = 1000 * MFC_UPDATE_INTERVAL;
             _mfcTimer.AutoReset = true;
             _mfcTimer.Elapsed += (s, e) => Dispatcher.Invoke(() =>
             {
@@ -85,7 +85,7 @@ namespace Olfactory.Pages
                 }
             });
 
-            _pidTimer.Interval = 200;
+            _pidTimer.Interval = 1000 * PID_UPDATE_INTERVAL;
             _pidTimer.AutoReset = true;
             _pidTimer.Elapsed += (s, e) => Dispatcher.Invoke(() =>
             {
@@ -121,6 +121,9 @@ namespace Olfactory.Pages
 
 
         // Internal
+
+        const double MFC_UPDATE_INTERVAL = 1;   // seconds
+        const double PID_UPDATE_INTERVAL = 0.2; // seconds
 
         readonly USB _usb = new();
         readonly MFC _mfc = MFC.Instance;
@@ -304,7 +307,13 @@ namespace Olfactory.Pages
         {
             if (_currentIndicator?.Source == dataSource)
             {
-                lmsGraph.Reset(baseValue);
+                var updateInterval = dataSource switch
+                {
+                    IndicatorDataSource.CleanAir or IndicatorDataSource.ScentedAir => MFC_UPDATE_INTERVAL,
+                    IndicatorDataSource.Loop or IndicatorDataSource.PID => PID_UPDATE_INTERVAL,
+                    _ => throw new NotImplementedException($"Data source {dataSource} is now supported")
+                };
+                lmsGraph.Reset(updateInterval, baseValue);
             }
         }
 
@@ -351,6 +360,8 @@ namespace Olfactory.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             _monitor = CommMonitor.Instance;
+            _monitor.MFCUpdateInterval = MFC_UPDATE_INTERVAL;
+            _monitor.PIDUpdateInterval = PID_UPDATE_INTERVAL;
 
             if (Focusable)
             {

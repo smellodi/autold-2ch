@@ -17,11 +17,14 @@ namespace Olfactory.Pages.ThresholdTest
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
+            _monitor.MFCUpdateInterval = DATA_UPDATE_INTERVAL;
+            _monitor.PIDUpdateInterval = DATA_UPDATE_INTERVAL;
+
             _stateTimer.Elapsed += (s, e) => Dispatcher.Invoke(NextState);
 
             _directionChangeTimer.Elapsed += (s, e) => Dispatcher.Invoke(OpenValve);
 
-            _measurementTimer.Interval = 1000;
+            _measurementTimer.Interval = 1000 * DATA_UPDATE_INTERVAL;
             _measurementTimer.Elapsed += (s, e) => Dispatcher.Invoke(Measure);
 
             wtiInstruction.Text = INSTRUCTION_OPEN_VALVE;
@@ -55,6 +58,8 @@ namespace Olfactory.Pages.ThresholdTest
             Finished
         }
 
+
+        const double DATA_UPDATE_INTERVAL = 1;
         const int VENTILATION_DURATION = 15;  // seconds
 
         readonly string INSTRUCTION_OPEN_VALVE = Utils.L10n.T("FamilInstrOpenValve");

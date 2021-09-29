@@ -155,12 +155,15 @@ namespace Olfactory.Tests.ThresholdTest
             }
             else
             { 
-                _mfcTimer.Interval = TIMER_MFC_INTERVAL;
+                _mfcTimer.Interval = 1000 * MFC_READING_INTERVAL;
                 _mfcTimer.Start();
             }
 
             _logger.Add(LogSource.ThTest, "trial", State);
             _logger.Add(LogSource.ThTest, "colors", string.Join(' ', _pens.Select(pen => pen.Color.ToString())));
+
+            _monitor.MFCUpdateInterval = MFC_READING_INTERVAL;
+            _monitor.PIDUpdateInterval = 0.001 * _settings.PIDReadingInterval;
 
             _pidTimer.Interval = _settings.PIDReadingInterval;
             _pidTimer.Start();
@@ -171,17 +174,19 @@ namespace Olfactory.Tests.ThresholdTest
         }
 
         /// <summary>
-        /// When wating for <see cref="AnswerType.HasOdor"/> answer: the selected pen
-        /// When wating for <see cref="AnswerType.YesNo"/> answer: the pen if "yes" was selected, or null if "no" was selected
+        /// Reacts to user answer.
         /// </summary>
-        /// <param name="pen">Selected pen, or no pen if no odor was perceived</param>
+        /// <param name="pen">A user answer:
+        ///     the selected pen (when waiting for <see cref="AnswerType.HasOdor"/> answer),
+        ///     the pen if "yes" was selected, or null if "no" was selected (when wating for <see cref="AnswerType.YesNo"/> answer)
+        /// </param>
         public void Select(Pen pen)
         {
             var isCorrectChoice = pen == null
                 ? _pens[0].Color == PenColor.NonOdor
                 : pen.Color == PenColor.Odor;
 
-            var canContinue = AdjustPPM(isCorrectChoice);
+            var canContinue = CanContinueTest(isCorrectChoice);
 
             _logger.Add(LogSource.ThTest, "result", isCorrectChoice.ToString());
 
@@ -257,7 +262,7 @@ namespace Olfactory.Tests.ThresholdTest
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
-        const int TIMER_MFC_INTERVAL = 1000;
+        const int MFC_READING_INTERVAL = 1;             // seconds
 
         // Properties
 
@@ -431,11 +436,11 @@ namespace Olfactory.Tests.ThresholdTest
         }
 
         /// <summary>
-        /// Adjusts PPM if need and returns the test continuation flag
+        /// Acceprs user answer and returns the test continuation flag
         /// </summary>
         /// <param name="odorWasRecognized">whether a user correctly recognized the presense/absence of odor</param>
-        /// <returns>'True' is the test must be continued with another trial, 'False' if the test is finished</returns>
-        private bool AdjustPPM(bool odorWasRecognized)
+        /// <returns>'True' is the test must be continued with another trial, 'False' if the test must be finished</returns>
+        private bool CanContinueTest(bool odorWasRecognized)
         {
             if(!_rules.AcceptAnswer(odorWasRecognized))
             {
