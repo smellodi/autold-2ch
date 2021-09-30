@@ -24,40 +24,12 @@ namespace Olfactory.Tests.OdorProduction
 
         public Procedure()
         {
-            // catch window closing event, so we do not display termination message due to MFC comm closed
-            Application.Current.MainWindow.Closing += (s, e) =>
-            {
-                _timer.Stop();
-            };
+            _dispatcher = Dispatcher.CurrentDispatcher;
 
-            // If the test is in progress, display warning message and quit the app:
-            // Or can we recover here by trying to open the COM port again?
-            _mfc.Closed += (s, e) =>
-            {
-                if (_timer.Enabled)
-                {
-                    _timer.Stop();
-                    _runner?.Stop();
+            FlowLogger flowLogger = FlowLogger.Instance;
+            flowLogger.Clear();
 
-                    Utils.MsgBox.Error(
-                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
-                        string.Format(Utils.L10n.T("DeviceConnLost"), "MFC") + " " + Utils.L10n.T("AppTerminated"));
-                    Application.Current.Shutdown();
-                }
-            };
-            _pid.Closed += (s, e) =>
-            {
-                if (_timer.Enabled)
-                {
-                    _timer.Stop();
-                    _runner?.Stop();
-
-                    Utils.MsgBox.Error(
-                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
-                        string.Format(Utils.L10n.T("DeviceConnLost"), "PID") + " " + Utils.L10n.T("AppTerminated"));
-                    Application.Current.Shutdown();
-                }
-            };
+            _logger.Clear();
 
             _timer.Elapsed += (s, e) =>
             {
@@ -89,12 +61,22 @@ namespace Olfactory.Tests.OdorProduction
         {
             _settings = settings;
 
+            // catch window closing event, so we do not display termination message due to MFC comm closed
+            Application.Current.MainWindow.Closing += MainWindow_Closing;
+
+            // If the test is in progress, display warning message and quit the app:
+            // Or can we recover here by trying to open the COM port again?
+            _mfc.Closed += MFC_Closed;
+            _pid.Closed += PID_Closed;
+
             var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
             _monitor.MFCUpdateInterval = updateIntervalInSeconds;
             _monitor.PIDUpdateInterval = updateIntervalInSeconds;
 
+            _initialDirection = _settings.ValvesControlled == MFC.OdorFlowsTo.WasteAndUser ? MFC.OdorFlowsTo.SystemAndWaste : MFC.OdorFlowsTo.Waste;
+
             _mfc.FreshAirSpeed = _settings.FreshAir;
-            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste; // should I add delay here?
+            _mfc.OdorDirection = _initialDirection; // should I add delay here?
 
             _timer.Interval = _settings.PIDReadingInterval;
             _timer.AutoReset = true;
@@ -123,10 +105,10 @@ namespace Olfactory.Tests.OdorProduction
                 .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, () => Finilize());
         }
 
-        public void Interrupt()
+        public void Stop()
         {
-            _timer.Stop();
             _runner?.Stop();
+            _timer.Stop();
 
             _mfc.IsInShortPulseMode = false;
             _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
@@ -141,9 +123,11 @@ namespace Olfactory.Tests.OdorProduction
         readonly SyncLogger _logger = SyncLogger.Instance;
         readonly CommMonitor _monitor = CommMonitor.Instance;
         readonly System.Timers.Timer _timer = new();
+        readonly Dispatcher _dispatcher;
 
         Settings _settings;
 
+        MFC.OdorFlowsTo _initialDirection;
         int _step = 0;
 
         Utils.DispatchOnce _runner;
@@ -151,12 +135,14 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            _logger.Add("V" + (_settings.Valve2ToUser ? "11" : "10"));
+            _logger.Add("V" + ((int)_settings.ValvesControlled).ToString("D2"));
 
-            var direction = _settings.Valve2ToUser ? MFC.OdorFlowsTo.SystemAndUser : MFC.OdorFlowsTo.SystemAndWaste;
+            var direction = _settings.ValvesControlled | MFC.OdorFlowsTo.System;
             var (mlmin, ms) = _settings.OdorQuantities[_step];
             var duration = ms == 0 ? _settings.OdorFlowDuration : (double)ms / 1000;
-            var useShortPulse = 0 < ms && ms <= (1000 * MFC.MAX_SHORT_PULSE_DURATION) && direction.HasFlag(MFC.OdorFlowsTo.User);
+            var useShortPulse = _settings.UseValveTimer
+                && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION
+                && direction.HasFlag(MFC.OdorFlowsTo.User);
 
             if (useShortPulse)
             {
@@ -180,7 +166,7 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
+            _mfc.OdorDirection = _initialDirection;
 
             _logger.Add("V00");
 
@@ -189,17 +175,54 @@ namespace Olfactory.Tests.OdorProduction
 
         private void Finilize()
         {
-            //_logger.Add(LogSource.OdProd, "trial", "finished");
+            _runner = null;
 
             var noMoreTrials = ++_step >= _settings.OdorQuantities.Length;
             if (noMoreTrials)
             {
-                _mfc.IsInShortPulseMode = false;
-                _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
-                _timer.Stop();
+                Stop();
             }
 
+            _dispatcher.Invoke(() =>
+            {
+                Application.Current.MainWindow.Closing -= MainWindow_Closing;
+                _mfc.Closed -= MFC_Closed;
+                _pid.Closed -= PID_Closed;
+            });
+
             Finished?.Invoke(this, noMoreTrials);
+        }
+
+        private void ExitOnDeviceError(string source)
+        {
+            if (_timer.Enabled)
+            {
+                _timer.Stop();
+                _runner?.Stop();
+
+                Utils.MsgBox.Error(
+                    Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
+                    string.Format(Utils.L10n.T("DeviceConnLost"), source) + " " + Utils.L10n.T("AppTerminated"));
+                Application.Current.Shutdown();
+            }
+        }
+
+        // Event handlers
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _timer.Stop();
+            _runner?.Stop();
+        }
+
+        private void MFC_Closed(object sender, EventArgs e)
+        {
+            ExitOnDeviceError("MFC");
+        }
+
+        private void PID_Closed(object sender, EventArgs e)
+        {
+            ExitOnDeviceError("PID");
         }
     }
 }

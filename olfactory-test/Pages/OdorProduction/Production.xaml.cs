@@ -101,7 +101,7 @@ namespace Olfactory.Pages.OdorProduction
 
         public void Interrupt()
         {
-            _procedure.Interrupt();
+            _procedure.Stop();
         }
 
 
@@ -157,7 +157,7 @@ namespace Olfactory.Pages.OdorProduction
         private void Interrupt_Click(object sender, RoutedEventArgs e)
         {
             // Do I need to show a confirmation dialog here?
-            _procedure.Interrupt();
+            _procedure.Stop();
             Next?.Invoke(this, new EventArgs());
         }
     }

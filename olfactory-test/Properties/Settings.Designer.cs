@@ -97,13 +97,13 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Test_OP_Valve2User {
+        [global::System.Configuration.DefaultSettingValueAttribute("11")]
+        public int Test_OP_ValvesControlled {
             get {
-                return ((bool)(this["Test_OP_Valve2User"]));
+                return ((int)(this["Test_OP_ValvesControlled"]));
             }
             set {
-                this["Test_OP_Valve2User"] = value;
+                this["Test_OP_ValvesControlled"] = value;
             }
         }
         
@@ -506,6 +506,18 @@ namespace Olfactory.Properties {
             }
             set {
                 this["Test_TT_Type"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool Test_OP_UseValveTimer {
+            get {
+                return ((bool)(this["Test_OP_UseValveTimer"]));
+            }
+            set {
+                this["Test_OP_UseValveTimer"] = value;
             }
         }
     }

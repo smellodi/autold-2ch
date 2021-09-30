@@ -607,4 +607,13 @@ Examples described:
 	<data name="Practice" xml:space="preserve">
 		<value>Demonstation</value>
 	</data>
+	<data name="SystemAndUser" xml:space="preserve">
+		<value>System und Nutzer</value>
+	</data>
+	<data name="Timer" xml:space="preserve">
+		<value>Timer</value>
+	</data>
+	<data name="UseValveControllerTimer" xml:space="preserve">
+		<value>Verwenden Sie die Zeitschaltuhr des Ventilreglers, wann immer es möglich ist </value>
+	</data>
 </root>

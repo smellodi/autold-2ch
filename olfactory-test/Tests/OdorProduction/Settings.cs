@@ -15,9 +15,10 @@ namespace Olfactory.Tests.OdorProduction
         public double OdorFlowDuration;
         public int FinalPause;
         public int PIDReadingInterval;
-        public bool Valve2ToUser;
+        public Comm.MFC.OdorFlowsTo ValvesControlled;
         public bool UseFeedbackLoopToReachLevel;
         public bool UseFeedbackLoopToKeepLevel;
+        public bool UseValveTimer;
 
         public Settings()
         {
@@ -29,9 +30,10 @@ namespace Olfactory.Tests.OdorProduction
             OdorFlowDuration = settings.Test_OP_OdorFlowDuration;
             FinalPause = settings.Test_OP_FinalPause;
             PIDReadingInterval = settings.Test_OP_PIDReadingInterval;
-            Valve2ToUser = settings.Test_OP_Valve2User;
+            ValvesControlled = (Comm.MFC.OdorFlowsTo)settings.Test_OP_ValvesControlled;
             UseFeedbackLoopToReachLevel = settings.Test_OP_UseFeedbackLoopToReachLevel;
             UseFeedbackLoopToKeepLevel = settings.Test_OP_UseFeedbackLoopToKeepLevel;
+            UseValveTimer = settings.Test_OP_UseValveTimer;
         }
 
         public void Save()
@@ -44,9 +46,10 @@ namespace Olfactory.Tests.OdorProduction
             settings.Test_OP_OdorFlowDuration = OdorFlowDuration;
             settings.Test_OP_FinalPause = FinalPause;
             settings.Test_OP_PIDReadingInterval = PIDReadingInterval;
-            settings.Test_OP_Valve2User = Valve2ToUser;
+            settings.Test_OP_ValvesControlled = (int)ValvesControlled;
             settings.Test_OP_UseFeedbackLoopToReachLevel = UseFeedbackLoopToReachLevel;
             settings.Test_OP_UseFeedbackLoopToKeepLevel = UseFeedbackLoopToKeepLevel;
+            settings.Test_OP_UseValveTimer = UseValveTimer;
 
             settings.Save();
         }

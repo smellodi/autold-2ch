@@ -16,16 +16,20 @@ namespace Olfactory.Pages.OdorProduction
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
+            _valvesControlled = _settings.ValvesControlled;
+
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");
             txbOdorQuantities.Text = _settings.OdorQuantitiesAsString();
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbFinalPause.Text = _settings.FinalPause.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
-            rdbValve2ToWaste.IsChecked = !_settings.Valve2ToUser;
-            rdbValve2ToUser.IsChecked = _settings.Valve2ToUser;
+            rdbSystemValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.SystemAndWaste;
+            rdbUserValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.WasteAndUser;
+            rdbSystemAndUserValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.SystemAndUser;
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
+            chkUseValveControllerTimer.IsChecked = _settings.UseValveTimer;
         }
 
         public void EmulationInit() { }
@@ -36,6 +40,8 @@ namespace Olfactory.Pages.OdorProduction
         // Internal
 
         readonly Settings _settings = new();
+
+        Comm.MFC.OdorFlowsTo _valvesControlled;
 
         private Utils.Validation CheckInput()
         {
@@ -88,9 +94,10 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
-                _settings.Valve2ToUser = rdbValve2ToUser.IsChecked ?? false;
+                _settings.ValvesControlled = _valvesControlled;
                 _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
+                _settings.UseValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
 
                 _settings.Save();
 
@@ -101,6 +108,21 @@ namespace Olfactory.Pages.OdorProduction
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, null);
+        }
+
+        private void SystemValve_Checked(object sender, RoutedEventArgs e)
+        {
+            _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndWaste;
+        }
+
+        private void rdbUserValve_Checked(object sender, RoutedEventArgs e)
+        {
+            _valvesControlled = Comm.MFC.OdorFlowsTo.WasteAndUser;
+        }
+
+        private void rdbSystemAndUserValve_Checked(object sender, RoutedEventArgs e)
+        {
+            _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndUser;
         }
     }
 }

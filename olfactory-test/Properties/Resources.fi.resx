@@ -607,4 +607,13 @@ Examples described:
 	<data name="Practice" xml:space="preserve">
 		<value>Harjoittele</value>
 	</data>
+	<data name="SystemAndUser" xml:space="preserve">
+		<value>järjestelmä ja käyttäjä</value>
+	</data>
+	<data name="Timer" xml:space="preserve">
+		<value>Ajastin</value>
+	</data>
+	<data name="UseValveControllerTimer" xml:space="preserve">
+		<value>Käytä venttiilinohjaimen ajastinta aina kun se on mahdollista </value>
+	</data>
 </root>

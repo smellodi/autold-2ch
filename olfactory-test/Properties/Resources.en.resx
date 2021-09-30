@@ -607,4 +607,13 @@ Examples described:
 	<data name="Practice" xml:space="preserve">
 		<value>Practice</value>
 	</data>
+	<data name="SystemAndUser" xml:space="preserve">
+		<value>system and user</value>
+	</data>
+	<data name="Timer" xml:space="preserve">
+		<value>Timer</value>
+	</data>
+	<data name="UseValveControllerTimer" xml:space="preserve">
+		<value>Use the valve controller timer whenever it is possible</value>
+	</data>
 </root>

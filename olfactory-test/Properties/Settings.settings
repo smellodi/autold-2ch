@@ -20,8 +20,8 @@
     <Setting Name="Test_OP_PIDReadingInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
     </Setting>
-    <Setting Name="Test_OP_Valve2User" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+    <Setting Name="Test_OP_ValvesControlled" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="Logger_Folder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
@@ -136,6 +136,9 @@
     </Setting>
     <Setting Name="Test_TT_Type" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Test_OP_UseValveTimer" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -38,7 +38,7 @@
             <Border.LayoutTransform>
                 <ScaleTransform x:Name="sctScale"/>
             </Border.LayoutTransform>
-            <StackPanel Width="420">
+            <StackPanel Width="460">
                 <Label Style="{StaticResource FormHeader}"
                        Content="{lex:Loc Settings}"/>
 
@@ -69,7 +69,7 @@
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRowLow}" Tag="{lex:Loc DurationsSec}">
-                    <Grid>
+                    <Grid Margin="10,0,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
@@ -104,16 +104,23 @@
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Valves}">
                     <StackPanel>
                         <WrapPanel Margin="0,6">
-                            <RadioButton x:Name="rdbValve2ToWaste"
-                                         GroupName="valve2"
-                                         Content="{lex:Loc Waste}"/>
-                            <RadioButton x:Name="rdbValve2ToUser"
+                            <RadioButton x:Name="rdbSystemValve"
+                                         GroupName="valves"
+                                         Content="{lex:Loc System}"
+                                         Checked="SystemValve_Checked"/>
+                            <RadioButton x:Name="rdbUserValve"
                                          Margin="16,0,0,0"
-                                         GroupName="valve2"
-                                         Content="{lex:Loc User}"/>
+                                         GroupName="valves"
+                                         Content="{lex:Loc User}"
+                                         Checked="rdbUserValve_Checked"/>
+                            <RadioButton x:Name="rdbSystemAndUserValve"
+                                         Margin="16,0,0,0"
+                                         GroupName="valves"
+                                         Content="{lex:Loc SystemAndUser}"
+                                         Checked="rdbSystemAndUserValve_Checked"/>
                         </WrapPanel>
-                        <TextBlock TextWrapping="Wrap"
-                                   Text="{lex:Loc ControlsValve2}"/>
+                        <!--TextBlock TextWrapping="Wrap"
+                                   Text="{lex:Loc ControlsValve2}"/-->
                     </StackPanel>
                 </UserControl>
 
@@ -124,6 +131,14 @@
                                  Text="1000"
                                  ToolTip="{lex:Loc IntPos}"/>
                     </UserControl>
+                </UserControl>
+
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Timer}">
+                    <CheckBox x:Name="chkUseValveControllerTimer"
+                              VerticalAlignment="Center">
+                        <TextBlock Text="{lex:Loc UseValveControllerTimer}"
+                                    TextWrapping="Wrap"/>
+                    </CheckBox>
                 </UserControl>
 
                 <Border Style="{StaticResource HorizontalLine}"/>
