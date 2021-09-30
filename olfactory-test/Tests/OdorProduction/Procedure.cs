@@ -135,14 +135,14 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            _logger.Add("V" + ((int)_settings.ValvesControlled).ToString("D2"));
-
             var direction = _settings.ValvesControlled | MFC.OdorFlowsTo.System;
             var (mlmin, ms) = _settings.OdorQuantities[_step];
             var duration = ms == 0 ? _settings.OdorFlowDuration : (double)ms / 1000;
             var useShortPulse = _settings.UseValveTimer
                 && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION
                 && direction.HasFlag(MFC.OdorFlowsTo.User);
+
+            _logger.Add("V" + ((int)direction).ToString("D2"));
 
             if (useShortPulse)
             {
@@ -168,7 +168,7 @@ namespace Olfactory.Tests.OdorProduction
         {
             _mfc.OdorDirection = _initialDirection;
 
-            _logger.Add("V00");
+            _logger.Add("V" + ((int)_initialDirection).ToString("D2"));
 
             StageChanged?.Invoke(this, Stage.FinalWait);
         }
