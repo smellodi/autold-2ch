@@ -1,8 +1,12 @@
 # Olfactory test platform
 
-Dedicated for running tests associated with odorant type/level recognition.
-Implements the following tests:
-1. [Odor Threshold Test](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiD9LbT3eHwAhX_hf0HHQRkBgoQFjAAegQIAhAD&url=https%3A%2F%2Fpubmed.ncbi.nlm.nih.gov%2F9056084%2F&usg=AOvVaw1iUPjwuMuh9dTPXtWpaVxh)
+Dedicated for running tests associated with scented air production and odorant type/level recognition.
+
+[Full documentation](https://tuni.sharepoint.com/:w:/s/TG-ProScents/EW_zr0V_uOpCkavwB9Dg0kcBagAzzogahZlLc4DnyQjfLw?e=Uau2Jy)
+
+[Portable software package](https://tuni.sharepoint.com/:u:/s/TG-ProScents/ESV9_fIxMgFMlgHAgeb3nMoBNTDkUKgnVg_07hBLHvSWIQ?e=tKs8fM)
+
+[Installation setup package](https://tuni.sharepoint.com/:u:/s/TG-ProScents/EW7DI4JoK-VPk8q-c3GmblMBXCo2hmDOOmY_xZ69hV32ig?e=B5XQby)
 
 ## Development environment and features
 
@@ -16,9 +20,6 @@ Implements the following tests:
 NuGet packages:
 - System.IO.Ports
 - System.Management
-
-## Using
-
-Select COM ports for MFC and PID, click both "Open" buttons.
-Press F5 any time to check the list of events and data measured from PID.
-Optionally, set the flag "Monitor" on the MFC log panel to observe MFC status.
+- NAudio
+- WPFLocalizeExtension
+- ScottPlot.WPF
