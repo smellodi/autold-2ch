@@ -262,7 +262,7 @@ namespace Olfactory.Tests.ThresholdTest
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
-        const int MFC_READING_INTERVAL = 1;             // seconds
+        const double MFC_READING_INTERVAL = 1;             // seconds
 
         // Properties
 
@@ -281,9 +281,10 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Members
 
+        readonly static SoundPlayer _waitingSounds = new(Properties.Resources.WaitingSound);
+
         readonly OlfactoryDeviceModel _model = new();
         readonly BreathingDetector _breathingDetector = new();
-        readonly SoundPlayer _waitingSounds = new(Properties.Resources.WaitingSound);
         readonly System.Timers.Timer _pidTimer = new();
         readonly System.Timers.Timer _mfcTimer = new();
 

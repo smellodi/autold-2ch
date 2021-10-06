@@ -9,6 +9,7 @@
              lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d"
+             x:Name="display"
              d:DesignHeight="80" d:DesignWidth="200">
     
     <UserControl.Resources>
@@ -27,7 +28,8 @@
         </Style>
     </UserControl.Resources>
 
-    <StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PauseDisplay}}}">
+    <!--StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PauseDisplay}}}"-->
+    <StackPanel DataContext="{Binding ElementName=display}">
         <Label Content="{Binding Text}"/>
         <Label>
             <TextBlock>

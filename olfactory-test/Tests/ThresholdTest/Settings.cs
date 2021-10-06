@@ -40,12 +40,15 @@ namespace Olfactory.Tests.ThresholdTest
             FlowStart = (FlowStartTrigger)settings.Test_TT_FlowStart;
             Type = (ProcedureType)settings.Test_TT_Type;
 
+            /*
             var odorQuantities = new List<double>();
             foreach (var q in settings.Test_TT_PPMs)
             {
                 odorQuantities.Add(double.Parse(q));
             }
             PPMs = odorQuantities.ToArray();
+            */
+            PPMs = settings.Test_TT_PPMs.Split(' ').Select(item => double.TryParse(item, out double ppm) ? ppm : 1).ToArray();
         }
 
         public void Save()
@@ -65,8 +68,11 @@ namespace Olfactory.Tests.ThresholdTest
             settings.Test_TT_FlowStart = (int)FlowStart;
             settings.Test_TT_Type = (int)Type;
 
+            /*
             settings.Test_TT_PPMs.Clear();
             settings.Test_TT_PPMs.AddRange(PPMs.Select(ppm => ppm.ToString()).ToArray());
+            */
+            settings.Test_TT_PPMs = string.Join(' ', PPMs.Select(ppm => ppm.ToString()));
 
             settings.Save();
         }

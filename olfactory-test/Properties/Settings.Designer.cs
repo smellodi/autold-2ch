@@ -349,28 +349,10 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
-<ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-  <string>2</string>
-  <string>4</string>
-  <string>6</string>
-  <string>8</string>
-  <string>10</string>
-  <string>12</string>
-  <string>14</string>
-  <string>16</string>
-  <string>18</string>
-  <string>20</string>
-  <string>22</string>
-  <string>24</string>
-  <string>26</string>
-  <string>28</string>
-  <string>30</string>
-  <string>32</string>
-</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection Test_TT_PPMs {
+        [global::System.Configuration.DefaultSettingValueAttribute("2 4 6")]
+        public string Test_TT_PPMs {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["Test_TT_PPMs"]));
+                return ((string)(this["Test_TT_PPMs"]));
             }
             set {
                 this["Test_TT_PPMs"] = value;

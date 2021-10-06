@@ -33,7 +33,10 @@ namespace Olfactory.Utils
         /// <param name="deviceName">Device to play the sound on</param>
         public SoundPlayer(byte[] mp3SoundData, string name = "", string deviceName = "")
         {
-            _mp3 = new Mp3FileReader(new MemoryStream(mp3SoundData));
+            using (var stream = new MemoryStream(mp3SoundData))
+            {
+                _mp3 = new Mp3FileReader(stream);
+            }
 
             Name = name;
 
