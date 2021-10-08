@@ -3,12 +3,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using Olfactory.Comm;
+using Navigation = Olfactory.Tests.ThresholdTest.Navigation;
 
 namespace Olfactory.Pages.ThresholdTest
 {
-    public partial class Familiarize : Page, IPage<long>
+    public partial class Familiarize : Page, IPage<Navigation>
     {
-        public event EventHandler<long> Next;    // passes duration of sniffing in milliseconds
+        public event EventHandler<Navigation> Next;    // passes duration of sniffing in milliseconds
 
         public Familiarize()
         {
@@ -34,6 +35,9 @@ namespace Olfactory.Pages.ThresholdTest
         {
             _settings = settings;
             _mfc.FreshAirSpeed = _settings.FreshAir;
+
+            btnBack.IsEnabled = false;
+            btnNext.IsEnabled = false;
 
             _measurementTimer.Start();
         }
@@ -71,12 +75,10 @@ namespace Olfactory.Pages.ThresholdTest
         readonly MFC _mfc = MFC.Instance;
         readonly PID _pid = PID.Instance;
         readonly CommMonitor _monitor = CommMonitor.Instance;
-
+        readonly FlowLogger _logger = FlowLogger.Instance;
         readonly System.Timers.Timer _stateTimer = new();
         readonly System.Timers.Timer _directionChangeTimer = new();
         readonly System.Timers.Timer _measurementTimer = new();
-
-        long _sniffingStartTimestamp = 0;
 
         State _state = State.Initial;
 
@@ -95,8 +97,6 @@ namespace Olfactory.Pages.ThresholdTest
 
                 var waitingSounds = new Utils.SoundPlayer(Properties.Resources.WaitingSound);
                 waitingSounds.Play();
-
-                _sniffingStartTimestamp = Utils.Timestamp.Ms;
 
                 _stateTimer.Interval = 1000 * _settings.FamiliarizationDuration;
                 _stateTimer.Start();
@@ -122,6 +122,7 @@ namespace Olfactory.Pages.ThresholdTest
                 wtiInstruction.Reset();
                 wtiInstruction.Text = INSTRUCTION_CONTINUE;
 
+                btnBack.IsEnabled = true;
                 btnNext.IsEnabled = true;
             }
         }
@@ -142,6 +143,13 @@ namespace Olfactory.Pages.ThresholdTest
             {
                 _monitor.LogData(LogSource.MFC, mfcSample);
             }
+        }
+
+        private void Finish(Navigation navigation)
+        {
+            _measurementTimer.Stop();
+            _logger.Add(LogSource.ThTest, "familiarization", (_settings.FamiliarizationDuration * 1000).ToString());
+            Next?.Invoke(this, navigation);
         }
 
         // UI events
@@ -165,22 +173,14 @@ namespace Olfactory.Pages.ThresholdTest
             (sender as Button).IsEnabled = false;
         }
 
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            Finish(Navigation.Back);
+        }
+
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            _measurementTimer.Stop();
-
-            if (_settings.FamiliarizationDuration > 0)
-            {
-                Next?.Invoke(this, (long)(_settings.FamiliarizationDuration * 1000));
-            }
-            else
-            {
-                btnNext.IsEnabled = false;
-
-                _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
-                Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
-                Utils.DispatchOnce.Do(1, () => Next?.Invoke(this, Utils.Timestamp.Ms - _sniffingStartTimestamp));
-            }
+            Finish(Navigation.Test);
         }
     }
 }

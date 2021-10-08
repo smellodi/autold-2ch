@@ -616,4 +616,7 @@ Examples described:
 	<data name="UseValveControllerTimer" xml:space="preserve">
 		<value>Verwenden Sie die Zeitschaltuhr des Ventilreglers, wann immer es möglich ist </value>
 	</data>
+	<data name="Back" xml:space="preserve">
+		<value>Zurücksetzen</value>
+	</data>
 </root>

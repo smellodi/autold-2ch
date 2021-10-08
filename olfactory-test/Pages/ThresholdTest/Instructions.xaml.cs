@@ -38,12 +38,17 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void Next_Click(object sender, RoutedEventArgs e)
         {
-            Next?.Invoke(this, Navigation.Familiarization);
+            Next?.Invoke(this, Navigation.Test);
         }
 
         private void Practice_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, Navigation.Practice);
+        }
+
+        private void Familiarize_Click(object sender, RoutedEventArgs e)
+        {
+            Next?.Invoke(this, Navigation.Familiarization);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

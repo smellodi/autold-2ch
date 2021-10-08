@@ -59,7 +59,10 @@
                     Content="{lex:Loc Practice}"
                     Click="Practice_Click"/>
             <Button Style="{StaticResource Next}"
-                    Content="{lex:Loc Continue}"
+                    Content="{lex:Loc FamiliarizeOdor}"
+                    Click="Familiarize_Click"/>
+            <Button Style="{StaticResource Next}"
+                    Content="{lex:Loc StartTest}"
                     Click="Next_Click"/>
         </StackPanel>
 

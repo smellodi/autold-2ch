@@ -616,4 +616,7 @@ Examples described:
 	<data name="UseValveControllerTimer" xml:space="preserve">
 		<value>Käytä venttiilinohjaimen ajastinta aina kun se on mahdollista </value>
 	</data>
+	<data name="Back" xml:space="preserve">
+		<value>Takaisin</value>
+	</data>
 </root>

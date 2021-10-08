@@ -10,6 +10,7 @@ namespace Olfactory.Tests.ThresholdTest
         Familiarization,
         Back,
         Practice,
+        Test,
     }
 
     /// <summary>
@@ -30,11 +31,7 @@ namespace Olfactory.Tests.ThresholdTest
             };
             _instructionsPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(e != Navigation.Back, e));
             _practicingPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true, Navigation.Back));
-            _familiarizePage.Next += (s, e) =>
-            {
-                _logger.Add(LogSource.ThTest, "familiarization", e.ToString());
-                PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            };
+            _familiarizePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true, e));
             _threePensPage.Next += (s, e) =>
             {
                 _logger.Add(LogSource.ThTest, "finished", e.ToString("F1"));
@@ -55,13 +52,24 @@ namespace Olfactory.Tests.ThresholdTest
                 {
                     Navigation.Familiarization => _familiarizePage,
                     Navigation.Practice => _practicingPage,
+                    Navigation.Test => _settings.Type switch
+                    {
+                        Settings.ProcedureType.ThreePens => _threePensPage,
+                        Settings.ProcedureType.TwoPens => _threePensPage,
+                        Settings.ProcedureType.OnePen => _threePensPage,
+                        _ => throw new NotImplementedException($"Unhandled procedure type in {Name}"),
+                    },
                     _ => throw new NotImplementedException($"Unhandled instruction navigation type in {Name}"),
                 },
-                Familiarize => _settings.Type switch {
-                    Settings.ProcedureType.ThreePens => _threePensPage,
-                    Settings.ProcedureType.TwoPens => _threePensPage,
-                    Settings.ProcedureType.OnePen => _threePensPage,
-                    _ => throw new NotImplementedException($"Unhandled procedure type in {Name}"),
+                Familiarize => (Navigation?)param switch
+                {
+                    Navigation.Back => _instructionsPage,
+                    _ => _settings.Type switch {
+                        Settings.ProcedureType.ThreePens => _threePensPage,
+                        Settings.ProcedureType.TwoPens => _threePensPage,
+                        Settings.ProcedureType.OnePen => _threePensPage,
+                        _ => throw new NotImplementedException($"Unhandled procedure type in {Name}"),
+                    },
                 },
                 PenPresentation => (Navigation?)param switch
                 {
