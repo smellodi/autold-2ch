@@ -259,6 +259,7 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Contants / readonlies
 
+        const double MIN_PEN_PRESENTATION_TIME = 3;     // seconds
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
@@ -307,6 +308,7 @@ namespace Olfactory.Tests.ThresholdTest
 
         double _odorPreparationStart = 0;
         bool _isAwaitingOdorFlowStart = false;
+        bool _isAwaitingNextPen = false;
 
         /// <summary>
         /// Called by PID measurement timer
@@ -323,12 +325,18 @@ namespace Olfactory.Tests.ThresholdTest
                 _monitor.LogData(LogSource.PID, pidSample);
 
                 if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic &&
-                    _breathingDetector.Feed(pidSample.Time, pidSample.Loop) &&
-                    _breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale &&
-                    _isAwaitingOdorFlowStart)
+                    _breathingDetector.Feed(pidSample.Time, pidSample.Loop))
                 {
-                    _isAwaitingOdorFlowStart = false;
-                    StartOdorFlow();
+                    if (_breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale && _isAwaitingOdorFlowStart)
+                    {
+                        _isAwaitingOdorFlowStart = false;
+                        StartOdorFlow();
+                    }
+                    else if (_breathingDetector.BreathingStage == BreathingDetector.Stage.Exhale && _isAwaitingNextPen)
+                    {
+                        _isAwaitingNextPen = false;
+                        ActivateNextPen();
+                    }
                 }
             }
         }
@@ -375,6 +383,14 @@ namespace Olfactory.Tests.ThresholdTest
             DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress() );
         }
 
+        private void StopOdorFlow()
+        {
+            if (!_isPracticing && CurrentColor == PenColor.Odor && _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.User))     // previous pen was with the odor - switch the mixer back to the fresh air
+            {
+                _model.CloseFlow();
+            }
+        }
+
         /// <summary>
         /// Prepare a pen to be recognized. 
         /// Controls MFC
@@ -390,10 +406,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void ActivateNextPen()
         {
-            if (!_isPracticing && CurrentColor == PenColor.Odor)     // previous pen was with the odor - switch the mixer back to the fresh air
-            {
-                _model.CloseFlow();
-            }
+            StopOdorFlow();
 
             if (++_currentPenID == _pens.Length)
             {
@@ -433,7 +446,24 @@ namespace Olfactory.Tests.ThresholdTest
 
             OdorFlowStarted?.Invoke(this, CurrentColor == PenColor.Odor);
 
-            DispatchOnce.Do(_settings.PenSniffingDuration, () => ActivateNextPen());
+            if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic)
+            {
+                DispatchOnce.Do(_settings.PenSniffingDuration, () =>
+                {
+                    StopOdorFlow();
+                    _isAwaitingNextPen = true;
+                });
+            }
+            else
+            {
+                var penPresentationTime = Math.Max(_settings.PenSniffingDuration, MIN_PEN_PRESENTATION_TIME);
+                DispatchOnce.Do(penPresentationTime, ActivateNextPen);
+
+                if (_settings.PenSniffingDuration > penPresentationTime)
+                {
+                    DispatchOnce.Do(_settings.PenSniffingDuration, StopOdorFlow);
+                }
+            }
         }
 
         /// <summary>
