@@ -57,6 +57,11 @@
                                  ToolTip="{lex:Loc NumPosSpaceSep}"/>
                     </UserControl>
                 </UserControl>
+                <UserControl Style="{StaticResource FormRow}">
+                    <CheckBox x:Name="chkUseValveTimer"
+                                Content="{lex:Loc UseValveControllerTimer}"
+                                VerticalAlignment="Center"/>
+                </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc FlowStart}">
                     <ComboBox x:Name="cmbFlowStart" SelectionChanged="FlowStart_SelectionChanged"/>
                 </UserControl>

@@ -194,6 +194,11 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
                 {
+                    if (_settings.UseValveTimer)
+                    {
+                        _model.Finilize();
+                    }
+
                     var result = _rules.Result(_settings.TurningPointsToCount);
                     Finished?.Invoke(this, result);
                     Stop();
@@ -441,7 +446,7 @@ namespace Olfactory.Tests.ThresholdTest
         {
             if (!_isPracticing && CurrentColor == PenColor.Odor)
             {
-                _model.OpenFlow();
+                _model.OpenFlow(_settings.UseValveTimer ? _settings.PenSniffingDuration : 0);
             }
 
             OdorFlowStarted?.Invoke(this, CurrentColor == PenColor.Odor);

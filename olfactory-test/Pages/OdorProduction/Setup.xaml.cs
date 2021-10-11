@@ -63,7 +63,7 @@ namespace Olfactory.Pages.OdorProduction
                 }
             }
 
-            var longestDuration = (double)Settings.GetOdorQuantitiesLongestDuration(txbOdorQuantities.Text) / 1000;
+            var longestDuration = 0.001 * Settings.GetOdorQuantitiesLongestDuration(txbOdorQuantities.Text);
             var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, longestDuration, 10000, Utils.Validation.ValueFormat.Float);
             if (!isOdorFlowDurationLongEnough.IsValid)
             {
@@ -115,12 +115,12 @@ namespace Olfactory.Pages.OdorProduction
             _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndWaste;
         }
 
-        private void rdbUserValve_Checked(object sender, RoutedEventArgs e)
+        private void UserValve_Checked(object sender, RoutedEventArgs e)
         {
             _valvesControlled = Comm.MFC.OdorFlowsTo.WasteAndUser;
         }
 
-        private void rdbSystemAndUserValve_Checked(object sender, RoutedEventArgs e)
+        private void SystemAndUserValve_Checked(object sender, RoutedEventArgs e)
         {
             _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndUser;
         }

@@ -137,7 +137,7 @@ namespace Olfactory.Tests.OdorProduction
         {
             var direction = _settings.ValvesControlled | MFC.OdorFlowsTo.System;
             var (mlmin, ms) = _settings.OdorQuantities[_step];
-            var duration = ms == 0 ? _settings.OdorFlowDuration : (double)ms / 1000;
+            var duration = ms == 0 ? _settings.OdorFlowDuration : 0.001 * ms;
             var useShortPulse = _settings.UseValveTimer
                 && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION
                 && direction.HasFlag(MFC.OdorFlowsTo.User);

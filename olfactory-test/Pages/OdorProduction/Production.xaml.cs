@@ -146,7 +146,7 @@ namespace Olfactory.Pages.OdorProduction
             {
                 var (mlmin, ms) = _settings.OdorQuantities[_procedure.Step];
                 lblOdorStatus.Content = mlmin.ToString();
-                pdsOdorFlow.Value = ms > 0 ? (double)ms / 1000 : _settings.OdorFlowDuration;
+                pdsOdorFlow.Value = ms > 0 ? 0.001 * ms : _settings.OdorFlowDuration;
                 Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
             }
         }

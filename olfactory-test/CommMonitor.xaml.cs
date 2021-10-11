@@ -120,15 +120,11 @@ namespace Olfactory
             // add to graph
             if (source == LogSource.MFC)
             {
-                lmsMFC.Add(
-                    (double)data.Time / 1000,
-                    data.MainValue
-                    //Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)
-                );
+                lmsMFC.Add(0.001 * data.Time, data.MainValue);
             }
             else if (source == LogSource.PID)
             {
-                lmsPID.Add((double)data.Time / 1000, data.MainValue);
+                lmsPID.Add(0.001 * data.Time, data.MainValue);
             }
         }
 

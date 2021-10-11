@@ -30,6 +30,7 @@ namespace Olfactory.Pages.ThresholdTest
             txbFamiliarizationDuration.Text = _settings.FamiliarizationDuration.ToString();
             chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
             chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
+            chkUseValveTimer.IsChecked = _settings.UseValveTimer;
 
             cmbFlowStart.ItemsSource = FLOW_START_TOOLTIPS
                 .Select(item => new ComboBoxItem()
@@ -138,6 +139,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
                 _settings.FlowStart = (FlowStart)cmbFlowStart.SelectedIndex;
                 _settings.Type = (ProcedureType)cmbProcedureType.SelectedIndex;
+                _settings.UseValveTimer = chkUseValveTimer.IsChecked ?? false;
 
                 _settings.Save();
 

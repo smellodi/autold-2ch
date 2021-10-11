@@ -322,7 +322,7 @@ namespace Olfactory.Pages
             chiFreshAir.Value = sample.A.MassFlow;
             chiOdor.Value = sample.B.MassFlow;
 
-            double timestamp = (double)sample.Time / 1000;
+            double timestamp = 0.001 * sample.Time;
             UpdateGraph(IndicatorDataSource.CleanAir, timestamp, sample.A.MassFlow);
             UpdateGraph(IndicatorDataSource.ScentedAir, timestamp, sample.B.MassFlow);
         }
@@ -332,7 +332,7 @@ namespace Olfactory.Pages
             chiPIDTemp.Value = sample.Loop;
             chiPIDVoltage.Value = sample.PID;
 
-            double timestamp = (double)sample.Time / 1000;
+            double timestamp = 0.001 * sample.Time;
             UpdateGraph(IndicatorDataSource.Loop, timestamp, sample.Loop);
             UpdateGraph(IndicatorDataSource.PID, timestamp, sample.PID);
 

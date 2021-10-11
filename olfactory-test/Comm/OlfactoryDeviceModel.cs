@@ -138,8 +138,14 @@ namespace Olfactory.Comm
         /// <summary>
         /// Directs the odored flow to the user
         /// </summary>
-        public void OpenFlow()
+        /// <param name="duration">Duration in seconds to use valve internal timer. Set it to 0 if the valve timer should not be used</param>
+        public void OpenFlow(double duration)
         {
+            if (duration > 0)
+            {
+                _mfc.PrepareForShortPulse(duration);
+            }
+
             _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndUser;
         }
 
@@ -152,6 +158,11 @@ namespace Olfactory.Comm
 
             // no need to wait till the trial is over, just stop odor flow at this point already
             Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case
+        }
+
+        public void Finilize()
+        {
+            _mfc.IsInShortPulseMode = false;
         }
 
 

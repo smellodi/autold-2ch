@@ -502,5 +502,17 @@ namespace Olfactory.Properties {
                 this["Test_OP_UseValveTimer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_TT_UseValveTimer {
+            get {
+                return ((bool)(this["Test_TT_UseValveTimer"]));
+            }
+            set {
+                this["Test_TT_UseValveTimer"] = value;
+            }
+        }
     }
 }

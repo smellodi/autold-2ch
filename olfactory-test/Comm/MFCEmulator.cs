@@ -126,7 +126,7 @@ namespace Olfactory.Comm
                     case MFC.Register.PULL_IN_0:
                         if (_isValve1InShortPulseMode && value > 0 && value <= 0xFFFF && _valve1ShortPulseTimer == null)
                         {
-                            _valve1ShortPulseTimer = Utils.DispatchOnce.Do((double)value / 1000, () =>
+                            _valve1ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                             {
                                 _valve1ShortPulseTimer = null;
                             });
@@ -135,7 +135,7 @@ namespace Olfactory.Comm
                     case MFC.Register.PULL_IN_1:
                         if (_isValve2InShortPulseMode && value > 0 && value <= 0xFFFF && _valve2ShortPulseTimer == null)
                         {
-                            _valve2ShortPulseTimer = Utils.DispatchOnce.Do((double)value / 1000, () =>
+                            _valve2ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                             {
                                 _valve2ShortPulseTimer = null;
                             });

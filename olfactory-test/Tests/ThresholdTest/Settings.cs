@@ -22,6 +22,7 @@ namespace Olfactory.Tests.ThresholdTest
         public bool UseFeedbackLoopToKeepLevel;
         public FlowStartTrigger FlowStart;
         public ProcedureType Type;
+        public bool UseValveTimer;
 
         public Settings()
         {
@@ -39,6 +40,7 @@ namespace Olfactory.Tests.ThresholdTest
             UseFeedbackLoopToKeepLevel = settings.Test_TT_UseFeedbackLoopToKeepLevel;
             FlowStart = (FlowStartTrigger)settings.Test_TT_FlowStart;
             Type = (ProcedureType)settings.Test_TT_Type;
+            UseValveTimer = settings.Test_TT_UseValveTimer;
 
             /*
             var odorQuantities = new List<double>();
@@ -67,6 +69,7 @@ namespace Olfactory.Tests.ThresholdTest
             settings.Test_TT_UseFeedbackLoopToKeepLevel = UseFeedbackLoopToKeepLevel;
             settings.Test_TT_FlowStart = (int)FlowStart;
             settings.Test_TT_Type = (int)Type;
+            settings.Test_TT_UseValveTimer = UseValveTimer;
 
             /*
             settings.Test_TT_PPMs.Clear();

@@ -112,12 +112,12 @@
                                          Margin="16,0,0,0"
                                          GroupName="valves"
                                          Content="{lex:Loc User}"
-                                         Checked="rdbUserValve_Checked"/>
+                                         Checked="UserValve_Checked"/>
                             <RadioButton x:Name="rdbSystemAndUserValve"
                                          Margin="16,0,0,0"
                                          GroupName="valves"
                                          Content="{lex:Loc SystemAndUser}"
-                                         Checked="rdbSystemAndUserValve_Checked"/>
+                                         Checked="SystemAndUserValve_Checked"/>
                         </WrapPanel>
                         <!--TextBlock TextWrapping="Wrap"
                                    Text="{lex:Loc ControlsValve2}"/-->

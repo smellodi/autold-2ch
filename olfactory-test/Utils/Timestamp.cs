@@ -10,12 +10,12 @@ namespace Olfactory.Utils
         /// <summary>
         /// In milliseconds
         /// </summary>
-        public static long Ms { get { return (DateTime.Now.Ticks - _start) / 10000; } }
+        public static long Ms => (DateTime.Now.Ticks - _start) / 10000;
 
         /// <summary>
         /// In seconds
         /// </summary>
-        public static double Sec { get { return (double)(DateTime.Now.Ticks - _start) / 10000000; } }
+        public static double Sec => (double)(DateTime.Now.Ticks - _start) / 10000000;
 
         // Internal
 
