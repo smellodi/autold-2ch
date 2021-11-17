@@ -84,10 +84,10 @@ namespace Olfactory.Pages.ThresholdTest
             var validations = new Utils.Validation[]
             {
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
-                new Utils.Validation(txbPPMs, 0.5, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
+                new Utils.Validation(txbPPMs, 0.1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
                 new Utils.Validation(txbFamiliarizationDuration, 1, 5, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorPreparationDuration, 10, 300, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbPenSniffingDuration, 0.2, 10, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbPenSniffingDuration, 0.1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbTurningPoints, 2, 15, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbTurningPointsToCount, 2, maxTurningPoints, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbRecognitionsInRow, 1, 5, Utils.Validation.ValueFormat.Integer),

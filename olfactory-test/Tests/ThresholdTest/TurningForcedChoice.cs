@@ -39,7 +39,10 @@ namespace Olfactory.Tests.ThresholdTest
             }
             else if (++_recognitionsInRow == _requiredRecognitions)    // decrease ppm only if recognized correctly few times in a row
             {
-                Update(-PPM_LEVEL_STEP, IProcState.PPMChangeDirection.Decreasing);
+                // we cannot let going to the ppm level below 0
+                var step = _ppmLevel > 0 ? -PPM_LEVEL_STEP : 0;
+                var direction = _ppmLevel > 0 ? IProcState.PPMChangeDirection.Decreasing : _direction;
+                Update(step, direction);
             }
 
             return IsValid;
