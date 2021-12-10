@@ -8,6 +8,9 @@ namespace Olfactory.Tests.ThresholdTest
         public enum FlowStartTrigger { Immediate, Manual, Automatic }
 
         public enum ProcedureType { ThreePens, TwoPens, OnePen }
+        
+        public enum OdorPreparationMethod { Delay, Pulse, None }
+
 
         public double FreshAir;
         public double[] PPMs;
@@ -23,6 +26,8 @@ namespace Olfactory.Tests.ThresholdTest
         public FlowStartTrigger FlowStart;
         public ProcedureType Type;
         public bool UseValveTimer;
+        public OdorPreparationMethod OdorPrepMethod;
+        public double[] PPMConversionParams;
 
         public Settings()
         {
@@ -41,6 +46,7 @@ namespace Olfactory.Tests.ThresholdTest
             FlowStart = (FlowStartTrigger)settings.Test_TT_FlowStart;
             Type = (ProcedureType)settings.Test_TT_Type;
             UseValveTimer = settings.Test_TT_UseValveTimer;
+            OdorPrepMethod = (OdorPreparationMethod)settings.Test_TT_OdorPrepMethod;
 
             /*
             var odorQuantities = new List<double>();
@@ -51,6 +57,7 @@ namespace Olfactory.Tests.ThresholdTest
             PPMs = odorQuantities.ToArray();
             */
             PPMs = settings.Test_TT_PPMs.Split(' ').Select(item => double.TryParse(item, out double ppm) ? ppm : 1).ToArray();
+            PPMConversionParams = settings.Test_TT_PPMConversionParams.Split(' ').Select(item => double.TryParse(item, out double param) ? param : 1).ToArray();
         }
 
         public void Save()
@@ -70,12 +77,14 @@ namespace Olfactory.Tests.ThresholdTest
             settings.Test_TT_FlowStart = (int)FlowStart;
             settings.Test_TT_Type = (int)Type;
             settings.Test_TT_UseValveTimer = UseValveTimer;
+            settings.Test_TT_OdorPrepMethod = (int)OdorPrepMethod;
 
             /*
             settings.Test_TT_PPMs.Clear();
             settings.Test_TT_PPMs.AddRange(PPMs.Select(ppm => ppm.ToString()).ToArray());
             */
             settings.Test_TT_PPMs = string.Join(' ', PPMs.Select(ppm => ppm.ToString()));
+            settings.Test_TT_PPMConversionParams = string.Join(' ', PPMConversionParams.Select(ppm => ppm.ToString()));
 
             settings.Save();
         }

@@ -33,10 +33,7 @@ namespace Olfactory.Utils
         /// <param name="deviceName">Device to play the sound on</param>
         public SoundPlayer(byte[] mp3SoundData, string name = "", string deviceName = "")
         {
-            using (var stream = new MemoryStream(mp3SoundData))
-            {
-                _mp3 = new Mp3FileReader(stream);
-            }
+            _mp3 = new Mp3FileReader(new MemoryStream(mp3SoundData));
 
             Name = name;
 
@@ -58,7 +55,7 @@ namespace Olfactory.Utils
         {
             _cyclic = cyclic;
             _player.Volume = 1;
-            Utils.DispatchOnce.Do(0.05, () => _player.Play());
+            DispatchOnce.Do(0.05, () => _player.Play());
 
             return this;
         }
@@ -66,7 +63,7 @@ namespace Olfactory.Utils
         public SoundPlayer Play(float volume)
         {
             _player.Volume = volume;
-            Utils.DispatchOnce.Do(0.05, () => _player.Play());
+            DispatchOnce.Do(0.05, () => _player.Play());
 
             return this;
         }

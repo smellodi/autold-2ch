@@ -125,5 +125,11 @@
     <Setting Name="Test_TT_UseValveTimer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Test_TT_OdorPrepMethod" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Test_TT_PPMConversionParams" Type="System.String" Scope="User">
+      <Value Profile="(Default)">400 2 1500 10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

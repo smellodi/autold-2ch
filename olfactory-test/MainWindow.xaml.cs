@@ -169,8 +169,8 @@ namespace Olfactory
             }
             else if (e.Key == Key.F12)
             {
-                var dialog = new System.Windows.Forms.OpenFileDialog() { Filter = "CSV files|*.csv" };
-                if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                var dialog = new Microsoft.Win32.OpenFileDialog() { Filter = "CSV files|*.csv" };
+                if (dialog.ShowDialog() == true)
                 {
                     var sb = Tests.ThresholdTest.BreathingDetector.Test(dialog.FileName);
                     Clipboard.SetText(sb.ToString());

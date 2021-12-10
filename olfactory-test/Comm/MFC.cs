@@ -298,7 +298,7 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Converts the ppm to the corresponding odor speed
+        /// Converts PPM to the corresponding odor speed
         /// </summary>
         /// <param name="ppm">Odor concentration in ppm</param>
         /// <returns>Odor speed</returns>

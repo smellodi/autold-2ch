@@ -514,5 +514,29 @@ namespace Olfactory.Properties {
                 this["Test_TT_UseValveTimer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Test_TT_OdorPrepMethod {
+            get {
+                return ((int)(this["Test_TT_OdorPrepMethod"]));
+            }
+            set {
+                this["Test_TT_OdorPrepMethod"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400 2 1500 10")]
+        public string Test_TT_PPMConversionParams {
+            get {
+                return ((string)(this["Test_TT_PPMConversionParams"]));
+            }
+            set {
+                this["Test_TT_PPMConversionParams"] = value;
+            }
+        }
     }
 }

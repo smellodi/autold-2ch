@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Olfactory.Utils;
+using static Olfactory.Tests.ThresholdTest.Settings;
 using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
 using ProcedureType = Olfactory.Tests.ThresholdTest.Settings.ProcedureType;
 
@@ -22,6 +23,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");
             txbPPMs.Text = string.Join(LIST_DELIM, _settings.PPMs);
+            txbPPMConversionParams.Text = string.Join(LIST_DELIM, _settings.PPMConversionParams);
             txbOdorPreparationDuration.Text = _settings.OdorPreparationDuration.ToString();
             txbPenSniffingDuration.Text = _settings.PenSniffingDuration.ToString();
             txbTurningPoints.Text = _settings.TurningPoints.ToString();
@@ -48,6 +50,14 @@ namespace Olfactory.Pages.ThresholdTest
                 });
             cmbProcedureType.SelectedIndex = (int)_settings.Type;
 
+            cmbOdorPreparationMethod.ItemsSource = ODOR_PREP_METHOD_TOOLTIPS
+                .Select(item => new ComboBoxItem()
+                {
+                    Content = L10n.T(item.Key.ToString()),
+                    ToolTip = item.Value,
+                });
+            cmbOdorPreparationMethod.SelectedIndex = (int)_settings.OdorPrepMethod;
+
             FlowStart_SelectionChanged(null, null);
 
             _pidSampling = _settings.PIDReadingInterval;
@@ -72,6 +82,12 @@ namespace Olfactory.Pages.ThresholdTest
             { ProcedureType.TwoPens, L10n.T("ProcTypeTwoPens") },
             { ProcedureType.OnePen, L10n.T("ProcTypeOnePen") },
         };
+        readonly Dictionary<OdorPreparationMethod, string> ODOR_PREP_METHOD_TOOLTIPS = new()
+        {
+            { OdorPreparationMethod.Delay, L10n.T("OdorPrepDelay") },
+            { OdorPreparationMethod.Pulse, L10n.T("OdorPrepPulse") },
+            { OdorPreparationMethod.None, L10n.T("OdorPrepNone") },
+        };
 
         int _pidSampling;
 
@@ -84,7 +100,7 @@ namespace Olfactory.Pages.ThresholdTest
             var validations = new Utils.Validation[]
             {
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
-                new Utils.Validation(txbPPMs, 0.1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
+                //new Utils.Validation(txbPPMs, 0.1, 250, Utils.Validation.ValueFormat.Float, LIST_DELIM),
                 new Utils.Validation(txbFamiliarizationDuration, 1, 5, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorPreparationDuration, 10, 300, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbPenSniffingDuration, 0.1, 10, Utils.Validation.ValueFormat.Float),
@@ -125,6 +141,10 @@ namespace Olfactory.Pages.ThresholdTest
                     .Split(LIST_DELIM)
                     .Select(val => double.Parse(val))
                     .ToArray();
+                _settings.PPMConversionParams = txbPPMConversionParams.Text
+                    .Split(LIST_DELIM)
+                    .Select(val => double.Parse(val))
+                    .ToArray();
                 _settings.OdorPreparationDuration = int.Parse(txbOdorPreparationDuration.Text);
                 _settings.PenSniffingDuration = double.Parse(txbPenSniffingDuration.Text);
                 _settings.TurningPoints = int.Parse(txbTurningPoints.Text);
@@ -140,6 +160,7 @@ namespace Olfactory.Pages.ThresholdTest
                 _settings.FlowStart = (FlowStart)cmbFlowStart.SelectedIndex;
                 _settings.Type = (ProcedureType)cmbProcedureType.SelectedIndex;
                 _settings.UseValveTimer = chkUseValveTimer.IsChecked ?? false;
+                _settings.OdorPrepMethod = (OdorPreparationMethod)cmbOdorPreparationMethod.SelectedIndex;
 
                 _settings.Save();
 

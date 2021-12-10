@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
@@ -63,7 +64,15 @@ namespace Olfactory.Tests.ThresholdTest
 
         public int Step => _rules.Step + 1;
         public IProcState.PPMChangeDirection Direction => _rules.Direction;
-        public double PPM => _rules.PPM;
+        //public double PPM => _rules.PPM;
+        public string PPM
+        {
+            get
+            {
+                var (speed, duration) = PPM2SpeedDuration(_rules.PPM);
+                return $"{_rules.PPM} = {speed:F1}x{1000*duration:F0}";
+            }
+        }
         public int RecognitionsInRow => _rules.RecognitionsInRow;
         public int TurningPointCount => _rules.TurningPointCount;
 
@@ -77,7 +86,7 @@ namespace Olfactory.Tests.ThresholdTest
             Settings.ProcedureType.ThreePens => 3,
             Settings.ProcedureType.TwoPens => 2,
             Settings.ProcedureType.OnePen => 1,
-            _ => throw new NotImplementedException($"There are no pens in the procedure '{_settings.Type}'"),
+            _ => throw new NotImplementedException($"No pens implemented for the procedure '{_settings.Type}'"),
         };
 
         public ProcedurePens(bool isPracticing)
@@ -118,7 +127,7 @@ namespace Olfactory.Tests.ThresholdTest
                 Settings.ProcedureType.OnePen => new TurningYesNo(ppms.First(), ppms.Last(), recInRow),
                 Settings.ProcedureType.TwoPens => new TurningForcedChoiceDynamic(ppms.First(), ppms.Last(), recInRow, 1),
                 Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow),
-                _ => throw new NotImplementedException($"No rules are implemented for '{_settings.Type}' procedure type")
+                _ => throw new NotImplementedException($"No rules implemented for '{_settings.Type}' procedure type")
             };
 
             _pens = new Pen[PenCount];
@@ -128,6 +137,8 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 _pens[i] = new Pen(PenColor.NonOdor);
             }
+
+            _trialPPMs.Clear();
 
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += MainWindow_Closing;
@@ -194,19 +205,35 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 if (!canContinue)    // there is no way to change the ppm anymore, exit
                 {
-                    if (_settings.UseValveTimer)
+                    if (!_isPracticing && _settings.UseValveTimer)
                     {
                         _model.Finilize();
                     }
-
-                    var result = _rules.Result(_settings.TurningPointsToCount);
-                    Finished?.Invoke(this, result);
-                    Stop();
 
                     if (_isPracticing)
                     {
                         _logger.Add(LogSource.ThTest, "practice", "end");
                     }
+                    else
+                    {
+                        _logger.Add(LogSource.ThTest, "Qxt values", "as defined");
+                        foreach (var ppm in _settings.PPMs)
+                        {
+                            var (s, d) = PPM2SpeedDuration(ppm);
+                            _logger.Add(LogSource.ThTest, ppm.ToString(), $"{s:F2} x {(1000 * d):F0}");
+                        }
+
+                        _logger.Add(LogSource.ThTest, "Qxt values", "as used");
+                        foreach (var ppm in _trialPPMs)
+                        {
+                            var (s, d) = PPM2SpeedDuration(ppm);
+                            _logger.Add(LogSource.ThTest, ppm.ToString(), $"{s:F2} x {(1000 * d):F0}");
+                        }
+                    }
+
+                    var result = _rules.Result(_settings.TurningPointsToCount);
+                    Finished?.Invoke(this, result);
+                    Stop();
                 }
                 else
                 {
@@ -279,7 +306,7 @@ namespace Olfactory.Tests.ThresholdTest
         string[] State => new string[] {
             Step.ToString(),
             Direction.ToString(),
-            PPM.ToString("F2"),
+            PPM, //.ToString("F2"),
             RecognitionsInRow.ToString(),
             TurningPointCount.ToString()
         };
@@ -287,7 +314,9 @@ namespace Olfactory.Tests.ThresholdTest
 
         // Members
 
-        readonly static SoundPlayer _waitingSounds = new(Properties.Resources.WaitingSound);
+        readonly bool USE_VOLUME = true;
+
+        readonly SoundPlayer _waitingSounds = new(Properties.Resources.WaitingSound);
 
         readonly OlfactoryDeviceModel _model = new();
         readonly BreathingDetector _breathingDetector = new();
@@ -314,6 +343,10 @@ namespace Olfactory.Tests.ThresholdTest
         double _odorPreparationStart = 0;
         bool _isAwaitingOdorFlowStart = false;
         bool _isAwaitingNextPen = false;
+
+        double _odorFlowDuration;
+
+        List<double> _trialPPMs = new();
 
         /// <summary>
         /// Called by PID measurement timer
@@ -360,39 +393,90 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         private void PrepareOdor()
         {
+            double penActivationDelay = _settings.OdorPreparationDuration;
+
             if (!_isPracticing)
             {
-                if (_settings.UseFeedbackLoopToReachLevel)
+                _trialPPMs.Add(_rules.PPM);
+
+                if (_settings.OdorPrepMethod == Settings.OdorPreparationMethod.Pulse)
                 {
-                    _model.Reach(_rules.PPM, _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
+                    if (_settings.UseFeedbackLoopToReachLevel)
+                    {
+                        _model.Reach(_rules.PPM, _settings.OdorPreparationDuration, _settings.UseFeedbackLoopToKeepLevel);
+                    }
+                    else
+                    {
+                        var readinessDelay = _model.GetReady(_rules.PPM, _odorTubeFillingDuration);
+
+                        // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
+                        if (readinessDelay > _settings.OdorPreparationDuration)
+                        {
+                            MsgBox.Error(
+                                L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
+                                string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"));
+                            Application.Current.Shutdown();
+                            return;
+                        }
+                    }
                 }
                 else
                 {
-                    var readinessDelay = _model.GetReady(_rules.PPM, _odorTubeFillingDuration);
-
-                    // This is the way we react if readinessDelay > _settings.OdorPreparationDuration : show a warning and quit the app.
-                    if (readinessDelay > _settings.OdorPreparationDuration)
+                    double odorSpeed;
+                    if (USE_VOLUME)
                     {
-                        MsgBox.Error(
-                            L10n.T("OlfactoryTestTool") + " - " + L10n.T("ThresholdTest"),
-                            string.Format(L10n.T("OdorFlowTooHigh"), _settings.OdorPreparationDuration) + " " + L10n.T("AppTerminated"));
-                        Application.Current.Shutdown();
-                        return;
+                        (odorSpeed, _odorFlowDuration) = PPM2SpeedDuration(_rules.PPM);
+                    }
+                    else
+                    {
+                        odorSpeed = _mfc.PPM2Speed(_rules.PPM); // just keep the flow running, it goes to the waste immediately
+                    }
+
+                    _mfc.OdorSpeed = odorSpeed;
+                    _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste; // optionally, we could close both valves, but due to very short valve opening this may be not correct solution
+
+                    if (_settings.OdorPrepMethod == Settings.OdorPreparationMethod.Delay)
+                    {
+                        if (_rules.Step == 0) // prepare odor only once when the test starts
+                        {
+                            penActivationDelay = _mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User, _mfc.OdorSpeed);
+                        }
+                    }
+                    else if (_settings.OdorPrepMethod == Settings.OdorPreparationMethod.None)
+                    { 
+                        // do nothing
+                    }
+                    else
+                    {
+                        throw new NotImplementedException($"Odor preparation for '{_settings.OdorPrepMethod}' method is not implemented");
                     }
                 }
             }
 
-            DispatchOnce.Do(_settings.OdorPreparationDuration, () => ActivateNextPen());
+            DispatchOnce.Do(penActivationDelay, () => ActivateNextPen());
 
             _odorPreparationStart = Timestamp.Sec;
-            DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress() );
+            DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress(penActivationDelay) );
         }
 
         private void StopOdorFlow()
         {
-            if (!_isPracticing && CurrentColor == PenColor.Odor && _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.User))     // previous pen was with the odor - switch the mixer back to the fresh air
+            // if previous pen was with the odor, then switch the mixer back to the fresh air
+            if (!_isPracticing && CurrentColor == PenColor.Odor && _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.User))
             {
-                _model.CloseFlow();
+                if (_settings.OdorPrepMethod == Settings.OdorPreparationMethod.Pulse)
+                {
+                    _model.CloseFlow();
+                }
+                else if (_settings.OdorPrepMethod == Settings.OdorPreparationMethod.Delay ||
+                         _settings.OdorPrepMethod == Settings.OdorPreparationMethod.None)
+                {
+                    _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste; // optionally, we could close both valves, but due to very short valve opening this may be not correct solution
+                }
+                else
+                {
+                    throw new NotImplementedException("Odor stop procedure for '{_settings.OdorPrepMethod}' is not implemented");
+                }
             }
         }
 
@@ -418,7 +502,16 @@ namespace Olfactory.Tests.ThresholdTest
                 _currentPenID = -1;
                 _logger.Add(LogSource.ThTest, "awaiting");
 
-                WaitingForAnswer?.Invoke(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
+                if (_settings.PPMConversionParams.Length > 4 && _settings.PPMConversionParams[4] > 0) // positive fifth param will enable user-mode for selecting the scented box
+                {
+                    WaitingForAnswer?.Invoke(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
+                }
+                else // ..otherwise a wrong box will be selected automatically
+                {
+                    // simulate clicking on a wrong box/pen
+                    PenActivated?.Invoke(this, new PenActivationArgs(-1, _settings.FlowStart));
+                    Select(_pens.First(pen => pen.Color == PenColor.NonOdor));
+                }
                 return;
             }
 
@@ -444,16 +537,18 @@ namespace Olfactory.Tests.ThresholdTest
 
         private void StartOdorFlow()
         {
+            double valveCloseDelay = USE_VOLUME ? _odorFlowDuration : _settings.PenSniffingDuration;
+
             if (!_isPracticing && CurrentColor == PenColor.Odor)
             {
-                _model.OpenFlow(_settings.UseValveTimer ? _settings.PenSniffingDuration : 0);
+                _model.OpenFlow(_settings.UseValveTimer ? valveCloseDelay : 0);
             }
 
             OdorFlowStarted?.Invoke(this, CurrentColor == PenColor.Odor);
 
             if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic)
             {
-                DispatchOnce.Do(_settings.PenSniffingDuration, () =>
+                DispatchOnce.Do(valveCloseDelay, () =>
                 {
                     StopOdorFlow();
                     _isAwaitingNextPen = true;
@@ -461,12 +556,12 @@ namespace Olfactory.Tests.ThresholdTest
             }
             else
             {
-                var penPresentationTime = Math.Max(_settings.PenSniffingDuration, MIN_PEN_PRESENTATION_TIME);
+                var penPresentationTime = Math.Max(valveCloseDelay, MIN_PEN_PRESENTATION_TIME);
                 DispatchOnce.Do(penPresentationTime, ActivateNextPen);
 
-                if (_settings.PenSniffingDuration > penPresentationTime)
+                if (valveCloseDelay > penPresentationTime)
                 {
-                    DispatchOnce.Do(_settings.PenSniffingDuration, StopOdorFlow);
+                    DispatchOnce.Do(valveCloseDelay, StopOdorFlow);
                 }
             }
         }
@@ -491,19 +586,39 @@ namespace Olfactory.Tests.ThresholdTest
             return true;
         }
 
-        private void EstimatePreparationProgress()
+        private void EstimatePreparationProgress(double completeDuration)
         {
             if (_currentPenID < 0)
             {
                 var duration = Timestamp.Sec - _odorPreparationStart;
-                var progress = Math.Min(1.0, duration / _settings.OdorPreparationDuration);
+                var progress = Math.Min(1.0, duration / completeDuration);
                 OdorPreparation?.Invoke(this, progress);
 
                 if (progress < 1)
                 {
-                    DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress());
+                    DispatchOnce.Do(ODOR_PREPARATION_REPORT_INTERVAL, () => EstimatePreparationProgress(completeDuration));
                 }
             }
+        }
+
+        /// <summary>
+        /// Converts PPM to the corresponding odor speed and duration
+        /// </summary>
+        /// <param name="ppm">Scented air amount proportional to ppm</param>
+        /// <returns>Odor speed (ml/min) and flow duration (seconds)</returns>
+        private (double, double) PPM2SpeedDuration(double ppm)
+        {
+            var q1 = _settings.PPMConversionParams[0];
+            var speed1 = _settings.PPMConversionParams[1];
+            var q2 = _settings.PPMConversionParams[2];
+            var speed2 = _settings.PPMConversionParams[3];
+
+            var tgA = (speed2 - speed1) / (q2 - q1);
+
+            var speed = ppm <= q1 ? speed1 : (ppm - q1)*tgA + speed1;
+            var duration = ppm / speed / 1000;
+
+            return (speed, duration);
         }
 
         // Event handlers

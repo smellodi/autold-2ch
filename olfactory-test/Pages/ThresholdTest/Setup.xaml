@@ -8,7 +8,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="520" d:DesignWidth="800"
+      d:DesignHeight="620" d:DesignWidth="800"
       Title="{lex:Loc Setup}"
       WindowTitle="{lex:Loc ThresholdTest}">
 
@@ -51,11 +51,16 @@
                     </UserControl>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorLevels}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="~mol">
+                        <!-- {lex:Loc MlMin} -->
                         <TextBox x:Name="txbPPMs"
                                  Text="4 6 8 10 12 14 16 18 20 22 24 26 28 30 32 36"
                                  ToolTip="{lex:Loc NumPosSpaceSep}"/>
                     </UserControl>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="   conversion params">
+                    <TextBox x:Name="txbPPMConversionParams"
+                                Text="400 2 1500 10"/>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}">
                     <CheckBox x:Name="chkUseValveTimer"
@@ -67,6 +72,9 @@
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ProcedureType}">
                     <ComboBox x:Name="cmbProcedureType"/>
+                </UserControl>
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorPreparationMethod}">
+                    <ComboBox x:Name="cmbOdorPreparationMethod"/>
                 </UserControl>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc DurationsSec}">
                     <Grid>

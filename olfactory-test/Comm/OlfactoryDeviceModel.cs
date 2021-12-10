@@ -130,7 +130,10 @@ namespace Olfactory.Comm
 
             var estimatedInterval = _mfc.EstimateFlowDuration(MFC.FlowStartPoint.Chamber, MFC.FlowEndPoint.User, _mfc.OdorSpeed);
 
-            Utils.DispatchOnce.Do(estimatedInterval, () => _mfc.OdorSpeed = _mfc.PPM2Speed(ppm));
+            Utils.DispatchOnce.Do(estimatedInterval, () => {            // after high-flow period,
+                _mfc.OdorSpeed = _mfc.PPM2Speed(ppm);                   // sets the flow speed to the desired level, and
+                _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;    // opens the first valve: this is need if very short odor presentation pulses are used
+            });
 
             return estimatedInterval;
         }
@@ -138,7 +141,8 @@ namespace Olfactory.Comm
         /// <summary>
         /// Directs the odored flow to the user
         /// </summary>
-        /// <param name="duration">Duration in seconds to use valve internal timer. Set it to 0 if the valve timer should not be used</param>
+        /// <param name="duration">Duration in seconds to use valve internal timer.
+        /// Set it to 0 if the valve timer should not be used</param>
         public void OpenFlow(double duration)
         {
             if (duration > 0)
@@ -150,11 +154,11 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Directs the fresh air to the user and stops odoring the flow to the waste
+        /// Directs the fresh air to the user and odored flow to the waste
         /// </summary>
         public void CloseFlow()
         {
-            _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
 
             // no need to wait till the trial is over, just stop odor flow at this point already
             Utils.DispatchOnce.Do(0.5, () => _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED);  // delay 0.5 sec. just in case
@@ -163,6 +167,7 @@ namespace Olfactory.Comm
         public void Finilize()
         {
             _mfc.IsInShortPulseMode = false;
+            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;     // just in case the first (gas mixer) valve was opened
         }
 
 

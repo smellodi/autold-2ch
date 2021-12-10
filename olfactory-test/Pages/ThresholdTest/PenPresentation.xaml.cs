@@ -183,18 +183,24 @@ namespace Olfactory.Pages.ThresholdTest
 
             _currentPenID = penID;
 
-            CurrentPen.IsActive = true;
+            if (CurrentPen != null)
+            {
+                CurrentPen.IsActive = true;
+            }
 
             if (flowStart == FlowStart.Manual)
             {
                 wtiInstruction.Text = ""; //INSTRUCTION_SNIFF_THE_PEN_MANUAL;
                 _isAwaitingInput = true;
 
-                var column = Grid.GetColumn(_penInstructions[CurrentPen]);
-                Grid.SetColumn(btnStartManualOdorFlow, column);
-                btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Visible;
+                if (CurrentPen != null)
+                {
+                    var column = Grid.GetColumn(_penInstructions[CurrentPen]);
+                    Grid.SetColumn(btnStartManualOdorFlow, column);
+                    btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Visible;
+                }
             }
-            else
+            else if (CurrentPen != null)
             {
                 _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
             }

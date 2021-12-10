@@ -619,4 +619,25 @@ Examples described:
 	<data name="Back" xml:space="preserve">
 		<value>Back</value>
 	</data>
+	<data name="OdorPreparationMethod" xml:space="preserve">
+		<value>Prepare odour with</value>
+	</data>
+	<data name="OdorPrepDelay" xml:space="preserve">
+		<value>uses slow flows and therefore long time (to avoid contamination) to prepare the odour</value>
+	</data>
+	<data name="OdorPrepPulse" xml:space="preserve">
+		<value>uses fast flow to prepare the odour (contamination is possible)</value>
+	</data>
+	<data name="Delay" xml:space="preserve">
+		<value>delay</value>
+	</data>
+	<data name="Pulse" xml:space="preserve">
+		<value>pulse</value>
+	</data>
+	<data name="OdorPrepNone" xml:space="preserve">
+		<value>do not use odour preparation stage (the system is ready to deliver the odour)</value>
+	</data>
+	<data name="None" xml:space="preserve">
+		<value>none</value>
+	</data>
 </root>
