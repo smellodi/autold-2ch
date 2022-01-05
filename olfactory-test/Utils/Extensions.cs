@@ -70,4 +70,21 @@ namespace Olfactory.Utils
             return string.Join(' ', words);
         }
     }
+
+    internal enum RangeRelation
+    {
+        Less,
+        Inside,
+        Greater
+    }
+
+    internal static class NumberExtensions
+    {
+        public static RangeRelation IsInRange(this double number, double min, double max)
+        {
+            if (number < min) return RangeRelation.Less;
+            if (number > max) return RangeRelation.Greater;
+            return RangeRelation.Inside;
+        }
+    }
 }

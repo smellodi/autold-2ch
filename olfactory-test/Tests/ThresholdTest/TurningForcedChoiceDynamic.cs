@@ -23,7 +23,7 @@ namespace Olfactory.Tests.ThresholdTest
         /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
         /// <param name="allowedWrongAnswers">max number of allowed wrong answers that do not reset the PPM value recognition chain</param>
         public TurningForcedChoiceDynamic(double minPPM, double maxPPM, int requiredRecognitions, int allowedWrongAnswers) : 
-            base(requiredRecognitions)
+            base(requiredRecognitions, true)
         {
             _minPPM = minPPM;
             _maxPPM = maxPPM;
@@ -38,7 +38,10 @@ namespace Olfactory.Tests.ThresholdTest
         {
             base.Next(pens);
 
-            _rnd.Shuffle(pens);
+            if (_randomize)
+            {
+                _rnd.Shuffle(pens);
+            }
         }
 
         public override bool AcceptAnswer(bool wasRecognized)

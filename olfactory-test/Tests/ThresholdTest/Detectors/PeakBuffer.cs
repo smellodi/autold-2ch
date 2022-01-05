@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Olfactory.Utils
+namespace Olfactory.Tests.ThresholdTest
 {
     /// <summary>
     /// Generic buffer to store floating-point numbers
@@ -88,7 +88,7 @@ namespace Olfactory.Utils
             }
         }
 
-        public (PeakType, double) EstimatePeak()
+        public (PeakType, double) EstimatePeak(BreathingStage stage)
         {
             if (!_isFull)
             {
@@ -104,7 +104,7 @@ namespace Olfactory.Utils
             double min = startValue;
             double max = startValue;
 
-            while (i != endIndex)
+            do
             {
                 if (prevValue != null)
                 {
@@ -121,12 +121,15 @@ namespace Olfactory.Utils
                     i = 0;
                 }
             }
+            while (i != _pointer);
 
-            // The order for the next trwo comparisons is important.
-            // Now, the upper peak detection is prioterized, as it is connected
-            // with temprerature starting to drop, i.e. with inhale
+            //* Original implementation fol long buffers (size = 15-20)
 
             var halfThreshold = ChangeThreshold / 2;
+
+            // Order of the next two comparisons is important.
+            // Now, the upper peak detection is prioterized, as it is connected
+            // with temprerature starting to drop, i.e. with inhale
 
             if ((max - startValue) > halfThreshold && (max - endValue) > ChangeThreshold)
             {
@@ -137,6 +140,46 @@ namespace Olfactory.Utils
             {
                 return (PeakType.Lower, min);
             }
+            
+            /*/
+            // New implementations for short buffers (size = 4-8)
+
+            if (stage == BreathingStage.Inhale) // values going down... search when this stops
+            {
+                if ((_peakValue - min) > MIN_PEAK_AMPLITUDE && (max - endValue) < ChangeThreshold)
+                {
+                    _peakValue = min;
+                    return (PeakType.Lower, min);
+                }
+                else if (max > _peakValue)
+                {
+                    _peakValue = max;
+                }
+            }
+            else if (stage == BreathingStage.Exhale) // values going up... search when this stops
+            {
+                if ((max - _peakValue) > MIN_PEAK_AMPLITUDE && (endValue - min) < ChangeThreshold)
+                {
+                    _peakValue = max;
+                    return (PeakType.Upper, max);
+                }
+                else if (min < _peakValue)
+                {
+                    _peakValue = min;
+                }
+            }
+            else
+            {
+                _peakValue = (endValue + startValue) / 2;
+                return (endValue - startValue) switch
+                {
+                    < 0 => (PeakType.Upper, max),
+                    > 0 => (PeakType.Lower, min),
+                    _ => (PeakType.None, 0)
+                };
+            }
+
+            // --new */
 
             return (PeakType.None, 0);
         }
@@ -144,7 +187,8 @@ namespace Olfactory.Utils
 
         // Internal
 
-        const long MAX_ALLOWED_PAUSE = 500; // ms
+        const long MAX_ALLOWED_PAUSE = 500;     // ms
+        const double MIN_PEAK_AMPLITUDE = 0.25; // mA
 
         readonly double[] _buffer;
         readonly int _size;
@@ -152,5 +196,7 @@ namespace Olfactory.Utils
         int _pointer = 0;
         bool _isFull = false;
         long _timestamp = 0;
+
+        double _peakValue = 0;
     }
 }

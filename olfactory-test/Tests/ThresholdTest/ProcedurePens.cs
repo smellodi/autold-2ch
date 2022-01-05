@@ -36,6 +36,8 @@ namespace Olfactory.Tests.ThresholdTest
 
     public class ProcedurePens : ITestEmulator
     {
+        public static double DELAY_ON_MANUAL_FLOW_START = 1; // set to 0 to avoid any delays of pen activation after the mouse clicked "Start odor flow"
+
         /// <summary>
         /// Fires on progressing the odor preparation
         /// </summary>
@@ -126,7 +128,7 @@ namespace Olfactory.Tests.ThresholdTest
             {
                 Settings.ProcedureType.OnePen => new TurningYesNo(ppms.First(), ppms.Last(), recInRow),
                 Settings.ProcedureType.TwoPens => new TurningForcedChoiceDynamic(ppms.First(), ppms.Last(), recInRow, 1),
-                Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow),
+                Settings.ProcedureType.ThreePens => new TurningForcedChoice(ppms, recInRow, _settings.FlowStart != Settings.FlowStartTrigger.Immediate), // TODO: only for experimenting
                 _ => throw new NotImplementedException($"No rules implemented for '{_settings.Type}' procedure type")
             };
 
@@ -295,7 +297,7 @@ namespace Olfactory.Tests.ThresholdTest
         const double AFTERMATH_PAUSE = 3;               // seconds
         const double OUTPUT_READINESS_DURATION = 5;     // seconds
         const double ODOR_PREPARATION_REPORT_INTERVAL = 0.2;    // seconds
-        const double MFC_READING_INTERVAL = 1;             // seconds
+        const double MFC_READING_INTERVAL = 1;          // seconds
 
         // Properties
 
@@ -365,12 +367,12 @@ namespace Olfactory.Tests.ThresholdTest
                 if (_settings.FlowStart == Settings.FlowStartTrigger.Automatic &&
                     _breathingDetector.Feed(pidSample.Time, pidSample.Loop))
                 {
-                    if (_breathingDetector.BreathingStage == BreathingDetector.Stage.Inhale && _isAwaitingOdorFlowStart)
+                    if (_breathingDetector.Stage == BreathingStage.Inhale && _isAwaitingOdorFlowStart)
                     {
                         _isAwaitingOdorFlowStart = false;
                         StartOdorFlow();
                     }
-                    else if (_breathingDetector.BreathingStage == BreathingDetector.Stage.Exhale && _isAwaitingNextPen)
+                    else if (_breathingDetector.Stage == BreathingStage.Exhale && _isAwaitingNextPen)
                     {
                         _isAwaitingNextPen = false;
                         ActivateNextPen();
@@ -502,15 +504,16 @@ namespace Olfactory.Tests.ThresholdTest
                 _currentPenID = -1;
                 _logger.Add(LogSource.ThTest, "awaiting");
 
-                if (_settings.PPMConversionParams.Length > 4 && _settings.PPMConversionParams[4] > 0) // positive fifth param will enable user-mode for selecting the scented box
+                // TODO: this is experimental option: user is not asked to recognize the scented box
+                if (_settings.PPMConversionParams.Length == 4 && _settings.FlowStart == Settings.FlowStartTrigger.Immediate)
                 {
-                    WaitingForAnswer?.Invoke(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
-                }
-                else // ..otherwise a wrong box will be selected automatically
-                {
-                    // simulate clicking on a wrong box/pen
+                    // simulate clicking on a wrong box
                     PenActivated?.Invoke(this, new PenActivationArgs(-1, _settings.FlowStart));
                     Select(_pens.First(pen => pen.Color == PenColor.NonOdor));
+                }
+                else
+                {
+                    WaitingForAnswer?.Invoke(this, _settings.Type == Settings.ProcedureType.OnePen ? AnswerType.YesNo : AnswerType.HasOdor);
                 }
                 return;
             }
@@ -556,7 +559,8 @@ namespace Olfactory.Tests.ThresholdTest
             }
             else
             {
-                var penPresentationTime = Math.Max(valveCloseDelay, MIN_PEN_PRESENTATION_TIME);
+                var duration = MIN_PEN_PRESENTATION_TIME + DELAY_ON_MANUAL_FLOW_START;
+                var penPresentationTime = Math.Max(valveCloseDelay, duration);
                 DispatchOnce.Do(penPresentationTime, ActivateNextPen);
 
                 if (valveCloseDelay > penPresentationTime)
@@ -608,14 +612,19 @@ namespace Olfactory.Tests.ThresholdTest
         /// <returns>Odor speed (ml/min) and flow duration (seconds)</returns>
         private (double, double) PPM2SpeedDuration(double ppm)
         {
-            var q1 = _settings.PPMConversionParams[0];
+            var amount1 = _settings.PPMConversionParams[0];
             var speed1 = _settings.PPMConversionParams[1];
-            var q2 = _settings.PPMConversionParams[2];
+            var amount2 = _settings.PPMConversionParams[2];
             var speed2 = _settings.PPMConversionParams[3];
 
-            var tgA = (speed2 - speed1) / (q2 - q1);
+            var tgA = (speed2 - speed1) / (amount2 - amount1);
 
-            var speed = ppm <= q1 ? speed1 : (ppm - q1)*tgA + speed1;
+            var speed = ppm.IsInRange(amount1, amount2) switch
+            {
+                RangeRelation.Less => speed1,
+                RangeRelation.Greater => speed2,
+                _ => (ppm - amount1) * tgA + speed1
+            };
             var duration = ppm / speed / 1000;
 
             return (speed, duration);

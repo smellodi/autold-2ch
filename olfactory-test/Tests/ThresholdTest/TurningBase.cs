@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
+using Olfactory.Utils;
 
 namespace Olfactory.Tests.ThresholdTest
 {
@@ -21,9 +23,11 @@ namespace Olfactory.Tests.ThresholdTest
         /// Constructor
         /// </summary>
         /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
-        public TurningBase(int requiredRecognitions)
+        /// <param name="randomize">Set it to true if pens must be randomized at each trial</param>
+        public TurningBase(int requiredRecognitions, bool randomize)
         {
             _requiredRecognitions = requiredRecognitions;
+            _randomize = randomize;
         }
 
         /// <summary>
@@ -33,6 +37,11 @@ namespace Olfactory.Tests.ThresholdTest
         public virtual void Next(Pen[] pens)
         {
             _stepID++;
+
+            if (_randomize)
+            {
+                _rnd.Shuffle(pens);
+            }
         }
 
         /// <summary>
@@ -72,6 +81,9 @@ namespace Olfactory.Tests.ThresholdTest
         protected IProcState.PPMChangeDirection _direction = IProcState.PPMChangeDirection.Increasing;
         protected int _recognitionsInRow = 0;
 
-        protected int _requiredRecognitions;
+        protected readonly int _requiredRecognitions;
+        protected readonly bool _randomize;
+
+        readonly Random _rnd = new((int)DateTime.Now.Ticks);
     }
 }

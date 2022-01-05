@@ -18,12 +18,10 @@ namespace Olfactory.Tests.ThresholdTest
         /// <param name="minPPM">minimal PPM value</param>
         /// <param name="maxPPM">maximal PPM value</param>
         /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
-        public TurningYesNo(double minPPM, double maxPPM, int requiredRecognitions) : base(requiredRecognitions)
+        public TurningYesNo(double minPPM, double maxPPM, int requiredRecognitions) : base(requiredRecognitions, true)
         {
             _minPPM = minPPM;
             _maxPPM = maxPPM;
-
-            _requiredRecognitions = requiredRecognitions;
 
             _ppmValue = _minPPM + (_maxPPM - _minPPM) * INITIAL_REL_PPM_VALUE;
             _ppmStep = (_maxPPM - _minPPM) * INITIAL_REL_PPM_STEP;

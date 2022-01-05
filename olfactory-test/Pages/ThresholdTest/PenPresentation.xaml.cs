@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using PenProc = Olfactory.Tests.ThresholdTest.ProcedurePens;
 using FlowStart = Olfactory.Tests.ThresholdTest.Settings.FlowStartTrigger;
-using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingDetector.Stage;
+using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingStage;
 
 namespace Olfactory.Pages.ThresholdTest
 {
@@ -185,7 +185,7 @@ namespace Olfactory.Pages.ThresholdTest
 
             if (CurrentPen != null)
             {
-                CurrentPen.IsActive = true;
+                //CurrentPen.IsActive = true;
             }
 
             if (flowStart == FlowStart.Manual)
@@ -202,6 +202,7 @@ namespace Olfactory.Pages.ThresholdTest
             }
             else if (CurrentPen != null)
             {
+                CurrentPen.IsActive = true;
                 _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
             }
         }
@@ -283,7 +284,12 @@ namespace Olfactory.Pages.ThresholdTest
                 _procedure.EnablePenOdor();
 
                 btnStartManualOdorFlow.Visibility = System.Windows.Visibility.Collapsed;
-                _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
+
+                Utils.DispatchOnceUI.Do(PenProc.DELAY_ON_MANUAL_FLOW_START, () =>
+                {
+                    CurrentPen.IsActive = true;
+                    _penInstructions[CurrentPen].Visibility = System.Windows.Visibility.Visible;
+                });
             }
         }
 

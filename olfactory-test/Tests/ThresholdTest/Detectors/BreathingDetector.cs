@@ -10,26 +10,16 @@ namespace Olfactory.Tests.ThresholdTest
     /// </summary>
     public class BreathingDetector
     {
-        /// <summary>
-        /// Breathing stages
-        /// </summary>
-        public enum Stage
-        {
-            None,
-            Inhale,
-            Exhale
-        }
-
         public static Brush InhaleBrush => Brushes.LightSkyBlue;
         public static Brush ExhaleBrush => Brushes.Pink;
 
-        public event EventHandler<Stage> StageChanged;
+        public event EventHandler<BreathingStage> StageChanged;
 
 
         /// <summary>
         /// Breathing stage
         /// </summary>
-        public Stage BreathingStage { get; private set; } = Stage.None;
+        public BreathingStage Stage { get; private set; } = BreathingStage.Unknown;
 
         /// <summary>
         /// Feed loop values when reading them from PID device
@@ -42,7 +32,7 @@ namespace Olfactory.Tests.ThresholdTest
             bool isStageChanged = false;
 
             _buffer.Add(timestamp, value);
-            var ( type, peak ) = _buffer.EstimatePeak();
+            var ( type, peak ) = _buffer.EstimatePeak(Stage);
 
             if (type != _currentPeakType)
             {
@@ -50,26 +40,26 @@ namespace Olfactory.Tests.ThresholdTest
 
                 var breathingStage = _currentPeakType switch
                 {
-                    Utils.PeakBuffer.PeakType.Lower => Stage.Exhale,
-                    Utils.PeakBuffer.PeakType.Upper => Stage.Inhale,
-                    _ => BreathingStage
+                    PeakBuffer.PeakType.Lower => BreathingStage.Exhale,
+                    PeakBuffer.PeakType.Upper => BreathingStage.Inhale,
+                    _ => Stage
                 };
 
-                if (breathingStage != BreathingStage)
+                if (breathingStage != Stage)
                 {
-                    _peakMax = breathingStage == Stage.Inhale ? peak : _peakMin;
-                    _peakMin = breathingStage == Stage.Exhale ? peak : _peakMax;
+                    _peakMax = breathingStage == BreathingStage.Inhale ? peak : _peakMin;
+                    _peakMin = breathingStage == BreathingStage.Exhale ? peak : _peakMax;
                     if (_peakMin > 0 && _peakMax > 0)
                     {
                         AdjustThreshold();
                     }
 
                     isStageChanged = true;
-                    BreathingStage = breathingStage;
+                    Stage = breathingStage;
 
                     _logger.Add(LogSource.ThTest, "breathing", breathingStage.ToString());
 
-                    StageChanged?.Invoke(this, BreathingStage);
+                    StageChanged?.Invoke(this, Stage);
                 }
             }
 
@@ -98,7 +88,7 @@ namespace Olfactory.Tests.ThresholdTest
                     var p = line.Split(',');
                     if (p.Length >= 9 && long.TryParse(p[0], out long timestamp) && double.TryParse(p[2], out double loop) && det.Feed(timestamp, loop))
                     {
-                        sb.AppendLine(line + $",{det.BreathingStage}");
+                        sb.AppendLine(line + $",{det.Stage}");
                     }
                     else
                     {
@@ -117,11 +107,11 @@ namespace Olfactory.Tests.ThresholdTest
         const double PEAK_SHARE_FROM_EXTREAMS = 0.1; // threshold is 1/10 from the diff of extream values
         const double NEW_PEAK_WEIGHT = 0.2;          // the new threshold has small weight, so the threshold change is not very dramatic after each inhale/exhale
 
-        readonly Utils.PeakBuffer _buffer = new(18); // 5 samples = 1 second
+        readonly PeakBuffer _buffer = new(18); // 5 samples = 1 second
 
         readonly FlowLogger _logger = FlowLogger.Instance;
 
-        Utils.PeakBuffer.PeakType _currentPeakType = Utils.PeakBuffer.PeakType.None;
+        PeakBuffer.PeakType _currentPeakType = PeakBuffer.PeakType.None;
 
         double _peakMin = 0;
         double _peakMax = 0;

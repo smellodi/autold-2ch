@@ -21,7 +21,15 @@ namespace Olfactory.Utils
 
         public static DispatchOnceUI Do(double seconds, Action action)
         {
-            return new DispatchOnceUI(seconds, action);
+            if (seconds > 0)
+            {
+                return new DispatchOnceUI(seconds, action);
+            }
+            else
+            {
+                action();
+                return null;
+            }
         }
 
         public DispatchOnceUI Then(double seconds, Action action)
@@ -77,7 +85,15 @@ namespace Olfactory.Utils
 
         public static DispatchOnce Do(double seconds, Action action)
         {
-            return new DispatchOnce(seconds, action);
+            if (seconds > 0)
+            {
+                return new DispatchOnce(seconds, action);
+            }
+            else
+            {
+                action();
+                return null;
+            }
         }
 
         public DispatchOnce Then(double seconds, Action action)

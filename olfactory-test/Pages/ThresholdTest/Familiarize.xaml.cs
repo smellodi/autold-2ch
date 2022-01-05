@@ -36,6 +36,8 @@ namespace Olfactory.Pages.ThresholdTest
             _settings = settings;
             _mfc.FreshAirSpeed = _settings.FreshAir;
 
+            _mfcOriginalSpeed = _mfc.OdorSpeed;
+
             btnBack.IsEnabled = false;
             btnNext.IsEnabled = false;
 
@@ -64,6 +66,7 @@ namespace Olfactory.Pages.ThresholdTest
 
 
         const double DATA_UPDATE_INTERVAL = 1;
+        const double ODOR_FAMILIARIZATION_SPEED = 4;
         const int VENTILATION_DURATION = 15;  // seconds
 
         readonly string INSTRUCTION_OPEN_VALVE = Utils.L10n.T("FamilInstrOpenValve");
@@ -81,6 +84,7 @@ namespace Olfactory.Pages.ThresholdTest
         readonly System.Timers.Timer _measurementTimer = new();
 
         State _state = State.Initial;
+        double _mfcOriginalSpeed;
 
         Tests.ThresholdTest.Settings _settings;
 
@@ -108,7 +112,7 @@ namespace Olfactory.Pages.ThresholdTest
                 wtiInstruction.Text = INSTRUCTION_WAIT_UNTIL_VENTILATED;
 
                 _mfc.OdorDirection = MFC.OdorFlowsTo.SystemAndWaste;
-                Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = 1.0);    // just in case, make 0.3 sec delay between the requests
+                Utils.DispatchOnce.Do(0.3, () => _mfc.OdorSpeed = _mfcOriginalSpeed);    // just in case, make 0.3 sec delay between the requests
 
                 wtiInstruction.Start(VENTILATION_DURATION);
 
@@ -156,7 +160,7 @@ namespace Olfactory.Pages.ThresholdTest
 
         private void OpenValve_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorSpeed = MFC.ODOR_MAX_SPEED;
+            _mfc.OdorSpeed = ODOR_FAMILIARIZATION_SPEED;
 
             _state = State.OdorPreparation;
 

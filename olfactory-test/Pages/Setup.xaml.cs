@@ -8,7 +8,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Olfactory.Comm;
 using IndicatorDataSource = Olfactory.Controls.ChannelIndicator.DataSource;
-using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingDetector.Stage;
+using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingStage;
 
 namespace Olfactory.Pages
 {

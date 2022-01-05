@@ -1,7 +1,4 @@
-﻿using System;
-using Olfactory.Utils;
-
-namespace Olfactory.Tests.ThresholdTest
+﻿namespace Olfactory.Tests.ThresholdTest
 {
     /// <summary>
     /// Sniffin' Sticks procedure.
@@ -18,16 +15,10 @@ namespace Olfactory.Tests.ThresholdTest
         /// </summary>
         /// <param name="ppms">A list of PPM values at each level (typically, 10-16 values)</param>
         /// <param name="requiredRecognitions">required recognitions to treat a PPM value as recognized</param>
-        public TurningForcedChoice(double[] ppms, int requiredRecognitions) : base(requiredRecognitions)
+        /// <param name="randomize">Set it to true if pens must be randomized at each trial</param>
+        public TurningForcedChoice(double[] ppms, int requiredRecognitions, bool randomize) : base(requiredRecognitions, randomize)
         {
             _ppms = ppms;
-        }
-
-        public override void Next(Pen[] pens)
-        {
-            base.Next(pens);
-
-            _rnd.Shuffle(pens);
         }
 
         public override bool AcceptAnswer(bool wasRecognized)
@@ -53,7 +44,6 @@ namespace Olfactory.Tests.ThresholdTest
 
         const int PPM_LEVEL_STEP = 1;
 
-        readonly Random _rnd = new((int)DateTime.Now.Ticks);
         readonly double[] _ppms;
 
         int _ppmLevel = 0;
