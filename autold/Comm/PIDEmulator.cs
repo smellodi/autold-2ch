@@ -2,11 +2,22 @@
 
 namespace Olfactory.Comm
 {
+    internal class OlfactoryDeviceModel
+    {
+        public float Loop => 11.5f + (float)Math.Sin(Utils.Timestamp.Ms % 5000 * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
+        public double PID => (
+            (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? _mfcEmul.Odor1FlowRate : 0) +
+            (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? _mfcEmul.Odor2FlowRate : 0)
+        ) / 2 * 50 + 50;
+
+        MFCEmulator _mfcEmul = MFCEmulator.Instance;
+    }
+
     internal class PIDEmulator
     {
         public static PIDEmulator Instance => _instance ??= new();
 
-        public OlfactoryDeviceModel Model => _model;
+        public double PID => _model.PID;
 
         public void EmulateWrite<T>(T query)
         {
@@ -29,10 +40,10 @@ namespace Olfactory.Comm
 
             if (count == 8) // query-preset1
             {
-                buffer[0] = PID.MODBUS_ADDR_PID;
-                buffer[1] = PID.MODBUS_FN_PRESET_INPUT_REGS;
-                buffer[2] = PID.MODBUS_REG_PID_POWER >> 8;
-                buffer[3] = PID.MODBUS_REG_PID_POWER & 0xFF;
+                buffer[0] = Comm.PID.MODBUS_ADDR_PID;
+                buffer[1] = Comm.PID.MODBUS_FN_PRESET_INPUT_REGS;
+                buffer[2] = Comm.PID.MODBUS_REG_PID_POWER >> 8;
+                buffer[3] = Comm.PID.MODBUS_REG_PID_POWER & 0xFF;
                 buffer[4] = 0x00;
                 buffer[5] = 0x01;
                 buffer[6] = 0x84;
@@ -42,11 +53,11 @@ namespace Olfactory.Comm
             {
                 var addr = (_inputQuery.AddressHi << 8) | _inputQuery.AddressLo;
 
-                buffer[0] = PID.MODBUS_ADDR_PID;
-                buffer[1] = PID.MODBUS_FN_READ_INPUT_REGS;
-                buffer[2] = PID.MODBUS_GROUP_LEN * sizeof(uint);
+                buffer[0] = Comm.PID.MODBUS_ADDR_PID;
+                buffer[1] = Comm.PID.MODBUS_FN_READ_INPUT_REGS;
+                buffer[2] = Comm.PID.MODBUS_GROUP_LEN * sizeof(uint);
 
-                if (addr == PID.MODBUS_REG_ADCMV_GROUP)
+                if (addr == Comm.PID.MODBUS_REG_ADCMV_GROUP)
                 {
                     // rtd
                     buffer[3] = (byte)'T';
@@ -80,7 +91,7 @@ namespace Olfactory.Comm
                     buffer[25] = (byte)'P';
                     buffer[26] = (byte)'L';
                 }
-                else if (addr == PID.MODBUS_REG_SIGNAL_GROUP)
+                else if (addr == Comm.PID.MODBUS_REG_SIGNAL_GROUP)
                 {
                     // rtd
                     var rtd = new PID.BtoD
@@ -140,7 +151,7 @@ namespace Olfactory.Comm
                 // crc
                 var crc = new PID.BtoW
                 {
-                    W = PID.CRC16(buffer, count - sizeof(ushort))
+                    W = Comm.PID.CRC16(buffer, count - sizeof(ushort))
                 };
                 buffer[offset + count - 2] = crc.B1;
                 buffer[offset + count - 1] = crc.B0;

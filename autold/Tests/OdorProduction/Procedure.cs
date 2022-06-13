@@ -73,10 +73,8 @@ namespace Olfactory.Tests.OdorProduction
             _monitor.MFCUpdateInterval = updateIntervalInSeconds;
             _monitor.PIDUpdateInterval = updateIntervalInSeconds;
 
-            _initialDirection = _settings.ValvesControlled == MFC.OdorFlowsTo.WasteAndUser ? MFC.OdorFlowsTo.SystemAndWaste : MFC.OdorFlowsTo.Waste;
-
             _mfc.FreshAirSpeed = _settings.FreshAir;
-            _mfc.OdorDirection = _initialDirection; // should I add delay here?
+            _mfc.OdorDirection = MFC.ValvesOpened.None; // should I add delay here?
 
             _timer.Interval = _settings.PIDReadingInterval;
             _timer.AutoReset = true;
@@ -91,13 +89,12 @@ namespace Olfactory.Tests.OdorProduction
         {
             var (mlmin, ms) = _settings.OdorQuantities[_step];
 
-            //_logger.Add(LogSource.OdProd, "trial", "start", _settings.OdorQuantities[_step].ToString());
             _logger.Add($"S{mlmin}" + (ms > 0 ? $"{ms}" : ""));
 
             _runner = Utils.DispatchOnce
                 .Do(0.1, () =>
                 {
-                    _mfc.OdorSpeed = mlmin;
+                    _mfc.Odor1Speed = mlmin;
                     StageChanged?.Invoke(this, Stage.InitWait);
                 })
                 .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
@@ -111,8 +108,9 @@ namespace Olfactory.Tests.OdorProduction
             _timer.Stop();
 
             _mfc.IsInShortPulseMode = false;
-            _mfc.OdorSpeed = MFC.ODOR_MIN_SPEED;
-            _mfc.OdorDirection = MFC.OdorFlowsTo.Waste;
+            _mfc.Odor1Speed = MFC.ODOR_MIN_SPEED;
+            _mfc.Odor2Speed = MFC.ODOR_MIN_SPEED;
+            _mfc.OdorDirection = MFC.ValvesOpened.None;
         }
 
 
@@ -127,7 +125,6 @@ namespace Olfactory.Tests.OdorProduction
 
         Settings _settings;
 
-        MFC.OdorFlowsTo _initialDirection;
         int _step = 0;
 
         Utils.DispatchOnce _runner;
@@ -135,12 +132,10 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            var direction = _settings.ValvesControlled | MFC.OdorFlowsTo.System;
+            var direction = _settings.ValvesControlled;
             var (mlmin, ms) = _settings.OdorQuantities[_step];
             var duration = ms == 0 ? _settings.OdorFlowDuration : 0.001 * ms;
-            var useShortPulse = _settings.UseValveTimer
-                && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION
-                && direction.HasFlag(MFC.OdorFlowsTo.User);
+            var useShortPulse = _settings.UseValveTimer && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION;
 
             _logger.Add("V" + ((int)direction).ToString("D2"));
 
@@ -155,20 +150,14 @@ namespace Olfactory.Tests.OdorProduction
 
             _mfc.OdorDirection = direction;
 
-            if (_settings.UseFeedbackLoopToReachLevel)
-            {
-                var model = new OlfactoryDeviceModel();
-                model.Reach(mlmin, duration, _settings.UseFeedbackLoopToKeepLevel);
-            }
-
             StageChanged?.Invoke(this, Stage.OdorFlow);
         }
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = _initialDirection;
+            _mfc.OdorDirection = MFC.ValvesOpened.None;
 
-            _logger.Add("V" + ((int)_initialDirection).ToString("D2"));
+            _logger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
 
             StageChanged?.Invoke(this, Stage.FinalWait);
         }

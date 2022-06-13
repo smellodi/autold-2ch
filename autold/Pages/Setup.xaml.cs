@@ -8,7 +8,6 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using Olfactory.Comm;
 using IndicatorDataSource = Olfactory.Controls.ChannelIndicator.DataSource;
-using BreathingStage = Olfactory.Tests.ThresholdTest.BreathingStage;
 
 namespace Olfactory.Pages
 {
@@ -21,6 +20,9 @@ namespace Olfactory.Pages
 
         public string MFCAction => _mfc?.IsOpen ?? false ? "Close" : "Open";        // keys in L10n dictionaries
         public string PIDAction => _pid?.IsOpen ?? false ? "Close" : "Open";        // keys in L10n dictionaries
+
+        public string ScentedAir1 => ScentedAir(1);
+        public string ScentedAir2 => ScentedAir(2);
 
         public Setup()
         {
@@ -105,17 +107,6 @@ namespace Olfactory.Pages
                 }
             });
 
-            _breathingDetector.StageChanged += (s, e) => Dispatcher.Invoke(() =>
-            {
-                rctBreathingStage.Fill = e switch
-                {
-                    BreathingStage.Inhale => Tests.ThresholdTest.BreathingDetector.InhaleBrush,
-                    BreathingStage.Exhale => Tests.ThresholdTest.BreathingDetector.ExhaleBrush,
-                    _ => null
-                };
-                lblBreathingStage.Text = Utils.L10n.T(e.ToString());
-            });
-
             UpdateUI();
         }
 
@@ -134,9 +125,9 @@ namespace Olfactory.Pages
         readonly System.Timers.Timer _mfcTimer = new();
         readonly System.Timers.Timer _pidTimer = new();
 
-        readonly Tests.ThresholdTest.BreathingDetector _breathingDetector = new();
-
         Controls.ChannelIndicator _currentIndicator = null;
+
+        private string ScentedAir(int id) => Utils.L10n.T("ScentedAir") + $" #{id}";
 
         private void UpdatePortList(ComboBox cmb)
         {
@@ -173,7 +164,6 @@ namespace Olfactory.Pages
             cmbMFCPort.IsEnabled = !_mfc.IsOpen;
 
             btnOdorProduction.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
-            btnThresholdTest.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             grdPlayground.IsEnabled = _mfc.IsOpen;
 
@@ -228,9 +218,10 @@ namespace Olfactory.Pages
         {
             var settings = Properties.Settings.Default;
             txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
-            txbOdor.Text = settings.Setup_MFC_Odor.ToString();
+            txbOdor1.Text = settings.Setup_MFC_Odor1.ToString();
+            txbOdor2.Text = settings.Setup_MFC_Odor2.ToString();
             rdbValve1ToWaste.IsChecked = settings.Setup_MFC_Valve1 == 0;
-            rdbValve1ToSystem.IsChecked = settings.Setup_MFC_Valve1 == 1;
+            rdbValve1ToUser.IsChecked = settings.Setup_MFC_Valve1 == 1;
             rdbValve2ToWaste.IsChecked = settings.Setup_MFC_Valve2 == 0;
             rdbValve2ToUser.IsChecked = settings.Setup_MFC_Valve2 == 1;
 
@@ -259,7 +250,8 @@ namespace Olfactory.Pages
             try
             {
                 settings.Setup_MFC_FreshAir = double.Parse(txbFreshAir.Text);
-                settings.Setup_MFC_Odor = double.Parse(txbOdor.Text);
+                settings.Setup_MFC_Odor1 = double.Parse(txbOdor1.Text);
+                settings.Setup_MFC_Odor2 = double.Parse(txbOdor2.Text);
                 settings.Setup_MFC_Valve1 = rdbValve1ToWaste.IsChecked ?? false ? 0 : 1;
                 settings.Setup_MFC_Valve2 = rdbValve2ToWaste.IsChecked ?? false ? 0 : 1;
                 settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
@@ -271,9 +263,9 @@ namespace Olfactory.Pages
 
         private void GetValveStates()
         {
-            rdbValve1ToSystem.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.System);
-            rdbValve1ToWaste.IsChecked = !rdbValve1ToSystem.IsChecked;
-            rdbValve2ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.OdorFlowsTo.User);
+            rdbValve1ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1);
+            rdbValve1ToWaste.IsChecked = !rdbValve1ToUser.IsChecked;
+            rdbValve2ToUser.IsChecked = _mfc.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2);
             rdbValve2ToWaste.IsChecked = !rdbValve2ToUser.IsChecked;
         }
 
@@ -309,7 +301,7 @@ namespace Olfactory.Pages
             {
                 var updateInterval = dataSource switch
                 {
-                    IndicatorDataSource.CleanAir or IndicatorDataSource.ScentedAir => MFC_UPDATE_INTERVAL,
+                    IndicatorDataSource.CleanAir or IndicatorDataSource.ScentedAir1 or IndicatorDataSource.ScentedAir2 => MFC_UPDATE_INTERVAL,
                     IndicatorDataSource.Loop or IndicatorDataSource.PID => PID_UPDATE_INTERVAL,
                     _ => throw new NotImplementedException($"Data source {dataSource} is now supported")
                 };
@@ -320,11 +312,13 @@ namespace Olfactory.Pages
         private void UpdateIndicators(MFCSample sample)
         {
             chiFreshAir.Value = sample.A.MassFlow;
-            chiOdor.Value = sample.B.MassFlow;
+            chiOdor1.Value = sample.B.MassFlow;
+            chiOdor2.Value = sample.C.MassFlow;
 
             double timestamp = 0.001 * sample.Time;
             UpdateGraph(IndicatorDataSource.CleanAir, timestamp, sample.A.MassFlow);
-            UpdateGraph(IndicatorDataSource.ScentedAir, timestamp, sample.B.MassFlow);
+            UpdateGraph(IndicatorDataSource.ScentedAir1, timestamp, sample.B.MassFlow);
+            UpdateGraph(IndicatorDataSource.ScentedAir2, timestamp, sample.C.MassFlow);
         }
 
         private void UpdateIndicators(PIDSample sample)
@@ -335,23 +329,19 @@ namespace Olfactory.Pages
             double timestamp = 0.001 * sample.Time;
             UpdateGraph(IndicatorDataSource.Loop, timestamp, sample.Loop);
             UpdateGraph(IndicatorDataSource.PID, timestamp, sample.PID);
-
-            _breathingDetector.Feed(sample.Time, sample.Loop);
         }
 
         private void ResetIndicatorGraphValue(MFCSample? sample)
         {
             ResetGraph(IndicatorDataSource.CleanAir, sample?.A.MassFlow ?? 0);
-            ResetGraph(IndicatorDataSource.ScentedAir, sample?.B.MassFlow ?? 0);
+            ResetGraph(IndicatorDataSource.ScentedAir1, sample?.B.MassFlow ?? 0);
+            ResetGraph(IndicatorDataSource.ScentedAir2, sample?.C.MassFlow ?? 0);
         }
 
         private void ResetIndicatorGraphValue(PIDSample? sample)
         {
             ResetGraph(IndicatorDataSource.Loop, sample?.Loop ?? 0);
             ResetGraph(IndicatorDataSource.PID, sample?.PID ?? 0);
-
-            rctBreathingStage.Fill = null;
-            lblBreathingStage.Text = "";
         }
 
 
@@ -370,7 +360,6 @@ namespace Olfactory.Pages
 
             if (_mfc.IsOpen)
             {
-                //lmsOdor.Reset();
                 ResetIndicatorGraphValue((MFCSample?)null);
 
                 _mfcTimer.Start();
@@ -381,7 +370,6 @@ namespace Olfactory.Pages
             {
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    //lmsPIDValue.Reset(sample.PID);
                     ResetIndicatorGraphValue(sample);
                 }
 
@@ -412,14 +400,6 @@ namespace Olfactory.Pages
                 Storage.Instance.IsDebugging = true;
                 lblDebug.Visibility = Visibility.Visible;
             }
-            else if (e.Key >= Key.D0 && e.Key <= Key.D9 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-            {
-                PIDEmulator.Instance.Model._PulseInput(e.Key - Key.D0);
-            }
-            else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9 && e.KeyboardDevice.Modifiers == ModifierKeys.Control)
-            {
-                PIDEmulator.Instance.Model._PulseOutput(e.Key - Key.NumPad0);
-            }
         }
 
         private void Port_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -436,7 +416,7 @@ namespace Olfactory.Pages
             else if (_mfc.IsOpen)
             {
                 _mfcTimer.Start();
-                //lmsOdor.Reset(/*Controls.LiveMeasurement.OdorColor(_mfc.OdorDirection)*/);
+
                 ResetIndicatorGraphValue((MFCSample?)null);
                 GetValveStates();
             }
@@ -460,7 +440,6 @@ namespace Olfactory.Pages
 
                 if (_pid.GetSample(out PIDSample sample).Error == Error.Success)
                 {
-                    //lmsPIDValue.Reset(/*Controls.LiveMeasurement.BRUSH_NEUTRAL, */sample.PID);
                     ResetIndicatorGraphValue(sample);
                 }
             }
@@ -472,24 +451,53 @@ namespace Olfactory.Pages
             UpdateUI();
         }
 
+        private void FreshAir_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SetFreshAir_Click(sender, e);
+            }
+        }
+
         private void SetFreshAir_Click(object sender, RoutedEventArgs e)
         {
             Utils.Validation.Do(txbFreshAir, 0, 10, (object s, double value) => _mfc.FreshAirSpeed = value );
         }
 
-        private void SetOdor_Click(object sender, RoutedEventArgs e)
+        private void Odor1_KeyUp(object sender, KeyEventArgs e)
         {
-            Utils.Validation.Do(txbOdor, 0, 500, (object s, double value) => _mfc.OdorSpeed = value );
+            if (e.Key == Key.Enter)
+            {
+                SetOdor1_Click(sender, e);
+            }
+        }
+
+        private void Odor2_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SetOdor2_Click(sender, e);
+            }
+        }
+
+        private void SetOdor1_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.Validation.Do(txbOdor1, 0, 500, (object s, double value) => _mfc.Odor1Speed = value );
+        }
+
+        private void SetOdor2_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.Validation.Do(txbOdor2, 0, 500, (object s, double value) => _mfc.Odor2Speed = value);
         }
 
         private void SetDirection_Click(object sender, RoutedEventArgs e)
         {
-            _mfc.OdorDirection = (rdbValve1ToWaste.IsChecked, rdbValve2ToWaste.IsChecked) switch
+            _mfc.OdorDirection = (rdbValve1ToUser.IsChecked, rdbValve2ToUser.IsChecked) switch
             {
-                (true, true) => MFC.OdorFlowsTo.Waste,
-                (true, false) => MFC.OdorFlowsTo.WasteAndUser,
-                (false, true) => MFC.OdorFlowsTo.SystemAndWaste,
-                (false, false) => MFC.OdorFlowsTo.SystemAndUser,
+                (false, false) => MFC.ValvesOpened.None,
+                (true, false) => MFC.ValvesOpened.Valve1,
+                (false, true) => MFC.ValvesOpened.Valve2,
+                (true, true) => MFC.ValvesOpened.All,
                 _ => throw new NotImplementedException()
             };
         }
@@ -500,30 +508,6 @@ namespace Olfactory.Pages
             _pidTimer.Stop();
 
             Next?.Invoke(this, Tests.Test.OdorProduction);
-        }
-
-        private void ThresholdTest_Click(object sender, RoutedEventArgs e)
-        {
-            _mfcTimer.Stop();
-            _pidTimer.Stop();
-
-            Next?.Invoke(this, Tests.Test.Threshold);
-        }
-
-        private void FreshAir_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                SetFreshAir_Click(sender, e);
-            }
-        }
-
-        private void Odor_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                SetOdor_Click(sender, e);
-            }
         }
 
         private void ChannelIndicator_MouseDown(object sender, MouseButtonEventArgs e)
@@ -551,6 +535,9 @@ namespace Olfactory.Pages
             CultureInfo.DefaultThreadCurrentUICulture = culture;
             System.Threading.Thread.CurrentThread.CurrentCulture = culture;
             System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScentedAir1)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScentedAir2)));
         }
     }
 }

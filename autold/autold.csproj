@@ -24,8 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveCharts.Wpf.Core" Version="0.9.8" />
-    <PackageReference Include="NAudio" Version="2.0.1" />
     <PackageReference Include="ScottPlot.WPF" Version="4.1.16" />
     <PackageReference Include="System.IO.Ports" Version="5.0.1" />
     <PackageReference Include="System.Management" Version="5.0.0" />
@@ -47,9 +45,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Pages\OdorProduction\Setup.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="Pages\ThresholdTest\Setup.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Properties\Resources.Designer.cs">
@@ -84,10 +79,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\OdorProduction\Setup.xaml">
-      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Pages\ThresholdTest\Setup.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

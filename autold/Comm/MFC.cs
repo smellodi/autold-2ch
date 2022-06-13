@@ -42,16 +42,22 @@ namespace Olfactory.Comm
         public MFCChannel A { get; set; }
 
         /// <summary>
-        /// Odored air channel
+        /// Odored air channel #1
         /// </summary>
         public MFCChannel B { get; set; }
 
-        public double MainValue => B.MassFlow;
+        /// <summary>
+        /// Odored air channel #2
+        /// </summary>
+        public MFCChannel C { get; set; }
+
+        public double MainValue => C.MassFlow;
 
         public override string ToString() => string.Join('\t', new string[] {
             Time.ToString(),
             A.ToString('\t'),
             B.ToString('\t'),
+            C.ToString('\t'),
         });
 
         public static string[] Header
@@ -59,9 +65,10 @@ namespace Olfactory.Comm
             get
             {
                 var list = new List<string>();
-                list.AddRange(new string[] { "", "|", "A", "", "|", "B", "", "|\r\nTime" });
+                list.AddRange(new string[] { "", "|", "A", "", "|", "B", "", "|", "C", "", "|\r\nTime" });
                 list.AddRange(MFCChannel.Header);       // A
                 list.AddRange(MFCChannel.Header);       // B
+                list.AddRange(MFCChannel.Header);       // C
                 return list.ToArray();
             }
         }
@@ -92,6 +99,7 @@ namespace Olfactory.Comm
         {
             A = 'a',
             B = 'b',
+            C = 'c',
             Z = 'z',
         }
 
@@ -109,14 +117,12 @@ namespace Olfactory.Comm
         /// The higher bit controls the Valve #1: 0 - to waste, 1 - to system
         /// </summary>
         [Flags]
-        public enum OdorFlowsTo
+        public enum ValvesOpened
         { 
-            Waste = 0,
-            User = 1,
-            System = 10,
-            WasteAndUser = Waste | User,        // makes no sense
-            SystemAndWaste = System | Waste,
-            SystemAndUser = System | User,
+            None = 0,
+            Valve1 = 10,
+            Valve2 = 1,
+            All = Valve1 | Valve2,
         }
 
         public enum FlowStartPoint
@@ -170,24 +176,42 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Odor flow speed, in milliliters per minute
+        /// Odor #1 flow speed, in milliliters per minute
         /// </summary>
-        public double OdorSpeed
+        public double Odor1Speed
         {
-            get => _odor;
+            get => _odor1;
             set
             {
                 var val = value.ToString("F1").Replace(',', '.');
-                var result = SendCommand(ODOR_CHANNEL, CMD_SET, val);
+                var result = SendCommand(ODOR1_CHANNEL, CMD_SET, val);
                 if (result.Error == Error.Success)
                 {
-                    _odor = value;
+                    _odor1 = value;
                 }
-                CommandResult(this, new CommandResultArgs(ODOR_CHANNEL + CMD_SET, val, result));
+                CommandResult(this, new CommandResultArgs(ODOR1_CHANNEL + CMD_SET, val, result));
             }
         }
 
-        public OdorFlowsTo OdorDirection
+        /// <summary>
+        /// Odor #2 flow speed, in milliliters per minute
+        /// </summary>
+        public double Odor2Speed
+        {
+            get => _odor2;
+            set
+            {
+                var val = value.ToString("F1").Replace(',', '.');
+                var result = SendCommand(ODOR2_CHANNEL, CMD_SET, val);
+                if (result.Error == Error.Success)
+                {
+                    _odor2 = value;
+                }
+                CommandResult(this, new CommandResultArgs(ODOR2_CHANNEL + CMD_SET, val, result));
+            }
+        }
+
+        public ValvesOpened OdorDirection
         {
             get => _odorDirection;
             set
@@ -239,72 +263,11 @@ namespace Olfactory.Comm
         {
             if (IsOpen)
             {
-                OdorSpeed = ODOR_MIN_SPEED;
+                Odor1Speed = ODOR_MIN_SPEED;
+                Odor2Speed = ODOR_MIN_SPEED;
             }
 
             base.Stop();
-        }
-
-        /// <summary>
-        /// Calculated the time in seconds for the odor to flow from 
-        /// 1 - the bottle
-        /// 2 - the valve #1
-        /// to 
-        /// 1 - the user
-        /// 2 - the mixer
-        /// given the current odor and fresh air speeds
-        /// </summary>
-        /// <param name="startPoint">the starting point</param>
-        /// <param name="endPoint">the point for odor to reach</param>
-        /// <param name="speed">Odor speed (the current one if omitted)</param>
-        /// <returns>Time the odor reaches a user in seconds</returns>
-        public double EstimateFlowDuration(FlowStartPoint startPoint, FlowEndPoint endPoint, double speed = 0)
-        {
-            double result = 0;
-
-            var odorSpeed = (speed <= 0 ? OdorSpeed : speed) / 60;      // ml/s
-
-            if (startPoint == FlowStartPoint.Chamber)
-            {
-                var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;           // ml
-
-                result += odorTubeVolume / odorSpeed;
-            }
-
-            var vmTubeVolume = Math.PI * TUBE_R * TUBE_R * VALVE_MIXER_TUBE_LENGTH / 1000;           // ml
-            result += vmTubeVolume / odorSpeed;
-
-            if (endPoint == FlowEndPoint.User)
-            {
-                var mixedTubeVolume = Math.PI * TUBE_R * TUBE_R * MIXED_TUBE_LENGTH / 1000;   // ml
-                var mixedSpeed = 1000 * FreshAirSpeed / 60;             // ml/s
-
-                result += mixedTubeVolume / mixedSpeed;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Calculates the speed in ml/min for the MFC-B (odor tube) that is required to 
-        /// fill the tube between the bottle and the mixer with the odor
-        /// </summary>
-        /// <param name="time">The time to fill the tube in seconds</param>
-        /// <returns>The speed in ml/min</returns>
-        public double PredictFlowSpeed(double time)
-        {
-            var odorTubeVolume = Math.PI * TUBE_R * TUBE_R * ODOR_TUBE_LENGTH / 1000;       // ml
-            return odorTubeVolume / time * 60;
-        }
-
-        /// <summary>
-        /// Converts PPM to the corresponding odor speed
-        /// </summary>
-        /// <param name="ppm">Odor concentration in ppm</param>
-        /// <returns>Odor speed</returns>
-        public double PPM2Speed(double ppm)
-        {
-            return 1.0 * ppm;   // TODO: implement this
         }
 
         /// <summary>
@@ -340,8 +303,14 @@ namespace Olfactory.Comm
 
                     if (error == Error.Success && _channels.HasFlag(Channels.B))
                     {
-                        error = ReadChannelValues(Channel.B, out MFCChannel odor);
-                        sample.B = odor;
+                        error = ReadChannelValues(Channel.B, out MFCChannel odor1);
+                        sample.B = odor1;
+                    }
+
+                    if (error == Error.Success && _channels.HasFlag(Channels.C))
+                    {
+                        error = ReadChannelValues(Channel.C, out MFCChannel odor2);
+                        sample.C = odor2;
                     }
 
                     if (error != Error.Success)
@@ -371,17 +340,6 @@ namespace Olfactory.Comm
                 Error = error,
                 Reason = reason
             };
-        }
-
-        /// <summary>
-        /// Before starting flor measureement, it is recommended to either set it to 0 for 2+ seconds,
-        /// or to tare it down using this method
-        /// </summary>
-        /// <param name="channel">Channel ID</param>
-        /// <returns></returns>
-        public Result TareFlow(Channel channel)
-        {
-            return SendCommand(channel, CMD_TARE_FLOW);
         }
 
         /// <summary>
@@ -445,11 +403,17 @@ namespace Olfactory.Comm
                     _channels |= Channels.A;
                     _freshAir = sample.A.MassFlow;
                 }
-                if ((error = ReadChannelValues(Channel.B, out MFCChannel odor)) == Error.Success)
+                if ((error = ReadChannelValues(Channel.B, out MFCChannel odor1)) == Error.Success)
                 {
-                    sample.B = odor;
+                    sample.B = odor1;
                     _channels |= Channels.B;
-                    _odor = sample.B.MassFlow;
+                    _odor1 = sample.B.MassFlow;
+                }
+                if ((error = ReadChannelValues(Channel.C, out MFCChannel odor2)) == Error.Success)
+                {
+                    sample.C = odor2;
+                    _channels |= Channels.C;
+                    _odor2 = sample.C.MassFlow;
                 }
                 /*if ((error = ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)) == Error.Success)
                 {
@@ -494,7 +458,8 @@ namespace Olfactory.Comm
             None = 0,
             A = 1,
             B = 2,
-            Both = A | B,
+            C = 4,
+            All = A | B | C,
         }
 
         static MFC _instance;
@@ -502,8 +467,9 @@ namespace Olfactory.Comm
         Channels _channels = Channels.None;
 
         double _freshAir = 5.0;
-        double _odor = 4.0;
-        OdorFlowsTo _odorDirection = OdorFlowsTo.Waste;
+        double _odor1 = 4.0;
+        double _odor2 = 4.0;
+        ValvesOpened _odorDirection = ValvesOpened.None;
         bool _isInShortPulseMode = false;
 
         readonly Mutex _mutex = new();     // this is needed to use in lock() only because we cannot use _port to lock when debugging
@@ -512,13 +478,9 @@ namespace Olfactory.Comm
         // constants
 
         const Channel FRESH_AIR_CHANNEL = Channel.A;
-        const Channel ODOR_CHANNEL = Channel.B;
+        const Channel ODOR1_CHANNEL = Channel.B;
+        const Channel ODOR2_CHANNEL = Channel.C;
         const Channel OUTPUT_CHANNEL = Channel.Z;
-
-        const double ODOR_TUBE_LENGTH = 600;       // mm
-        const double VALVE_MIXER_TUBE_LENGTH = 27; // mm
-        const double MIXED_TUBE_LENGTH = 1200;     // mm
-        const double TUBE_R = 2;                   // mm
 
         /// <summary>
         /// Read the mass flow rate and the temperature of the specified MFC.
@@ -582,50 +544,6 @@ namespace Olfactory.Comm
 
             return Error.Success;
         }
-        /*
-        Error ReadValveValues(out bool isValve1Opened, out bool isValve2Opened)
-        {
-            isValve1Opened = false;
-            isValve2Opened = false;
-
-            var mfcAddr = Channel.Z.ToString()[0];
-
-            if (!IsDebugging)
-            {
-                char[] chars = new char[2] { mfcAddr, DATA_END };
-                _port.Write(chars, 0, 2);
-            }
-            if (_error != null)
-            {
-                return (Error)Marshal.GetLastWin32Error();
-            }
-            
-            var response = !IsDebugging ? ReadBytes() : _emulator.EmulateReading(mfcAddr);
-
-            if (_error != null)
-            {
-                return (Error)Marshal.GetLastWin32Error();
-            }
-            if (string.IsNullOrEmpty(response))
-            {
-                return Error.ReadFault;
-            }
-
-            string[] values = response.Split(' ');
-            if (values.Length != 3)
-            {
-                return Error.BadDataFormat;
-            }
-            if (values[0][0] != mfcAddr)
-            {
-                return Error.WrongDevice;
-            }
-            
-            isValve1Opened = values[1][0] == '1';
-            isValve2Opened = values[2][0] == '1';
-
-            return Error.Success;
-        }*/
 
         /// <summary>
         /// Sets MFC registers of the output channel

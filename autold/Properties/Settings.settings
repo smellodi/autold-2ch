@@ -29,7 +29,7 @@
     <Setting Name="Setup_MFC_FreshAir" Type="System.Double" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="Setup_MFC_Odor" Type="System.Double" Scope="User">
+    <Setting Name="Setup_MFC_Odor1" Type="System.Double" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
     <Setting Name="Setup_MFC_Valve1" Type="System.Int32" Scope="User">
@@ -71,65 +71,14 @@
     <Setting Name="MonitorWindow_Y" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Test_TT_FreshAir" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
-    <Setting Name="Test_TT_OdorPreparationDuration" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">15</Value>
-    </Setting>
-    <Setting Name="Test_TT_PenSniffingDuration" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">5</Value>
-    </Setting>
-    <Setting Name="Test_TT_PIDReadingInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="Test_TT_PPMs" Type="System.String" Scope="User">
-      <Value Profile="(Default)">2 4 6</Value>
-    </Setting>
-    <Setting Name="Test_TT_RecognitionInRow" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="Test_TT_TurningPoints" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">7</Value>
-    </Setting>
-    <Setting Name="Test_TT_TurningPointsToCount" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">4</Value>
-    </Setting>
-    <Setting Name="Test_TT_FamiliarizationDuration" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">2</Value>
-    </Setting>
-    <Setting Name="Test_TT_UseFeedbackLoopToReachLevel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Test_TT_UseFeedbackLoopToKeepLevel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Test_OP_UseFeedbackLoopToReachLevel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Test_OP_UseFeedbackLoopToKeepLevel" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="Test_TT_FlowStart" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">en</Value>
-    </Setting>
-    <Setting Name="Test_TT_Type" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Test_OP_UseValveTimer" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Test_TT_UseValveTimer" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="Test_TT_OdorPrepMethod" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="Test_TT_PPMConversionParams" Type="System.String" Scope="User">
-      <Value Profile="(Default)">400 2 1500 10</Value>
+    <Setting Name="Setup_MFC_Odor2" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">8</Value>
     </Setting>
   </Settings>
 </SettingsFile>

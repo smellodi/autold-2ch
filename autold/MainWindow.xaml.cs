@@ -79,7 +79,6 @@ namespace Olfactory
         {
             _currentTest = test switch
             {
-                Tests.Test.Threshold => new Tests.ThresholdTest.Manager(),
                 Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
                 _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
             };
@@ -166,20 +165,6 @@ namespace Olfactory
             else if (e.Key == Key.F9)
             {
                 _currentTest?.Emulate(Tests.EmulationCommand.ForceToFinishWithResult);
-            }
-            else if (e.Key == Key.F12)
-            {
-                var dialog = new Microsoft.Win32.OpenFileDialog() { Filter = "CSV files|*.csv" };
-                if (dialog.ShowDialog() == true)
-                {
-                    var sb = Tests.ThresholdTest.BreathingDetector.Test(dialog.FileName);
-                    Clipboard.SetText(sb.ToString());
-                    MsgBox.Notify(Title, "Done.\nThe resulting data is copied into clipboard", MsgBox.Button.OK);
-                }
-            }
-            else
-            {
-                _currentTest?.Emulate(Tests.EmulationCommand.ReportKey, e.Key);
             }
         }
 

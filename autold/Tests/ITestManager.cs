@@ -5,7 +5,6 @@ namespace Olfactory.Tests
 {
     public enum Test
     {
-        Threshold,
         OdorProduction,
     }
 
@@ -34,6 +33,5 @@ namespace Olfactory.Tests
     {
         EnableEmulation,
         ForceToFinishWithResult,
-        ReportKey,
     }
 }

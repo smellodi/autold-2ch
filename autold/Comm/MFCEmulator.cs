@@ -7,9 +7,10 @@ namespace Olfactory.Comm
         public static MFCEmulator Instance => _instance ??= new();
 
         public double FreshAirFlowRate => _massFlowA;
-        public double OdorFlowRate => _massFlowB;
+        public double Odor1FlowRate => _massFlowB;
+        public double Odor2FlowRate => _massFlowC;
 
-        public MFC.OdorFlowsTo OdorDirection => _odorDirection;
+        public MFC.ValvesOpened OdorDirection => _odorDirection;
 
         public string EmulateReading(char channel)
         {
@@ -23,14 +24,32 @@ namespace Olfactory.Comm
             {
                 return string.Join(' ',
                     'Z',
-                    OdorDirection.HasFlag(MFC.OdorFlowsTo.System) ? 1 : 0,
-                    OdorDirection.HasFlag(MFC.OdorFlowsTo.User) ? 1 : 0
+                    OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? 1 : 0,
+                    OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? 1 : 0
                 );
             }
 
-            var pressure = channel == 'A' ? _pressureA : _pressureB;
-            var massFlow = channel == 'A' ? _massFlowA : _massFlowB;
-            var volFlow = channel == 'A' ? _volFlowA : _volFlowB;
+            var pressure = channel switch
+            {
+                'A' => _pressureA,
+                'B' => _pressureB,
+                'C' => _pressureC,
+                _ => throw new Exception("[MFC-E] unknown channel")
+            };
+            var massFlow = channel switch
+            {
+                'A' => _massFlowA,
+                'B' => _massFlowB,
+                'C' => _massFlowC,
+                _ => throw new Exception("[MFC-E] unknown channel")
+            };
+            var volFlow = channel switch
+            {
+                'A' => _volFlowA,
+                'B' => _volFlowB,
+                'C' => _volFlowC,
+                _ => throw new Exception("[MFC-E] unknown channel")
+            };
 
             return string.Join(' ',
                 channel.ToString(),                         // channel
@@ -55,7 +74,7 @@ namespace Olfactory.Comm
             var cmds = input.Split(MFC.DATA_END);
             foreach (var cmd in cmds)
             {
-                if (cmd.Length > 4)
+                if (cmd.Length >= 4)
                 {
                     ExecuteCommand(cmd);
                 }
@@ -70,13 +89,16 @@ namespace Olfactory.Comm
 
         const int _pressureA = 1200;
         const int _pressureB = 1800;
+        const int _pressureC = 1800;
         const double _volFlowA = .05;
         const double _volFlowB = .05;
+        const double _volFlowC = .05;
 
         double _massFlowA = 1.0;
         double _massFlowB = 0.02;
+        double _massFlowC = 0.02;
 
-        MFC.OdorFlowsTo _odorDirection = MFC.OdorFlowsTo.Waste;
+        MFC.ValvesOpened _odorDirection = MFC.ValvesOpened.None;
 
         Utils.DispatchOnce _valve1ShortPulseTimer = null;
         Utils.DispatchOnce _valve2ShortPulseTimer = null;
@@ -104,8 +126,11 @@ namespace Olfactory.Comm
                     case MFC.Channel.B:
                         _massFlowB = value;
                         break;
+                    case MFC.Channel.C:
+                        _massFlowC = value;
+                        break;
                     case MFC.Channel.Z:
-                        _odorDirection = (MFC.OdorFlowsTo)value;
+                        _odorDirection = (MFC.ValvesOpened)value;
                         break;
                     default: break;
                 }

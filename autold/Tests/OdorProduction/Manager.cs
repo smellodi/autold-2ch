@@ -61,7 +61,6 @@ namespace Olfactory.Tests.OdorProduction
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
                 case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
-                case EmulationCommand.ReportKey: /* ignore keypresses */ break;
                 default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }

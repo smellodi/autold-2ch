@@ -7,10 +7,10 @@
       xmlns:utils="clr-namespace:Olfactory.Utils"
       xmlns:lex="http://wpflocalizeextension.codeplex.com"
       lex:LocalizeDictionary.DesignCulture="en"
-      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="1000"
+      d:DesignHeight="520" d:DesignWidth="1000"
       Title="{lex:Loc Setup}"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -24,7 +24,7 @@
             <Setter Property="Width" Value="75" />
         </Style>
         <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource FormRowHeader}">
-            <Setter Property="Width" Value="80" />
+            <Setter Property="Width" Value="94" />
         </Style>
         <Style TargetType="{x:Type ComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Setter Property="Width" Value="90" />
@@ -37,21 +37,6 @@
             <Setter Property="Height" Value="30" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-
-        <!-- Indicator & graph area-->
-        <!--Style x:Key="Divider" TargetType="{x:Type Label}">
-            <Setter Property="BorderThickness" Value="0,1,0,0"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BrushBorderLight}"/>
-            <Setter Property="Height" Value="1"/>
-        </>
-        <Style x:Key="NumericIndicator" TargetType="{x:Type Label}">
-            <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
-            <Setter Property="Margin" Value="0,2,0,0"/>
-            <Setter Property="Content" Value="0.0"/>
-        </Style>
-        <Style x:Key="Indicator" TargetType="{x:Type WrapPanel}">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style-->
     </Page.Resources>
 
     <Grid>
@@ -143,61 +128,73 @@
                                     Click="SetFreshAir_Click"/>
                         </Grid>
                     </UserControl>
-                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ScentedAir}">
+                    <UserControl Style="{StaticResource FormRow}" Tag="{Binding ScentedAir1}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
                             <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                                <TextBox x:Name="txbOdor"
+                                <TextBox x:Name="txbOdor1"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"
                                          ToolTip="{lex:Loc NumNotNeg}"
-                                         KeyUp="Odor_KeyUp"/>
+                                         KeyUp="Odor1_KeyUp"/>
                             </UserControl>
                             <Button Grid.Column="1" 
                                     Content="{lex:Loc Set}"
-                                    Click="SetOdor_Click"/>
+                                    Click="SetOdor1_Click"/>
+                            <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Center">
+                                <RadioButton x:Name="rdbValve1ToWaste"
+                                                 GroupName="valve1"
+                                                 Content="{lex:Loc Waste}"
+                                                 Click="SetDirection_Click"/>
+                                <RadioButton x:Name="rdbValve1ToUser"
+                                                 GroupName="valve1"
+                                                 Content="{lex:Loc User}"
+                                                 Margin="16,0,0,0"
+                                                 Click="SetDirection_Click"/>
+                            </WrapPanel>
                         </Grid>
                     </UserControl>
 
-                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Valves}">
+                    <UserControl Style="{StaticResource FormRow}" Tag="{Binding ScentedAir2}">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0" Grid.ColumnSpan="2">
-                                <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="1: "/>
-                                    <RadioButton x:Name="rdbValve1ToWaste"
-                                                 GroupName="valve1"
-                                                 Content="{lex:Loc Waste}"
-                                                 Click="SetDirection_Click"/>
-                                    <RadioButton x:Name="rdbValve1ToSystem"
-                                                 GroupName="valve1"
-                                                 Content="{lex:Loc System}"
-                                                 Margin="16,0,0,0"
-                                                 Click="SetDirection_Click"/>
-                                </WrapPanel>
-                                <WrapPanel VerticalAlignment="Center">
-                                    <Label Style="{StaticResource RadioLabel}" Content="2: "/>
-                                    <RadioButton x:Name="rdbValve2ToWaste"
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                                <TextBox x:Name="txbOdor2"
+                                         VerticalContentAlignment="Center"
+                                         Text="8.0"
+                                         ToolTip="{lex:Loc NumNotNeg}"
+                                         KeyUp="Odor2_KeyUp"/>
+                            </UserControl>
+                            <Button Grid.Column="1" 
+                                    Content="{lex:Loc Set}"
+                                    Click="SetOdor2_Click"/>
+                            <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"
+                                       VerticalAlignment="Center">
+                                <RadioButton x:Name="rdbValve2ToWaste"
                                                  GroupName="valve2"
                                                  Content="{lex:Loc Waste}"
                                                  Click="SetDirection_Click"/>
-                                    <RadioButton x:Name="rdbValve2ToUser"
+                                <RadioButton x:Name="rdbValve2ToUser"
                                                  GroupName="valve2"
                                                  Content="{lex:Loc User}"
                                                  Margin="16,0,0,0"
                                                  Click="SetDirection_Click"/>
-                                </WrapPanel>
-                            </StackPanel>
-                            <!--Button Grid.Column="1"
-                                    Content="Set"
-                                    Click="btnSetDirection_Click"/-->
+                            </WrapPanel>
                         </Grid>
                     </UserControl>
                 </StackPanel>
@@ -210,56 +207,6 @@
                 <ScaleTransform x:Name="sctScale1"/>
             </StackPanel.LayoutTransform>
 
-            <!--
-            <Label Style="{StaticResource Divider}"/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label>
-                    <TextBlock>
-                        <Run Text="{lex:Loc CleanAir}"/>
-                        <Run Text="{lex:Loc LMin}"/>
-                    </TextBlock>
-                </Label>
-                <Label x:Name="lblMFC_FreshAir" Style="{StaticResource NumericIndicator}"/>
-            </WrapPanel>
-
-            <Label Style="{StaticResource Divider}"/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label>
-                    <TextBlock>
-                        <Run Text="{lex:Loc ScentedAir}"/>
-                        <Run Text="{lex:Loc MlMin}"/>
-                    </TextBlock>
-                </Label>
-                <Label x:Name="lblMFC_OdorFlow" Style="{StaticResource NumericIndicator}"/>
-            </WrapPanel>
-            <local:LiveData x:Name="lmsOdor"
-                            Height="92"/>
-
-            <Label Style="{StaticResource Divider}"
-                   Margin="0,12,0,0"/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label>
-                    <TextBlock>
-                        <Run Text="{lex:Loc PIDTemp}"/>
-                        <Run Text="{lex:Loc MA}"/>
-                    </TextBlock>
-                </Label>
-                <Label x:Name="lblPID_Loop" Style="{StaticResource NumericIndicator}"/>
-            </WrapPanel>
-
-            <Label Style="{StaticResource Divider}"/>
-            <WrapPanel Style="{StaticResource Indicator}">
-                <Label>
-                    <TextBlock>
-                        <Run Text="{lex:Loc PIDVoltage}"/>
-                        <Run Text="{lex:Loc MV}"/>
-                    </TextBlock>
-                </Label>
-                <Label x:Name="lblPID_PID" Style="{StaticResource NumericIndicator}"/>
-            </WrapPanel>
-            <local:LiveData x:Name="lmsPIDValue"
-                            Height="118"/>
-            -->
             <ScrollViewer x:Name="scvIndicatorScroller" 
                           HorizontalScrollBarVisibility="Auto" 
                           VerticalScrollBarVisibility="Disabled">
@@ -274,12 +221,20 @@
                                             Source="CleanAir"
                                             Tag="MFC"
                                             MouseDown="ChannelIndicator_MouseDown"/>
-                    <local:ChannelIndicator x:Name="chiOdor"
-                                            Title="{lex:Loc ScentedAir}"
+                    <local:ChannelIndicator x:Name="chiOdor1"
+                                            Title="{Binding ScentedAir1}"
                                             Units="{lex:Loc MlMin}"
                                             Precision="2"
                                             Value="0.0"
-                                            Source="ScentedAir"
+                                            Source="ScentedAir1"
+                                            Tag="MFC"
+                                            MouseDown="ChannelIndicator_MouseDown"/>
+                    <local:ChannelIndicator x:Name="chiOdor2"
+                                            Title="{Binding ScentedAir2}"
+                                            Units="{lex:Loc MlMin}"
+                                            Precision="2"
+                                            Value="0.0"
+                                            Source="ScentedAir2"
                                             Tag="MFC"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                     <local:ChannelIndicator x:Name="chiPIDTemp"
@@ -303,21 +258,7 @@
             
             <local:LiveData x:Name="lmsGraph"
                             Margin="0,12,0,0"
-                            Height="234"/>
-
-            <Grid Margin="0,8,0,0">
-                <Label Content="{lex:Loc BreathingStage}"
-                       ContentStringFormat="{}{0}:"
-                       VerticalAlignment="Center"
-                       Margin="4,0"/>
-                <Rectangle x:Name="rctBreathingStage"
-                       Margin="100,0,0,0"
-                       Height="26"/>
-                <TextBlock x:Name="lblBreathingStage"
-                       Margin="100,0,0,0"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"/>
-            </Grid>
+                            Height="324"/>
         </StackPanel>
 
         <WrapPanel Grid.Row="4" Grid.Column="0"
@@ -338,10 +279,6 @@
                 Style="{StaticResource Next}"
                 Content="{lex:Loc OdorPulses}"
                 Click="OdorProduction_Click"/>
-            <Button x:Name="btnThresholdTest"
-                Style="{StaticResource Next}"
-                Content="{lex:Loc ThresholdTest}"
-                Click="ThresholdTest_Click"/>
         </WrapPanel>
 
         <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>

@@ -7,7 +7,7 @@ namespace Olfactory.Controls
 {
     public partial class ChannelIndicator : UserControl, INotifyPropertyChanged
     {
-        public enum DataSource { CleanAir, ScentedAir, PID, Loop }
+        public enum DataSource { CleanAir, ScentedAir1, ScentedAir2, PID, Loop }
 
         #region Title property
 

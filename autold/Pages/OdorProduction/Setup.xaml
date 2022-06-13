@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:lex="http://wpflocalizeextension.codeplex.com"
       lex:LocalizeDictionary.DesignCulture="en"
-      lex:ResxLocalizationProvider.DefaultAssembly="olfactory-test"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="530" d:DesignWidth="600"
@@ -104,20 +104,20 @@
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Valves}">
                     <StackPanel>
                         <WrapPanel Margin="0,6">
-                            <RadioButton x:Name="rdbSystemValve"
+                            <RadioButton x:Name="rdbValve1"
                                          GroupName="valves"
                                          Content="{lex:Loc System}"
-                                         Checked="SystemValve_Checked"/>
-                            <RadioButton x:Name="rdbUserValve"
+                                         Checked="Valve1_Checked"/>
+                            <RadioButton x:Name="rdbValve2"
                                          Margin="16,0,0,0"
                                          GroupName="valves"
                                          Content="{lex:Loc User}"
-                                         Checked="UserValve_Checked"/>
-                            <RadioButton x:Name="rdbSystemAndUserValve"
+                                         Checked="Valve2_Checked"/>
+                            <RadioButton x:Name="rdbAllValves"
                                          Margin="16,0,0,0"
                                          GroupName="valves"
                                          Content="{lex:Loc SystemAndUser}"
-                                         Checked="SystemAndUserValve_Checked"/>
+                                         Checked="AllValve_Checked"/>
                         </WrapPanel>
                         <!--TextBlock TextWrapping="Wrap"
                                    Text="{lex:Loc ControlsValve2}"/-->
@@ -141,19 +141,6 @@
                     </CheckBox>
                 </UserControl>
 
-                <Border Style="{StaticResource HorizontalLine}"/>
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc FeedbackLoop}">
-                    <StackPanel>
-                        <CheckBox x:Name="chkFeedbackLoopToReachLevel"
-                                  Content="{lex:Loc ToReachTargetLevel}"
-                                  VerticalAlignment="Center"/>
-                        <CheckBox x:Name="chkFeedbackLoopToKeepLevel"
-                                  Content="{lex:Loc ToKeepTargetLevel}"
-                                  VerticalAlignment="Center"
-                                  Margin="0,4,0,0"
-                                  IsEnabled="{Binding IsChecked, ElementName=chkFeedbackLoopToReachLevel}"/>
-                    </StackPanel>
-                </UserControl>
             </StackPanel>
         </Border>
 

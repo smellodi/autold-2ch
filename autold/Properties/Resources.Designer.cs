@@ -59,15 +59,5 @@ namespace Olfactory.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] WaitingSound {
-            get {
-                object obj = ResourceManager.GetObject("WaitingSound", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

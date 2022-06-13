@@ -24,11 +24,9 @@ namespace Olfactory.Pages.OdorProduction
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbFinalPause.Text = _settings.FinalPause.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
-            rdbSystemValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.SystemAndWaste;
-            rdbUserValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.WasteAndUser;
-            rdbSystemAndUserValve.IsChecked = _valvesControlled == Comm.MFC.OdorFlowsTo.SystemAndUser;
-            chkFeedbackLoopToReachLevel.IsChecked = _settings.UseFeedbackLoopToReachLevel;
-            chkFeedbackLoopToKeepLevel.IsChecked = _settings.UseFeedbackLoopToKeepLevel;
+            rdbValve1.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.Valve1;
+            rdbValve2.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.Valve2;
+            rdbAllValves.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.All;
             chkUseValveControllerTimer.IsChecked = _settings.UseValveTimer;
         }
 
@@ -41,7 +39,7 @@ namespace Olfactory.Pages.OdorProduction
 
         readonly Settings _settings = new();
 
-        Comm.MFC.OdorFlowsTo _valvesControlled;
+        Comm.MFC.ValvesOpened _valvesControlled;
 
         private Utils.Validation CheckInput()
         {
@@ -95,8 +93,6 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.ValvesControlled = _valvesControlled;
-                _settings.UseFeedbackLoopToReachLevel = chkFeedbackLoopToReachLevel.IsChecked ?? false;
-                _settings.UseFeedbackLoopToKeepLevel = chkFeedbackLoopToKeepLevel.IsChecked ?? false;
                 _settings.UseValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
 
                 _settings.Save();
@@ -110,19 +106,19 @@ namespace Olfactory.Pages.OdorProduction
             Next?.Invoke(this, null);
         }
 
-        private void SystemValve_Checked(object sender, RoutedEventArgs e)
+        private void Valve1_Checked(object sender, RoutedEventArgs e)
         {
-            _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndWaste;
+            _valvesControlled = Comm.MFC.ValvesOpened.Valve1;
         }
 
-        private void UserValve_Checked(object sender, RoutedEventArgs e)
+        private void Valve2_Checked(object sender, RoutedEventArgs e)
         {
-            _valvesControlled = Comm.MFC.OdorFlowsTo.WasteAndUser;
+            _valvesControlled = Comm.MFC.ValvesOpened.Valve2;
         }
 
-        private void SystemAndUserValve_Checked(object sender, RoutedEventArgs e)
+        private void AllValve_Checked(object sender, RoutedEventArgs e)
         {
-            _valvesControlled = Comm.MFC.OdorFlowsTo.SystemAndUser;
+            _valvesControlled = Comm.MFC.ValvesOpened.All;
         }
     }
 }

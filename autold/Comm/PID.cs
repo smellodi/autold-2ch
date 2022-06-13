@@ -58,7 +58,7 @@ namespace Olfactory.Comm
         public override string Name => "PID";
         public override string[] DataColumns => PIDSample.Header;
 
-        public double Value => _emulator?.Model.PID ?? _lastSample.PID;
+        public double Value => _emulator?.PID ?? _lastSample.PID;
 
         /// <summary>
         /// Private constructor, use Instance property to get the instance.

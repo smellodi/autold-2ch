@@ -12,7 +12,7 @@ namespace Olfactory.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.8.1.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -134,12 +134,12 @@ namespace Olfactory.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public double Setup_MFC_Odor {
+        public double Setup_MFC_Odor1 {
             get {
-                return ((double)(this["Setup_MFC_Odor"]));
+                return ((double)(this["Setup_MFC_Odor1"]));
             }
             set {
-                this["Setup_MFC_Odor"] = value;
+                this["Setup_MFC_Odor1"] = value;
             }
         }
         
@@ -301,174 +301,6 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public double Test_TT_FreshAir {
-            get {
-                return ((double)(this["Test_TT_FreshAir"]));
-            }
-            set {
-                this["Test_TT_FreshAir"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int Test_TT_OdorPreparationDuration {
-            get {
-                return ((int)(this["Test_TT_OdorPreparationDuration"]));
-            }
-            set {
-                this["Test_TT_OdorPreparationDuration"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5")]
-        public double Test_TT_PenSniffingDuration {
-            get {
-                return ((double)(this["Test_TT_PenSniffingDuration"]));
-            }
-            set {
-                this["Test_TT_PenSniffingDuration"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public int Test_TT_PIDReadingInterval {
-            get {
-                return ((int)(this["Test_TT_PIDReadingInterval"]));
-            }
-            set {
-                this["Test_TT_PIDReadingInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2 4 6")]
-        public string Test_TT_PPMs {
-            get {
-                return ((string)(this["Test_TT_PPMs"]));
-            }
-            set {
-                this["Test_TT_PPMs"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int Test_TT_RecognitionInRow {
-            get {
-                return ((int)(this["Test_TT_RecognitionInRow"]));
-            }
-            set {
-                this["Test_TT_RecognitionInRow"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("7")]
-        public int Test_TT_TurningPoints {
-            get {
-                return ((int)(this["Test_TT_TurningPoints"]));
-            }
-            set {
-                this["Test_TT_TurningPoints"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4")]
-        public int Test_TT_TurningPointsToCount {
-            get {
-                return ((int)(this["Test_TT_TurningPointsToCount"]));
-            }
-            set {
-                this["Test_TT_TurningPointsToCount"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public double Test_TT_FamiliarizationDuration {
-            get {
-                return ((double)(this["Test_TT_FamiliarizationDuration"]));
-            }
-            set {
-                this["Test_TT_FamiliarizationDuration"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Test_TT_UseFeedbackLoopToReachLevel {
-            get {
-                return ((bool)(this["Test_TT_UseFeedbackLoopToReachLevel"]));
-            }
-            set {
-                this["Test_TT_UseFeedbackLoopToReachLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Test_TT_UseFeedbackLoopToKeepLevel {
-            get {
-                return ((bool)(this["Test_TT_UseFeedbackLoopToKeepLevel"]));
-            }
-            set {
-                this["Test_TT_UseFeedbackLoopToKeepLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Test_OP_UseFeedbackLoopToReachLevel {
-            get {
-                return ((bool)(this["Test_OP_UseFeedbackLoopToReachLevel"]));
-            }
-            set {
-                this["Test_OP_UseFeedbackLoopToReachLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool Test_OP_UseFeedbackLoopToKeepLevel {
-            get {
-                return ((bool)(this["Test_OP_UseFeedbackLoopToKeepLevel"]));
-            }
-            set {
-                this["Test_OP_UseFeedbackLoopToKeepLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Test_TT_FlowStart {
-            get {
-                return ((int)(this["Test_TT_FlowStart"]));
-            }
-            set {
-                this["Test_TT_FlowStart"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("en")]
         public string Language {
             get {
@@ -476,18 +308,6 @@ namespace Olfactory.Properties {
             }
             set {
                 this["Language"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Test_TT_Type {
-            get {
-                return ((int)(this["Test_TT_Type"]));
-            }
-            set {
-                this["Test_TT_Type"] = value;
             }
         }
         
@@ -505,37 +325,13 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool Test_TT_UseValveTimer {
+        [global::System.Configuration.DefaultSettingValueAttribute("8")]
+        public double Setup_MFC_Odor2 {
             get {
-                return ((bool)(this["Test_TT_UseValveTimer"]));
+                return ((double)(this["Setup_MFC_Odor2"]));
             }
             set {
-                this["Test_TT_UseValveTimer"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Test_TT_OdorPrepMethod {
-            get {
-                return ((int)(this["Test_TT_OdorPrepMethod"]));
-            }
-            set {
-                this["Test_TT_OdorPrepMethod"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("400 2 1500 10")]
-        public string Test_TT_PPMConversionParams {
-            get {
-                return ((string)(this["Test_TT_PPMConversionParams"]));
-            }
-            set {
-                this["Test_TT_PPMConversionParams"] = value;
+                this["Setup_MFC_Odor2"] = value;
             }
         }
     }
