@@ -47,17 +47,17 @@ namespace Olfactory.Pages
             btnSaveData.IsEnabled = true;
         }
 
-        private void OnSaveData_Click(object sender, RoutedEventArgs e)
+        private void SaveData_Click(object sender, RoutedEventArgs e)
         {
             RequestSaving?.Invoke(this, new EventArgs());
         }
 
-        private void OnReturn_Click(object sender, RoutedEventArgs e)
+        private void Return_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, false);
         }
 
-        private void OnExit_Click(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, true);
         }

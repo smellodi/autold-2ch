@@ -120,9 +120,6 @@
 	<data name="Setup" xml:space="preserve">
     <value>Setup</value>
   </data>
-	<data name="Automatic" xml:space="preserve">
-    <value>Automatisch</value>
-  </data>
 	<data name="BackToHome" xml:space="preserve">
     <value>Zurück zur Startseite</value>
   </data>
@@ -144,14 +141,8 @@
 	<data name="COMMonitor" xml:space="preserve">
     <value>COM Monitor</value>
   </data>
-	<data name="Continue" xml:space="preserve">
-    <value>Weiter</value>
-  </data>
 	<data name="CorrectAndTryAgain" xml:space="preserve">
     <value>Bitter korrigieren und erneut versuchen.</value>
-  </data>
-	<data name="Direction" xml:space="preserve">
-    <value>Richtung</value>
   </data>
 	<data name="DurationsSec" xml:space="preserve">
     <value>Dauer in Sekunden</value>
@@ -165,30 +156,6 @@
 	<data name="Exit" xml:space="preserve">
     <value>Ausgang</value>
   </data>
-	<data name="Familiarization" xml:space="preserve">
-    <value>Einarbeitung</value>
-  </data>
-	<data name="FamiliarizeOdor" xml:space="preserve">
-    <value>Mit dem Duft vertraut machen.</value>
-  </data>
-	<data name="FamilInstrContinue" xml:space="preserve">
-    <value>Drücken Sie 'Test starten' um zu beginnen.</value>
-  </data>
-	<data name="FamilInstrOpenValve" xml:space="preserve">
-    <value>Bitte warten sie nach dem Öffnen des Ventils einige Sekunden bis Sie den Duft wahrnehmen. Dann nehmen Sie sich Zeit sich den Duft einzuprägen.</value>
-  </data>
-	<data name="FamilInstrPreparing" xml:space="preserve">
-    <value>Bereite den Duft vor</value>
-  </data>
-	<data name="FamilInstrSniff" xml:space="preserve">
-    <value>Der Duft fliesst nun, bitte schnuppern Sie ihn!</value>
-  </data>
-	<data name="FamilInstrVentilating" xml:space="preserve">
-    <value>Bitte warten Sie während der Schlauch mit Frischluft gereinigt wird ...</value>
-  </data>
-	<data name="FeedbackLoop" xml:space="preserve">
-    <value>Rückmeldungsschleife</value>
-  </data>
 	<data name="FinalPause" xml:space="preserve">
     <value>Letzte Pause</value>
   </data>
@@ -201,14 +168,8 @@
 	<data name="NumPos" xml:space="preserve">
     <value>eine positive Zahl</value>
   </data>
-	<data name="NumPosSpaceSep" xml:space="preserve">
-    <value>durch Leerzeichen getrennte positive Zahlen</value>
-  </data>
 	<data name="Graph" xml:space="preserve">
     <value>Graph</value>
-  </data>
-	<data name="Immediate" xml:space="preserve">
-    <value>umgehend</value>
   </data>
 	<data name="InfoF2" xml:space="preserve">
     <value>Drücken Sie F2 um COM Anschlüsse zu simulieren.</value>
@@ -221,9 +182,6 @@
   </data>
 	<data name="Input" xml:space="preserve">
     <value>Eingabe</value>
-  </data>
-	<data name="Instructions" xml:space="preserve">
-    <value>Anweisungen</value>
   </data>
 	<data name="Interrupt" xml:space="preserve">
     <value>unterbrechen</value>
@@ -246,9 +204,6 @@
 	<data name="MA" xml:space="preserve">
     <value>mA</value>
   </data>
-	<data name="Manual" xml:space="preserve">
-    <value>Handbuch</value>
-  </data>
 	<data name="MFCPlayground" xml:space="preserve">
     <value>MFC Spielplatz</value>
   </data>
@@ -261,74 +216,23 @@
 	<data name="MV" xml:space="preserve">
     <value>mV</value>
   </data>
-	<data name="OdorantHere" xml:space="preserve">
-    <value>Duft war hier</value>
-  </data>
 	<data name="OdorFlow" xml:space="preserve">
     <value>Duftstrom</value>
-  </data>
-	<data name="OdorLevel" xml:space="preserve">
-    <value>Duftkonzentration</value>
-  </data>
-	<data name="OdorLevels" xml:space="preserve">
-    <value>Duftkonzentrationen</value>
-  </data>
-	<data name="OdorPreparation" xml:space="preserve">
-    <value>Duftvorbereitung</value>
   </data>
 	<data name="OdorPulses" xml:space="preserve">
     <value>Duftimpulse</value>
   </data>
-	<data name="OdorSensitivity" xml:space="preserve">
-    <value>Ihre Duftsensitivität (ml/min):</value>
-  </data>
-	<data name="OdorStartsAfterInhale" xml:space="preserve">
-    <value>Der Duft beginnt zu fliessen sobald Sie einatmen.</value>
-  </data>
-	<data name="OdorStartsAfterKeyPress" xml:space="preserve">
-    <value>Der Duft beginnt zu fliessen sobald der Nuter die Leertaste drückt</value>
-  </data>
-	<data name="OdorStartsImmediately" xml:space="preserve">
-    <value>Der Duft beginnt zu fliessen sobald er vorbereitet wurde</value>
-  </data>
-	<data name="Open" xml:space="preserve">
-    <value>Offen</value>
-  </data>
-	<data name="OpenValve" xml:space="preserve">
-    <value>Öffnet das Ventil zum Duft</value>
-  </data>
-	<data name="Pen" xml:space="preserve">
-    <value>Kiste</value>
-  </data>
-	<data name="PenPresentation" xml:space="preserve">
-    <value>Duftpräsentation</value>
-  </data>
-	<data name="PenSniffing" xml:space="preserve">
-    <value>Schnuppern</value>
-  </data>
 	<data name="PIDSampling" xml:space="preserve">
     <value>PID Probenentnahme</value>
   </data>
-	<data name="PIDTemp" xml:space="preserve">
-    <value>Strom des Temperaturdetektors</value>
-  </data>
 	<data name="PIDVoltage" xml:space="preserve">
     <value>PID Spannung</value>
-  </data>
-	<data name="Procedure" xml:space="preserve">
-    <value>Prozedur</value>
   </data>
 	<data name="PulseFlowRate" xml:space="preserve">
     <value>Pulsdurchfluss</value>
   </data>
 	<data name="Pulses" xml:space="preserve">
     <value>Puls</value>
-  </data>
-	<data name="RecognInRow" xml:space="preserve">
-    <value>Erkennungen in Folge</value>
-  </data>
-	<data name="Result" xml:space="preserve">
-    <value>Resultat</value>
   </data>
 	<data name="Save" xml:space="preserve">
     <value>Speichern</value>
@@ -357,15 +261,6 @@
 	<data name="Start" xml:space="preserve">
     <value>Start</value>
   </data>
-	<data name="StartTest" xml:space="preserve">
-    <value>Den Test starten</value>
-  </data>
-	<data name="Step" xml:space="preserve">
-    <value>Schritt</value>
-  </data>
-	<data name="System" xml:space="preserve">
-    <value>System</value>
-  </data>
 	<data name="Table" xml:space="preserve">
     <value>Tabelle</value>
   </data>
@@ -378,47 +273,8 @@
 	<data name="ThankYou" xml:space="preserve">
     <value>Vielen dank!</value>
   </data>
-	<data name="ThresholdTest" xml:space="preserve">
-    <value>Test zur Bestimmung der Wahrnehmungsschwelle</value>
-  </data>
-	<data name="ThTestInstrDone" xml:space="preserve">
-    <value>Vielen Dank, Ihre Auswahl wurde registriert.</value>
-  </data>
-	<data name="ThTestInstrInhale" xml:space="preserve">
-    <value>Bitte atmen Sie ein</value>
-  </data>
-	<data name="ThTestInstrPressKey" xml:space="preserve">
-    <value>Bitte drücken Sie die Leertaste when Sie anfangen einzuatmen</value>
-  </data>
-	<data name="ThTestInstrSelectPen" xml:space="preserve">
-    <value> Bitte wählen Sie die Kiste mit Geruch.</value>
-  </data>
-	<data name="ThTestInstrSniff" xml:space="preserve">
-    <value>Schnuppern Sie an der Kiste</value>
-  </data>
-	<data name="ThTestInstrWait" xml:space="preserve">
-    <value>Bitte warten Sie bis der Duft bereit ist.</value>
-  </data>
 	<data name="Time" xml:space="preserve">
     <value>Zeit</value>
-  </data>
-	<data name="ToCollect" xml:space="preserve">
-    <value>Sammeln</value>
-  </data>
-	<data name="ToCount" xml:space="preserve">
-    <value>Zählen</value>
-  </data>
-	<data name="ToKeepTargetLevel" xml:space="preserve">
-    <value>um das Ziellevel zu halten</value>
-  </data>
-	<data name="ToReachTargetLevel" xml:space="preserve">
-    <value>um das Ziellevel zu erreichen</value>
-  </data>
-	<data name="Turnings" xml:space="preserve">
-    <value>Abzweigungen</value>
-  </data>
-	<data name="Unknown" xml:space="preserve">
-    <value>unbekannt</value>
   </data>
 	<data name="User" xml:space="preserve">
     <value>Nutzer</value>
@@ -435,9 +291,6 @@
 	<data name="AppTerminated" xml:space="preserve">
     <value>Die Anwendung wird beendet.</value>
   </data>
-	<data name="ControlsValve2" xml:space="preserve">
-    <value>Kontrolliert Ventil #2 während des Strömen des Duftes. Dieses Ventil führt zum Papierkorb während beider Pausen.</value>
-  </data>
 	<data name="DataSavedInto" xml:space="preserve">
     <value>Daten gespeichert in</value>
   </data>
@@ -452,12 +305,6 @@
   </data>
 	<data name="FailedToSave" xml:space="preserve">
     <value>Speichern der Daten in .. fehlgeschlagen</value>
-  </data>
-	<data name="OdorFlowTooHigh" xml:space="preserve">
-    <value>Der Durchfluss ist zu hoch um in {0} Sekunden bereit zu sein.</value>
-  </data>
-	<data name="PressCancelToDiscard" xml:space="preserve">
-    <value>Drücken Sie 'Abbrechen' um die Daten zu verwerfen.</value>
   </data>
 	<data name="PressNoToChangeNameFolder" xml:space="preserve">
     <value>Drücken Sie 'Nein' um den Name und/oder Ordner zu ändern.</value>
@@ -480,23 +327,8 @@
 	<data name="Logger" xml:space="preserve">
     <value>Aufzeichnungsgerät</value>
   </data>
-	<data name="OlfactoryTestTool" xml:space="preserve">
-    <value>Olfaktorisches Testgerät</value>
-  </data>
 	<data name="Validator" xml:space="preserve">
     <value>Validierer</value>
-  </data>
-	<data name="ThTestInstrIntro" xml:space="preserve">
-    <value>Ihr Geruchssinn wird getestet. Der Test dauert in etwa 30-40 Minuten.</value>
-  </data>
-	<data name="ThTestInstrFinal" xml:space="preserve">
-    <value>Alle Substanzenin diesem Test sind ungifitig und harmlos in den verwendeten Konzentration.</value>
-  </data>
-	<data name="ThTestInstrRN" xml:space="preserve">
-    <value>[BEMERKUNG AN FORSCHER] Weitere Anweisungen können hier hinzugefügt werden. Wir könnten sogar persönliche Daten auf dieser Seite sammeln um sie später in den log Dateien zusammen mit den Daten zu speichern.</value>
-  </data>
-	<data name="ThTestInstrThreePens" xml:space="preserve">
-    <value>Ihnen werden wiederholt drei Kisten präsentiert. Nur einer dieser Drei enthält den Geruchsstoff. Ihre Aufgabe ist es die Kiste zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
   </data>
 	<data name="Temperature" xml:space="preserve">
     <value>Temperatur</value>
@@ -504,51 +336,12 @@
 	<data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
-	<data name="ThTestInstrTwoPens" xml:space="preserve">
-    <value>Ihnen werden wiederholt zwei Kisten präsentiert. Nur einer dieser Zwei enthält den Geruchsstoff. Ihre Aufgabe ist es die Kiste zu finden, welcher ihrer Meinung nach einen Duft emittiert. Falls Sie keinen Geruch wahrnehmen können und daher keine Entscheidung treffen können, dann raten Sie bitte.</value>
-  </data>
 	<data name="No" xml:space="preserve">
     <value>Nein</value>
   </data>
 	<data name="Yes" xml:space="preserve">
     <value>Ja</value>
   </data>
-	<data name="OnePen" xml:space="preserve">
-		<value>eine Kiste</value>
-	</data>
-	<data name="ThreePens" xml:space="preserve">
-		<value>drei Kisten</value>
-	</data>
-	<data name="TwoPens" xml:space="preserve">
-		<value>zwei Kisten</value>
-	</data>
-	<data name="FlowStart" xml:space="preserve">
-		<value>Beginn der Zirkulation</value>
-	</data>
-	<data name="ProcedureType" xml:space="preserve">
-		<value>Prozedurtyp</value>
-	</data>
-	<data name="ProcTypeOnePen" xml:space="preserve">
-		<value>Nutzer antworten, ob die präsentierte Kiste gerochen hat oder nicht</value>
-	</data>
-	<data name="ProcTypeThreePens" xml:space="preserve">
-		<value>Den Nutzern werden drei Kisten präsentiert. Sie müssen sich für eine entscheiden, die ihrer Meinung nach riecht</value>
-	</data>
-	<data name="ProcTypeTwoPens" xml:space="preserve">
-		<value>Den Nutzern werden zwei Kisten präsentiert. Sie müssen sich für eine entscheiden, die ihrer Meinung nach riecht</value>
-	</data>
-	<data name="ThTestInstrOnePen" xml:space="preserve">
-		<value>Sie werden wiederholt aufgefordert die Luft, welche zu der Maske geleitet wird, zu schnuppern. Ihre Aufgabe ist es zu entscheiden, ob Sie einen Geruch wahrgenommen haben.</value>
-	</data>
-	<data name="ThTestInstrChooseOdor" xml:space="preserve">
-		<value>Haben Sie den Geruch wahrgenommen?</value>
-	</data>
-	<data name="Decreasing" xml:space="preserve">
-		<value>Abnehmend</value>
-	</data>
-	<data name="Increasing" xml:space="preserve">
-		<value>Zunehemend</value>
-	</data>
 	<data name="OK" xml:space="preserve">
 		<value>Ok</value>
 	</data>
@@ -569,18 +362,6 @@
 	</data>
 	<data name="PressCancel" xml:space="preserve">
 		<value>Drücken Sie ‘Abbrechen’ um ohne zu speichern fortzufahren.</value>
-	</data>
-	<data name="BreathingStage" xml:space="preserve">
-		<value>Atemphase</value>
-	</data>
-	<data name="Exhale" xml:space="preserve">
-		<value>Ausatmen</value>
-	</data>
-	<data name="Inhale" xml:space="preserve">
-		<value>Einatmen</value>
-	</data>
-	<data name="StartOdorFlow" xml:space="preserve">
-		<value>Geruchspräsentation starten</value>
 	</data>
 	<data name="OdorPulsesExpressionNote" xml:space="preserve">
 		<value>Notes: 
@@ -604,12 +385,6 @@ Examples described:
 
 32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
 	</data>
-	<data name="Practice" xml:space="preserve">
-		<value>Demonstation</value>
-	</data>
-	<data name="SystemAndUser" xml:space="preserve">
-		<value>System und Nutzer</value>
-	</data>
 	<data name="Timer" xml:space="preserve">
 		<value>Timer</value>
 	</data>
@@ -618,5 +393,11 @@ Examples described:
 	</data>
 	<data name="Back" xml:space="preserve">
 		<value>Zurücksetzen</value>
+	</data>
+	<data name="Valve" xml:space="preserve">
+		<value>Ventil</value>
+	</data>
+	<data name="Open" xml:space="preserve">
+		<value>Offen</value>
 	</data>
 </root>

@@ -12,6 +12,7 @@ namespace Olfactory.Utils
         {
             /// <summary>
             /// Used internally
+            /// Note that each name should have a corresponding translation in resourse files
             /// </summary>
             None = 0,
             Yes = 1,
@@ -139,7 +140,7 @@ namespace Olfactory.Utils
                 _ => throw new NotImplementedException("Unknown icon")
             };
 
-            var uriSource = new Uri($@"/olfactory-test;component/Assets/images/{iconFilename}.png", UriKind.Relative);
+            var uriSource = new Uri($@"/autold;component/Assets/images/{iconFilename}.png", UriKind.Relative);
             imgIcon.Source = new BitmapImage(uriSource);
 
             if (customButtons != null)

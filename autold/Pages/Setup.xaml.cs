@@ -31,8 +31,7 @@ namespace Olfactory.Pages
             DataContext = this;
 
             Storage.Instance
-                .BindScaleToZoomLevel(sctScale1)
-                .BindScaleToZoomLevel(sctScale2)
+                .BindScaleToZoomLevel(sctScale)
                 .BindVisibilityToDebug(lblDebug);
 
             UpdatePortList(cmbPIDPort);

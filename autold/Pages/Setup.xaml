@@ -40,6 +40,9 @@
     </Page.Resources>
 
     <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition />
@@ -60,9 +63,6 @@
                     Orientation="Vertical"
                     HorizontalAlignment="Center"
                     Margin="12,0,0,0">
-            <StackPanel.LayoutTransform>
-                <ScaleTransform x:Name="sctScale2"/>
-            </StackPanel.LayoutTransform>
             <Border Style="{StaticResource Form}" Margin="0,0,0,12">
                 <StackPanel>
                     <Label Style="{StaticResource FormHeader}"
@@ -203,10 +203,6 @@
 
         <StackPanel Grid.Row="2" Grid.Column="1" x:Name="stpMeasurements"
                     Margin="12,0">
-            <StackPanel.LayoutTransform>
-                <ScaleTransform x:Name="sctScale1"/>
-            </StackPanel.LayoutTransform>
-
             <ScrollViewer x:Name="scvIndicatorScroller" 
                           HorizontalScrollBarVisibility="Auto" 
                           VerticalScrollBarVisibility="Disabled">

@@ -10,8 +10,7 @@
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="{lex:Loc Pulses}"
-      WindowTitle="{lex:Loc OdorPulses}">
+      Title="{lex:Loc Pulses}">
     
     <Page.Resources>
         <Style x:Key="Status" TargetType="Label">
@@ -21,6 +20,9 @@
     </Page.Resources>
     
     <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition/>
@@ -37,10 +39,6 @@
         <StackPanel Grid.Row="1"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
-            <StackPanel.LayoutTransform>
-                <ScaleTransform x:Name="sctScale"/>
-            </StackPanel.LayoutTransform>
-            
             <WrapPanel Margin="0,12"
                        HorizontalAlignment="Center">
                 <Label Content="{lex:Loc PulseFlowRate}"

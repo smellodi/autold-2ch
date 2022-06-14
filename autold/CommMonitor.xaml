@@ -39,7 +39,7 @@
         
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
-            <ColumnDefinition Width="460"/>
+            <ColumnDefinition Width="500"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -101,14 +101,18 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="{lex:Loc Time}" Width="50" DisplayMemberBinding="{Binding Path=Time}" />
-                    <GridViewColumn Header="C:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource any2blank}}"/>
+                    <GridViewColumn Header="A:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource any2blank}}"/>
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=A.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=A.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=A.Temperature}" />
-                    <GridViewColumn Header="S:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource any2blank}}" />
+                    <GridViewColumn Header="B:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource any2blank}}" />
                     <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=B.MassFlow}" />
                     <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=B.Pressure}" />
                     <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=B.Temperature}" />
+                    <GridViewColumn Header="C:" Width="20" DisplayMemberBinding="{Binding Converter={StaticResource any2blank}}" />
+                    <GridViewColumn Header="M (ml/m)" Width="60" DisplayMemberBinding="{Binding Path=C.MassFlow}" />
+                    <GridViewColumn Header="Pr (mbar)" Width="60" DisplayMemberBinding="{Binding Path=C.Pressure}" />
+                    <GridViewColumn Header="T (C)" Width="50" DisplayMemberBinding="{Binding Path=C.Temperature}" />
                 </GridView>
             </ListView.View>
         </ListView>

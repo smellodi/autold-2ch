@@ -11,7 +11,7 @@ namespace Olfactory
         public class Record
         {
             public static string DELIM => ",";
-            public static string HEADER => $"Time [ms]{DELIM}PID [mV]{DELIM}Loop [mA]{DELIM}QMa [std]{DELIM}QMb [std]{DELIM}Pa [mbar]{DELIM}Pb [mbar]{DELIM}Ta [C]{DELIM}Tb [C]{DELIM}Mark";
+            public static string HEADER => $"Time [ms]{DELIM}PID [mV]{DELIM}Loop [mA]{DELIM}QMa [std]{DELIM}QMb [std]{DELIM}QMc [std]{DELIM}Pa [mbar]{DELIM}Pb [mbar]{DELIM}Pc [mbar]{DELIM}Ta [C]{DELIM}Tb [C]{DELIM}Tc [C]{DELIM}Mark";
 
             public long Time => _time;
 
@@ -26,10 +26,13 @@ namespace Olfactory
                     pidSample.Loop.ToString("F4"),
                     mfcSample.A.MassFlow.ToString("F2"),
                     mfcSample.B.MassFlow.ToString("F2"),
+                    mfcSample.C.MassFlow.ToString("F2"),
                     mfcSample.A.Pressure.ToString("F2"),
                     mfcSample.B.Pressure.ToString("F2"),
+                    mfcSample.C.Pressure.ToString("F2"),
                     mfcSample.A.Temperature.ToString("F2"),
                     mfcSample.B.Temperature.ToString("F2"),
+                    mfcSample.C.Temperature.ToString("F2"),
                     string.Join(' ', events)
                 };
             }

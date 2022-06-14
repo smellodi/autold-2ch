@@ -9,10 +9,12 @@
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="530" d:DesignWidth="600"
-      Title="{lex:Loc Setup}"
-      WindowTitle="{lex:Loc OdorPulses}">
+      Title="{lex:Loc Setup}">
 
     <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="auto"/>
@@ -35,9 +37,6 @@
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Form}">
-            <Border.LayoutTransform>
-                <ScaleTransform x:Name="sctScale"/>
-            </Border.LayoutTransform>
             <StackPanel Width="460">
                 <Label Style="{StaticResource FormHeader}"
                        Content="{lex:Loc Settings}"/>
@@ -106,21 +105,31 @@
                         <WrapPanel Margin="0,6">
                             <RadioButton x:Name="rdbValve1"
                                          GroupName="valves"
-                                         Content="{lex:Loc System}"
-                                         Checked="Valve1_Checked"/>
+                                         Checked="Valve1_Checked">
+                                <TextBlock>
+                                    <Run Text="{lex:Loc Valve}"/>
+                                    <Run Text="#1"/>
+                                </TextBlock>
+                            </RadioButton>
                             <RadioButton x:Name="rdbValve2"
                                          Margin="16,0,0,0"
                                          GroupName="valves"
-                                         Content="{lex:Loc User}"
-                                         Checked="Valve2_Checked"/>
+                                         Checked="Valve2_Checked">
+                                <TextBlock>
+                                    <Run Text="{lex:Loc Valve}"/>
+                                    <Run Text="#2"/>
+                                </TextBlock>
+                            </RadioButton>
                             <RadioButton x:Name="rdbAllValves"
                                          Margin="16,0,0,0"
                                          GroupName="valves"
-                                         Content="{lex:Loc SystemAndUser}"
-                                         Checked="AllValve_Checked"/>
+                                         Checked="AllValve_Checked">
+                                <TextBlock>
+                                    <Run Text="{lex:Loc Valves}"/>
+                                    <Run Text="#1 and #2"/>
+                                </TextBlock>
+                            </RadioButton>
                         </WrapPanel>
-                        <!--TextBlock TextWrapping="Wrap"
-                                   Text="{lex:Loc ControlsValve2}"/-->
                     </StackPanel>
                 </UserControl>
 

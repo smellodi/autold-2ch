@@ -12,8 +12,7 @@ namespace Olfactory
         COM = MFC | PID,
 
         __MIN_TEST_ID = 4,
-        ThTest = 4,
-        OdProd = 8,
+        OdProd = 4,
     }
 
     public enum SavingResult

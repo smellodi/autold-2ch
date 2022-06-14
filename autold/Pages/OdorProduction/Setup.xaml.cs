@@ -13,8 +13,9 @@ namespace Olfactory.Pages.OdorProduction
         {
             InitializeComponent();
 
-            Storage.Instance.BindScaleToZoomLevel(sctScale);
-            Storage.Instance.BindVisibilityToDebug(lblDebug);
+            Storage.Instance
+                .BindScaleToZoomLevel(sctScale)
+                .BindVisibilityToDebug(lblDebug);
 
             _valvesControlled = _settings.ValvesControlled;
 
