@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<project>
+  <configuration createBackupFiles="False" hideEmptyRows="False" hideTranslatedRows="False" useSpellChecker="True" resXIndentChar="	" neutralLanguageCode="en-US" languagesToDisplay="">
+    <globalSetting name="Filter-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+  &lt;property name="ActiveFilterString" /&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="Sort-ResourceEditorGrid">&lt;XtraSerializer version="1.0" application="View"&gt;
+  &lt;property name="#LayoutVersion" /&gt;
+  &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
+&lt;/XtraSerializer&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="1614395878" /&gt;&lt;/items&gt;</globalSetting>
+    <userSetting name="olequ@LAPTOP-BNL99RMU.filesInitialDir">C:\Users\olequ\Dev\ProScent\model1\autold\Properties</userSetting>
+    <userSetting name="olequ@LAPTOP-BNL99RMU.FindText">User</userSetting>
+    <userSetting name="olequ@LAPTOP-BNL99RMU.RecentFiles">C:\Users\olequ\Dev\ProScent\model1\autold\Properties\Resources.en.resx;C:\Users\olequ\Dev\ProScent\model1\autold\Properties\Resources.fi.resx</userSetting>
+    <description>
+    </description>
+  </configuration>
+  <fileGroups>
+    <fileGroup name="" projectFolderUniqueID="00000000-0000-0000-0000-000000000000" orderPosition="0" ignoreDuringExportAndImport="False" uniqueID="ecf89fb2-080e-42e6-bb69-063947025e05">
+      <file filePath="autold\Properties\Resources.en.resx" absoluteFilePath="C:\Users\olequ\Dev\ProScent\model1\autold\Properties\Resources.en.resx" uniqueID="56511a66-ea7b-45de-984a-d89acbf05034" />
+      <file filePath="autold\Properties\Resources.fi.resx" absoluteFilePath="C:\Users\olequ\Dev\ProScent\model1\autold\Properties\Resources.fi.resx" uniqueID="b8d76389-6598-462d-b4c1-a9ac17cea265" />
+      <remarks>
+      </remarks>
+    </fileGroup>
+  </fileGroups>
+  <projectFolders />
+</project>

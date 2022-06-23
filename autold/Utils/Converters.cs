@@ -6,34 +6,22 @@ using System.Windows.Data;
 
 namespace Olfactory.Utils
 {
-    public class BoolToVisibilityConverter : IValueConverter
+    [ValueConversion(typeof(int), typeof(Visibility))]
+    public class NumberToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return (bool)value ? Visibility.Visible : Visibility.Hidden;
+            return (int)value != 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var visibility = (Visibility)value;
-            return visibility == Visibility.Visible;
+            return visibility == Visibility.Visible ? 1.0 : 0.0;
         }
     }
 
-    public class NotBoolToVisibilityConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return (bool)value ? Visibility.Hidden : Visibility.Visible;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var visibility = (Visibility)value;
-            return visibility != Visibility.Visible;
-        }
-    }
-
+    [ValueConversion(typeof(object), typeof(bool))]
     public class ObjectToBoolConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -47,6 +35,7 @@ namespace Olfactory.Utils
         }
     }
 
+    [ValueConversion(typeof(object), typeof(string))]
     public class AnyToBlankConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -60,6 +49,7 @@ namespace Olfactory.Utils
         }
     }
 
+    [ValueConversion(typeof(ComboBoxItem), typeof(Visibility))]
     public class ComboBoxItemToVisilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -70,20 +60,6 @@ namespace Olfactory.Utils
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        }
-    }
-
-    [ValueConversion(typeof(bool), typeof(bool))]
-    public class InverseBooleanConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return !(bool)value;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return !(bool)value;
         }
     }
 }

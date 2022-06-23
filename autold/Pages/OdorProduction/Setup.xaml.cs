@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Settings = Olfactory.Tests.OdorProduction.Settings;
@@ -17,17 +19,12 @@ namespace Olfactory.Pages.OdorProduction
                 .BindScaleToZoomLevel(sctScale)
                 .BindVisibilityToDebug(lblDebug);
 
-            _valvesControlled = _settings.ValvesControlled;
-
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");
-            txbOdorQuantities.Text = _settings.OdorQuantitiesAsString();
+            txbPulses.Text = _settings.SerializePulses();
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbFinalPause.Text = _settings.FinalPause.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
-            rdbValve1.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.Valve1;
-            rdbValve2.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.Valve2;
-            rdbAllValves.IsChecked = _valvesControlled == Comm.MFC.ValvesOpened.All;
             chkUseValveControllerTimer.IsChecked = _settings.UseValveTimer;
         }
 
@@ -40,19 +37,38 @@ namespace Olfactory.Pages.OdorProduction
 
         readonly Settings _settings = new();
 
-        Comm.MFC.ValvesOpened _valvesControlled;
-
         private Utils.Validation CheckInput()
         {
-            var validations = new Utils.Validation[]
+            var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string error);
+            if (pulses == null)
+            {
+                return new Utils.Validation(txbPulses, error);
+            }
+
+            var validations = new List<Utils.Validation>
             {
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorFlowDuration, 0.1, 10000, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbOdorQuantities, 1, 60000, Utils.Validation.ValueFormat.Float, Settings.LIST_DELIM, Settings.EXPR_OPS),
             };
+
+            foreach (var pulse in pulses)
+            {
+                if (pulse.Channel1 != null)
+                {
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Duration.ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
+                }
+                if (pulse.Channel2 != null)
+                {
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Duration.ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
+                }
+            }
 
             foreach (var v in validations)
             {
@@ -62,8 +78,8 @@ namespace Olfactory.Pages.OdorProduction
                 }
             }
 
-            var longestDuration = 0.001 * Settings.GetOdorQuantitiesLongestDuration(txbOdorQuantities.Text);
-            var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, longestDuration, 10000, Utils.Validation.ValueFormat.Float);
+            var longestDurationMs = pulses.Max(pulse => pulse.WholeDuration(_settings.OdorFlowDurationMs));
+            var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, 0.001 * longestDurationMs, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Float);
             if (!isOdorFlowDurationLongEnough.IsValid)
             {
                 return isOdorFlowDurationLongEnough;
@@ -88,12 +104,11 @@ namespace Olfactory.Pages.OdorProduction
             else
             {
                 _settings.FreshAir = double.Parse(txbFreshAir.Text);
-                _settings.OdorQuantities = Settings.ParseOdorQuantinies(txbOdorQuantities.Text);
+                _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string _);
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
-                _settings.ValvesControlled = _valvesControlled;
                 _settings.UseValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
 
                 _settings.Save();
@@ -105,21 +120,6 @@ namespace Olfactory.Pages.OdorProduction
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, null);
-        }
-
-        private void Valve1_Checked(object sender, RoutedEventArgs e)
-        {
-            _valvesControlled = Comm.MFC.ValvesOpened.Valve1;
-        }
-
-        private void Valve2_Checked(object sender, RoutedEventArgs e)
-        {
-            _valvesControlled = Comm.MFC.ValvesOpened.Valve2;
-        }
-
-        private void AllValve_Checked(object sender, RoutedEventArgs e)
-        {
-            _valvesControlled = Comm.MFC.ValvesOpened.All;
         }
     }
 }

@@ -217,7 +217,7 @@
     <value>Kiitos!</value>
   </data>
 	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>Lista pilkulla erotettuja arvoja tai lausekkeita. Lausekkeet ovat muodossa MLMIN x [MS ≥ 10] x [LUKUMÄÄRÄ &lt; 10]'. Esimerkiksi: '4, 8x500, 16x500x2, 32x5'</value>
+    <value>Lista SPACE tai ENTER erotettuja lausekkeita. Lausekkeet koostuvat 1-2 sub-lausekkeita muodossa '&lt;channel=1|2&gt;=[&lt;delay=ms&gt;]&lt;flow=ml/min&gt;x&lt;duration=ms&gt;' ja pilkulla erotettuna. Esimerkiksi: '1=4x200,2=[100]4x100 2=10x500'</value>
   </data>
 	<data name="CorrectAndTryAgain" xml:space="preserve">
     <value>Korjaa virheellinen syöte ja yritä uudestaan.</value>
@@ -265,16 +265,13 @@
     <value>Aika</value>
   </data>
 	<data name="User" xml:space="preserve">
-    <value>käyttäjä</value>
-  </data>
-	<data name="Valves" xml:space="preserve">
-    <value>Venttiilit</value>
+    <value>avattu</value>
   </data>
 	<data name="NoDataToSave" xml:space="preserve">
     <value>Tallennettavaa tietoa ei ole</value>
   </data>
 	<data name="Waste" xml:space="preserve">
-    <value>poisto</value>
+    <value>suljettu</value>
   </data>
 	<data name="AppTerminated" xml:space="preserve">
     <value>Ohjelma on suljettu.</value>
@@ -287,9 +284,6 @@
   </data>
 	<data name="EmptyList" xml:space="preserve">
     <value>Listassa ei ole arvoja</value>
-  </data>
-	<data name="ExpressionNotValid" xml:space="preserve">
-    <value>Lauseke '{0}' ei kelpaa. Ainoastaan '{1}' operaatiot ovat sallittuja. </value>
   </data>
 	<data name="FailedToSave" xml:space="preserve">
     <value>Tietoja ei voitu tallentaa kohteeseen</value>
@@ -319,10 +313,10 @@
     <value>Arvo '{0}' on liian pieni, sen ei saa olla pienempi kuin '{1}'</value>
   </data>
 	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>pilkulla erotetut positiiviset liukuluvut tai lausekkeet. Lausekkeet muodossa MLMIN x [MS] x [LUKUMÄÄRÄ]'</value>
+    <value>SPACE tai ENTER erotetut lausekkeet. Lausekkeet koostuvat 1-2 sub-lausekkeita muodossa '&lt;1|2&gt;=[&lt;ms&gt;]&lt;ml/min&gt;x&lt;ms&gt;' ja pilkulla erotettuna.</value>
   </data>
 	<data name="PulseFlowRate" xml:space="preserve">
-    <value>Pulssivirtauksen nopeus</value>
+    <value>Pulssivirtauksen nopeukset:</value>
   </data>
 	<data name="Logger" xml:space="preserve">
     <value>Tietojen kerääjä</value>
@@ -364,26 +358,20 @@
 		<value>Paina “Peruuta”, jos haluat jatkaa tallentamatta</value>
 	</data>
 	<data name="OdorPulsesExpressionNote" xml:space="preserve">
-		<value>Notes: 
+		<value>Huomautuksia:
 
-1. Valve #2 (output to user) is controlled by MFC embedded timer only if an expression contains pulse duration, otherwise it is controlled by the software timer that closed the valve after [Odour flow] seconds.
+1. Pulssin kesto + mahdollinen lausekkeessa määritetty viive ei saa ylittää "Tuoksuvirtaus" määriteltyä yleistä kestoa.
 
-2. Valve #1 (gas mixer) is always controlled by the software timer.
+2. Pulssin vähimmäiskesto on 10 ms, maksimi on 65 355 ms.
 
-3. Pulse duration defined in an expression must not exceed the general duration defined as "Odour flow".
-
-4. Minimum pulse duration is 10ms. Maximum repetition count is 9. 
+3. Korkeintaan yksi (jompikumpi) haju voi viivästyä
 
 
-Examples described:
+Kuvattuja esimerkkejä:
 
-4 - the pulse of 4 ml/min lasting [Odour flow] seconds; the software timer is used,
+1=4x200,2=[100]4x100 - hajupulssi #1 on 4 ml/min ja kestää 200 ms; haju #2 alkaa virrata 100 ms viiveellä, virtaa 4 ml/min nopeudella ja kestää 100 ms.
 
-8x500 - the pulse of 8 ml/min lasting 500 ms; the MFC timer is used,
-
-16x500x2 - two pulse of 16 ml/min, each lasting 500 ms; the MFC timer is used,
-
-32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
+2=10x500 - vain haju #2 virtaa nopeudella 10 ml/min 500 ms:n ajan.</value>
 	</data>
 	<data name="Timer" xml:space="preserve">
 		<value>Ajastin</value>
@@ -394,10 +382,31 @@ Examples described:
 	<data name="Back" xml:space="preserve">
 		<value>Takaisin</value>
 	</data>
-	<data name="Valve" xml:space="preserve">
-		<value>venttiili</value>
-	</data>
 	<data name="Open" xml:space="preserve">
 		<value>Avaa</value>
+	</data>
+	<data name="PulseInvalidNumberOfChannels" xml:space="preserve">
+		<value>Virheellinen kanavien määrä: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelExpression" xml:space="preserve">
+		<value>Virheellinen kanavalauseke: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelID" xml:space="preserve">
+		<value>Virheellinen kanavatunnus: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelDescription" xml:space="preserve">
+		<value>Virheellinen kanavan #{0} kuvaus: {1}</value>
+	</data>
+	<data name="PulseSameChannelTwice" xml:space="preserve">
+		<value>Sama kanava määritetty kahdesti: {0}</value>
+	</data>
+	<data name="PulseOnlyOneChannelCanDelay" xml:space="preserve">
+		<value>Vain yksi kanava voi viivästyä: {0}</value>
+	</data>
+	<data name="Channel" xml:space="preserve">
+		<value>Kanava</value>
+	</data>
+	<data name="Session" xml:space="preserve">
+		<value>Hajun virtaus</value>
 	</data>
 </root>

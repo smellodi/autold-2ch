@@ -398,6 +398,9 @@ namespace Olfactory.Pages
 
                 Storage.Instance.IsDebugging = true;
                 lblDebug.Visibility = Visibility.Visible;
+
+                MFCToggle_Click(this, null);
+                PIDToggle_Click(this, null);
             }
         }
 

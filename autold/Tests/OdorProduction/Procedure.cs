@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 using Olfactory.Comm;
@@ -7,33 +8,39 @@ namespace Olfactory.Tests.OdorProduction
 {
     public class Procedure : ITestEmulator
     {
+        [Flags]
         public enum Stage
         {
-            None,
-            InitWait,
-            OdorFlow,
-            FinalWait,
+            None = 0,
+            InitWait = 1,
+            BeforeFinalWait = 2,
+            FinalWait = 4,
+            Odor1Flow = 8,
+            Odor2Flow = 16,
+            OdorFlow = 32,
         }
 
         public int Step => _step;
 
         public event EventHandler<double> Data;
         public event EventHandler<Stage> StageChanged;
-        public event EventHandler<bool> Finished;         // provides 'true' if there is no more trials to run
+        /// <summary>
+        /// Provides 'true' if there is no more trials to run, 'false' is more trials to run
+        /// </summary>
+        public event EventHandler<bool> Finished;
 
 
         public Procedure()
         {
             _dispatcher = Dispatcher.CurrentDispatcher;
 
-            FlowLogger flowLogger = FlowLogger.Instance;
-            flowLogger.Clear();
+            FlowLogger.Instance.Clear();
 
             _logger.Clear();
 
             _timer.Elapsed += (s, e) =>
             {
-                Dispatcher.CurrentDispatcher.Invoke(() =>  // we let the timer to count further without waiting for the end of reading from serial ports
+                _dispatcher.Invoke(() =>  // we let the timer to count further without waiting for the end of reading from serial ports
                 {
                     if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                     {
@@ -50,11 +57,14 @@ namespace Olfactory.Tests.OdorProduction
             };
         }
 
-        public void EmulationInit() { }
+        public void EmulationInit()
+        {
+            // nothing is needed here
+        }
 
         public void EmulationFinilize()
         {
-            _step = _settings.OdorQuantities.Length - 1;
+            _step = _settings.Pulses.Length - 1;
         }
 
         public void Start(Settings settings)
@@ -87,14 +97,15 @@ namespace Olfactory.Tests.OdorProduction
 
         public void Next()
         {
-            var (mlmin, ms) = _settings.OdorQuantities[_step];
+            var pulse = _settings.Pulses[_step];
 
-            _logger.Add($"S{mlmin}" + (ms > 0 ? $"{ms}" : ""));
+            _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
             _runner = Utils.DispatchOnce
                 .Do(0.1, () =>
                 {
-                    _mfc.Odor1Speed = mlmin;
+                    _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
+                    _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
                     StageChanged?.Invoke(this, Stage.InitWait);
                 })
                 .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
@@ -104,15 +115,13 @@ namespace Olfactory.Tests.OdorProduction
 
         public void Stop()
         {
-            _runner?.Stop();
-            _timer.Stop();
+            StopTimers();
 
             _mfc.IsInShortPulseMode = false;
             _mfc.Odor1Speed = MFC.ODOR_MIN_SPEED;
             _mfc.Odor2Speed = MFC.ODOR_MIN_SPEED;
             _mfc.OdorDirection = MFC.ValvesOpened.None;
         }
-
 
         // Internal
 
@@ -128,37 +137,59 @@ namespace Olfactory.Tests.OdorProduction
         int _step = 0;
 
         Utils.DispatchOnce _runner;
-
+        PulsesController _pulseController;
+        Utils.DispatchOnce _pulseFinisher;
 
         private void StartOdorFlow()
         {
-            var direction = _settings.ValvesControlled;
-            var (mlmin, ms) = _settings.OdorQuantities[_step];
-            var duration = ms == 0 ? _settings.OdorFlowDuration : 0.001 * ms;
-            var useShortPulse = _settings.UseValveTimer && 0 < duration && duration <= MFC.MAX_SHORT_PULSE_DURATION;
+            var pulse = _settings.Pulses[_step];
+            _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
+            _pulseController.PulseStateChanged += PulseStateChanged;
+            _pulseController.Run();
 
-            _logger.Add("V" + ((int)direction).ToString("D2"));
-
-            if (useShortPulse)
+            /*
+            if (pulse.Channel1?.Delay > 0)
             {
-                _mfc.PrepareForShortPulse(duration);
+                _pulseController = new PulsesController(pulse.Channel2, pulse.Channel1);
+                _pulseController.PulseStateChanged += PulseStateChanged;
+                _pulseController.Run(_settings.OdorFlowDurationMs);
+            }
+            else if (pulse.Channel2?.Delay > 0)
+            {
+                _pulseController = new PulsesController(pulse.Channel1, pulse.Channel2);
+                _pulseController.PulseStateChanged += PulseStateChanged;
+                _pulseController.Run(_settings.OdorFlowDurationMs);
             }
             else
             {
-                _mfc.IsInShortPulseMode = false;
+                _logger.Add("V" + ((int)pulse.Valves).ToString("D2"));
+
+                _mfc.StartPulses(
+                    Pulse.ChannelDuration(pulse.Channel1, _settings.OdorFlowDurationMs),
+                    Pulse.ChannelDuration(pulse.Channel2, _settings.OdorFlowDurationMs));
+                _mfc.OdorDirection = pulse.Valves;
+
+                StageChanged?.Invoke(this, Stage.OdorFlow |
+                    (pulse.Channel1 == null ? Stage.None : Stage.Odor1Flow) |
+                    (pulse.Channel2 == null ? Stage.None : Stage.Odor2Flow) );
             }
 
-            _mfc.OdorDirection = direction;
+            int wholeDuration = pulse.WholeDuration(_settings.OdorFlowDurationMs);
+            if (wholeDuration < _settings.OdorFlowDurationMs)
+            {
+                _pulseFinisher = Utils.DispatchOnce.Do((double)wholeDuration / 1000, () =>
+                {
+                    _pulseFinisher = null;
 
-            StageChanged?.Invoke(this, Stage.OdorFlow);
+                    CloseValves();
+                    StageChanged?.Invoke(this, Stage.OdorFlow);
+                });
+            }*/
         }
 
         private void StopOdorFlow()
         {
-            _mfc.OdorDirection = MFC.ValvesOpened.None;
-
-            _logger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
-
+            CloseValves();
             StageChanged?.Invoke(this, Stage.FinalWait);
         }
 
@@ -166,7 +197,7 @@ namespace Olfactory.Tests.OdorProduction
         {
             _runner = null;
 
-            var noMoreTrials = ++_step >= _settings.OdorQuantities.Length;
+            var noMoreTrials = ++_step >= _settings.Pulses.Length;
             if (noMoreTrials)
             {
                 Stop();
@@ -182,12 +213,20 @@ namespace Olfactory.Tests.OdorProduction
             Finished?.Invoke(this, noMoreTrials);
         }
 
+        private void CloseValves()
+        {
+            if (_mfc.OdorDirection != MFC.ValvesOpened.None)
+            {
+                _mfc.OdorDirection = MFC.ValvesOpened.None;
+                _logger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
+            }
+        }
+
         private void ExitOnDeviceError(string source)
         {
             if (_timer.Enabled)
             {
-                _timer.Stop();
-                _runner?.Stop();
+                StopTimers();
 
                 Utils.MsgBox.Error(
                     Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
@@ -196,12 +235,72 @@ namespace Olfactory.Tests.OdorProduction
             }
         }
 
+        private void StopTimers()
+        {
+            _runner?.Stop();
+            _timer.Stop();
+            _pulseController?.Terminate();
+            _pulseFinisher?.Stop();
+        }
+
         // Event handlers
+
+        private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
+        {
+            if (e.IsLast)
+            {
+                _pulseController = null;
+
+                if (_mfc.OdorDirection != MFC.ValvesOpened.None)
+                {
+                    CloseValves();
+                    StageChanged?.Invoke(this, Stage.OdorFlow);
+                }
+
+                return;
+            }
+
+            //Stage newStage = e.StartingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
+            Stage newStage = Stage.None;
+            foreach (var startingChannel in e.StartingChannels)
+            {
+                newStage |= startingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
+            }
+            foreach (var ongoingChannel in e.OngoingChannels)
+            {
+                newStage |= ongoingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
+            }
+
+            MFC.ValvesOpened valves = newStage switch
+            {
+                Stage.Odor1Flow => MFC.ValvesOpened.Valve1,
+                Stage.Odor2Flow => MFC.ValvesOpened.Valve2,
+                (Stage.Odor1Flow | Stage.Odor2Flow) => MFC.ValvesOpened.Valve1 | MFC.ValvesOpened.Valve2,
+                _ => MFC.ValvesOpened.None
+            };
+
+            _logger.Add("V" + ((int)valves).ToString("D2"));
+
+            /*
+            _mfc.StartPulse(
+                e.StartingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
+                Pulse.ChannelDuration(e.StartingChannel, _settings.OdorFlowDurationMs));
+            */
+            foreach (var startingChannel in e.StartingChannels)
+            {
+                _mfc.StartPulse(
+                    startingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
+                    Pulse.ChannelDuration(startingChannel, _settings.OdorFlowDurationMs));
+            }
+
+            _mfc.OdorDirection = valves;
+
+            StageChanged?.Invoke(this, newStage | Stage.OdorFlow);
+        }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _timer.Stop();
-            _runner?.Stop();
+            StopTimers();
         }
 
         private void MFC_Closed(object sender, EventArgs e)

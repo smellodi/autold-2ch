@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Olfactory.Utils
@@ -14,16 +12,16 @@ namespace Olfactory.Utils
         public enum ValueFormat
         {
             Integer = NumberStyles.Integer | NumberStyles.AllowLeadingWhite | NumberStyles.AllowTrailingWhite,
-            Float = NumberStyles.Float
+            Float = NumberStyles.Float,
+            Unknown = NumberStyles.Any,
         }
 
         public readonly TextBox Source;
         public readonly double Min;
         public readonly double Max;
         public readonly ValueFormat Format;
+        public readonly string ExternalError;
 
-        public bool IsList => _listDelim != null;
-        public bool AcceptsExpression => _expressionDelims != null;
         public string Value => _value;
         public double? AsNumber => IsValid ? double.Parse(_value) : null;
 
@@ -31,38 +29,38 @@ namespace Olfactory.Utils
         {
             get
             {
-                if (_listDelim != null)
-                {
-                    var chunks = Source.Text
-                        .Split(_listDelim ?? ' ')
-                        .Where(v => !string.IsNullOrWhiteSpace(v));
-                    if (chunks.Count() == 0)
-                    {
-                        _code = ValidityViolationCode.EmptyList;
-                    }
-                    else
-                    {
-                        chunks.All(chunk => IsValidValueOrExpression(chunk));
-                    }
-                }
-                else
-                {
-                    IsValidValueOrExpression(Source.Text);
-                }
-
+                IsValidValue(Value);
                 return _code == ValidityViolationCode.OK;
             }
         }
 
-        public Validation(TextBox textbox, double min, double max, ValueFormat format, char? listDelim = null, char[] expressionDelims = null)
+        public Validation(TextBox textbox, double min, double max, ValueFormat format)
         {
             Source = textbox;
             Min = min;
             Max = max;
             Format = format;
-            _listDelim = listDelim;
-            _expressionDelims = expressionDelims;
 
+            _value = Source.Text;
+        }
+
+        public Validation(TextBox textbox, string value, double min, double max, ValueFormat format)
+        {
+            Source = textbox;
+            Min = min;
+            Max = max;
+            Format = format;
+
+            _value = value;
+        }
+
+        public Validation(TextBox textbox, string externalError)
+        {
+            Source = textbox;
+            Format = ValueFormat.Unknown;
+            ExternalError = externalError;
+
+            _code = ValidityViolationCode.ExternallyDetectedError;
             _value = Source.Text;
         }
 
@@ -71,22 +69,22 @@ namespace Olfactory.Utils
             return _code switch
             {
                 ValidityViolationCode.EmptyList => L10n.T("EmptyList"),
-                ValidityViolationCode.InvalidExpression => string.Format(L10n.T("ExpressionNotValid"), _value, _expressionDelims),
                 ValidityViolationCode.InvalidFormat => string.Format(L10n.T("ValueFormatNotValid"), _value, Format),
                 ValidityViolationCode.TooLarge => string.Format(L10n.T("ValueTooLarge"), _value, Max),
                 ValidityViolationCode.TooSmall => string.Format(L10n.T("ValueTooSmall"), _value, Min),
+                ValidityViolationCode.ExternallyDetectedError => ExternalError,
                 _ => "unknown error",
             };
         }
 
-        public static bool Do(TextBox textbox, double min, double max, EventHandler<int> action, char? listDelim = null, char[] expressionDelims = null)
+        public static bool Do(TextBox textbox, double min, double max, EventHandler<int> action)
         {
-            return Do(textbox, min, max, ValueFormat.Integer, (object s, double e) => action(s, (int)e), listDelim, expressionDelims);
+            return Do(textbox, min, max, ValueFormat.Integer, (object s, double e) => action(s, (int)e));
         }
 
-        public static bool Do(TextBox textbox, double min, double max, EventHandler<double> action, char? listDelim = null, char[] expressionDelims = null)
+        public static bool Do(TextBox textbox, double min, double max, EventHandler<double> action)
         {
-            return Do(textbox, min, max, ValueFormat.Float, (object s, double e) => action(s, e), listDelim, expressionDelims);
+            return Do(textbox, min, max, ValueFormat.Float, (object s, double e) => action(s, e));
         }
 
         // Internal
@@ -98,18 +96,15 @@ namespace Olfactory.Utils
             TooSmall,
             TooLarge,
             EmptyList,
-            InvalidExpression
+            ExternallyDetectedError,
         }
-
-        readonly char? _listDelim;
-        readonly char[] _expressionDelims;
 
         ValidityViolationCode _code = ValidityViolationCode.OK;
         string _value;
 
-        private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action, char? listDelim = null, char[] expressionDelims = null)
+        private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action)
         {
-            var validation = new Validation(textbox, min, max, format, listDelim, expressionDelims);
+            var validation = new Validation(textbox, min, max, format);
             if (!validation.IsValid)
             {
                 var msg = L10n.T("CorrectAndTryAgain");
@@ -126,17 +121,8 @@ namespace Olfactory.Utils
             return true;
         }
 
-        private bool IsValidValueOrExpression(string value)
+        private bool IsValidValue(string value)
         {
-            if (_expressionDelims != null)
-            {
-                var exprValues = value.Split(_expressionDelims);
-                if (exprValues.Length > 1)
-                {
-                    return exprValues.All(exprValue => IsValidValueOrExpression(exprValue));
-                }
-            }
-
             _value = value;
 
             // not expresion, or the expression is a simple value

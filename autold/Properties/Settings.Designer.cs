@@ -37,13 +37,13 @@ namespace Olfactory.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4, 8x500, 16x500x2, 32x2")]
-        public string Test_OP_OdorQuantityList {
+        [global::System.Configuration.DefaultSettingValueAttribute("1=4x200,2=8x500 1=16x500,2=[250]10x250 1=[250]32x250,2=20x500 1=64x250 2=30x500")]
+        public string Test_OP_Pulses {
             get {
-                return ((string)(this["Test_OP_OdorQuantityList"]));
+                return ((string)(this["Test_OP_Pulses"]));
             }
             set {
-                this["Test_OP_OdorQuantityList"] = value;
+                this["Test_OP_Pulses"] = value;
             }
         }
         
@@ -92,18 +92,6 @@ namespace Olfactory.Properties {
             }
             set {
                 this["Test_OP_PIDReadingInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("11")]
-        public int Test_OP_ValvesControlled {
-            get {
-                return ((int)(this["Test_OP_ValvesControlled"]));
-            }
-            set {
-                this["Test_OP_ValvesControlled"] = value;
             }
         }
         

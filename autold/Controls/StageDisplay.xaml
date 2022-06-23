@@ -1,25 +1,29 @@
-﻿<UserControl x:Class="Olfactory.Controls.PauseDisplay"
+﻿<UserControl x:Class="Olfactory.Controls.StageDisplay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Olfactory.Controls" 
+             xmlns:utils="clr-namespace:Olfactory.Utils"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="en"
              lex:ResxLocalizationProvider.DefaultAssembly="autold"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d"
              x:Name="display"
-             d:DesignHeight="80" d:DesignWidth="200">
-    
+                    MinHeight="100"
+             d:DesignHeight="90" d:DesignWidth="200">
+
     <UserControl.Resources>
+        <utils:NumberToVisibilityConverter x:Key="num2vis"/>
+        
         <Style TargetType="Label">
             <Setter Property="Margin" Value="20,0"/>
             <Setter Property="Foreground" Value="{StaticResource BrushFont}"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
-        <Style TargetType="StackPanel">
+        <Style TargetType="Grid">
             <Setter Property="Background" Value="{StaticResource BrushPanelLight}"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsCurrent}" Value="True">
                     <Setter Property="Background" Value="{StaticResource BrushPanel}"/>
@@ -29,13 +33,25 @@
     </UserControl.Resources>
 
     <!--StackPanel DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PauseDisplay}}}"-->
-    <StackPanel DataContext="{Binding ElementName=display}">
-        <Label Content="{Binding Text}"/>
-        <Label>
-            <TextBlock>
-                <Run Text="{Binding Value, StringFormat=0.##}"/>
-                <Run Text="{lex:Loc Seconds}"/>
-            </TextBlock>
-        </Label>
-    </StackPanel>
+    <Grid DataContext="{Binding ElementName=display}">
+        <StackPanel VerticalAlignment="Center"
+                    Margin="0,16">
+            <Label Content="{Binding Text}"/>
+            <Label Padding="5, 2, 5, 2">
+                <TextBlock>
+                    <Run Text="{Binding DurationValue, Mode=OneWay}"/>
+                    <Run Text="{Binding DurationUnits, Mode=OneWay}"/>
+                </TextBlock>
+            </Label>
+            <Label Padding="5, 0, 5, 5"
+                   Visibility="{Binding Path=Delay, Converter={StaticResource num2vis}}">
+                <TextBlock>
+                    <Run Text="["/>
+                    <Run Text="{Binding DelayValue, Mode=OneWay}"/>
+                    <Run Text="{Binding DelayUnits, Mode=OneWay}"/>
+                    <Run Text="]"/>
+                </TextBlock>
+            </Label>
+        </StackPanel>
+    </Grid>
 </UserControl>

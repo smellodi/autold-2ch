@@ -62,7 +62,7 @@ namespace Olfactory.Controls
 
         #region Units property
 
-        [Description("Value"), Category("Common Properties")]
+        [Description("Units"), Category("Common Properties")]
         public string Units
         {
             get => (string)GetValue(UnitsProperty);

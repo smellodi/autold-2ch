@@ -130,10 +130,10 @@
     <value>Close</value>
   </data>
 	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>A list of comma-separated values or expressions. Expressions are of the form 'MLMIN x [MS ≥ 10] x [COUNT &lt; 10]'. Example: '4, 8x500, 16x500x2, 32x5'</value>
+    <value>A list of space or new-line -separated expressions. Each expression consists of one or two sub-expressions of the form '&lt;channel=1|2&gt;=[&lt;delay=ms&gt;]&lt;flow=ml/min&gt;x&lt;duration=ms&gt;' separated by comma. Example: '1=4x200,2=[100]4x100 2=10x500'</value>
   </data>
 	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>comma-separated positive floating-point values or expressions in a form 'MLMIN x [MS] x [COUNT]'</value>
+    <value>space or new-line -separated expressions consists of one or two sub-expressions in the form '&lt;1|2&gt;=[&lt;ms&gt;]&lt;ml/min&gt;x&lt;ms&gt;' separated by comma.</value>
   </data>
 	<data name="COMMonitor" xml:space="preserve">
     <value>COM Monitor</value>
@@ -226,7 +226,7 @@
     <value>PID voltage</value>
   </data>
 	<data name="PulseFlowRate" xml:space="preserve">
-    <value>Pulse flow rate</value>
+    <value>Pulse flow rates:</value>
   </data>
 	<data name="Pulses" xml:space="preserve">
     <value>Pulses</value>
@@ -277,16 +277,13 @@
     <value>Time</value>
   </data>
 	<data name="User" xml:space="preserve">
-    <value>user</value>
-  </data>
-	<data name="Valves" xml:space="preserve">
-    <value>Valves</value>
+    <value>open</value>
   </data>
 	<data name="NoDataToSave" xml:space="preserve">
     <value>There is no data to save</value>
   </data>
 	<data name="Waste" xml:space="preserve">
-    <value>waste</value>
+    <value>closed</value>
   </data>
 	<data name="AppTerminated" xml:space="preserve">
     <value>The application is terminated.</value>
@@ -298,10 +295,7 @@
     <value>Connection with the {0} device was shut down.</value>
   </data>
 	<data name="EmptyList" xml:space="preserve">
-    <value>The list of values is empty</value>
-  </data>
-	<data name="ExpressionNotValid" xml:space="preserve">
-    <value>The expression '{0}' is invalid, only '{1}' operations are allowed</value>
+    <value>The list of pulses is empty</value>
   </data>
 	<data name="FailedToSave" xml:space="preserve">
     <value>Failed to save data into</value>
@@ -366,24 +360,18 @@
 	<data name="OdorPulsesExpressionNote" xml:space="preserve">
 		<value>Notes: 
 
-1. Valve #2 (output to user) is controlled by MFC embedded timer only if an expression contains pulse duration, otherwise it is controlled by the software timer that closed the valve after [Odour flow] seconds.
+1. Pulse duration + possible delay defined in an expression must not exceed the general duration defined as "Odour flow".
 
-2. Valve #1 (gas mixer) is always controlled by the software timer.
+2. Minimum pulse duration is 10ms, maximum is 65 355 ms.
 
-3. Pulse duration defined in an expression must not exceed the general duration defined as "Odour flow".
-
-4. Minimum pulse duration is 10ms. Maximum repetition count is 9. 
+3. At most one (either) odor may have a delay
 
 
 Examples described:
 
-4 - the pulse of 4 ml/min lasting [Odour flow] seconds; the software timer is used,
+1=4x200,2=[100]4x100 - the pulse of odor #1 of 4 ml/min lasts 200 ms; odor #2 start flowing with 100 ms delay, flows with 4 ml/min speed and lasts for 100 ms.
 
-8x500 - the pulse of 8 ml/min lasting 500 ms; the MFC timer is used,
-
-16x500x2 - two pulse of 16 ml/min, each lasting 500 ms; the MFC timer is used,
-
-32x5 - five pulses of 32 ml/min, each lasting [Odour flow] seconds; the software timer is used,</value>
+2=10x500 - only odor #2 is flowing with the speed 10 ml/min for 500 ms.</value>
 	</data>
 	<data name="Timer" xml:space="preserve">
 		<value>Timer</value>
@@ -394,10 +382,31 @@ Examples described:
 	<data name="Back" xml:space="preserve">
 		<value>Back</value>
 	</data>
-	<data name="Valve" xml:space="preserve">
-		<value>valve</value>
-	</data>
 	<data name="Open" xml:space="preserve">
 		<value>Open</value>
+	</data>
+	<data name="PulseInvalidNumberOfChannels" xml:space="preserve">
+		<value>Invalid number of channels: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelExpression" xml:space="preserve">
+		<value>Invalid channel expression: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelID" xml:space="preserve">
+		<value>Invalid channel ID: {0}</value>
+	</data>
+	<data name="PulseInvalidChannelDescription" xml:space="preserve">
+		<value>Invalid channel #{0} description: {1}</value>
+	</data>
+	<data name="PulseSameChannelTwice" xml:space="preserve">
+		<value>Same channel defined twice: {0}</value>
+	</data>
+	<data name="PulseOnlyOneChannelCanDelay" xml:space="preserve">
+		<value>Only one channel can delay: {0}</value>
+	</data>
+	<data name="Channel" xml:space="preserve">
+		<value>Channel</value>
+	</data>
+	<data name="Session" xml:space="preserve">
+		<value>Odor flow</value>
 	</data>
 </root>

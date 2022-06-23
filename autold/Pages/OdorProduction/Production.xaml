@@ -33,7 +33,7 @@
                    Style="{StaticResource PageTitle}">
             <Run Text="{lex:Loc OdorPulses}"/>
             <Run Text=" - "/>
-            <Run Text="{lex:Loc Pulses}"/>
+            <Run Text="{lex:Loc Session}"/>
         </TextBlock>
 
         <StackPanel Grid.Row="1"
@@ -50,17 +50,33 @@
                        Style="{StaticResource Status}"/>
             </WrapPanel>
             
-            <WrapPanel>
-                <local:PauseDisplay x:Name="pdsInitialPause"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="10"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <local:StageDisplay x:Name="pdsInitialPause" Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
                                     Text="{lex:Loc InitialPause}"
                                     IsCurrent="{Binding IsInitialPause}"/>
-                <local:PauseDisplay x:Name="pdsOdorFlow"
-                                    Text="{lex:Loc OdorFlow}"
-                                    IsCurrent="{Binding IsOdorFlow}"/>
-                <local:PauseDisplay x:Name="pdsFinalPause"
+                <local:StageDisplay x:Name="pdsOdor1Flow" Grid.Row="0" Grid.Column="1"
+                                    Text="{Binding Label_Channel1}"
+                                    IsCurrent="{Binding IsOdor1Flow}"/>
+                <local:StageDisplay x:Name="pdsOdor2Flow" Grid.Row="1" Grid.Column="1"
+                                    Text="{Binding Label_Channel2}"
+                                    IsCurrent="{Binding IsOdor2Flow}"/>
+                <local:StageDisplay x:Name="pdsOdorFlow" Grid.Row="3" Grid.Column="1"
+                                    IsCurrent="{Binding IsOdorFlowPhase, Mode=OneWay}"/>
+                <local:StageDisplay x:Name="pdsFinalPause" Grid.Row="0" Grid.Column="2" Grid.RowSpan="3"
                                     Text="{lex:Loc FinalPause}"
                                     IsCurrent="{Binding IsFinalPause}"/>
-            </WrapPanel>
+            </Grid>
 
             <local:WaitingInstruction x:Name="wtiWaiting"/>
 

@@ -5,8 +5,8 @@
     <Setting Name="Test_OP_FreshAir" Type="System.Double" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="Test_OP_OdorQuantityList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">4, 8x500, 16x500x2, 32x2</Value>
+    <Setting Name="Test_OP_Pulses" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1=4x200,2=8x500 1=16x500,2=[250]10x250 1=[250]32x250,2=20x500 1=64x250 2=30x500</Value>
     </Setting>
     <Setting Name="Test_OP_InitialPause" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
@@ -19,9 +19,6 @@
     </Setting>
     <Setting Name="Test_OP_PIDReadingInterval" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1000</Value>
-    </Setting>
-    <Setting Name="Test_OP_ValvesControlled" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">11</Value>
     </Setting>
     <Setting Name="Logger_Folder" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

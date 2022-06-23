@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              Name="channelIndicator"
-             d:DesignHeight="80" d:DesignWidth="120">
+             d:DesignHeight="120" d:DesignWidth="120">
 
     <UserControl.Resources>
         <Style x:Key="Channel" TargetType="{x:Type Label}">

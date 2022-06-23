@@ -146,7 +146,7 @@ namespace Olfactory.Comm
         public const double ODOR_MAX_SPEED = 90.0;
         public const double ODOR_MIN_SPEED = 0.0;
 
-        public const double MAX_SHORT_PULSE_DURATION = 60; // seconds
+        public const double MAX_SHORT_PULSE_DURATION = 0xffff; // ms
 
         public static readonly string CMD_SET = "s";
         public static readonly string CMD_WRITE_REGISTER = "w";
@@ -228,8 +228,6 @@ namespace Olfactory.Comm
 
         /// <summary>
         /// The flag that can be set on when creating flow pulses using valve controller own timer. 
-        /// Only the output valve is allowed to operate in short-pulse mode, and gas-mixer valve always operates in "normal" mode.
-        /// A pulse must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/> seconds.
         /// Note that even though the valve is closed automatically, the <see cref="OdorDirection"/> must be set manually
         /// when a pulse ends.
         /// </summary>
@@ -240,12 +238,15 @@ namespace Olfactory.Comm
             {
                 if (value && !_isInShortPulseMode)
                 {
-                    // only the output valve can operate in short-pulse mode
-                    _isInShortPulseMode = SetRegisters((Register.HOLD_1, 0)).Error == Error.Success;
+                    _isInShortPulseMode = SetRegisters((Register.HOLD_0, 0)).Error == Error.Success && SetRegisters((Register.HOLD_1, 0)).Error == Error.Success;
                 }
                 else if (!value && _isInShortPulseMode)
-                {
-                    _isInShortPulseMode = !(SetRegisters((Register.HOLD_1, 255), (Register.PULL_IN_1, 0)).Error == Error.Success);
+                {/*
+                    _isInShortPulseMode =
+                        !(SetRegisters((Register.HOLD_0, 255), (Register.PULL_IN_0, 0)).Error == Error.Success) &&
+                        !(SetRegisters((Register.HOLD_1, 255), (Register.PULL_IN_1, 0)).Error == Error.Success);*/
+                    var result = SetRegisters((Register.HOLD_0, 255), (Register.PULL_IN_0, 0), (Register.HOLD_1, 255), (Register.PULL_IN_1, 0));
+                    _isInShortPulseMode = !(result.Error == Error.Success);
                 }
             }
         }
@@ -343,22 +344,23 @@ namespace Olfactory.Comm
         }
 
         /// <summary>
-        /// Prepares the output valve for a short flow pulse to the user using the valves controller timer.
-        /// Note that gas-mixer valve is not affected.
-        /// A pulse must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/> seconds.
-        /// Note that even though the valve is closed automatically, the <see cref="OdorDirection"/> must be set manually
+        /// Prepares the output valve for a short flow pulse to the user using the valves controller timer,
+        /// then executes the both pulses in sync.
+        /// Note that even though the valve(s) is/are closed automatically, the <see cref="OdorDirection"/> must be set manually
         /// when a pulse ends.
         /// </summary>
-        /// <param name="duration">pulse duration in seconds</param>
+        /// <param name="duration1">channel #1 pulse duration, ms. Must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/>.</param>
+        /// <param name="duration2">channel #2 pulse duration, ms. Must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/>.</param>
         /// <returns></returns>
-        public Result PrepareForShortPulse(double duration)
+        public Result StartPulses(int duration1, int duration2)
         {
-            if (duration <= 0 || MAX_SHORT_PULSE_DURATION < duration)
+            if (duration1 < 0 || MAX_SHORT_PULSE_DURATION < duration1 ||
+                duration2 < 0 || MAX_SHORT_PULSE_DURATION < duration2)
             {
                 return new Result()
                 {
                     Error = Error.InvalidData,
-                    Reason = $"Short Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} seconds"
+                    Reason = $"Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} ms"
                 };
             }
 
@@ -366,11 +368,58 @@ namespace Olfactory.Comm
 
             if (!_isInShortPulseMode)
             {
+                cmdSets.Add((Register.HOLD_0, 0));
                 cmdSets.Add((Register.HOLD_1, 0));
             }
 
-            var ms = (int)(1000 * duration);
-            cmdSets.Add((Register.PULL_IN_1, ms));
+            if (duration1 > 0)
+            {
+                cmdSets.Add((Register.PULL_IN_0, duration1));
+            }
+            if (duration2 > 0)
+            {
+                cmdSets.Add((Register.PULL_IN_1, duration2));
+            }
+
+            Result result = SetRegisters(cmdSets.ToArray());
+
+            if (result.Error == Error.Success)
+            {
+                _isInShortPulseMode = true;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Prepares the output valve for a short flow pulse to the user using the valves controller timer,
+        /// then executes the pulse.
+        /// Note that even though the valve is closed automatically, the <see cref="OdorDirection"/> must be set manually
+        /// when a pulse ends.
+        /// </summary>
+        /// <param name="valve">the valve to open.</param>
+        /// <param name="duration2">channel #2 pulse duration, ms. Must be shorter than <see cref="MAX_SHORT_PULSE_DURATION"/>.</param>
+        /// <returns></returns>
+        public Result StartPulse(ValvesOpened valve, int duration)
+        {
+            if (duration <= 0 || MAX_SHORT_PULSE_DURATION < duration)
+            {
+                return new Result()
+                {
+                    Error = Error.InvalidData,
+                    Reason = $"Pulse must be no longer than {MAX_SHORT_PULSE_DURATION} ms"
+                };
+            }
+
+            var cmdSets = new List<(Register, int)>();
+
+            if (!_isInShortPulseMode)
+            {
+                cmdSets.Add((Register.HOLD_0, 0));
+                cmdSets.Add((Register.HOLD_1, 0));
+            }
+
+            cmdSets.Add((valve == ValvesOpened.Valve1 ? Register.PULL_IN_0 : Register.PULL_IN_1, duration));
 
             Result result = SetRegisters(cmdSets.ToArray());
 
@@ -421,7 +470,7 @@ namespace Olfactory.Comm
                         | (isValve1Opened ? OdorFlowsTo.System : OdorFlowsTo.Waste)
                         | (isValve2Opened ? OdorFlowsTo.User : OdorFlowsTo.Waste);
                 }*/
-            }
+                }
             catch (Exception ex)
             {
                 Stop();
