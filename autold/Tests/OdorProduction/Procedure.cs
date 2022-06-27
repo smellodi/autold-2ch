@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Threading;
 using Olfactory.Comm;
@@ -25,7 +24,7 @@ namespace Olfactory.Tests.OdorProduction
         public event EventHandler<double> Data;
         public event EventHandler<Stage> StageChanged;
         /// <summary>
-        /// Provides 'true' if there is no more trials to run, 'false' is more trials to run
+        /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
         /// </summary>
         public event EventHandler<bool> Finished;
 
@@ -146,45 +145,6 @@ namespace Olfactory.Tests.OdorProduction
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
             _pulseController.PulseStateChanged += PulseStateChanged;
             _pulseController.Run();
-
-            /*
-            if (pulse.Channel1?.Delay > 0)
-            {
-                _pulseController = new PulsesController(pulse.Channel2, pulse.Channel1);
-                _pulseController.PulseStateChanged += PulseStateChanged;
-                _pulseController.Run(_settings.OdorFlowDurationMs);
-            }
-            else if (pulse.Channel2?.Delay > 0)
-            {
-                _pulseController = new PulsesController(pulse.Channel1, pulse.Channel2);
-                _pulseController.PulseStateChanged += PulseStateChanged;
-                _pulseController.Run(_settings.OdorFlowDurationMs);
-            }
-            else
-            {
-                _logger.Add("V" + ((int)pulse.Valves).ToString("D2"));
-
-                _mfc.StartPulses(
-                    Pulse.ChannelDuration(pulse.Channel1, _settings.OdorFlowDurationMs),
-                    Pulse.ChannelDuration(pulse.Channel2, _settings.OdorFlowDurationMs));
-                _mfc.OdorDirection = pulse.Valves;
-
-                StageChanged?.Invoke(this, Stage.OdorFlow |
-                    (pulse.Channel1 == null ? Stage.None : Stage.Odor1Flow) |
-                    (pulse.Channel2 == null ? Stage.None : Stage.Odor2Flow) );
-            }
-
-            int wholeDuration = pulse.WholeDuration(_settings.OdorFlowDurationMs);
-            if (wholeDuration < _settings.OdorFlowDurationMs)
-            {
-                _pulseFinisher = Utils.DispatchOnce.Do((double)wholeDuration / 1000, () =>
-                {
-                    _pulseFinisher = null;
-
-                    CloseValves();
-                    StageChanged?.Invoke(this, Stage.OdorFlow);
-                });
-            }*/
         }
 
         private void StopOdorFlow()
@@ -260,7 +220,6 @@ namespace Olfactory.Tests.OdorProduction
                 return;
             }
 
-            //Stage newStage = e.StartingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
             Stage newStage = Stage.None;
             foreach (var startingChannel in e.StartingChannels)
             {
@@ -281,16 +240,11 @@ namespace Olfactory.Tests.OdorProduction
 
             _logger.Add("V" + ((int)valves).ToString("D2"));
 
-            /*
-            _mfc.StartPulse(
-                e.StartingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
-                Pulse.ChannelDuration(e.StartingChannel, _settings.OdorFlowDurationMs));
-            */
             foreach (var startingChannel in e.StartingChannels)
             {
                 _mfc.StartPulse(
                     startingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
-                    Pulse.ChannelDuration(startingChannel, _settings.OdorFlowDurationMs));
+                    startingChannel.GetDuration(_settings.OdorFlowDurationMs));
             }
 
             _mfc.OdorDirection = valves;

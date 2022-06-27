@@ -77,22 +77,26 @@ namespace Olfactory.Tests.OdorProduction
             if (_pulse.Channel1 != null)
             {
                 events.Add(new ChannelEvent(_pulse.Channel1.Delay, _pulse.Channel1, ChannelEvent.EventType.Start));
-                events.Add(new ChannelEvent(_pulse.Channel1.Delay + Pulse.ChannelDuration(_pulse.Channel1, _defaultPulseDuration), _pulse.Channel1, ChannelEvent.EventType.End));
+                events.Add(new ChannelEvent(_pulse.Channel1.GetFinishedTimestamp(_defaultPulseDuration), _pulse.Channel1, ChannelEvent.EventType.End));
             }
             if (_pulse.Channel2 != null)
             {
                 events.Add(new ChannelEvent(_pulse.Channel2.Delay, _pulse.Channel2, ChannelEvent.EventType.Start));
-                events.Add(new ChannelEvent(_pulse.Channel2.Delay + Pulse.ChannelDuration(_pulse.Channel2, _defaultPulseDuration), _pulse.Channel2, ChannelEvent.EventType.End));
+                events.Add(new ChannelEvent(_pulse.Channel2.GetFinishedTimestamp(_defaultPulseDuration), _pulse.Channel2, ChannelEvent.EventType.End));
             }
 
-            var pulseEvents = PulseEvent.Create(events.ToArray());
+            var pulseEvents = PulseEvent.CreateSequence(events.ToArray());
 
+            // Fire the first event
             PulseStateChanged?.Invoke(this, pulseEvents[0].ToStateChange());
+
+            // Schedule the second event (there are always at least 2 events)
             _runner = Utils.DispatchOnce.Do(pulseEvents[1].Interval, () =>
             {
                 PulseStateChanged?.Invoke(this, pulseEvents[1].ToStateChange());
             });
 
+            // Schedule the rest of events (up to 4 events may exist for two channels)
             for (int i = 2; i < pulseEvents.Length; i++)
             {
                 var evt = pulseEvents[i];
@@ -163,8 +167,8 @@ namespace Olfactory.Tests.OdorProduction
 
             public PulseStateChangedEventArgs ToStateChange()
             {
-                // To find the continuing chanels, we need to start from the first pulse event
-                // and go up to the current one, memorizing of what channels have started but not yet ended
+                // To find the ongoing/continuing channels, we need to start from the first pulse event
+                // and go up to the current one, memorizing channels that have started but not ended yet
                 HashSet<ChannelPulse> activePulses = new();
                 
                 var firstEvent = this;
@@ -192,6 +196,7 @@ namespace Olfactory.Tests.OdorProduction
                     activePulses.ToArray()
                 );
                 result.IsLast = Next == null;
+
                 return result;
             }
 
@@ -209,7 +214,7 @@ namespace Olfactory.Tests.OdorProduction
                 return result;
             }
 
-            public static PulseEvent[] Create(ChannelEvent[] events)
+            public static PulseEvent[] CreateSequence(ChannelEvent[] events)
             {
                 var orderedEvents = events.OrderBy(evt => evt.Delay);
                 

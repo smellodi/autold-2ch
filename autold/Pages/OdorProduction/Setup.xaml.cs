@@ -59,13 +59,13 @@ namespace Olfactory.Pages.OdorProduction
                 if (pulse.Channel1 != null)
                 {
                     validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
-                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Duration.ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.GetDuration(0).ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
                     validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
                 }
                 if (pulse.Channel2 != null)
                 {
                     validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
-                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Duration.ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                    validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.GetDuration(0).ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
                     validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
                 }
             }
@@ -78,7 +78,7 @@ namespace Olfactory.Pages.OdorProduction
                 }
             }
 
-            var longestDurationMs = pulses.Max(pulse => pulse.WholeDuration(_settings.OdorFlowDurationMs));
+            var longestDurationMs = pulses.Max(pulse => pulse.GetDuration(_settings.OdorFlowDurationMs));
             var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, 0.001 * longestDurationMs, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Float);
             if (!isOdorFlowDurationLongEnough.IsValid)
             {

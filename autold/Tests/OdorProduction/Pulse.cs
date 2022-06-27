@@ -17,11 +17,6 @@ namespace Olfactory.Tests.OdorProduction
         public double Flow { get; }
 
         /// <summary>
-        /// ms; if saet to 0, then "Odor flow" value will be used 
-        /// </summary>
-        public int Duration { get; }
-
-        /// <summary>
         /// ms
         /// </summary>
         public int Delay { get; } = 0;
@@ -37,16 +32,43 @@ namespace Olfactory.Tests.OdorProduction
         {
             ID = id;
             Flow = flow;
-            Duration = duration;
             Delay = delay;
+
+            _duration = duration;
+        }
+
+        /// <summary>
+        /// Returns duration in ms. If it was set to 0 in the constructor, 
+        /// then the default duration provided as an argument will be used 
+        /// </summary>
+        /// <param name="defaultDuration">Default duration: must be "Odor flow", <see cref="Settings.OdorFlowDuration"/></param>
+        /// <returns>Duration in ms</returns>
+        public int GetDuration(int defaultDuration)
+        {
+            return _duration > 0 ? _duration : defaultDuration;
+        }
+
+        /// <summary>
+        /// Returns delay + duration in ms. Note that if the duration was set to 0 in the constructor, 
+        /// then the default duration provided as an argument will be used 
+        /// </summary>
+        /// <param name="defaultDuration">Default duration: must be "Odor flow", <see cref="Settings.OdorFlowDuration"/></param>
+        /// <returns>Timestamp in ms</returns>
+        public int GetFinishedTimestamp(int defaultDuration)
+        {
+            return Delay + GetDuration(defaultDuration);
         }
 
         public override string ToString()
         {
             return $"{ID}{Pulse.DELIM_EXPRESSION}"
                 + (Delay > 0 ? $"[{Delay}]" : "")
-                + (Duration > 0 ? $"{Flow}{Pulse.DELIM_BY}{Duration}" : Flow.ToString());
+                + (_duration > 0 ? $"{Flow}{Pulse.DELIM_BY}{_duration}" : Flow.ToString());
         }
+
+        // Internal
+
+        int _duration;
     }
 
     /// <summary>
@@ -75,15 +97,19 @@ namespace Olfactory.Tests.OdorProduction
             (Channel1 != null ? Comm.MFC.ValvesOpened.Valve1 : Comm.MFC.ValvesOpened.None) |
             (Channel2 != null ? Comm.MFC.ValvesOpened.Valve2 : Comm.MFC.ValvesOpened.None);
 
-        public static int ChannelDuration(ChannelPulse channel, int defaultDuration)
-        {
-            return channel == null ? 0 : (channel.Duration > 0 ? channel.Duration : defaultDuration);
-        }
-
         /// <summary>
-        /// Create a pulse
+        /// Create a pulse from a definition string
         /// </summary>
-        /// <param name="input">Textual pulse description consisting of one or two sub-expressions of the form "channel=1|2"=["delay=ms"]"flow=ml/min"x"duration=ms" separated by comma. Example: '1=4x200,2=[100]4x100'</param>
+        /// <param name="input">Pulse expression consisting of one or two sub-expressions of the form
+        /// <code>"channel=1|2"=[["delay=ms"]]"flow=ml/min"[x"duration=ms"]</code> separated by comma.
+        /// Note that delay and duration are optional: the default value is 0 for delay, and duration will be set to
+        /// <see cref="Settings.OdorFlowDuration"/> is not specified in the expression
+        /// Examples:
+        /// <list type="bullet">
+        /// <item>'1=4' - the first channels is used only, and the pulse duration is describes in <see cref="Settings.OdorFlowDuration"/></item>
+        /// <item>'1=4x200,2=[100]4x100' - the first channels starts immediately and lasts 200ms, the second channels delays 100ms and lasts 100ms</item>
+        /// </list> 
+        /// </param>
         public Pulse(string input)
         {
             string[] channels = input.Split(DELIM_CHANNELS);
@@ -147,6 +173,13 @@ namespace Olfactory.Tests.OdorProduction
             }
         }
 
+        public int GetDuration(int defaultDuration)
+        {
+            var duration1 = Channel1 != null ? Channel1.Delay + Channel1.GetDuration(defaultDuration) : 0;
+            var duration2 = Channel2 != null ? Channel2.Delay + Channel2.GetDuration(defaultDuration) : 0;
+            return Math.Max(duration1, duration2);
+        }
+
         public override string ToString()
         {
             var pulses = new List<string>();
@@ -159,13 +192,6 @@ namespace Olfactory.Tests.OdorProduction
                 pulses.Add(Channel2.ToString());
             }
             return string.Join(DELIM_CHANNELS, pulses);
-        }
-
-        public int WholeDuration(int defaultDuration)
-        {
-            var duration1 = ChannelDuration(Channel1, defaultDuration) + Channel1?.Delay ?? 0;
-            var duration2 = ChannelDuration(Channel2, defaultDuration) + Channel2?.Delay ?? 0;
-            return Math.Max(duration1, duration2);
         }
     }
 }

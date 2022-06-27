@@ -149,9 +149,9 @@ namespace Olfactory.Pages.OdorProduction
             var pulse = _settings.Pulses[_procedure.Step];
             lblOdorStatus.Content = $"{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}";
 
-            pdsOdor1Flow.Duration = Pulse.ChannelDuration(pulse.Channel1, _settings.OdorFlowDurationMs);
+            pdsOdor1Flow.Duration = pulse.Channel1?.GetDuration(_settings.OdorFlowDurationMs) ?? 0;
             pdsOdor1Flow.Delay = pulse.Channel1?.Delay ?? 0;
-            pdsOdor2Flow.Duration = Pulse.ChannelDuration(pulse.Channel2, _settings.OdorFlowDurationMs);
+            pdsOdor2Flow.Duration = pulse.Channel2?.GetDuration(_settings.OdorFlowDurationMs) ?? 0;
             pdsOdor2Flow.Delay = pulse.Channel2?.Delay ?? 0;
         }
 
