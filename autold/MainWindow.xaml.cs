@@ -1,5 +1,6 @@
 ﻿using Olfactory.Utils;
 using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using WPFLocalizeExtension.Engine;
@@ -22,9 +23,13 @@ namespace Olfactory
             InitializeComponent();
 
             LocalizeDictionary.Instance.MergedAvailableCultures.RemoveAt(0);
-            LocalizeDictionary.Instance.Culture = System.Globalization.CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
+            LocalizeDictionary.Instance.Culture = CultureInfo.GetCultureInfo(Properties.Settings.Default.Language);
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
+
+            var buildDate = DateTime.ParseExact(Properties.Resources.BuildDate.Trim(), "dd/MM/yyyy HH:mm:ss.ff", CultureInfo.InvariantCulture);
+            var buildCode = buildDate.ToString("yyMMdd.HHmm");
+            Title += $" [build {buildCode}]";
 
             _monitor = new CommMonitor();
             _monitor.Hide();
