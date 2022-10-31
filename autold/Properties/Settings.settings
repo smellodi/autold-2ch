@@ -77,5 +77,8 @@
     <Setting Name="Setup_MFC_Odor2" Type="System.Double" Scope="User">
       <Value Profile="(Default)">8</Value>
     </Setting>
+    <Setting Name="Test_OP_ManualFlowStop" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

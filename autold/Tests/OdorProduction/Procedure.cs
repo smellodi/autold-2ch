@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Threading;
 using Olfactory.Comm;
+using Olfactory.Utils;
 
 namespace Olfactory.Tests.OdorProduction
 {
@@ -135,9 +136,9 @@ namespace Olfactory.Tests.OdorProduction
 
         int _step = 0;
 
-        Utils.DispatchOnce _runner;
+        DispatchOnce _runner;
         PulsesController _pulseController;
-        Utils.DispatchOnce _pulseFinisher;
+        DispatchOnce _pulseFinisher;
 
         private void StartOdorFlow()
         {
@@ -149,6 +150,12 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
+            if (_settings.ManualFlowStop)
+            {
+                _logger.Add("M");
+                MsgBox.Notify(App.Name, L10n.T("ManualFlowStopMsg"), new string[] { L10n.T("Close") });
+            }
+
             CloseValves();
             StageChanged?.Invoke(this, Stage.FinalWait);
         }
@@ -188,9 +195,9 @@ namespace Olfactory.Tests.OdorProduction
             {
                 StopTimers();
 
-                Utils.MsgBox.Error(
-                    Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("OdorPulses"),
-                    string.Format(Utils.L10n.T("DeviceConnLost"), source) + " " + Utils.L10n.T("AppTerminated"));
+                MsgBox.Error(
+                    App.Name + " - " + L10n.T("OdorPulses"),
+                    string.Format(L10n.T("DeviceConnLost"), source) + " " + L10n.T("AppTerminated"));
                 Application.Current.Shutdown();
             }
         }
@@ -211,9 +218,8 @@ namespace Olfactory.Tests.OdorProduction
             {
                 _pulseController = null;
 
-                if (_mfc.OdorDirection != MFC.ValvesOpened.None)
+                if (_mfc.OdorDirection != MFC.ValvesOpened.None && !_settings.ManualFlowStop)
                 {
-                    CloseValves();
                     StageChanged?.Invoke(this, Stage.OdorFlow);
                 }
 

@@ -26,6 +26,7 @@ namespace Olfactory.Pages.OdorProduction
             txbFinalPause.Text = _settings.FinalPause.ToString();
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkUseValveControllerTimer.IsChecked = _settings.UseValveTimer;
+            chkManualFlowStop.IsChecked = _settings.ManualFlowStop;
         }
 
         public void EmulationInit() { }
@@ -97,7 +98,7 @@ namespace Olfactory.Pages.OdorProduction
             if (validation != null)
             {
                 var msg = Utils.L10n.T("CorrectAndTryAgain");
-                Utils.MsgBox.Error(Title, $"{validation}.\n{msg}");
+                Utils.MsgBox.Error(App.Name, $"{validation}.\n{msg}");
                 validation.Source.Focus();
                 validation.Source.SelectAll();
             }
@@ -110,6 +111,7 @@ namespace Olfactory.Pages.OdorProduction
                 _settings.FinalPause = int.Parse(txbFinalPause.Text);
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
+                _settings.ManualFlowStop = chkManualFlowStop.IsChecked ?? false;
 
                 _settings.Save();
 

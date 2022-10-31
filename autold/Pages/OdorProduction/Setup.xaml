@@ -8,7 +8,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="autold"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="530" d:DesignWidth="600"
+      d:DesignHeight="580" d:DesignWidth="600"
       Title="{lex:Loc Setup}">
 
     <Grid>
@@ -103,6 +103,13 @@
                     </Grid>
                 </UserControl>
 
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ManualControl}">
+                    <CheckBox x:Name="chkManualFlowStop"
+                              VerticalAlignment="Center"
+                              ToolTip="{lex:Loc ManualFlowStopTip}"
+                              Content="{lex:Loc ManualFlowStop}"/>
+                </UserControl>
+
                 <Border Style="{StaticResource HorizontalLine}"/>
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDSampling}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Ms}">
@@ -116,7 +123,7 @@
                     <CheckBox x:Name="chkUseValveControllerTimer"
                               VerticalAlignment="Center">
                         <TextBlock Text="{lex:Loc UseValveControllerTimer}"
-                                    TextWrapping="Wrap"/>
+                                   TextWrapping="Wrap"/>
                     </CheckBox>
                 </UserControl>
 

@@ -77,7 +77,7 @@ namespace Olfactory
             var pressDicard = Utils.L10n.T("PressDiscard");
             var pressCancel = Utils.L10n.T("PressCancel");
             var answer = Utils.MsgBox.Ask(
-                Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
+                App.Name + " - " + Utils.L10n.T("Logger"),
                 $"{greeting}{saveInto}\n'{_folder}\\{filename}'?\n\n{pressNo}\n{pressDicard}\n{pressCancel}",
                 Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No, Utils.MsgBox.Button.Discard, Utils.MsgBox.Button.Cancel);
 
@@ -147,7 +147,7 @@ namespace Olfactory
 
                     var dataSavedInto = Utils.L10n.T("DataSavedInto");
                     Utils.MsgBox.Notify(
-                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
+                        App.Name + " - " + Utils.L10n.T("Logger"),
                         $"{dataSavedInto}\n'{filename}'",
                         Utils.MsgBox.Button.OK);
 
@@ -158,7 +158,7 @@ namespace Olfactory
                     var failedToSave = Utils.L10n.T("FailedToSave");
                     var retry = Utils.L10n.T("Retry");
                     var answer = Utils.MsgBox.Ask(
-                        Utils.L10n.T("OlfactoryTestTool") + " - " + Utils.L10n.T("Logger"),
+                        App.Name + " - " + Utils.L10n.T("Logger"),
                         $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
                         Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No);
                     if (answer == Utils.MsgBox.Button.Yes)

@@ -15,6 +15,7 @@ namespace Olfactory.Tests.OdorProduction
         public int FinalPause;
         public int PIDReadingInterval;
         public bool UseValveTimer;
+        public bool ManualFlowStop;
 
         public int OdorFlowDurationMs => (int)(OdorFlowDuration * 1000);
 
@@ -29,6 +30,7 @@ namespace Olfactory.Tests.OdorProduction
             FinalPause = settings.Test_OP_FinalPause;
             PIDReadingInterval = settings.Test_OP_PIDReadingInterval;
             UseValveTimer = settings.Test_OP_UseValveTimer;
+            ManualFlowStop = settings.Test_OP_ManualFlowStop;
         }
 
         public void Save()
@@ -42,6 +44,7 @@ namespace Olfactory.Tests.OdorProduction
             settings.Test_OP_FinalPause = FinalPause;
             settings.Test_OP_PIDReadingInterval = PIDReadingInterval;
             settings.Test_OP_UseValveTimer = UseValveTimer;
+            settings.Test_OP_ManualFlowStop = ManualFlowStop;
 
             settings.Save();
         }

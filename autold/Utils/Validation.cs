@@ -109,7 +109,7 @@ namespace Olfactory.Utils
             {
                 var msg = L10n.T("CorrectAndTryAgain");
                 MsgBox.Error(
-                    L10n.T("OlfactoryTestTool") + " - " + L10n.T("Validator"),
+                    App.Name + " - " + L10n.T("Validator"),
                     $"{validation}.\n{msg}");
                 validation.Source.Focus();
                 validation.Source.SelectAll();

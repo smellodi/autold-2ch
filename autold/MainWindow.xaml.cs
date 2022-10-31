@@ -27,7 +27,7 @@ namespace Olfactory
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
 
-            Title += $" [build {Properties.Resources.BuildCode.Trim()}]";
+            Title = $"{App.Name} v{App.Version} [build {Properties.Resources.BuildCode.Trim()}]";
 
             _monitor = new CommMonitor();
             _monitor.Hide();
@@ -117,7 +117,7 @@ namespace Olfactory
             if (savingResult == null)
             {
                 _finishedPage.DisableSaving();
-                MsgBox.Warn(Title, L10n.T("NoDataToSave"), MsgBox.Button.OK);
+                MsgBox.Warn(App.Name, L10n.T("NoDataToSave"), MsgBox.Button.OK);
             }
         }
 

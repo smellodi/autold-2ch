@@ -409,4 +409,19 @@ Examples described:
 	<data name="Session" xml:space="preserve">
 		<value>Odor flow</value>
 	</data>
+	<data name="ManualControl" xml:space="preserve">
+		<value>Manual control</value>
+	</data>
+	<data name="ManualFlowStop" xml:space="preserve">
+		<value>stop flow</value>
+	</data>
+	<data name="ManualFlowStopTip" xml:space="preserve">
+		<value>If checked, a message appears after the flow time is over, but the valves are not closed yet. The procedure continues after a user closes the message.</value>
+	</data>
+	<data name="ManualFlowStopMsg" xml:space="preserve">
+		<value>Close this message to continue.</value>
+	</data>
+	<data name="Continue" xml:space="preserve">
+		<value>Continue</value>
+	</data>
 </root>

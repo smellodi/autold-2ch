@@ -409,4 +409,19 @@ Kuvattuja esimerkkejä:
 	<data name="Session" xml:space="preserve">
 		<value>Hajun virtaus</value>
 	</data>
+	<data name="ManualControl" xml:space="preserve">
+		<value>Manuaali ohjaus</value>
+	</data>
+	<data name="ManualFlowStop" xml:space="preserve">
+		<value>pysäyttää virtaus</value>
+	</data>
+	<data name="ManualFlowStopTip" xml:space="preserve">
+		<value>Jos tämä on valittuna, näyttöön tulee viesti, kun virtausaika on ohi, mutta venttiilit eivät ole vielä kiinni. Toimenpide jatkuu, kun käyttäjä sulkee viestin.</value>
+	</data>
+	<data name="ManualFlowStopMsg" xml:space="preserve">
+		<value>Sulje tämä viesti jatkaaksesi.</value>
+	</data>
+	<data name="Continue" xml:space="preserve">
+		<value>Jatka</value>
+	</data>
 </root>

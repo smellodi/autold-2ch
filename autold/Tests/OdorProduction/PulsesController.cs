@@ -90,7 +90,7 @@ namespace Olfactory.Tests.OdorProduction
             // Fire the first event
             PulseStateChanged?.Invoke(this, pulseEvents[0].ToStateChange());
 
-            // Schedule the second event (there are always at least 2 events)
+            // Schedule the second event (there are always at least 2 events: start and stop of the same channel)
             _runner = Utils.DispatchOnce.Do(pulseEvents[1].Interval, () =>
             {
                 PulseStateChanged?.Invoke(this, pulseEvents[1].ToStateChange());
