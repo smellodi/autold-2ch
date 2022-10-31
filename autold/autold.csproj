@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\BuildDate.txt" />
+    <Resource Include="Properties\BuildCode.txt" />
     <Resource Include="Assets\icons\main.png" />
     <Resource Include="Assets\icons\monitor.png" />
     <Resource Include="Assets\images\error.png" />
@@ -87,7 +87,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="echo %25date%25 %25time%25 &gt; &quot;$(ProjectDir)\Assets\BuildDate.txt&quot;" />
+    <Exec Command="for /f &quot;skip=1&quot; %25%25x in ('wmic os get localdatetime') do if not defined isodate set isodate=%25%25x&#xD;&#xA;set today=%25isodate:~0,4%25%25isodate:~4,2%25%25isodate:~6,2%25.%25time:~0,2%25%25time:~3,2%25&#xD;&#xA;echo %25today%25 &gt; &quot;$(ProjectDir)\Properties\BuildCode.txt&quot;" />
   </Target>
 
 </Project>

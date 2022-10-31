@@ -61,12 +61,12 @@ namespace Olfactory.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 27/10/2022 12:20:14.74 
+        ///   Looks up a localized string similar to 20221031.1102 
         ///.
         /// </summary>
-        internal static string BuildDate {
+        internal static string BuildCode {
             get {
-                return ResourceManager.GetString("BuildDate", resourceCulture);
+                return ResourceManager.GetString("BuildCode", resourceCulture);
             }
         }
     }

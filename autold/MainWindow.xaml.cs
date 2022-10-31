@@ -27,9 +27,7 @@ namespace Olfactory
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
 
-            var buildDate = DateTime.ParseExact(Properties.Resources.BuildDate.Trim(), "dd/MM/yyyy HH:mm:ss.ff", CultureInfo.InvariantCulture);
-            var buildCode = buildDate.ToString("yyMMdd.HHmm");
-            Title += $" [build {buildCode}]";
+            Title += $" [build {Properties.Resources.BuildCode.Trim()}]";
 
             _monitor = new CommMonitor();
             _monitor.Hide();
