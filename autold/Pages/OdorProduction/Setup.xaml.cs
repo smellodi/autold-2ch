@@ -46,11 +46,13 @@ namespace Olfactory.Pages.OdorProduction
                 return new Utils.Validation(txbPulses, error);
             }
 
+            double maxPulseDurationSec = (chkUseValveControllerTimer.IsChecked ?? false) ? Comm.MFC.MAX_SHORT_PULSE_DURATION / 1000 : 10000;
+
             var validations = new List<Utils.Validation>
             {
                 new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbOdorFlowDuration, 0.1, 10000, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbOdorFlowDuration, 0.1, maxPulseDurationSec, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
             };
@@ -79,8 +81,10 @@ namespace Olfactory.Pages.OdorProduction
                 }
             }
 
-            var longestDurationMs = pulses.Max(pulse => pulse.GetDuration(_settings.OdorFlowDurationMs));
-            var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, 0.001 * longestDurationMs, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Float);
+            double.TryParse(txbOdorFlowDuration.Text, out double odorFlowDurationSec);
+
+            var longestDurationMs = pulses.Max(pulse => pulse.GetDuration((int)(odorFlowDurationSec * 1000)));
+            var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, 0.001 * longestDurationMs, maxPulseDurationSec, Utils.Validation.ValueFormat.Float);
             if (!isOdorFlowDurationLongEnough.IsValid)
             {
                 return isOdorFlowDurationLongEnough;

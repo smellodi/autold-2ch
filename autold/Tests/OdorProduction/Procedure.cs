@@ -85,6 +85,7 @@ namespace Olfactory.Tests.OdorProduction
 
             _mfc.FreshAirSpeed = _settings.FreshAir;
             _mfc.OdorDirection = MFC.ValvesOpened.None; // should I add delay here?
+            _mfc.IsInShortPulseMode = _settings.UseValveTimer;
 
             _timer.Interval = _settings.PIDReadingInterval;
             _timer.AutoReset = true;
@@ -246,11 +247,14 @@ namespace Olfactory.Tests.OdorProduction
 
             _logger.Add("V" + ((int)valves).ToString("D2"));
 
-            foreach (var startingChannel in e.StartingChannels)
+            if (_settings.UseValveTimer)
             {
-                _mfc.StartPulse(
-                    startingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
-                    startingChannel.GetDuration(_settings.OdorFlowDurationMs));
+                foreach (var startingChannel in e.StartingChannels)
+                {
+                    _mfc.StartPulse(
+                        startingChannel.ID == 1 ? MFC.ValvesOpened.Valve1 : MFC.ValvesOpened.Valve2,
+                        startingChannel.GetDuration(_settings.OdorFlowDurationMs));
+                }
             }
 
             _mfc.OdorDirection = valves;
