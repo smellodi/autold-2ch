@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -37,7 +38,7 @@ namespace Olfactory.Pages
             UpdatePortList(cmbPIDPort);
             UpdatePortList(cmbMFCPort);
 
-            Application.Current.Exit += (s, e) => Close();
+            Application.Current.Exit += async (s, e) => await Close();
 
             LoadSettings();
 
@@ -200,7 +201,7 @@ namespace Olfactory.Pages
             return success;
         }
 
-        private void Close()
+        private async Task Close()
         {
             if (_pid.IsOpen)
             {
@@ -210,6 +211,11 @@ namespace Olfactory.Pages
             {
                 _mfc.Stop();
             }
+
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
+            await Dispatcher.Yield();
 
             SaveSettings();
         }
@@ -380,6 +386,7 @@ namespace Olfactory.Pages
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             _mfcTimer.Stop();
+            _pidTimer.Stop();
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)

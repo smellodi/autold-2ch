@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
 using Olfactory.Comm;
@@ -71,6 +72,7 @@ namespace Olfactory.Tests.Comparison
                         //_dataLogger.Add(pidSample);
                         _monitor.LogData(LogSource.PID, pidSample);
                         Data?.Invoke(this, pidSample.PID);
+                        CheckPID(pidSample.PID);
                     }
                     if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                     {
@@ -135,8 +137,10 @@ namespace Olfactory.Tests.Comparison
             _runner = DispatchOnce
                 .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))
                 .Then(_settings.InitialPause, () => StartOdorFlow(0))
+                .Wait()
                 .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
                 .Then(_settings.InitialPause, () => StartOdorFlow(1))
+                .Wait()
                 .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
                 .Then(0.5, () => RequestAnswer?.Invoke(this, new EventArgs()));
         }
@@ -161,7 +165,8 @@ namespace Olfactory.Tests.Comparison
 
         // Internal
 
-        const double UPDATE_INTERVAL_IN_SECONDS = 1.0;
+        const double UPDATE_INTERVAL_IN_SECONDS = 0.2;
+        const double EXPECTED_PID_REDUCTION = 0.85;     // must be < 0.9
 
         readonly MFC _mfc = MFC.Instance;
         readonly PID _pid = PID.Instance;
@@ -175,6 +180,7 @@ namespace Olfactory.Tests.Comparison
 
         int _step = 0;
         MixtureID _mixtureID = MixtureID.None;
+        double _PIDThreshold = 0;
 
         DispatchOnce _runner;
         PulsesController _pulseController;
@@ -190,9 +196,19 @@ namespace Olfactory.Tests.Comparison
             _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
             _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
 
+            MFC.ValvesOpened valves = (pulse.Channel1?.Valve ?? MFC.ValvesOpened.None) | (pulse.Channel2?.Valve ?? MFC.ValvesOpened.None);
+            _mfc.OdorDirection = valves;
+
+            //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
+
+            _PIDThreshold = GasMixer.GetExpectedPID(
+                _settings.Gas1, pulse.Channel1?.Flow ?? 0,
+                _settings.Gas2, pulse.Channel2?.Flow ?? 0
+            ) * EXPECTED_PID_REDUCTION;
+            Debug.WriteLine(_PIDThreshold);
+
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
             _pulseController.PulseStateChanged += PulseStateChanged;
-            _pulseController.Run();
         }
 
         private void StopOdorFlow()
@@ -252,6 +268,19 @@ namespace Olfactory.Tests.Comparison
             _pulseFinisher?.Stop();
         }
 
+        private void CheckPID(double pid)
+        {
+            if (_PIDThreshold != 0)
+            {
+                if (pid > _PIDThreshold)
+                {
+                    _PIDThreshold = 0;
+                    _pulseController.Run();
+                    StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
+                }
+            }
+        }
+
         private MixtureID NextMixtureID()
         {
             return _mixtureID == MixtureID.Second ? MixtureID.None : (MixtureID)((int)_mixtureID + 1);
@@ -267,21 +296,7 @@ namespace Olfactory.Tests.Comparison
                 return;
             }
 
-            MFC.ValvesOpened valves = MFC.ValvesOpened.None;
-
-            foreach (var startingChannel in e.StartingChannels)
-            {
-                _mfc.StartPulse(
-                    startingChannel.Valve,
-                    startingChannel.GetDuration(_settings.OdorFlowDurationMs));
-                valves |= startingChannel.Valve;
-            }
-
-            _mfc.OdorDirection = valves;
-
-            //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
-
-            StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
+            _runner.Resume();
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

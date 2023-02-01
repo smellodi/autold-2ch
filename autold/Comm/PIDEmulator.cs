@@ -5,12 +5,41 @@ namespace Olfactory.Comm
     internal class OlfactoryDeviceModel
     {
         public float Loop => 11.5f + (float)Math.Sin(Utils.Timestamp.Ms % 5000 * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
-        public double PID => (
-            (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? _mfcEmul.Odor1FlowRate : 0) +
-            (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? _mfcEmul.Odor2FlowRate : 0)
-        ) / 2 * 50 + 50;
+        public double PID
+        {
+            get
+            {
+                double expected = PID_BASELINE +
+                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? _mfcEmul.Odor1FlowRate : 0) * 20 +   // = Tests.Comparison.GasMixer.MV_PER_MLMIN[0]
+                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? _mfcEmul.Odor2FlowRate : 0) * 35;    // = Tests.Comparison.GasMixer.MV_PER_MLMIN[1]
 
-        MFCEmulator _mfcEmul = MFCEmulator.Instance;
+                double nextPID;
+                if (_prevPID < expected)
+                {
+                    // in addition, we simulate some delay when the PID signal has to rise
+                    double weightPrev = 75.0 / (0.0000000001 + Math.Pow(_prevPID - PID_BASELINE, 0.7)); // the numbers are just guessed to get a delay and a curve somewhat realistic
+                    double weightNext = 1.0 - WEIGHT;
+                    nextPID = (_prevPID * weightPrev + expected * weightNext) / (weightPrev + weightNext);
+                }
+                else
+                {
+                    // ..and simpler simulation when the PID signal has to go down
+                    nextPID = expected + (_prevPID - expected) * WEIGHT;
+                }
+
+                _prevPID = nextPID;
+                return nextPID;
+            }
+        }
+
+        // Internal
+
+        const double PID_BASELINE = 50;
+        const double WEIGHT = 0.85;
+
+        readonly MFCEmulator _mfcEmul = MFCEmulator.Instance;
+
+        double _prevPID = PID_BASELINE;
     }
 
     internal class PIDEmulator

@@ -96,10 +96,47 @@ namespace Olfactory.Utils
             }
         }
 
+        /// <summary>
+        /// Adds an action to the chain of actions
+        /// </summary>
+        /// <param name="seconds">time to wait</param>
+        /// <param name="action">action to execute</param>
+        /// <returns></returns>
         public DispatchOnce Then(double seconds, Action action)
         {
             _actions.Enqueue(new ScheduledAction() { Pause = (int)(1000 * seconds), Action = action });
             return this;
+        }
+
+        /// <summary>
+        /// Stop execution until Resume is called, or a timeout elapses
+        /// </summary>
+        /// <param name="maxTime">timeout in seconds</param>
+        /// <returns>The instance</returns>
+        public DispatchOnce Wait(double maxTime = double.MaxValue)
+        {
+            _actions.Enqueue(new ScheduledAction() { Pause = maxTime == double.MaxValue ? int.MaxValue : (int)(1000 * maxTime), Action = null });
+            return this;
+        }
+
+        /// <summary>
+        /// Interrupts waiting for current task to execute (i.e. this task is abandoned) and starts waiting for the next tasks.
+        /// Also resumes the time after <see cref="Wait(double)"/> was called.
+        /// </summary>
+        public void Resume()
+        {
+            if (Enabled)
+            {
+                Stop();
+                _actions.Dequeue();
+            }
+
+            if (_actions.Count > 0)
+            {
+                var next = _actions.Peek();
+                Interval = next.Pause;
+                Start();
+            }
         }
 
 
@@ -118,7 +155,7 @@ namespace Olfactory.Utils
             Stop();
 
             var action = _actions.Dequeue();
-            action.Action();
+            action.Action?.Invoke();
 
             if (_actions.Count > 0)
             {
