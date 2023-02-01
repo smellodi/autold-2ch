@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory.Tests.Common
 {
     /// <summary>
     /// Generates a list of pulse state changes, and fires each change event at its proper time
@@ -170,7 +170,7 @@ namespace Olfactory.Tests.OdorProduction
                 // To find the ongoing/continuing channels, we need to start from the first pulse event
                 // and go up to the current one, memorizing channels that have started but not ended yet
                 HashSet<ChannelPulse> activePulses = new();
-                
+
                 var firstEvent = this;
                 while (firstEvent.Previous != null) firstEvent = firstEvent.Previous;   // get the first event
                 while (firstEvent != this)
@@ -217,7 +217,7 @@ namespace Olfactory.Tests.OdorProduction
             public static PulseEvent[] CreateSequence(ChannelEvent[] events)
             {
                 var orderedEvents = events.OrderBy(evt => evt.Delay);
-                
+
                 List<PulseEvent> result = new();
                 PulseEvent currentEvent = null;
 

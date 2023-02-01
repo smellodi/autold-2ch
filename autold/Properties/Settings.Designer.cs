@@ -12,7 +12,7 @@ namespace Olfactory.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.3.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -332,6 +332,90 @@ namespace Olfactory.Properties {
             }
             set {
                 this["Test_OP_ManualFlowStop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double Test_CMP_FreshAirFlow {
+            get {
+                return ((double)(this["Test_CMP_FreshAirFlow"]));
+            }
+            set {
+                this["Test_CMP_FreshAirFlow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public double Test_CMP_OdorFlow {
+            get {
+                return ((double)(this["Test_CMP_OdorFlow"]));
+            }
+            set {
+                this["Test_CMP_OdorFlow"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Test_CMP_Gas1 {
+            get {
+                return ((int)(this["Test_CMP_Gas1"]));
+            }
+            set {
+                this["Test_CMP_Gas1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int Test_CMP_Gas2 {
+            get {
+                return ((int)(this["Test_CMP_Gas2"]));
+            }
+            set {
+                this["Test_CMP_Gas2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Odor1, Odor2")]
+        public string Test_CMP_Mixtures {
+            get {
+                return ((string)(this["Test_CMP_Mixtures"]));
+            }
+            set {
+                this["Test_CMP_Mixtures"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double Test_CMP_InitialPause {
+            get {
+                return ((double)(this["Test_CMP_InitialPause"]));
+            }
+            set {
+                this["Test_CMP_InitialPause"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double Test_CMP_OdorFlowDuration {
+            get {
+                return ((double)(this["Test_CMP_OdorFlowDuration"]));
+            }
+            set {
+                this["Test_CMP_OdorFlowDuration"] = value;
             }
         }
     }

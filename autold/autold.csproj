@@ -43,6 +43,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Pages\Comparison\Production.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\Comparison\Setup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pages\OdorProduction\Production.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -76,6 +82,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Pages\Comparison\Production.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pages\Comparison\Setup.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Pages\OdorProduction\Production.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>

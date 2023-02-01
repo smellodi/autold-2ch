@@ -6,6 +6,7 @@ namespace Olfactory.Tests
     public enum Test
     {
         OdorProduction,
+        Comparison
     }
 
     public class PageDoneEventArgs : EventArgs

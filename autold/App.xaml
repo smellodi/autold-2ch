@@ -556,7 +556,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
-                                    <ColumnDefinition Width="45"/>
+                                    <ColumnDefinition Width="48"/>
                                 </Grid.ColumnDefinitions>
                                 <ContentPresenter Grid.Column="0"/>
                                 <TextBlock Grid.Column="1"

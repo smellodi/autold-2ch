@@ -1,0 +1,135 @@
+﻿<Page x:Class="Olfactory.Pages.Comparison.Production"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Olfactory.Controls"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="800"
+      Title="{lex:Loc Comparison}">
+    
+    <Page.Resources>
+        <Style x:Key="OdorBox" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Background" Value="{StaticResource BrushPanelLightest}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="Margin" Value="24 0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Background" Value="{StaticResource BrushPanelDisabled}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource BrushBorderDisabled}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Answer" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="MinWidth" Value="100"/>
+            <Setter Property="MinHeight" Value="56"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="12"/>
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc Comparison}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc Session}"/>
+        </TextBlock>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <local:WaitingInstruction x:Name="wtiWaiting" Grid.Row="0" Grid.ColumnSpan="3"
+                                          Margin="24px"
+                                          Text="{lex:Loc InstructionWait}"/>
+                <Label x:Name="lblGas1" Grid.Row="1" Grid.Column="0"
+                       IsEnabled="false"
+                       Style="{StaticResource OdorBox}">
+                    <local:WaitingInstruction x:Name="wtiOdor1"
+                                              Text="{lex:Loc Odor1}"/>
+                </Label>
+                <Label x:Name="lblGas2" Grid.Row="1" Grid.Column="1"
+                       IsEnabled="false"
+                       Style="{StaticResource OdorBox}">
+                    <local:WaitingInstruction x:Name="wtiOdor2"
+                                              Text="{lex:Loc Odor2}"/>
+                </Label>
+            </Grid>
+
+            <StackPanel x:Name="stpAnswer"
+                        Visibility="Hidden"
+                        Margin="0,36,0,0">
+                <Label Content="{lex:Loc WasSameOrNot}"
+                       HorizontalContentAlignment="Center"/>
+                <WrapPanel HorizontalAlignment="Center">
+                    <Button Content="{lex:Loc Same}"
+                            Style="{StaticResource Answer}"
+                            Click="Same_Click"/>
+                    <Separator Width="16"/>
+                    <Button Content="{lex:Loc Different}"
+                            Style="{StaticResource Answer}"
+                            Click="Different_Click"/>
+                </WrapPanel>
+            </StackPanel>
+            
+            <WrapPanel HorizontalAlignment="Center"
+                       Margin="0,24,0,0">
+                <Label Margin="0,4,0,0"
+                       VerticalContentAlignment="Center"
+                       FontSize="14">
+                    <TextBlock>
+                        <Run Text="{lex:Loc PIDVoltage}"/>
+                        <Run Text=" ("/>
+                        <Run Text="{lex:Loc MV}"/>
+                        <Run Text=")"/>
+                    </TextBlock>
+                </Label>
+                <Label x:Name="lblPID"
+                       VerticalContentAlignment="Bottom"
+                       Content="0.0"
+                       FontSize="26"
+                       Foreground="{StaticResource BrushFontDark}"/>
+            </WrapPanel>
+        </StackPanel>
+
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
+                Style="{StaticResource Next}"
+                Content="{lex:Loc Interrupt}"
+                Click="Interrupt_Click"/>
+
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
+    </Grid>
+</Page>

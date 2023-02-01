@@ -83,6 +83,7 @@ namespace Olfactory
             _currentTest = test switch
             {
                 Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
+                Tests.Test.Comparison => new Tests.Comparison.Manager(),
                 _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
             };
 

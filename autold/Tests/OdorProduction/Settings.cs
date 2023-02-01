@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Olfactory.Tests.Common;
 
 namespace Olfactory.Tests.OdorProduction
 {

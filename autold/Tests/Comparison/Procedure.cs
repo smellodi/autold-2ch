@@ -5,26 +5,48 @@ using Olfactory.Comm;
 using Olfactory.Tests.Common;
 using Olfactory.Utils;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory.Tests.Comparison
 {
     public class Procedure : ITestEmulator
     {
-        [Flags]
-        public enum Stage
+        public enum Answer
         {
-            None = 0,
-            InitWait = 1,
-            BeforeFinalWait = 2,
-            FinalWait = 4,
-            Odor1Flow = 8,
-            Odor2Flow = 16,
-            OdorFlow = 32,
+            Same,
+            Different
         }
 
-        public int Step => _step;
+        public enum OutputValveStage
+        {
+            Closed,
+            Opened
+        }
+
+        public enum MixtureID
+        {
+            None = 0,
+            First = 1,
+            Second = 2
+        }
+
+        public class Stage
+        {
+            public OutputValveStage OutputValveStage { get; private set; }
+            public MixtureID MixtureID { get; private set; }
+
+            public Stage(OutputValveStage outputValveStage = OutputValveStage.Closed, MixtureID flowOrder = MixtureID.None)
+            {
+                OutputValveStage = outputValveStage;
+                MixtureID = flowOrder;
+                if (OutputValveStage == OutputValveStage.Opened && flowOrder == MixtureID.None)
+                {
+                    throw new Exception("Missing the mixtureID in the valve-opened stage");
+                }
+            }
+        }
 
         public event EventHandler<double> Data;
         public event EventHandler<Stage> StageChanged;
+        public event EventHandler RequestAnswer;
         /// <summary>
         /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
         /// </summary>
@@ -37,7 +59,8 @@ namespace Olfactory.Tests.OdorProduction
 
             FlowLogger.Instance.Clear();
 
-            _logger.Clear();
+            //_dataLogger.Clear();
+            _testLogger.Clear();
 
             _timer.Elapsed += (s, e) =>
             {
@@ -45,13 +68,13 @@ namespace Olfactory.Tests.OdorProduction
                 {
                     if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                     {
-                        _logger.Add(pidSample);
+                        //_dataLogger.Add(pidSample);
                         _monitor.LogData(LogSource.PID, pidSample);
                         Data?.Invoke(this, pidSample.PID);
                     }
                     if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                     {
-                        _logger.Add(mfcSample);
+                        //_dataLogger.Add(mfcSample);
                         _monitor.LogData(LogSource.MFC, mfcSample);
                     }
                 });
@@ -65,7 +88,7 @@ namespace Olfactory.Tests.OdorProduction
 
         public void EmulationFinilize()
         {
-            _step = _settings.Pulses.Length - 1;
+            _step = _settings.PairsOfMixtures.Length - 1;
         }
 
         public void Start(Settings settings)
@@ -80,39 +103,50 @@ namespace Olfactory.Tests.OdorProduction
             _mfc.Closed += MFC_Closed;
             _pid.Closed += PID_Closed;
 
-            var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
-            _monitor.MFCUpdateInterval = updateIntervalInSeconds;
-            _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+            _monitor.MFCUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
+            _monitor.PIDUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
 
-            _mfc.FreshAirSpeed = _settings.FreshAir;
+            _mfc.FreshAirSpeed = _settings.FreshAirFlow;
             _mfc.OdorDirection = MFC.ValvesOpened.None; // should I add delay here?
-            _mfc.IsInShortPulseMode = _settings.UseValveTimer;
+            _mfc.IsInShortPulseMode = true;
 
-            _timer.Interval = _settings.PIDReadingInterval;
+            int intervalInMs = (int)(1000 * UPDATE_INTERVAL_IN_SECONDS);
+
+            _timer.Interval = intervalInMs;
             _timer.AutoReset = true;
             _timer.Start();
 
-            _logger.Start(_settings.PIDReadingInterval);
+            //_dataLogger.Start(intervalInMs);
+            foreach (var param in _settings.Params)
+            {
+                _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
+            }
 
             Next();
         }
 
         public void Next()
         {
-            var pulse = _settings.Pulses[_step];
+            var pair = _settings.PairsOfMixtures[_step];
 
-            _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
+            //_dataLogger.Add(pair.ToString());
+            _testLogger.Add(LogSource.Comparison, "trial", "pair", pair.ToString());
 
-            _runner = Utils.DispatchOnce
-                .Do(0.1, () =>
-                {
-                    _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
-                    _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
-                    StageChanged?.Invoke(this, Stage.InitWait);
-                })
-                .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
+            _runner = DispatchOnce
+                .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))
+                .Then(_settings.InitialPause, () => StartOdorFlow(0))
                 .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
-                .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, () => Finilize());
+                .Then(_settings.InitialPause, () => StartOdorFlow(1))
+                .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
+                .Then(0.5, () => RequestAnswer?.Invoke(this, new EventArgs()));
+        }
+
+        public void SetResult(Answer answer)
+        {
+            //_dataLogger.Add($"A={answer}");
+            _testLogger.Add(LogSource.Comparison, "trial", "answer", answer.ToString());
+
+            Finilize();
         }
 
         public void Stop()
@@ -127,9 +161,12 @@ namespace Olfactory.Tests.OdorProduction
 
         // Internal
 
+        const double UPDATE_INTERVAL_IN_SECONDS = 1.0;
+
         readonly MFC _mfc = MFC.Instance;
         readonly PID _pid = PID.Instance;
-        readonly SyncLogger _logger = SyncLogger.Instance;
+        //readonly SyncLogger _dataLogger = SyncLogger.Instance;
+        readonly FlowLogger _testLogger = FlowLogger.Instance;
         readonly CommMonitor _monitor = CommMonitor.Instance;
         readonly System.Timers.Timer _timer = new();
         readonly Dispatcher _dispatcher;
@@ -137,14 +174,22 @@ namespace Olfactory.Tests.OdorProduction
         Settings _settings;
 
         int _step = 0;
+        MixtureID _mixtureID = MixtureID.None;
 
         DispatchOnce _runner;
         PulsesController _pulseController;
         DispatchOnce _pulseFinisher;
 
-        private void StartOdorFlow()
+        private void StartOdorFlow(int mixID)
         {
-            var pulse = _settings.Pulses[_step];
+            _mixtureID = NextMixtureID();
+
+            var pair = _settings.PairsOfMixtures[_step];
+            var pulse = GasMixer.ToPulse(pair, mixID, _settings.OdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2);
+
+            _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
+            _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
+
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
             _pulseController.PulseStateChanged += PulseStateChanged;
             _pulseController.Run();
@@ -152,21 +197,16 @@ namespace Olfactory.Tests.OdorProduction
 
         private void StopOdorFlow()
         {
-            if (_settings.ManualFlowStop)
-            {
-                _logger.Add("M");
-                MsgBox.Notify(App.Name, L10n.T("ManualFlowStopMsg"), new string[] { L10n.T("Close") });
-            }
-
             CloseValves();
-            StageChanged?.Invoke(this, Stage.FinalWait);
+            StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, NextMixtureID()));
         }
 
         private void Finilize()
         {
             _runner = null;
+            _mixtureID = MixtureID.None;
 
-            var noMoreTrials = ++_step >= _settings.Pulses.Length;
+            var noMoreTrials = ++_step >= _settings.PairsOfMixtures.Length;
             if (noMoreTrials)
             {
                 Stop();
@@ -187,7 +227,7 @@ namespace Olfactory.Tests.OdorProduction
             if (_mfc.OdorDirection != MFC.ValvesOpened.None)
             {
                 _mfc.OdorDirection = MFC.ValvesOpened.None;
-                _logger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
+                //_dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
             }
         }
 
@@ -212,6 +252,11 @@ namespace Olfactory.Tests.OdorProduction
             _pulseFinisher?.Stop();
         }
 
+        private MixtureID NextMixtureID()
+        {
+            return _mixtureID == MixtureID.Second ? MixtureID.None : (MixtureID)((int)_mixtureID + 1);
+        }
+
         // Event handlers
 
         private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
@@ -219,48 +264,24 @@ namespace Olfactory.Tests.OdorProduction
             if (e.IsLast)
             {
                 _pulseController = null;
-
-                if (_mfc.OdorDirection != MFC.ValvesOpened.None && !_settings.ManualFlowStop)
-                {
-                    StageChanged?.Invoke(this, Stage.OdorFlow);
-                }
-
                 return;
             }
 
-            Stage newStage = Stage.None;
+            MFC.ValvesOpened valves = MFC.ValvesOpened.None;
+
             foreach (var startingChannel in e.StartingChannels)
             {
-                newStage |= startingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
-            }
-            foreach (var ongoingChannel in e.OngoingChannels)
-            {
-                newStage |= ongoingChannel.ID == 1 ? Stage.Odor1Flow : Stage.Odor2Flow;
-            }
-
-            MFC.ValvesOpened valves = newStage switch
-            {
-                Stage.Odor1Flow => MFC.ValvesOpened.Valve1,
-                Stage.Odor2Flow => MFC.ValvesOpened.Valve2,
-                (Stage.Odor1Flow | Stage.Odor2Flow) => MFC.ValvesOpened.Valve1 | MFC.ValvesOpened.Valve2,
-                _ => MFC.ValvesOpened.None
-            };
-
-            _logger.Add("V" + ((int)valves).ToString("D2"));
-
-            if (_settings.UseValveTimer)
-            {
-                foreach (var startingChannel in e.StartingChannels)
-                {
-                    _mfc.StartPulse(
-                        startingChannel.Valve,
-                        startingChannel.GetDuration(_settings.OdorFlowDurationMs));
-                }
+                _mfc.StartPulse(
+                    startingChannel.Valve,
+                    startingChannel.GetDuration(_settings.OdorFlowDurationMs));
+                valves |= startingChannel.Valve;
             }
 
             _mfc.OdorDirection = valves;
 
-            StageChanged?.Invoke(this, newStage | Stage.OdorFlow);
+            //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
+
+            StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

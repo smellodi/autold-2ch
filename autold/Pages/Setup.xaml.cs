@@ -163,6 +163,7 @@ namespace Olfactory.Pages
             cmbMFCPort.IsEnabled = !_mfc.IsOpen;
 
             btnOdorProduction.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
+            btnComparison.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             grdPlayground.IsEnabled = _mfc.IsOpen;
 
@@ -502,6 +503,14 @@ namespace Olfactory.Pages
                 (true, true) => MFC.ValvesOpened.All,
                 _ => throw new NotImplementedException()
             };
+        }
+
+        private void Comparison_Click(object sender, RoutedEventArgs e)
+        {
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
+            Next?.Invoke(this, Tests.Test.Comparison);
         }
 
         private void OdorProduction_Click(object sender, RoutedEventArgs e)

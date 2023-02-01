@@ -424,4 +424,34 @@ Kuvattuja esimerkkejä:
 	<data name="Continue" xml:space="preserve">
 		<value>Jatka</value>
 	</data>
+	<data name="Comparison" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="Odor1" xml:space="preserve">
+		<value>Haju1</value>
+	</data>
+	<data name="Odor2" xml:space="preserve">
+		<value>Haju2</value>
+	</data>
+	<data name="InstructionToEnterMixtures" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="PairsOfMixtures" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="InstructionWait" xml:space="preserve">
+		<value>Odota...</value>
+	</data>
+	<data name="WasSameOrNot" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="Same" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="Different" xml:space="preserve">
+		<value>_</value>
+	</data>
+	<data name="PulseDuration" xml:space="preserve">
+		<value>_</value>
+	</data>
 </root>

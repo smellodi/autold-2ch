@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory.Tests.Common
 {
     /// <summary>
     /// Describes a single channel pulse
     /// </summary>
     public class ChannelPulse
     {
+        /// <summary>
+        /// 1 or 2
+        /// </summary>
         public int ID { get; }
 
         /// <summary>
@@ -20,6 +23,11 @@ namespace Olfactory.Tests.OdorProduction
         /// ms
         /// </summary>
         public int Delay { get; } = 0;
+
+        /// <summary>
+        /// The corresponding valve
+        /// </summary>
+        public Comm.MFC.ValvesOpened Valve => ID == 1 ? Comm.MFC.ValvesOpened.Valve1 : Comm.MFC.ValvesOpened.Valve2;
 
         /// <summary>
         /// Constructor
@@ -122,32 +130,7 @@ namespace Olfactory.Tests.OdorProduction
 
             foreach (string channel in channels)
             {
-                string[] p = channel.Split(DELIM_EXPRESSION);
-                if (p.Length != 2)
-                {
-                    throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelExpression"), channel));
-                }
-
-                if (!int.TryParse(p[0], out int channelID) || (channelID != 1 && channelID != 2))
-                {
-                    throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelID"), p[0]));
-                }
-
-                Regex regex = new Regex(@"^(\[(?<delay>[0-9]+)\])?(?<flow>[0-9\.]+)(x(?<duration>[0-9]+))?$");
-                var match = regex.Match(p[1]);
-
-                if (!match.Success || match.Groups.Count < 1)
-                {
-                    throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelDescription"), p[0], p[1]));
-                }
-
-                var delayGroup = match.Groups["delay"];
-                var durationGroup = match.Groups["duration"];
-                var flowGroup = match.Groups["flow"];
-
-                int delay = delayGroup.Success ? int.Parse(delayGroup.Value) : 0;
-                double flow = double.Parse(flowGroup.Value);
-                int duration = durationGroup.Success ? int.Parse(durationGroup.Value) : 0;
+                var (channelID, delay, flow, duration) = Parse(channel);
 
                 if (delay > 0)
                 {
@@ -173,6 +156,41 @@ namespace Olfactory.Tests.OdorProduction
             }
         }
 
+        public Pulse(ChannelPulse[] channels)
+        {
+            if (channels.Length < 1 || channels.Length > 2)
+            {
+                throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidNumberOfChannels"), channels.Length));
+            }
+
+            bool hasDelay = false;
+
+            foreach (var channel in channels)
+            {
+                if (channel.Delay > 0)
+                {
+                    if (hasDelay)
+                    {
+                        throw new ArgumentException(string.Format(Utils.L10n.T("PulseOnlyOneChannelCanDelay"), channel));
+                    }
+                    hasDelay = true;
+                }
+
+                if (channel.ID == 1 && Channel1 == null)
+                {
+                    Channel1 = channel;
+                }
+                else if (channel.ID == 2 && Channel2 == null)
+                {
+                    Channel2 = channel;
+                }
+                else
+                {
+                    throw new ArgumentException(string.Format(Utils.L10n.T("PulseSameChannelTwice"), channel));
+                }
+            }
+        }
+
         public int GetDuration(int defaultDuration)
         {
             var duration1 = Channel1 != null ? Channel1.Delay + Channel1.GetDuration(defaultDuration) : 0;
@@ -192,6 +210,40 @@ namespace Olfactory.Tests.OdorProduction
                 pulses.Add(Channel2.ToString());
             }
             return string.Join(DELIM_CHANNELS, pulses);
+        }
+
+        // Internal
+        (int, int, double, int) Parse(string channel)
+        {
+            string[] p = channel.Split(DELIM_EXPRESSION);
+            if (p.Length != 2)
+            {
+                throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelExpression"), channel));
+            }
+
+            if (!int.TryParse(p[0], out int channelID) || channelID != 1 && channelID != 2)
+            {
+                throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelID"), p[0]));
+            }
+
+            Regex regex = new Regex(@"^(\[(?<delay>[0-9]+)\])?(?<flow>[0-9\.]+)(x(?<duration>[0-9]+))?$");
+            var match = regex.Match(p[1]);
+
+            if (!match.Success || match.Groups.Count < 1)
+            {
+                throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelDescription"), p[0], p[1]));
+            }
+
+            var delayGroup = match.Groups["delay"];
+            var durationGroup = match.Groups["duration"];
+            var flowGroup = match.Groups["flow"];
+
+            return (
+                channelID,
+                delayGroup.Success ? int.Parse(delayGroup.Value) : 0,
+                double.Parse(flowGroup.Value),
+                durationGroup.Success ? int.Parse(durationGroup.Value) : 0
+            );
         }
     }
 }
