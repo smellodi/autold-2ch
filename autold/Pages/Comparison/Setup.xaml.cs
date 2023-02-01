@@ -28,6 +28,7 @@ namespace Olfactory.Pages.Comparison
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbPairsOfMixtures.Text = _settings.SerializeMixtures();
+            chkWaitForPID.IsChecked = _settings.WaitForPID;
             //txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
         }
 
@@ -90,6 +91,7 @@ namespace Olfactory.Pages.Comparison
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.PairsOfMixtures = Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);
+                _settings.WaitForPID = chkWaitForPID.IsChecked ?? false;
                 //_settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
                 _settings.Save();

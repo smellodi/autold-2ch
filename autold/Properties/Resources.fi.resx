@@ -454,4 +454,7 @@ Kuvattuja esimerkkejä:
 	<data name="PulseDuration" xml:space="preserve">
 		<value>_</value>
 	</data>
+	<data name="WaitForPID" xml:space="preserve">
+		<value>_</value>
+	</data>
 </root>

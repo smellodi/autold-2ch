@@ -48,6 +48,7 @@ namespace Olfactory.Tests.Comparison
         public MixturePair[] PairsOfMixtures;
         public double InitialPause;
         public double OdorFlowDuration;
+        public bool WaitForPID;
         //public int PIDReadingInterval;
 
         public int OdorFlowDurationMs => (int)(OdorFlowDuration * 1000);
@@ -59,6 +60,7 @@ namespace Olfactory.Tests.Comparison
             { "gas2", Gas2.ToString() },
             { "pause", InitialPause.ToString() },
             { "flow", OdorFlowDuration.ToString() },
+            { "use_pid", WaitForPID.ToString() },
         };
 
         public Settings()
@@ -72,6 +74,7 @@ namespace Olfactory.Tests.Comparison
             PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string _);
             InitialPause = settings.Test_CMP_InitialPause;
             OdorFlowDuration = settings.Test_CMP_OdorFlowDuration;
+            WaitForPID = settings.Test_CMP_WaitForPID;
             //PIDReadingInterval = settings.Test_OP_PIDReadingInterval;
         }
 
@@ -86,6 +89,7 @@ namespace Olfactory.Tests.Comparison
             settings.Test_CMP_Mixtures = SerializeMixtures();
             settings.Test_CMP_InitialPause = InitialPause;
             settings.Test_CMP_OdorFlowDuration = OdorFlowDuration;
+            settings.Test_CMP_WaitForPID = WaitForPID;
             //settings.Test_OP_PIDReadingInterval = PIDReadingInterval;
 
             settings.Save();

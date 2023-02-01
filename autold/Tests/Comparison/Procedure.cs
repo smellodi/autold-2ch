@@ -136,12 +136,22 @@ namespace Olfactory.Tests.Comparison
 
             _runner = DispatchOnce
                 .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))
-                .Then(_settings.InitialPause, () => StartOdorFlow(0))
-                .Wait()
-                .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
-                .Then(_settings.InitialPause, () => StartOdorFlow(1))
-                .Wait()
-                .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
+                .Then(_settings.InitialPause, () => StartOdorFlow(0));
+            
+            if (_settings.WaitForPID)
+            {
+                _runner.ThenWait();
+            }
+
+            _runner.Then(_settings.OdorFlowDuration, () => StopOdorFlow())
+                .Then(_settings.InitialPause, () => StartOdorFlow(1));
+
+            if (_settings.WaitForPID)
+            {
+                _runner.ThenWait();
+            }
+
+            _runner.Then(_settings.OdorFlowDuration, () => StopOdorFlow())
                 .Then(0.5, () => RequestAnswer?.Invoke(this, new EventArgs()));
         }
 
@@ -201,14 +211,21 @@ namespace Olfactory.Tests.Comparison
 
             //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
 
-            _PIDThreshold = GasMixer.GetExpectedPID(
-                _settings.Gas1, pulse.Channel1?.Flow ?? 0,
-                _settings.Gas2, pulse.Channel2?.Flow ?? 0
-            ) * EXPECTED_PID_REDUCTION;
-            Debug.WriteLine(_PIDThreshold);
-
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
             _pulseController.PulseStateChanged += PulseStateChanged;
+
+            if (_settings.WaitForPID)
+            {
+                _PIDThreshold = GasMixer.GetExpectedPID(
+                    _settings.Gas1, pulse.Channel1?.Flow ?? 0,
+                    _settings.Gas2, pulse.Channel2?.Flow ?? 0
+                ) * EXPECTED_PID_REDUCTION;
+                Debug.WriteLine(_PIDThreshold);
+            }
+            else
+            {
+                _pulseController.Run();
+            }
         }
 
         private void StopOdorFlow()
@@ -296,7 +313,14 @@ namespace Olfactory.Tests.Comparison
                 return;
             }
 
-            _runner.Resume();
+            if (_settings.WaitForPID)
+            {
+                _runner.Resume();
+            }
+            else
+            {
+                StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
+            }
         }
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)

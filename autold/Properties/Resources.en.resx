@@ -454,4 +454,7 @@ Examples described:
 	<data name="PulseDuration" xml:space="preserve">
 		<value>Pulse duration</value>
 	</data>
+	<data name="WaitForPID" xml:space="preserve">
+		<value>Wait until the PID reaches a high level</value>
+	</data>
 </root>

@@ -113,7 +113,7 @@ namespace Olfactory.Utils
         /// </summary>
         /// <param name="maxTime">timeout in seconds</param>
         /// <returns>The instance</returns>
-        public DispatchOnce Wait(double maxTime = double.MaxValue)
+        public DispatchOnce ThenWait(double maxTime = double.MaxValue)
         {
             _actions.Enqueue(new ScheduledAction() { Pause = maxTime == double.MaxValue ? int.MaxValue : (int)(1000 * maxTime), Action = null });
             return this;
@@ -121,7 +121,7 @@ namespace Olfactory.Utils
 
         /// <summary>
         /// Interrupts waiting for current task to execute (i.e. this task is abandoned) and starts waiting for the next tasks.
-        /// Also resumes the time after <see cref="Wait(double)"/> was called.
+        /// Also resumes the time after <see cref="ThenWait(double)"/> was called.
         /// </summary>
         public void Resume()
         {

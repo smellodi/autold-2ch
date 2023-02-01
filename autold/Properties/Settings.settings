@@ -101,5 +101,8 @@
     <Setting Name="Test_CMP_OdorFlowDuration" Type="System.Double" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
+    <Setting Name="Test_CMP_WaitForPID" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

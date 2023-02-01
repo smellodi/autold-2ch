@@ -418,5 +418,17 @@ namespace Olfactory.Properties {
                 this["Test_CMP_OdorFlowDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_CMP_WaitForPID {
+            get {
+                return ((bool)(this["Test_CMP_WaitForPID"]));
+            }
+            set {
+                this["Test_CMP_WaitForPID"] = value;
+            }
+        }
     }
 }
