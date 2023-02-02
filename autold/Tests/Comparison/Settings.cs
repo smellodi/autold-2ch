@@ -4,17 +4,11 @@ using System.Collections.Generic;
 
 namespace Olfactory.Tests.Comparison
 {
-    public enum Gas
-    {
-        nButanol,
-        IPA
-    }
-
     public enum Mixture
     {
         Odor1,
         Odor2,
-        Mix50
+        Mix50,  // All other possible values must in the form "Mix[1-99]"
     }
 
     public class MixturePair
@@ -43,8 +37,8 @@ namespace Olfactory.Tests.Comparison
 
         public double FreshAirFlow;
         public double OdorFlow;
-        public Gas Gas1;
-        public Gas Gas2;
+        public Comm.Gas Gas1;
+        public Comm.Gas Gas2;
         public MixturePair[] PairsOfMixtures;
         public double InitialPause;
         public double OdorFlowDuration;
@@ -69,8 +63,8 @@ namespace Olfactory.Tests.Comparison
 
             FreshAirFlow = settings.Test_CMP_FreshAirFlow;
             OdorFlow = settings.Test_CMP_OdorFlow;
-            Gas1 = (Gas)settings.Test_CMP_Gas1;
-            Gas2 = (Gas)settings.Test_CMP_Gas2;
+            Gas1 = (Comm.Gas)settings.Test_CMP_Gas1;
+            Gas2 = (Comm.Gas)settings.Test_CMP_Gas2;
             PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string _);
             InitialPause = settings.Test_CMP_InitialPause;
             OdorFlowDuration = settings.Test_CMP_OdorFlowDuration;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using Olfactory.Comm;
 using Olfactory.Tests.Comparison;
 
 namespace Olfactory.Pages.Comparison
@@ -54,7 +55,7 @@ namespace Olfactory.Pages.Comparison
                 new Utils.Validation(txbFreshAirFlow, 1, 10, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbOdorFlow, 1, 200, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbOdorFlowDuration, 0.1, Comm.MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbOdorFlowDuration, 0.1, MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
                 //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
             };
 
@@ -95,6 +96,9 @@ namespace Olfactory.Pages.Comparison
                 //_settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
                 _settings.Save();
+
+                OlfactoryDeviceModel.Gas1 = _settings.Gas1;
+                OlfactoryDeviceModel.Gas2 = _settings.Gas1;
 
                 Next?.Invoke(this, _settings);
             }

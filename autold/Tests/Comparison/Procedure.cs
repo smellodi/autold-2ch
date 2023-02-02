@@ -216,7 +216,7 @@ namespace Olfactory.Tests.Comparison
 
             if (_settings.WaitForPID)
             {
-                _PIDThreshold = GasMixer.GetExpectedPID(
+                _PIDThreshold = OlfactoryDeviceModel.ComputePID(
                     _settings.Gas1, pulse.Channel1?.Flow ?? 0,
                     _settings.Gas2, pulse.Channel2?.Flow ?? 0
                 ) * EXPECTED_PID_REDUCTION;

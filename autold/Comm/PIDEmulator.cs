@@ -2,22 +2,45 @@
 
 namespace Olfactory.Comm
 {
+    public enum Gas
+    {
+        nButanol,
+        IPA
+    }
+
     internal class OlfactoryDeviceModel
     {
+        /// <summary>
+        /// Gas in the first channel
+        /// </summary>
+        public static Gas Gas1 = Gas.nButanol;
+
+        /// <summary>
+        /// Gas in the second channel
+        /// </summary>
+        public static Gas Gas2 = Gas.IPA;
+
+        /// <summary>
+        /// Current in mA
+        /// </summary>
         public float Loop => 11.5f + (float)Math.Sin(Utils.Timestamp.Ms % 5000 * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
+
+        /// <summary>
+        /// Current PID value in mV
+        /// </summary>
         public double PID
         {
             get
             {
                 double expected = PID_BASELINE +
-                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? _mfcEmul.Odor1FlowRate : 0) * 20 +   // = Tests.Comparison.GasMixer.MV_PER_MLMIN[0]
-                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? _mfcEmul.Odor2FlowRate : 0) * 35;    // = Tests.Comparison.GasMixer.MV_PER_MLMIN[1]
+                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve1) ? ToPID(Gas1, _mfcEmul.Odor1FlowRate) : 0) +
+                    (_mfcEmul.OdorDirection.HasFlag(MFC.ValvesOpened.Valve2) ? ToPID(Gas2, _mfcEmul.Odor2FlowRate) : 0);
 
                 double nextPID;
                 if (_prevPID < expected)
                 {
                     // in addition, we simulate some delay when the PID signal has to rise
-                    double weightPrev = 75.0 / (0.0000000001 + Math.Pow(_prevPID - PID_BASELINE, 0.7)); // the numbers are just guessed to get a delay and a curve somewhat realistic
+                    double weightPrev = 75.0 / (0.0000000001 + Math.Pow(_prevPID - PID_BASELINE, 0.7)); // the numbers just guessed to get a delay and a curve somewhat realistic
                     double weightNext = 1.0 - WEIGHT;
                     nextPID = (_prevPID * weightPrev + expected * weightNext) / (weightPrev + weightNext);
                 }
@@ -32,14 +55,43 @@ namespace Olfactory.Comm
             }
         }
 
+        /// <summary>
+        /// Computes PID value when the specified gases are flowing at the specified rates
+        /// </summary>
+        /// <param name="gas1">Gas in the first channel</param>
+        /// <param name="gas1Flow">First gas flow rate, ml/min</param>
+        /// <param name="gas2">Gas in the second channel</param>
+        /// <param name="gas2Flow">Second gas flow rate, ml/min</param>
+        /// <returns>PID value</returns>
+        public static double ComputePID(Gas gas1, double gas1Flow, Gas gas2, double gas2Flow)
+        {
+            double mv1 = ToPID(gas1, gas1Flow);
+            double mv2 = ToPID(gas2, gas2Flow);
+            return PID_BASELINE + mv1 + mv2;
+        }
+
         // Internal
 
-        const double PID_BASELINE = 50;
         const double WEIGHT = 0.85;
+        const double PID_BASELINE = 50;
 
         readonly MFCEmulator _mfcEmul = MFCEmulator.Instance;
 
         double _prevPID = PID_BASELINE;
+
+        /// <summary>
+        /// Computes PID value for the given gas flowing at the specified rate
+        /// </summary>
+        /// <param name="gas">Gas type</param>
+        /// <param name="flow">Flow rate, ml/min</param>
+        /// <returns>PID value</returns>
+        /// <exception cref="Exception"><see cref="Exception"/> if gas is unknown</exception>
+        static double ToPID(Gas gas, double flow) => gas switch
+        {
+            Gas.nButanol => flow * 20,
+            Gas.IPA => flow * 35,
+            _ => throw new Exception($"Gas '{gas}' is unknown")
+        };
     }
 
     internal class PIDEmulator
