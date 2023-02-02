@@ -231,10 +231,6 @@ namespace Olfactory.Pages
             txbOdor2.Text = settings.Setup_MFC_Odor2.ToString();
             cmbGas1.SelectedItem = (Gas)settings.Setup_Gas1;
             cmbGas2.SelectedItem = (Gas)settings.Setup_Gas2;
-            rdbValve1ToWaste.IsChecked = settings.Setup_MFC_Valve1 == 0;
-            rdbValve1ToUser.IsChecked = settings.Setup_MFC_Valve1 == 1;
-            rdbValve2ToWaste.IsChecked = settings.Setup_MFC_Valve2 == 0;
-            rdbValve2ToUser.IsChecked = settings.Setup_MFC_Valve2 == 1;
 
             foreach (string item in cmbMFCPort.Items)
             {
@@ -263,12 +259,10 @@ namespace Olfactory.Pages
                 settings.Setup_MFC_FreshAir = double.Parse(txbFreshAir.Text);
                 settings.Setup_MFC_Odor1 = double.Parse(txbOdor1.Text);
                 settings.Setup_MFC_Odor2 = double.Parse(txbOdor2.Text);
-                settings.Setup_MFC_Valve1 = rdbValve1ToWaste.IsChecked ?? false ? 0 : 1;
-                settings.Setup_MFC_Valve2 = rdbValve2ToWaste.IsChecked ?? false ? 0 : 1;
                 settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
                 settings.Setup_PIDPort = cmbPIDPort.SelectedItem?.ToString() ?? "";
                 settings.Setup_Gas1 = (int)(Gas)cmbGas1.SelectedItem;
-                settings.Setup_Gas1 = (int)(Gas)cmbGas2.SelectedItem;
+                settings.Setup_Gas2 = (int)(Gas)cmbGas2.SelectedItem;
             }
             catch { }
             settings.Save();
@@ -563,6 +557,14 @@ namespace Olfactory.Pages
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScentedAir1)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ScentedAir2)));
+        }
+
+        private void Gas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbGas1.SelectedItem != null && cmbGas2.SelectedItem != null)
+            {
+                SaveSettings();
+            }
         }
     }
 }

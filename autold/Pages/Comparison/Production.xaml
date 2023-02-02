@@ -98,7 +98,8 @@
                     <Button Content="{lex:Loc Same}"
                             Style="{StaticResource Answer}"
                             Click="Same_Click"/>
-                    <Separator Width="16"/>
+                    <Separator Width="16"
+                               Background="Transparent"/>
                     <Button Content="{lex:Loc Different}"
                             Style="{StaticResource Answer}"
                             Click="Different_Click"/>

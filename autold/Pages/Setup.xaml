@@ -37,14 +37,6 @@
             <Setter Property="Height" Value="30" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
-
-        <Style x:Key="FormRowHeaderWithCombo" TargetType="{x:Type StackPanel}">
-            <Setter Property="Width" Value="130"/>
-            <Setter Property="DockPanel.Dock" Value="Left"/>
-            <Setter Property="VerticalAlignment" Value="Top"/>
-            <Setter Property="Margin" Value="8,6,8,8"/>
-        </Style>
-
     </Page.Resources>
 
     <Grid>
@@ -151,7 +143,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="cmbGas1" Grid.Column="0"/>
+                            <ComboBox x:Name="cmbGas1" Grid.Column="0"
+                                      SelectionChanged="Gas_SelectionChanged"/>
                             
                             <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                                 <TextBox x:Name="txbOdor1"
@@ -166,14 +159,15 @@
                             <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        VerticalAlignment="Center">
                                 <RadioButton x:Name="rdbValve1ToWaste"
-                                                 GroupName="valve1"
-                                                 Content="{lex:Loc Waste}"
-                                                 Click="SetDirection_Click"/>
+                                             GroupName="valve1"
+                                             IsChecked="True"
+                                             Content="{lex:Loc Waste}"
+                                             Click="SetDirection_Click"/>
                                 <RadioButton x:Name="rdbValve1ToUser"
-                                                 GroupName="valve1"
-                                                 Content="{lex:Loc User}"
-                                                 Margin="16,0,0,0"
-                                                 Click="SetDirection_Click"/>
+                                             GroupName="valve1"
+                                             Content="{lex:Loc User}"
+                                             Margin="16,0,0,0"
+                                             Click="SetDirection_Click"/>
                             </WrapPanel>
                         </Grid>
                     </UserControl>
@@ -192,7 +186,8 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="cmbGas2" Grid.Column="0" />
+                            <ComboBox x:Name="cmbGas2" Grid.Column="0"
+                                      SelectionChanged="Gas_SelectionChanged"/>
 
                             <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                                 <TextBox x:Name="txbOdor2"
@@ -207,14 +202,15 @@
                             <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        VerticalAlignment="Center">
                                 <RadioButton x:Name="rdbValve2ToWaste"
-                                                 GroupName="valve2"
-                                                 Content="{lex:Loc Waste}"
-                                                 Click="SetDirection_Click"/>
+                                             GroupName="valve2"
+                                             IsChecked="True"
+                                             Content="{lex:Loc Waste}"
+                                             Click="SetDirection_Click"/>
                                 <RadioButton x:Name="rdbValve2ToUser"
-                                                 GroupName="valve2"
-                                                 Content="{lex:Loc User}"
-                                                 Margin="16,0,0,0"
-                                                 Click="SetDirection_Click"/>
+                                             GroupName="valve2"
+                                             Content="{lex:Loc User}"
+                                             Margin="16,0,0,0"
+                                             Click="SetDirection_Click"/>
                             </WrapPanel>
                         </Grid>
                     </UserControl>

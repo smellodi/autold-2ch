@@ -70,6 +70,13 @@
                 </Setter>
             </Style>
 
+            <Style TargetType="{x:Type Separator}">
+                <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="1"/>
+                <Setter Property="Margin" Value="4,0,4,12"/>
+            </Style>
+
             <!-- Combobox -->
             <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
                 <Grid>
@@ -500,12 +507,6 @@
                         <Setter Property="Foreground" Value="{StaticResource BrushFontDisabled}"/>
                     </Trigger>
                 </Style.Triggers>
-            </Style>
-            <Style x:Key="HorizontalLine" TargetType="{x:Type Border}">
-                <Setter Property="BorderBrush" Value="{StaticResource BrushBorder}"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Height" Value="1"/>
-                <Setter Property="Margin" Value="4,0,4,8"/>
             </Style>
             <Style x:Key="FormRowHeader" TargetType="{x:Type TextBlock}">
                 <Setter Property="Width" Value="130"/>
