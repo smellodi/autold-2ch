@@ -198,9 +198,6 @@
 	<data name="LMin" xml:space="preserve">
     <value>l/min</value>
   </data>
-	<data name="MA" xml:space="preserve">
-    <value>mA</value>
-  </data>
 	<data name="MFCPlayground" xml:space="preserve">
     <value>MFC Playground</value>
   </data>
@@ -426,12 +423,6 @@ Examples described:
 	</data>
 	<data name="Comparison" xml:space="preserve">
 		<value>Comparison</value>
-	</data>
-	<data name="Odor1" xml:space="preserve">
-		<value>Odor1</value>
-	</data>
-	<data name="Odor2" xml:space="preserve">
-		<value>Odor2</value>
 	</data>
 	<data name="InstructionToEnterMixtures" xml:space="preserve">
 		<value>Each line contains a pair of "Odor1", "Odor2" or "Mix50" separated by comma</value>

@@ -159,9 +159,6 @@
 	<data name="LMin" xml:space="preserve">
     <value>l/min</value>
   </data>
-	<data name="MA" xml:space="preserve">
-    <value>mA</value>
-  </data>
 	<data name="MlMin" xml:space="preserve">
     <value>ml/min</value>
   </data>
@@ -426,12 +423,6 @@ Kuvattuja esimerkkejä:
 	</data>
 	<data name="Comparison" xml:space="preserve">
 		<value>_</value>
-	</data>
-	<data name="Odor1" xml:space="preserve">
-		<value>Haju1</value>
-	</data>
-	<data name="Odor2" xml:space="preserve">
-		<value>Haju2</value>
 	</data>
 	<data name="InstructionToEnterMixtures" xml:space="preserve">
 		<value>_</value>
