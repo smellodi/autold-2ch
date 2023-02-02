@@ -19,13 +19,8 @@ namespace Olfactory.Pages.Comparison
                 .BindScaleToZoomLevel(sctScale)
                 .BindVisibilityToDebug(lblDebug);
 
-            cmbGas1.ItemsSource = Enum.GetValues(typeof(Gas));
-            cmbGas2.ItemsSource = Enum.GetValues(typeof(Gas));
-
             txbFreshAirFlow.Text = _settings.FreshAirFlow.ToString("F1");
             txbOdorFlow.Text = _settings.OdorFlow.ToString("F1");
-            cmbGas1.SelectedItem = _settings.Gas1;
-            cmbGas2.SelectedItem = _settings.Gas2;
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbPairsOfMixtures.Text = _settings.SerializeMixtures();
@@ -87,8 +82,6 @@ namespace Olfactory.Pages.Comparison
             {
                 _settings.FreshAirFlow = double.Parse(txbFreshAirFlow.Text);
                 _settings.OdorFlow = double.Parse(txbOdorFlow.Text);
-                _settings.Gas1 = (Gas)cmbGas1.SelectedItem;
-                _settings.Gas2 = (Gas)cmbGas2.SelectedItem;
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.PairsOfMixtures = Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);

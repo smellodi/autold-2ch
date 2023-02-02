@@ -63,8 +63,8 @@ namespace Olfactory.Tests.Comparison
 
             FreshAirFlow = settings.Test_CMP_FreshAirFlow;
             OdorFlow = settings.Test_CMP_OdorFlow;
-            Gas1 = (Comm.Gas)settings.Test_CMP_Gas1;
-            Gas2 = (Comm.Gas)settings.Test_CMP_Gas2;
+            Gas1 = (Comm.Gas)settings.Setup_Gas1;
+            Gas2 = (Comm.Gas)settings.Setup_Gas2;
             PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string _);
             InitialPause = settings.Test_CMP_InitialPause;
             OdorFlowDuration = settings.Test_CMP_OdorFlowDuration;
@@ -78,8 +78,6 @@ namespace Olfactory.Tests.Comparison
 
             settings.Test_CMP_FreshAirFlow = FreshAirFlow;
             settings.Test_CMP_OdorFlow = OdorFlow;
-            settings.Test_CMP_Gas1 = (int)Gas1;
-            settings.Test_CMP_Gas2 = (int)Gas2;
             settings.Test_CMP_Mixtures = SerializeMixtures();
             settings.Test_CMP_InitialPause = InitialPause;
             settings.Test_CMP_OdorFlowDuration = OdorFlowDuration;

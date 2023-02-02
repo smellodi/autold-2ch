@@ -362,24 +362,24 @@ namespace Olfactory.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int Test_CMP_Gas1 {
+        public int Setup_Gas1 {
             get {
-                return ((int)(this["Test_CMP_Gas1"]));
+                return ((int)(this["Setup_Gas1"]));
             }
             set {
-                this["Test_CMP_Gas1"] = value;
+                this["Setup_Gas1"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int Test_CMP_Gas2 {
+        public int Setup_Gas2 {
             get {
-                return ((int)(this["Test_CMP_Gas2"]));
+                return ((int)(this["Setup_Gas2"]));
             }
             set {
-                this["Test_CMP_Gas2"] = value;
+                this["Setup_Gas2"] = value;
             }
         }
         

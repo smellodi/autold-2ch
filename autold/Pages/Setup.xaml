@@ -37,6 +37,14 @@
             <Setter Property="Height" Value="30" />
             <Setter Property="VerticalContentAlignment" Value="Center" />
         </Style>
+
+        <Style x:Key="FormRowHeaderWithCombo" TargetType="{x:Type StackPanel}">
+            <Setter Property="Width" Value="130"/>
+            <Setter Property="DockPanel.Dock" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Margin" Value="8,6,8,8"/>
+        </Style>
+
     </Page.Resources>
 
     <Grid>
@@ -128,27 +136,34 @@
                                     Click="SetFreshAir_Click"/>
                         </Grid>
                     </UserControl>
-                    <UserControl Style="{StaticResource FormRow}" Tag="{Binding ScentedAir1}">
+
+                    <Separator/>
+
+                    <UserControl Margin="0,8,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110" />
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+
+                            <ComboBox x:Name="cmbGas1" Grid.Column="0"/>
+                            
+                            <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                                 <TextBox x:Name="txbOdor1"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"
                                          ToolTip="{lex:Loc NumNotNeg}"
                                          KeyUp="Odor1_KeyUp"/>
                             </UserControl>
-                            <Button Grid.Column="1" 
+                            <Button Grid.Column="2" 
                                     Content="{lex:Loc Set}"
                                     Click="SetOdor1_Click"/>
-                            <WrapPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                            <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        VerticalAlignment="Center">
                                 <RadioButton x:Name="rdbValve1ToWaste"
                                                  GroupName="valve1"
@@ -162,28 +177,34 @@
                             </WrapPanel>
                         </Grid>
                     </UserControl>
+                    
+                    <Separator/>
 
-                    <UserControl Style="{StaticResource FormRow}" Tag="{Binding ScentedAir2}">
+                    <UserControl Margin="0,8,0,0">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="110"/>
                                 <ColumnDefinition />
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="100"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+
+                            <ComboBox x:Name="cmbGas2" Grid.Column="0" />
+
+                            <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                                 <TextBox x:Name="txbOdor2"
                                          VerticalContentAlignment="Center"
                                          Text="8.0"
                                          ToolTip="{lex:Loc NumNotNeg}"
                                          KeyUp="Odor2_KeyUp"/>
                             </UserControl>
-                            <Button Grid.Column="1" 
+                            <Button Grid.Column="2" 
                                     Content="{lex:Loc Set}"
                                     Click="SetOdor2_Click"/>
-                            <WrapPanel Grid.Row="1" Grid.ColumnSpan="2"
+                            <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
                                        VerticalAlignment="Center">
                                 <RadioButton x:Name="rdbValve2ToWaste"
                                                  GroupName="valve2"

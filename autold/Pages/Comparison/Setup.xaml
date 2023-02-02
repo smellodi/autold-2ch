@@ -57,17 +57,6 @@
                     </UserControl>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Odor1}">
-                    <UserControl Style="{StaticResource ValueWithUnit}">
-                        <ComboBox x:Name="cmbGas1"/>
-                    </UserControl>
-                </UserControl>
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Odor2}">
-                    <UserControl Style="{StaticResource ValueWithUnit}">
-                        <ComboBox x:Name="cmbGas2"/>
-                    </UserControl>
-                </UserControl>
-
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc InitialPause}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Seconds}">
                         <TextBox x:Name="txbInitialPause"

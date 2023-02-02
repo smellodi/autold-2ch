@@ -38,6 +38,9 @@ namespace Olfactory.Pages
             UpdatePortList(cmbPIDPort);
             UpdatePortList(cmbMFCPort);
 
+            cmbGas1.ItemsSource = Enum.GetValues(typeof(Gas));
+            cmbGas2.ItemsSource = Enum.GetValues(typeof(Gas));
+
             Application.Current.Exit += async (s, e) => await Close();
 
             LoadSettings();
@@ -226,6 +229,8 @@ namespace Olfactory.Pages
             txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
             txbOdor1.Text = settings.Setup_MFC_Odor1.ToString();
             txbOdor2.Text = settings.Setup_MFC_Odor2.ToString();
+            cmbGas1.SelectedItem = (Gas)settings.Setup_Gas1;
+            cmbGas2.SelectedItem = (Gas)settings.Setup_Gas2;
             rdbValve1ToWaste.IsChecked = settings.Setup_MFC_Valve1 == 0;
             rdbValve1ToUser.IsChecked = settings.Setup_MFC_Valve1 == 1;
             rdbValve2ToWaste.IsChecked = settings.Setup_MFC_Valve2 == 0;
@@ -262,6 +267,8 @@ namespace Olfactory.Pages
                 settings.Setup_MFC_Valve2 = rdbValve2ToWaste.IsChecked ?? false ? 0 : 1;
                 settings.Setup_MFCPort = cmbMFCPort.SelectedItem?.ToString() ?? "";
                 settings.Setup_PIDPort = cmbPIDPort.SelectedItem?.ToString() ?? "";
+                settings.Setup_Gas1 = (int)(Gas)cmbGas1.SelectedItem;
+                settings.Setup_Gas1 = (int)(Gas)cmbGas2.SelectedItem;
             }
             catch { }
             settings.Save();

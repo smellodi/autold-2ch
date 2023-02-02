@@ -86,10 +86,10 @@
     <Setting Name="Test_CMP_OdorFlow" Type="System.Double" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
-    <Setting Name="Test_CMP_Gas1" Type="System.Int32" Scope="User">
+    <Setting Name="Setup_Gas1" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="Test_CMP_Gas2" Type="System.Int32" Scope="User">
+    <Setting Name="Setup_Gas2" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="Test_CMP_Mixtures" Type="System.String" Scope="User">
