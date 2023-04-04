@@ -384,10 +384,12 @@ namespace Olfactory.Pages
             }
         }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        private async void Page_Unloaded(object sender, RoutedEventArgs e)
         {
             _mfcTimer.Stop();
             _pidTimer.Stop();
+
+            await Task.Delay(100);
         }
 
         private void Page_KeyDown(object sender, KeyEventArgs e)

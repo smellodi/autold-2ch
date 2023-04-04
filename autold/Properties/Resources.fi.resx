@@ -448,4 +448,10 @@ Kuvattuja esimerkkejä:
 	<data name="WaitForPID" xml:space="preserve">
 		<value>_</value>
 	</data>
+	<data name="Odor1" xml:space="preserve">
+		<value>Haju #1</value>
+	</data>
+	<data name="Odor2" xml:space="preserve">
+		<value>Haju #2</value>
+	</data>
 </root>

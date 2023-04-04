@@ -448,4 +448,10 @@ Examples described:
 	<data name="WaitForPID" xml:space="preserve">
 		<value>Wait until PID reaches a high level</value>
 	</data>
+	<data name="Odor1" xml:space="preserve">
+		<value>Odor #1</value>
+	</data>
+	<data name="Odor2" xml:space="preserve">
+		<value>Odor #2</value>
+	</data>
 </root>

@@ -22,7 +22,7 @@ namespace Olfactory.Tests.Comparison
 
         static readonly Dictionary<Gas, double> GAS_INTENSITY_WEIGHT = new() {
             { Gas.nButanol, 1.0 },
-            { Gas.IPA, 3.5 },
+            { Gas.IPA, 2.0 },
         };
 
         private static Pulse Mix(double baseOdorFlow, int flowDuration, Gas gas1, Gas gas2, double gas1Share)
