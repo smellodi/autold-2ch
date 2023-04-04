@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 
-namespace Olfactory.Tests
+namespace Olfactory2Ch.Tests
 {
     public enum Test
     {

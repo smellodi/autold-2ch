@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Olfactory.Comm
+namespace Olfactory2Ch.Comm
 {
     internal class MFCEmulator
     {

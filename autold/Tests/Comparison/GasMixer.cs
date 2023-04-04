@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Olfactory.Comm;
-using Olfactory.Tests.Common;
+using Olfactory2Ch.Comm;
+using Olfactory2Ch.Tests.Common;
 
-namespace Olfactory.Tests.Comparison
+namespace Olfactory2Ch.Tests.Comparison
 {
     internal class GasMixer
     {

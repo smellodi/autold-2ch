@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Controls;
-using Olfactory.Pages.OdorProduction;
+using Olfactory2Ch.Pages.OdorProduction;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory2Ch.Tests.OdorProduction
 {
     /// <summary>
     /// Manages the order of pages in the Odor Production

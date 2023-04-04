@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Threading;
-using Olfactory.Comm;
+using Olfactory2Ch.Comm;
 
-namespace Olfactory
+namespace Olfactory2Ch
 {
     public class SyncLogger : Logger<SyncLogger.Record>
     {

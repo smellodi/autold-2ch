@@ -7,10 +7,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using Olfactory.Comm;
-using IndicatorDataSource = Olfactory.Controls.ChannelIndicator.DataSource;
+using Olfactory2Ch.Comm;
+using IndicatorDataSource = Olfactory2Ch.Controls.ChannelIndicator.DataSource;
 
-namespace Olfactory.Pages
+namespace Olfactory2Ch.Pages
 {
     public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged
     {

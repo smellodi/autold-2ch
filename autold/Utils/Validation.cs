@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Controls;
 
-namespace Olfactory.Utils
+namespace Olfactory2Ch.Utils
 {
     public class Validation
     {

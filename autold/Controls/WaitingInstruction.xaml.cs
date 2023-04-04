@@ -1,10 +1,10 @@
-﻿using Olfactory.Utils;
+﻿using Olfactory2Ch.Utils;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory.Controls
+namespace Olfactory2Ch.Controls
 {
     public partial class WaitingInstruction : UserControl, INotifyPropertyChanged
     {

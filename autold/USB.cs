@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Management;
 
-namespace Olfactory
+namespace Olfactory2Ch
 {
     internal class USB
     {

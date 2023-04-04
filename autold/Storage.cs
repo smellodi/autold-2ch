@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Olfactory
+namespace Olfactory2Ch
 {
     /// <summary>
     /// Cross-app storage, mainly used to share the app state

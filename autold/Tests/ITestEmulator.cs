@@ -1,4 +1,4 @@
-﻿namespace Olfactory.Tests
+﻿namespace Olfactory2Ch.Tests
 {
     public interface ITestEmulator
     {

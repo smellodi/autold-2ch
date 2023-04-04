@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Settings = Olfactory.Tests.OdorProduction.Settings;
+using Settings = Olfactory2Ch.Tests.OdorProduction.Settings;
 
-namespace Olfactory.Pages.OdorProduction
+namespace Olfactory2Ch.Pages.OdorProduction
 {
     public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
     {

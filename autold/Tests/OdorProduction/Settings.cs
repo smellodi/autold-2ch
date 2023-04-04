@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Olfactory.Tests.Common;
+using Olfactory2Ch.Tests.Common;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory2Ch.Tests.OdorProduction
 {
     public class Settings
     {

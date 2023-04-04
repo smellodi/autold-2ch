@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using Olfactory.Comm;
-using Olfactory.Tests.Common;
-using Olfactory.Utils;
+using Olfactory2Ch.Comm;
+using Olfactory2Ch.Tests.Common;
+using Olfactory2Ch.Utils;
 
-namespace Olfactory.Tests.OdorProduction
+namespace Olfactory2Ch.Tests.OdorProduction
 {
     public class Procedure : ITestEmulator
     {

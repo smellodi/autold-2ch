@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Olfactory.Comm;
-using Olfactory.Tests.Comparison;
+using Olfactory2Ch.Comm;
+using Olfactory2Ch.Tests.Comparison;
 
-namespace Olfactory.Pages.Comparison
+namespace Olfactory2Ch.Pages.Comparison
 {
     public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
     {

@@ -3,7 +3,7 @@ using System.IO.Ports;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Olfactory.Comm
+namespace Olfactory2Ch.Comm
 {
     public struct PIDSample : ISample             // Sample record/vector; all the measured values for one second
     {

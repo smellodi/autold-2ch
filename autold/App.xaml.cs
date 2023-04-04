@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory
+namespace Olfactory2Ch
 {
     public partial class App : Application
     {

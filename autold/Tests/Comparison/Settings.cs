@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Olfactory.Tests.Comparison
+namespace Olfactory2Ch.Tests.Comparison
 {
     public enum Mixture
     {

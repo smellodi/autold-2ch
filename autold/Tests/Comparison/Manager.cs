@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows.Controls;
-using Olfactory.Pages.Comparison;
+using Olfactory2Ch.Pages.Comparison;
 
-namespace Olfactory.Tests.Comparison
+namespace Olfactory2Ch.Tests.Comparison
 {
     /// <summary>
     /// Manages the order of pages in the Comparison

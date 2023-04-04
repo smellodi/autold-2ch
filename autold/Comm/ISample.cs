@@ -1,4 +1,4 @@
-﻿namespace Olfactory.Comm
+﻿namespace Olfactory2Ch.Comm
 {
     public interface ISample
     {

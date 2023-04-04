@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory.Controls
+namespace Olfactory2Ch.Controls
 {
     public partial class StageDisplay : UserControl, INotifyPropertyChanged
     {

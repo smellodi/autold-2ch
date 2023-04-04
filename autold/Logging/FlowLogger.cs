@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Olfactory
+namespace Olfactory2Ch
 {
     public class FlowLogger : Logger<FlowLogger.Record>
     {

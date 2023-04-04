@@ -1,11 +1,11 @@
-﻿using Olfactory.Tests.OdorProduction;
+﻿using Olfactory2Ch.Tests.OdorProduction;
 using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace Olfactory.Pages.OdorProduction
+namespace Olfactory2Ch.Pages.OdorProduction
 {
     public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     {

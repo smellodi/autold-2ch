@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Olfactory.Utils
+namespace Olfactory2Ch.Utils
 {
     [ValueConversion(typeof(int), typeof(Visibility))]
     public class NumberToVisibilityConverter : IValueConverter

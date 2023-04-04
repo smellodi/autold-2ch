@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory.Controls
+namespace Olfactory2Ch.Controls
 {
     public partial class ChannelIndicator : UserControl, INotifyPropertyChanged
     {

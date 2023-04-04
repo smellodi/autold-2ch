@@ -2,9 +2,9 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Olfactory.Tests.Comparison;
+using Olfactory2Ch.Tests.Comparison;
 
-namespace Olfactory.Pages.Comparison
+namespace Olfactory2Ch.Pages.Comparison
 {
     public partial class Production : Page, IPage<EventArgs>
     {
