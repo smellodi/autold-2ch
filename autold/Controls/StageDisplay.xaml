@@ -6,7 +6,7 @@
              xmlns:utils="clr-namespace:Olfactory2Ch.Utils"
              xmlns:lex="http://wpflocalizeextension.codeplex.com"
              lex:LocalizeDictionary.DesignCulture="en"
-             lex:ResxLocalizationProvider.DefaultAssembly="autold"
+             lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
              lex:ResxLocalizationProvider.DefaultDictionary="Resources"
              mc:Ignorable="d"
              x:Name="display"

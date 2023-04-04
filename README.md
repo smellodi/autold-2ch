@@ -13,6 +13,7 @@ Dedicated for running tests associated with scented air production and odorant t
 - Microsoft Visual Studio Community 2019, Version 16.9.4 (May 2021)
 - .NET Core 3.1 (LTS)
 - C# 9.0
+- Zeta Resource Editor
 - Tested only as x86-32 application.
 
 ## Dependencies

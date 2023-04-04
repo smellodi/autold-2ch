@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Controls;
 using Olfactory2Ch.Pages.Comparison;
+using Olfactory2Ch.Pages.ThresholdTest;
 
 namespace Olfactory2Ch.Tests.Comparison
 {
@@ -21,6 +22,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 PageDone?.Invoke(this, new PageDoneEventArgs(_settings != null));
             };
             _productionPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _vna.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
         }
 
         public Page NextPage(object param = null)
@@ -29,7 +31,8 @@ namespace Olfactory2Ch.Tests.Comparison
             {
                 null => _setupPage,
                 Setup _ => _productionPage,
-                Production _ => null,
+                Production _ => _vna,
+                VnA _ => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),
             };
 
@@ -69,6 +72,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         readonly Setup _setupPage = new();
         readonly Production _productionPage = new();
+        readonly VnA _vna = new();
 
         Page _current = null;
 

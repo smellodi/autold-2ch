@@ -62,4 +62,23 @@ namespace Olfactory2Ch.Utils
             throw new NotImplementedException();
         }
     }
+
+    [ValueConversion(typeof(double), typeof(double))]
+    public class CornerRadiusConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            double mult = 1.0;
+            if (parameter is double k)
+            {
+                mult = k;
+            }
+            return new CornerRadius((double)value * mult);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

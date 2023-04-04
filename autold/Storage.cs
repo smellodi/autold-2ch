@@ -93,6 +93,20 @@ namespace Olfactory2Ch
             return this;
         }
 
+        public Storage UnbindVisibilityToDebug(DependencyObject obj)
+        {
+            BindingOperations.ClearBinding(obj, UIElement.VisibilityProperty);
+            return this;
+        }
+
+        public Storage UnbindScaleToZoomLevel(DependencyObject obj)
+        {
+            BindingOperations.ClearBinding(obj, ScaleTransform.ScaleXProperty);
+            BindingOperations.ClearBinding(obj, ScaleTransform.ScaleYProperty);
+
+            return this;
+        }
+
         // Other
 
         public void Dispose()

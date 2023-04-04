@@ -1,10 +1,13 @@
 ﻿<Application x:Class="Olfactory2Ch.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:utils="clr-namespace:Olfactory2Ch.Utils"
              Startup="Application_Startup"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+            <utils:CornerRadiusConverter x:Key="cornerRadius"></utils:CornerRadiusConverter>
+
             <!-- Theme colors -->
             
             <!-- Brown -->
@@ -57,7 +60,8 @@
             <SolidColorBrush x:Key="BrushPanelDisabled" Color="{StaticResource ColorDisabledDark}" />
             <SolidColorBrush x:Key="BrushPanelDisabledLight" Color="{StaticResource ColorDisabledLightDarker}" />
 
-            
+
+
             <!-- Common app elements -->
 
             <Style x:Key="InputFocus">
@@ -414,14 +418,14 @@
                         <ControlTemplate TargetType="{x:Type RadioButton}">
                             <BulletDecorator VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                                 <BulletDecorator.Bullet>
-                                    <Grid Height="16" Width="16">
+                                    <Grid Height="{TemplateBinding FontSize}" Width="{TemplateBinding FontSize}">
                                         <Border Name="RadioOuter"
                                                 Background="Transparent"
                                                 BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                                CornerRadius="8" />
+                                                CornerRadius="{TemplateBinding FontSize, Converter={StaticResource cornerRadius}, ConverterParameter=0.5}"/>
                                         <Border Name="RadioMark"
-                                                CornerRadius="4"
+                                                CornerRadius="{TemplateBinding FontSize, Converter={StaticResource cornerRadius}, ConverterParameter=0.25}"
                                                 Margin="4"
                                                 Background="{TemplateBinding BorderBrush}"
                                                 Visibility="Hidden" />

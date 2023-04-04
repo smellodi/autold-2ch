@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:Olfactory2Ch.Controls"
       xmlns:lex="http://wpflocalizeextension.codeplex.com"
       lex:LocalizeDictionary.DesignCulture="en"
-      lex:ResxLocalizationProvider.DefaultAssembly="autold"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
