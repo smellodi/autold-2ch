@@ -61,7 +61,7 @@ namespace Olfactory2Ch.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 20230208.1228 
+        ///   Looks up a localized string similar to 20230405.1618 
         ///.
         /// </summary>
         internal static string BuildCode {

@@ -22,6 +22,7 @@
     <None Remove="Assets\images\pen.png" />
     <None Remove="Assets\images\question.png" />
     <None Remove="Assets\main.png" />
+    <None Remove="Properties\GasProps.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,9 @@
     <Resource Include="Assets\images\information.png" />
     <Resource Include="Assets\images\pen.png" />
     <Resource Include="Assets\images\question.png" />
+    <Content Include="Properties\GasProps.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
