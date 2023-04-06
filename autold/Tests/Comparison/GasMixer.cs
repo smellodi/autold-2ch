@@ -23,11 +23,9 @@ namespace Olfactory2Ch.Tests.Comparison
 
         // Internal
 
-        [Serializable]
-        class GasProp
+        class GasProp : Utils.Serializable
         {
             public double Weight { get; set; }
-            public override string ToString() => $"weight = {Weight}";
         }
 
         static readonly Dictionary<Gas, GasProp> GasProperties = new() {
