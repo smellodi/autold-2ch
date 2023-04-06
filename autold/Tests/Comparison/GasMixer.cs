@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using Olfactory2Ch.Comm;
 using Olfactory2Ch.Tests.Common;
@@ -25,10 +24,10 @@ namespace Olfactory2Ch.Tests.Comparison
         // Internal
 
         [Serializable]
-        public class GasProp
+        class GasProp
         {
             public double Weight { get; set; }
-            public override string ToString() => $"w = {Weight}";
+            public override string ToString() => $"weight = {Weight}";
         }
 
         static readonly Dictionary<Gas, GasProp> GasProperties = new() {
@@ -43,9 +42,16 @@ namespace Olfactory2Ch.Tests.Comparison
                 System.IO.StreamReader reader = new("Properties/GasProps.json");
                 var gasPropsJson = reader.ReadToEnd();
 
-                JsonSerializerOptions options = new() { ReadCommentHandling = JsonCommentHandling.Skip };
-                var gasProps = (Dictionary<string, GasProp>)JsonSerializer.Deserialize(gasPropsJson.Trim(), typeof(Dictionary<string, GasProp>), options);
+                JsonSerializerOptions serializerOptions = new()
+                {
+                    ReadCommentHandling = JsonCommentHandling.Skip,
+                    PropertyNameCaseInsensitive = true,
+                };
 
+                // Enum cannot be properly deserialized, so we use string as the type of keys
+                var gasProps = (Dictionary<string, GasProp>)JsonSerializer.Deserialize(gasPropsJson.Trim(), typeof(Dictionary<string, GasProp>), serializerOptions);
+
+                // Now the keys are converted to enums
                 foreach (var record in gasProps)
                 {
                     if (Enum.TryParse(typeof(Gas), record.Key, out object gasObj) && gasObj is Gas gas)

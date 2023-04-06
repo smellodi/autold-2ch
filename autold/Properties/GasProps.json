@@ -1,26 +1,26 @@
 ﻿{
-  /*
-  * These are definitions of gas weights Wn used for computing their flow rates:
-  *
-  * Given the base flow rate BF and the mixture percentage for the first gas FGP,
-  * these flows are caluclated as follows:
-  *
-  *   gas1 flow rate = BF * W1 * FGP
-  *   gas2 flow rate = BF * W2 * (1 - FGP)
-  *
-  * So, if BF = 20 ml/min, the mixture was defined as Mix40, 
-  * the first gas is nButanol and its weight defined in this file is 1.0,
-  * the second gas is IPA and its weight defined in this file is 2.5,
-  * then the resulting flow to a participant will consist of two flows calculated as follow: 
-  *
-  *   nButanol flow rate = 20 * 1.0 * 0.40       =  8 ml/min
-  *   IPA flow rate      = 20 * 2.5 * (1 - 0.40) = 30 ml/min
-  */
+/*
+* These are definitions of gas weights Wn used for computing their flow rates:
+*
+* Given the base flow rate BF and the mixture percentage for the first gas FGP,
+* these flows are caluclated as follows:
+*
+*   gas1 flow rate = BF * W1 * FGP
+*   gas2 flow rate = BF * W2 * (1 - FGP)
+*
+* So, if BF = 20 ml/min, the mixture was defined as Mix40, 
+* the first gas is nButanol and its weight defined in this file is 1.0,
+* the second gas is IPA and its weight defined in this file is 2.5,
+* then the resulting flow to a participant will consist of two flows calculated as follow: 
+*
+*   nButanol flow rate = 20 * 1.0 * 0.40       =  8 ml/min
+*   IPA flow rate      = 20 * 2.5 * (1 - 0.40) = 30 ml/min
+*/
 
   "nButanol": {
-    "Weight": 1.0
+    "weight": 1.0
   },
   "IPA": {
-    "Weight": 2.5
+    "weight": 2.5
   }
 }
