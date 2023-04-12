@@ -31,12 +31,19 @@ namespace Olfactory2Ch.Tests.Comparison
         }
     }
 
+    public enum Stage
+    {
+        Practice,
+        Test
+    }
+
     public class Settings
     {
         //public const int MIN_FLOW_DURATION = 10; // ms
 
         public double FreshAirFlow;
-        public double OdorFlow;
+        public double PracticeOdorFlow;
+        public double TestOdorFlow;
         public Comm.Gas Gas1;
         public Comm.Gas Gas2;
         public MixturePair[] PairsOfMixtures;
@@ -49,7 +56,8 @@ namespace Olfactory2Ch.Tests.Comparison
         public Dictionary<string, string> Params => new()
         {
             { "fresh", FreshAirFlow.ToString() },
-            { "odor", OdorFlow.ToString() },
+            { "practice_flow", PracticeOdorFlow.ToString() },
+            { "test_flow", TestOdorFlow.ToString() },
             { "gas1", Gas1.ToString() },
             { "gas2", Gas2.ToString() },
             { "pause", InitialPause.ToString() },
@@ -62,7 +70,8 @@ namespace Olfactory2Ch.Tests.Comparison
             var settings = Properties.Settings.Default;
 
             FreshAirFlow = settings.Test_CMP_FreshAirFlow;
-            OdorFlow = settings.Test_CMP_OdorFlow;
+            PracticeOdorFlow = settings.Test_CMP_PracticeOdorFlow;
+            TestOdorFlow = settings.Test_CMP_TestOdorFlow;
             Gas1 = (Comm.Gas)settings.Setup_Gas1;
             Gas2 = (Comm.Gas)settings.Setup_Gas2;
             PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string _);
@@ -77,7 +86,8 @@ namespace Olfactory2Ch.Tests.Comparison
             var settings = Properties.Settings.Default;
 
             settings.Test_CMP_FreshAirFlow = FreshAirFlow;
-            settings.Test_CMP_OdorFlow = OdorFlow;
+            settings.Test_CMP_PracticeOdorFlow = PracticeOdorFlow;
+            settings.Test_CMP_TestOdorFlow = TestOdorFlow;
             settings.Test_CMP_Mixtures = SerializeMixtures();
             settings.Test_CMP_InitialPause = InitialPause;
             settings.Test_CMP_OdorFlowDuration = OdorFlowDuration;

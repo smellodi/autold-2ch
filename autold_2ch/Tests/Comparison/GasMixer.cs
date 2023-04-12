@@ -21,6 +21,24 @@ namespace Olfactory2Ch.Tests.Comparison
             };
         }
 
+        public static Pulse ToPulse(MixturePair pair, int mixID, double gasOdorFlow, int flowDuration)
+        {
+            List<ChannelPulse> channels = new List<ChannelPulse>();
+
+            var mixture = mixID == 0 ? pair.Mix1 : pair.Mix2;
+
+            var channel = mixture switch
+            {
+                Mixture.Odor1 => new ChannelPulse(1, gasOdorFlow, flowDuration),
+                Mixture.Odor2 => new ChannelPulse(2, gasOdorFlow, flowDuration),
+                _ => throw new ArgumentException($"Improper value of {nameof(mixID)}")
+            };
+
+            channels.Add(channel);
+
+            return new Pulse(channels.ToArray());
+        }
+
         // Internal
 
         class GasProp : Utils.Serializable

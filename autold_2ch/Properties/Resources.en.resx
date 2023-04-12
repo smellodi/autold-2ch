@@ -117,47 +117,89 @@
 	<resheader name="writer">
 		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
 	</resheader>
-	<data name="Setup" xml:space="preserve">
-    <value>Asetukset</value>
-  </data>
 	<data name="BackToHome" xml:space="preserve">
-    <value>Takaisin aloitussivulle</value>
+    <value>Back to home page</value>
   </data>
 	<data name="CleanAir" xml:space="preserve">
-    <value>Puhdas ilma</value>
+    <value>Clean air</value>
   </data>
 	<data name="Clear" xml:space="preserve">
-    <value>Tyhjennä</value>
+    <value>Clear</value>
   </data>
 	<data name="Close" xml:space="preserve">
-    <value>Sulje</value>
+    <value>Close</value>
+  </data>
+	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
+    <value>A list of space or new-line -separated expressions. Each expression consists of one or two sub-expressions of the form '&lt;channel=1|2&gt;=[&lt;delay=ms&gt;]&lt;flow=ml/min&gt;x&lt;duration=ms&gt;' separated by comma. Example: '1=4x200,2=[100]4x100 2=10x500'</value>
+  </data>
+	<data name="CommaSeparatedValues" xml:space="preserve">
+    <value>space or new-line -separated expressions consists of one or two sub-expressions in the form '&lt;1|2&gt;=[&lt;ms&gt;]&lt;ml/min&gt;x&lt;ms&gt;' separated by comma.</value>
+  </data>
+	<data name="COMMonitor" xml:space="preserve">
+    <value>COM Monitor</value>
+  </data>
+	<data name="CorrectAndTryAgain" xml:space="preserve">
+    <value>Please correct and try again.</value>
   </data>
 	<data name="DurationsSec" xml:space="preserve">
-    <value>Kesto sekunteina</value>
+    <value>Durations in seconds</value>
   </data>
 	<data name="CannotOpenPort" xml:space="preserve">
-    <value>Porttia ei voida avata</value>
+    <value>Cannot open the port</value>
+  </data>
+	<data name="Events" xml:space="preserve">
+    <value>Events</value>
   </data>
 	<data name="Exit" xml:space="preserve">
-    <value>Sulje</value>
+    <value>Exit</value>
+  </data>
+	<data name="FinalPause" xml:space="preserve">
+    <value>Final pause</value>
   </data>
 	<data name="Finished" xml:space="preserve">
-    <value>Valmis</value>
+    <value>Finished</value>
+  </data>
+	<data name="NumNotNeg" xml:space="preserve">
+    <value>a non-negative number</value>
+  </data>
+	<data name="NumPos" xml:space="preserve">
+    <value>a positive number</value>
   </data>
 	<data name="Graph" xml:space="preserve">
-    <value>Kuvaaja</value>
+    <value>Graph</value>
   </data>
 	<data name="InfoF2" xml:space="preserve">
-    <value>Paina F2 simuloidaksesi sarjaportteja.</value>
+    <value>Press F2 to simulate COM ports.</value>
   </data>
 	<data name="InfoF5" xml:space="preserve">
-    <value>Paina F5 näyttääksesi monitorointi-ikkunan. </value>
+    <value>Press F5 any time to show the logging window.</value>
+  </data>
+	<data name="InitialPause" xml:space="preserve">
+    <value>Initial pause</value>
   </data>
 	<data name="Input" xml:space="preserve">
-    <value>Syöte</value>
+    <value>Input</value>
+  </data>
+	<data name="Interrupt" xml:space="preserve">
+    <value>Interrupt</value>
+  </data>
+	<data name="IntNotNeg" xml:space="preserve">
+    <value>a non-negative integer value</value>
+  </data>
+	<data name="IntPos" xml:space="preserve">
+    <value>a positive integer number</value>
+  </data>
+	<data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+	<data name="Light" xml:space="preserve">
+    <value>Light</value>
   </data>
 	<data name="LMin" xml:space="preserve">
     <value>l/min</value>
+  </data>
+	<data name="MFCPlayground" xml:space="preserve">
+    <value>MFC Playground</value>
   </data>
 	<data name="MlMin" xml:space="preserve">
     <value>ml/min</value>
@@ -168,308 +210,287 @@
 	<data name="MV" xml:space="preserve">
     <value>mV</value>
   </data>
+	<data name="OdorFlow" xml:space="preserve">
+    <value>Test odor flow</value>
+  </data>
 	<data name="OdorPulses" xml:space="preserve">
-    <value>Tuoksupulssit</value>
+    <value>Odor Pulses</value>
+  </data>
+	<data name="PIDUsage" xml:space="preserve">
+    <value>PID usage</value>
   </data>
 	<data name="PIDVoltage" xml:space="preserve">
-    <value>PID jännite</value>
-  </data>
-	<data name="Pulses" xml:space="preserve">
-    <value>Pulssit</value>
-  </data>
-	<data name="Save" xml:space="preserve">
-    <value>Tallenna</value>
-  </data>
-	<data name="SaveData" xml:space="preserve">
-    <value>Tallenna tiedot</value>
-  </data>
-	<data name="ScentedAir" xml:space="preserve">
-    <value>Tuoksuva ilma</value>
-  </data>
-	<data name="Seconds" xml:space="preserve">
-    <value>sekuntia</value>
-  </data>
-	<data name="SerialPorts" xml:space="preserve">
-    <value>Laitteet</value>
-  </data>
-	<data name="Set" xml:space="preserve">
-    <value>Aseta</value>
-  </data>
-	<data name="Settings" xml:space="preserve">
-    <value>Asetukset</value>
-  </data>
-	<data name="Start" xml:space="preserve">
-    <value>Aloita</value>
-  </data>
-	<data name="Table" xml:space="preserve">
-    <value>Taulukko</value>
-  </data>
-	<data name="Temp" xml:space="preserve">
-    <value>Lämp (C)</value>
-  </data>
-	<data name="Text" xml:space="preserve">
-    <value>Teksti</value>
-  </data>
-	<data name="ThankYou" xml:space="preserve">
-    <value>Kiitos!</value>
-  </data>
-	<data name="CommaSeparatedListWithExpressions" xml:space="preserve">
-    <value>Lista SPACE tai ENTER erotettuja lausekkeita. Lausekkeet koostuvat 1-2 sub-lausekkeita muodossa '&lt;channel=1|2&gt;=[&lt;delay=ms&gt;]&lt;flow=ml/min&gt;x&lt;duration=ms&gt;' ja pilkulla erotettuna. Esimerkiksi: '1=4x200,2=[100]4x100 2=10x500'</value>
-  </data>
-	<data name="CorrectAndTryAgain" xml:space="preserve">
-    <value>Korjaa virheellinen syöte ja yritä uudestaan.</value>
-  </data>
-	<data name="Events" xml:space="preserve">
-    <value>Tapahtumat</value>
-  </data>
-	<data name="FinalPause" xml:space="preserve">
-    <value>Toinen tauko</value>
-  </data>
-	<data name="NumNotNeg" xml:space="preserve">
-    <value>ei-negatiivinen luku</value>
-  </data>
-	<data name="NumPos" xml:space="preserve">
-    <value>positiviinen luku</value>
-  </data>
-	<data name="InitialPause" xml:space="preserve">
-    <value>Ensim. tauko</value>
-  </data>
-	<data name="Interrupt" xml:space="preserve">
-    <value>Keskeytä</value>
-  </data>
-	<data name="IntNotNeg" xml:space="preserve">
-    <value>ei-negatiivinen kokonaisluku</value>
-  </data>
-	<data name="IntPos" xml:space="preserve">
-    <value>positiivinen kokonaisluku</value>
-  </data>
-	<data name="Language" xml:space="preserve">
-    <value>Kieli</value>
-  </data>
-	<data name="Light" xml:space="preserve">
-    <value>Valo</value>
-  </data>
-	<data name="MFCPlayground" xml:space="preserve">
-    <value>MFC Kokeilukenttä</value>
-  </data>
-	<data name="OdorFlow" xml:space="preserve">
-    <value>Tuoksuvirtaus</value>
-  </data>
-	<data name="PIDSampling" xml:space="preserve">
-    <value>PID näytteenottoväli</value>
-  </data>
-	<data name="Time" xml:space="preserve">
-    <value>Aika</value>
-  </data>
-	<data name="User" xml:space="preserve">
-    <value>avattu</value>
-  </data>
-	<data name="NoDataToSave" xml:space="preserve">
-    <value>Tallennettavaa tietoa ei ole</value>
-  </data>
-	<data name="Waste" xml:space="preserve">
-    <value>suljettu</value>
-  </data>
-	<data name="AppTerminated" xml:space="preserve">
-    <value>Ohjelma on suljettu.</value>
-  </data>
-	<data name="DataSavedInto" xml:space="preserve">
-    <value>Tiedot on tallennettu kohteeseen</value>
-  </data>
-	<data name="DeviceConnLost" xml:space="preserve">
-    <value>Yhteys laitteeseen {0} katkesi.</value>
-  </data>
-	<data name="EmptyList" xml:space="preserve">
-    <value>Listassa ei ole arvoja</value>
-  </data>
-	<data name="FailedToSave" xml:space="preserve">
-    <value>Tietoja ei voitu tallentaa kohteeseen</value>
-  </data>
-	<data name="PressNoToChangeNameFolder" xml:space="preserve">
-    <value>Paina 'Ei', jos haluat vaihtaa tiedostonimen tai kohdekansion.</value>
-  </data>
-	<data name="Retry" xml:space="preserve">
-    <value>Aloita uudestaan?</value>
-  </data>
-	<data name="SaveDataInto" xml:space="preserve">
-    <value>Haluatko tallentaa tiedot kohteeseen</value>
-  </data>
-	<data name="COMMonitor" xml:space="preserve">
-    <value>Sarjaporttien monitorointi</value>
-  </data>
-	<data name="ShowAs" xml:space="preserve">
-    <value>Näytä</value>
-  </data>
-	<data name="ValueFormatNotValid" xml:space="preserve">
-    <value>Arvon '{0}' tietotyyyppi on väärä, sen täytyy olla '{1}' luku</value>
-  </data>
-	<data name="ValueTooLarge" xml:space="preserve">
-    <value>Arvo '{0}' on liian suuri, se ei saa olla suurempi kuin '{1}'</value>
-  </data>
-	<data name="ValueTooSmall" xml:space="preserve">
-    <value>Arvo '{0}' on liian pieni, sen ei saa olla pienempi kuin '{1}'</value>
-  </data>
-	<data name="CommaSeparatedValues" xml:space="preserve">
-    <value>SPACE tai ENTER erotetut lausekkeet. Lausekkeet koostuvat 1-2 sub-lausekkeita muodossa '&lt;1|2&gt;=[&lt;ms&gt;]&lt;ml/min&gt;x&lt;ms&gt;' ja pilkulla erotettuna.</value>
+    <value>PID voltage</value>
   </data>
 	<data name="PulseFlowRate" xml:space="preserve">
-    <value>Pulssivirtauksen nopeukset:</value>
+    <value>Pulse flow rates:</value>
+  </data>
+	<data name="Pulses" xml:space="preserve">
+    <value>Pulses</value>
+  </data>
+	<data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+	<data name="SaveData" xml:space="preserve">
+    <value>Save data</value>
+  </data>
+	<data name="ScentedAir" xml:space="preserve">
+    <value>Scented air</value>
+  </data>
+	<data name="Seconds" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+	<data name="SerialPorts" xml:space="preserve">
+    <value>Devices</value>
+  </data>
+	<data name="Set" xml:space="preserve">
+    <value>Set</value>
+  </data>
+	<data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+	<data name="Setup" xml:space="preserve">
+    <value>Setup</value>
+  </data>
+	<data name="ShowAs" xml:space="preserve">
+    <value>Show as</value>
+  </data>
+	<data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+	<data name="Table" xml:space="preserve">
+    <value>Table</value>
+  </data>
+	<data name="Temp" xml:space="preserve">
+    <value>Temp (C)</value>
+  </data>
+	<data name="Text" xml:space="preserve">
+    <value>Text</value>
+  </data>
+	<data name="ThankYou" xml:space="preserve">
+    <value>Thank you!</value>
+  </data>
+	<data name="Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+	<data name="User" xml:space="preserve">
+    <value>open</value>
+  </data>
+	<data name="NoDataToSave" xml:space="preserve">
+    <value>There is no data to save</value>
+  </data>
+	<data name="Waste" xml:space="preserve">
+    <value>closed</value>
+  </data>
+	<data name="AppTerminated" xml:space="preserve">
+    <value>The application is terminated.</value>
+  </data>
+	<data name="DataSavedInto" xml:space="preserve">
+    <value>Data saved into</value>
+  </data>
+	<data name="DeviceConnLost" xml:space="preserve">
+    <value>Connection with the {0} device was shut down.</value>
+  </data>
+	<data name="EmptyList" xml:space="preserve">
+    <value>The list of pulses is empty</value>
+  </data>
+	<data name="FailedToSave" xml:space="preserve">
+    <value>Failed to save data into</value>
+  </data>
+	<data name="PressNoToChangeNameFolder" xml:space="preserve">
+    <value>Press 'No' to change the name and/or folder.</value>
+  </data>
+	<data name="Retry" xml:space="preserve">
+    <value>Retry?</value>
+  </data>
+	<data name="SaveDataInto" xml:space="preserve">
+    <value>Would you like to save data into</value>
+  </data>
+	<data name="ValueFormatNotValid" xml:space="preserve">
+    <value>The type of value '{0}' is invalid, it must be a '{1}' number</value>
+  </data>
+	<data name="ValueTooLarge" xml:space="preserve">
+    <value>The value '{0}' is too large, is must be no greater than '{1}'</value>
+  </data>
+	<data name="ValueTooSmall" xml:space="preserve">
+    <value>The value '{0}' is too small, is must be no smaller than '{1}'</value>
   </data>
 	<data name="Logger" xml:space="preserve">
-    <value>Tietojen kerääjä</value>
+    <value>Logger</value>
   </data>
 	<data name="Validator" xml:space="preserve">
-    <value>Validoija</value>
+    <value>Validator</value>
   </data>
 	<data name="Temperature" xml:space="preserve">
-    <value>Lämpötila</value>
+    <value>Temperature</value>
   </data>
 	<data name="Cancel" xml:space="preserve">
-    <value>Peruuta</value>
+    <value>Cancel</value>
   </data>
 	<data name="No" xml:space="preserve">
-    <value>Ei</value>
+    <value>No</value>
   </data>
 	<data name="Yes" xml:space="preserve">
-    <value>Kyllä</value>
+    <value>Yes</value>
   </data>
 	<data name="OK" xml:space="preserve">
-		<value>OK</value>
-	</data>
+    <value>OK</value>
+  </data>
 	<data name="Discard" xml:space="preserve">
-		<value>Hylkää</value>
-	</data>
+    <value>Discard</value>
+  </data>
 	<data name="SaveAs" xml:space="preserve">
-		<value>Tallenna nimellä...</value>
-	</data>
+    <value>Save as...</value>
+  </data>
 	<data name="Abort" xml:space="preserve">
-		<value>Keskeytä</value>
-	</data>
+    <value>Abort</value>
+  </data>
 	<data name="Ignore" xml:space="preserve">
-		<value>Ohita</value>
-	</data>
+    <value>Ignore</value>
+  </data>
 	<data name="PressDiscard" xml:space="preserve">
-		<value>Paina “Hylkää”, jos et halua tallentaa tietoja</value>
-	</data>
+    <value>Press 'Discard' to discard the data.</value>
+  </data>
 	<data name="PressCancel" xml:space="preserve">
-		<value>Paina “Peruuta”, jos haluat jatkaa tallentamatta</value>
-	</data>
+    <value>Press 'Cancel' to continue without saving</value>
+  </data>
 	<data name="OdorPulsesExpressionNote" xml:space="preserve">
-		<value>Huomautuksia:
+		<value>Notes: 
 
-1. Pulssin kesto + mahdollinen lausekkeessa määritetty viive ei saa ylittää "Tuoksuvirtaus" määriteltyä yleistä kestoa.
+1. Pulse duration + possible delay defined in an expression must not exceed the general duration defined as "Odor flow".
 
-2. Pulssin vähimmäiskesto on 10 ms, maksimi on 65 355 ms.
+2. Minimum pulse duration is 10ms, maximum is 65 355 ms.
 
-3. Korkeintaan yksi (jompikumpi) haju voi viivästyä
+3. At most one (either) odor may have a delay
 
 
-Kuvattuja esimerkkejä:
+Examples described:
 
-1=4x200,2=[100]4x100 - hajupulssi #1 on 4 ml/min ja kestää 200 ms; haju #2 alkaa virrata 100 ms viiveellä, virtaa 4 ml/min nopeudella ja kestää 100 ms.
+1=4x200,2=[100]4x100 - the pulse of odor #1 of 4 ml/min lasts 200 ms; odor #2 start flowing with 100 ms delay, flows with 4 ml/min speed and lasts for 100 ms.
 
-2=10x500 - vain haju #2 virtaa nopeudella 10 ml/min 500 ms:n ajan.</value>
+2=10x500 - only odor #2 is flowing with the speed 10 ml/min for 500 ms.</value>
 	</data>
 	<data name="Timer" xml:space="preserve">
-		<value>Ajastin</value>
+		<value>Timer</value>
 	</data>
 	<data name="UseValveControllerTimer" xml:space="preserve">
-		<value>Käytä venttiilinohjaimen ajastinta aina kun se on mahdollista </value>
+		<value>Use the valve controller timer whenever it is possible</value>
 	</data>
 	<data name="Back" xml:space="preserve">
-		<value>Takaisin</value>
+		<value>Back</value>
 	</data>
 	<data name="Open" xml:space="preserve">
-		<value>Avaa</value>
+		<value>Open</value>
 	</data>
 	<data name="PulseInvalidNumberOfChannels" xml:space="preserve">
-		<value>Virheellinen kanavien määrä: {0}</value>
+		<value>Invalid number of channels: {0}</value>
 	</data>
 	<data name="PulseInvalidChannelExpression" xml:space="preserve">
-		<value>Virheellinen kanavalauseke: {0}</value>
+		<value>Invalid channel expression: {0}</value>
 	</data>
 	<data name="PulseInvalidChannelID" xml:space="preserve">
-		<value>Virheellinen kanavatunnus: {0}</value>
+		<value>Invalid channel ID: {0}</value>
 	</data>
 	<data name="PulseInvalidChannelDescription" xml:space="preserve">
-		<value>Virheellinen kanavan #{0} kuvaus: {1}</value>
+		<value>Invalid channel #{0} description: {1}</value>
 	</data>
 	<data name="PulseSameChannelTwice" xml:space="preserve">
-		<value>Sama kanava määritetty kahdesti: {0}</value>
+		<value>Same channel defined twice: {0}</value>
 	</data>
 	<data name="PulseOnlyOneChannelCanDelay" xml:space="preserve">
-		<value>Vain yksi kanava voi viivästyä: {0}</value>
+		<value>Only one channel can delay: {0}</value>
 	</data>
 	<data name="Channel" xml:space="preserve">
-		<value>Kanava</value>
+		<value>Channel</value>
 	</data>
 	<data name="Session" xml:space="preserve">
-		<value>Hajun virtaus</value>
+		<value>Odor flow</value>
 	</data>
 	<data name="ManualControl" xml:space="preserve">
-		<value>Manuaali ohjaus</value>
+		<value>Manual control</value>
 	</data>
 	<data name="ManualFlowStop" xml:space="preserve">
-		<value>pysäyttää virtaus</value>
+		<value>stop flow</value>
 	</data>
 	<data name="ManualFlowStopTip" xml:space="preserve">
-		<value>Jos tämä on valittuna, näyttöön tulee viesti, kun virtausaika on ohi, mutta venttiilit eivät ole vielä kiinni. Toimenpide jatkuu, kun käyttäjä sulkee viestin.</value>
+		<value>If checked, a message appears after the flow time is over, but the valves are not closed yet. The procedure continues after a user closes the message.</value>
 	</data>
 	<data name="ManualFlowStopMsg" xml:space="preserve">
-		<value>Sulje tämä viesti jatkaaksesi.</value>
+		<value>Close this message to continue.</value>
 	</data>
 	<data name="Continue" xml:space="preserve">
-		<value>Jatka</value>
+		<value>Continue</value>
 	</data>
 	<data name="Comparison" xml:space="preserve">
-		<value>_</value>
+		<value>Comparison</value>
 	</data>
 	<data name="InstructionToEnterMixtures" xml:space="preserve">
-		<value>_</value>
+		<value>Each line contains a pair of "Odor1", "Odor2" or "MixNN" (NN = 1..99) separated by comma</value>
 	</data>
 	<data name="PairsOfMixtures" xml:space="preserve">
-		<value>_</value>
+		<value>Pairs of mixtures</value>
 	</data>
 	<data name="InstructionWait" xml:space="preserve">
-		<value>Odota...</value>
+		<value>Please wait...</value>
 	</data>
 	<data name="WasSameOrNot" xml:space="preserve">
-		<value>_</value>
+		<value>The odors were...</value>
 	</data>
 	<data name="Same" xml:space="preserve">
-		<value>_</value>
+		<value>same</value>
 	</data>
 	<data name="Different" xml:space="preserve">
-		<value>_</value>
+		<value>different</value>
 	</data>
 	<data name="PulseDuration" xml:space="preserve">
-		<value>_</value>
+		<value>Pulse duration</value>
 	</data>
 	<data name="WaitForPID" xml:space="preserve">
-		<value>_</value>
+		<value>Wait until PID reaches a high level</value>
 	</data>
 	<data name="Odor1" xml:space="preserve">
-		<value>Haju #1</value>
+		<value>Odor #1</value>
 	</data>
 	<data name="Odor2" xml:space="preserve">
-		<value>Haju #2</value>
+		<value>Odor #2</value>
 	</data>
 	<data name="VnA_Title" xml:space="preserve">
-		<value>-</value>
+		<value>Valence and Arousal</value>
 	</data>
 	<data name="VnA_Instruction" xml:space="preserve">
-		<value>-</value>
+		<value>Please, fill in the questionnaire</value>
 	</data>
 	<data name="VnA_Valence" xml:space="preserve">
-		<value>-</value>
+		<value>Valence</value>
 	</data>
 	<data name="VnA_ValenceDescription" xml:space="preserve">
-		<value>-</value>
+		<value>the level of pleasantness</value>
 	</data>
 	<data name="VnA_Arousal" xml:space="preserve">
-		<value>-</value>
+		<value>Arousal</value>
 	</data>
 	<data name="VnA_ArousalDescription" xml:space="preserve">
-		<value>-</value>
+		<value>the level of autonomic activation</value>
+	</data>
+	<data name="PracticeOdorFlow" xml:space="preserve">
+		<value>Practice odor flow</value>
+	</data>
+	<data name="Pause" xml:space="preserve">
+		<value>Pause</value>
+	</data>
+	<data name="PauseInfo" xml:space="preserve">
+		<value>Take a deep breath...</value>
+	</data>
+	<data name="VnA_Unpleasant" xml:space="preserve">
+		<value>unpleasant</value>
+	</data>
+	<data name="VnA_Pleasant" xml:space="preserve">
+		<value>pleasant</value>
+	</data>
+	<data name="VnA_Calm" xml:space="preserve">
+		<value>calm</value>
+	</data>
+	<data name="VnA_Excited" xml:space="preserve">
+		<value>excited</value>
 	</data>
 </root>

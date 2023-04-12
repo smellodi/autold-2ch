@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace Olfactory2Ch.Controls
 {
-    public partial class Scale9 : UserControl
+    public partial class Scale9 : UserControl, INotifyPropertyChanged
     {
         #region Title property
 
@@ -124,7 +124,34 @@ namespace Olfactory2Ch.Controls
 
         #endregion
 
+        #region IsValueBarVisible property
+
+        [Description("Is value bar visible?"), Category("Common Properties")]
+        public bool IsValueBarVisible
+        {
+            get => (bool)GetValue(IsValueBarVisibleProperty);
+            set => SetValue(IsValueBarVisibleProperty, value);
+        }
+
+        public static readonly DependencyProperty IsValueBarVisibleProperty = DependencyProperty.Register(
+            "IsValueBarVisible",
+            typeof(bool),
+            typeof(Scale9),
+            new FrameworkPropertyMetadata(new PropertyChangedCallback(IsValueBarVisibleProperty_Changed)));
+
+        private static void IsValueBarVisibleProperty_Changed(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is Scale9 instance)
+            {
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(IsValueBarVisible)));
+                System.Diagnostics.Debug.WriteLine(e.NewValue);
+            }
+        }
+
+        #endregion
+
         public event EventHandler<RoutedEventArgs> ValueChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public int? Value
         {

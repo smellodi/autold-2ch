@@ -49,9 +49,17 @@
                     </UserControl>
                 </UserControl>
 
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                        <TextBox x:Name="txbPracticeOdorFlow"
+                                 Text="30"
+                                 ToolTip="{lex:Loc NumPos}"/>
+                    </UserControl>
+                </UserControl>
+
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorFlow}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                        <TextBox x:Name="txbOdorFlow"
+                        <TextBox x:Name="txbTestOdorFlow"
                                  Text="20"
                                  ToolTip="{lex:Loc NumPos}"/>
                     </UserControl>
@@ -94,7 +102,7 @@
                     </StackPanel>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDSampling}">
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}">
                     <CheckBox x:Name="chkWaitForPID"
                                 Content="{lex:Loc WaitForPID}"/>
                 </UserControl>

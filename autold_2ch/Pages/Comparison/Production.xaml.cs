@@ -10,9 +10,13 @@ namespace Olfactory2Ch.Pages.Comparison
     {
         public event EventHandler<EventArgs> Next;
 
+        public Stage Stage { get; private set; }
+
         public Tests.ITestEmulator Emulator => _procedure;
 
-        public Production()
+        public (MixturePair,Procedure.Answer)[] Results => _procedure.Results.ToArray();
+
+        public Production(Stage stage)
         {
             DataContext = this;
 
@@ -20,6 +24,8 @@ namespace Olfactory2Ch.Pages.Comparison
 
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
+
+            Stage = stage;
 
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
@@ -29,9 +35,34 @@ namespace Olfactory2Ch.Pages.Comparison
 
         public void Init(Settings settings)
         {
+            if (Stage == Stage.Practice)
+            {
+                // modify the settings for the practicing page:
+                settings = new Settings()
+                {
+                    // Most of the settings are same...
+                    FreshAirFlow = settings.FreshAirFlow,
+                    Gas1 = settings.Gas1,
+                    Gas2 = settings.Gas2,
+                    InitialPause = settings.InitialPause,
+                    OdorFlowDuration = settings.OdorFlowDuration,
+                    WaitForPID = settings.WaitForPID,
+                    PracticeOdorFlow = settings.PracticeOdorFlow,
+                    TestOdorFlow = settings.TestOdorFlow,
+
+                    // ..and only the flow and gas pairs are different
+                    PairsOfMixtures = new MixturePair[]
+                    {
+                        new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor2 },
+                        new MixturePair { Mix1 = Mixture.Odor1, Mix2 = Mixture.Odor1 },
+                        new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor1 },
+                    }
+                };
+            }
+
             _settings = settings;
 
-            _procedure.Start(settings);
+            _procedure.Start(settings, Stage);
 
             UpdateUI();
         }

@@ -350,12 +350,12 @@ namespace Olfactory2Ch.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("20")]
-        public double Test_CMP_OdorFlow {
+        public double Test_CMP_TestOdorFlow {
             get {
-                return ((double)(this["Test_CMP_OdorFlow"]));
+                return ((double)(this["Test_CMP_TestOdorFlow"]));
             }
             set {
-                this["Test_CMP_OdorFlow"] = value;
+                this["Test_CMP_TestOdorFlow"] = value;
             }
         }
         
@@ -428,6 +428,18 @@ namespace Olfactory2Ch.Properties {
             }
             set {
                 this["Test_CMP_WaitForPID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public double Test_CMP_PracticeOdorFlow {
+            get {
+                return ((double)(this["Test_CMP_PracticeOdorFlow"]));
+            }
+            set {
+                this["Test_CMP_PracticeOdorFlow"] = value;
             }
         }
     }

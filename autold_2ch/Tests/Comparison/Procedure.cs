@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
@@ -53,6 +54,7 @@ namespace Olfactory2Ch.Tests.Comparison
         /// </summary>
         public event EventHandler<bool> Finished;
 
+        public List<(MixturePair, Answer)> Results { get; } = new();
 
         public Procedure()
         {
@@ -93,9 +95,10 @@ namespace Olfactory2Ch.Tests.Comparison
             _step = _settings.PairsOfMixtures.Length - 1;
         }
 
-        public void Start(Settings settings)
+        public void Start(Settings settings, Comparison.Stage stage)
         {
             _settings = settings;
+            _stage = stage;
 
             // catch window closing event, so we do not display termination message due to MFC comm closed
             Application.Current.MainWindow.Closing += MainWindow_Closing;
@@ -118,6 +121,7 @@ namespace Olfactory2Ch.Tests.Comparison
             _timer.Start();
 
             //_dataLogger.Start(intervalInMs);
+            _testLogger.Add(LogSource.Comparison, "stage", stage.ToString());
             foreach (var param in _settings.Params)
             {
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
@@ -161,6 +165,9 @@ namespace Olfactory2Ch.Tests.Comparison
             //_dataLogger.Add($"A={answer}");
             _testLogger.Add(LogSource.Comparison, "trial", "answer", answer.ToString());
 
+            var pair = _settings.PairsOfMixtures[_step];
+            Results.Add((pair, answer));
+
             Finilize();
         }
 
@@ -191,6 +198,7 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly Dispatcher _dispatcher;
 
         Settings _settings;
+        Comparison.Stage _stage;
 
         int _step = 0;
         MixtureID _mixtureID = MixtureID.None;
@@ -203,7 +211,9 @@ namespace Olfactory2Ch.Tests.Comparison
         private void PrepareOdors(int mixID)
         {
             var pair = _settings.PairsOfMixtures[_step];
-            var pulse = GasMixer.ToPulse(pair, mixID, _settings.OdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2);
+            var pulse = _stage == Comparison.Stage.Test
+                ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
+                : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
 
             _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
             _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
@@ -214,8 +224,11 @@ namespace Olfactory2Ch.Tests.Comparison
             _mixtureID = NextMixtureID();
 
             var pair = _settings.PairsOfMixtures[_step];
-            var pulse = GasMixer.ToPulse(pair, mixID, _settings.OdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2);
+            var pulse = _stage == Comparison.Stage.Test
+                ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
+                : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
 
+            Debug.WriteLine(pulse);
             //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
             /*
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);

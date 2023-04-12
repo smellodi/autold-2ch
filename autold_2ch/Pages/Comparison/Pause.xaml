@@ -1,0 +1,53 @@
+﻿<Page x:Class="Olfactory2Ch.Pages.ThresholdTest.Pause"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Olfactory2Ch.Controls"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+      mc:Ignorable="d" 
+      d:DesignHeight="780" d:DesignWidth="1200"
+      Focusable="True"
+      Title="{lex:Loc Pause}">
+
+    <Grid ScrollViewer.PanningMode="Both">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
+        
+        <TextBlock Grid.Column="0" Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc Pause}"/>
+        </TextBlock>
+
+        <ScrollViewer x:Name="svwScroller" Grid.Row="1" 
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="12"
+                      PanningMode="VerticalOnly">
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="20"
+                       Text="{lex:Loc PauseInfo}"/>
+                <Separator Margin="0,24"/>
+                <StackPanel x:Name="stpResults"
+                            HorizontalAlignment="Center"/>
+            </StackPanel>
+        </ScrollViewer>
+        
+        <Button x:Name="btnNext" Grid.Row="2" 
+                Style="{StaticResource Next}"
+                Content="{lex:Loc Continue}"
+                HorizontalAlignment="Center"
+                Click="Next_Click"/>
+        
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
+    </Grid>
+</Page>

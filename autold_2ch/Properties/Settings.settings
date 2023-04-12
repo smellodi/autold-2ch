@@ -83,7 +83,7 @@
     <Setting Name="Test_CMP_FreshAirFlow" Type="System.Double" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="Test_CMP_OdorFlow" Type="System.Double" Scope="User">
+    <Setting Name="Test_CMP_TestOdorFlow" Type="System.Double" Scope="User">
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="Setup_Gas1" Type="System.Int32" Scope="User">
@@ -103,6 +103,9 @@
     </Setting>
     <Setting Name="Test_CMP_WaitForPID" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="Test_CMP_PracticeOdorFlow" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
     </Setting>
   </Settings>
 </SettingsFile>

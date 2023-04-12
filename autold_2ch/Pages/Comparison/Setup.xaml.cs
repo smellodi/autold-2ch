@@ -20,7 +20,8 @@ namespace Olfactory2Ch.Pages.Comparison
                 .BindVisibilityToDebug(lblDebug);
 
             txbFreshAirFlow.Text = _settings.FreshAirFlow.ToString("F1");
-            txbOdorFlow.Text = _settings.OdorFlow.ToString("F1");
+            txbPracticeOdorFlow.Text = _settings.PracticeOdorFlow.ToString("F1");
+            txbTestOdorFlow.Text = _settings.TestOdorFlow.ToString("F1");
             txbInitialPause.Text = _settings.InitialPause.ToString();
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbPairsOfMixtures.Text = _settings.SerializeMixtures();
@@ -48,7 +49,8 @@ namespace Olfactory2Ch.Pages.Comparison
             var validations = new List<Utils.Validation>
             {
                 new Utils.Validation(txbFreshAirFlow, 1, 10, Utils.Validation.ValueFormat.Float),
-                new Utils.Validation(txbOdorFlow, 1, 200, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbPracticeOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbTestOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorFlowDuration, 0.1, MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
                 //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
@@ -81,7 +83,8 @@ namespace Olfactory2Ch.Pages.Comparison
             else
             {
                 _settings.FreshAirFlow = double.Parse(txbFreshAirFlow.Text);
-                _settings.OdorFlow = double.Parse(txbOdorFlow.Text);
+                _settings.PracticeOdorFlow = double.Parse(txbPracticeOdorFlow.Text);
+                _settings.TestOdorFlow = double.Parse(txbTestOdorFlow.Text);
                 _settings.InitialPause = int.Parse(txbInitialPause.Text);
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.PairsOfMixtures = Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);
@@ -91,7 +94,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 _settings.Save();
 
                 OlfactoryDeviceModel.Gas1 = _settings.Gas1;
-                OlfactoryDeviceModel.Gas2 = _settings.Gas1;
+                OlfactoryDeviceModel.Gas2 = _settings.Gas2;
 
                 Next?.Invoke(this, _settings);
             }

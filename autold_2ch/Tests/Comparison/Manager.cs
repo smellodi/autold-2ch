@@ -21,24 +21,38 @@ namespace Olfactory2Ch.Tests.Comparison
                 _settings = e;
                 PageDone?.Invoke(this, new PageDoneEventArgs(_settings != null));
             };
-            _productionPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            _vna.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
         }
 
         public Page NextPage(object param = null)
         {
+            var previousPage = _current;
+
             _current = _current switch
             {
                 null => _setupPage,
-                Setup _ => _productionPage,
-                Production _ => _vna,
+                Setup _ => _productionPracticePage,
+                Production prod =>
+                    prod.Stage switch {
+                        Stage.Practice => _pausePage,
+                        Stage.Test => _vnaPage,
+                        _ => throw new NotImplementedException($"Unhandled production stage in {Name}"),
+                    },
+                Pause _ => _productionTestPage,
                 VnA _ => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),
             };
 
-            if (_current is Production page)
+            if (_current is Production prodPage)
             {
-                page.Init(_settings);
+                prodPage.Init(_settings);
+            }
+            else if (_current is Pause pausePage)
+            {
+                pausePage.Init(_settings, (previousPage as Production).Results);
             }
 
             return _current;
@@ -52,9 +66,9 @@ namespace Olfactory2Ch.Tests.Comparison
 
         public void Interrupt()
         {
-            if (_current == _productionPage)
+            if (_current is Production prodPage)
             {
-                _productionPage.Interrupt();
+                prodPage.Interrupt();
             }
         }
 
@@ -63,7 +77,7 @@ namespace Olfactory2Ch.Tests.Comparison
             switch (command)
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
-                case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
+                case EmulationCommand.ForceToFinishWithResult: if (_current is Production prodPage) prodPage.Emulator.EmulationFinilize(); break;
                 default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }
@@ -71,8 +85,10 @@ namespace Olfactory2Ch.Tests.Comparison
         // Internal
 
         readonly Setup _setupPage = new();
-        readonly Production _productionPage = new();
-        readonly VnA _vna = new();
+        readonly Production _productionPracticePage = new(Stage.Practice);
+        readonly Production _productionTestPage = new(Stage.Test);
+        readonly Pause _pausePage = new();
+        readonly VnA _vnaPage = new();
 
         Page _current = null;
 
