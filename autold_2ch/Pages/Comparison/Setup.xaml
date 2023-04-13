@@ -37,7 +37,7 @@
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Form}">
-            <StackPanel Width="380">
+            <StackPanel Width="480">
                 <Label Style="{StaticResource FormHeader}"
                        Content="{lex:Loc Settings}"/>
 
@@ -50,19 +50,33 @@
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                        <TextBox x:Name="txbPracticeOdorFlow"
-                                 Text="30"
-                                 ToolTip="{lex:Loc NumPos}"/>
-                    </UserControl>
+                    <StackPanel>
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                            <TextBox x:Name="txbPracticeOdorFlow"
+                                     Text="30"
+                                     ToolTip="{lex:Loc NumPos}"/>
+                        </UserControl>
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <TextBlock TextWrapping="Wrap"
+                                       Margin="0,4,0,0"
+                                       Text="{lex:Loc PracticeStageFlowDescription}"/>
+                        </UserControl>
+                    </StackPanel>
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorFlow}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                        <TextBox x:Name="txbTestOdorFlow"
-                                 Text="20"
-                                 ToolTip="{lex:Loc NumPos}"/>
-                    </UserControl>
+                    <StackPanel>
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                            <TextBox x:Name="txbTestOdorFlow"
+                                     Text="20"
+                                     ToolTip="{lex:Loc NumPos}"/>
+                        </UserControl>
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <TextBlock TextWrapping="Wrap"
+                                       Margin="0,4,0,0"
+                                       Text="{lex:Loc TestStageFlowDescription}"/>
+                        </UserControl>
+                    </StackPanel>
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc InitialPause}">
@@ -94,17 +108,17 @@
                                      Text="Odor1, Odor2"
                                      ToolTip="{lex:Loc CommaSeparatedValues}"/>
                         </UserControl>
-                        <TextBlock TextWrapping="Wrap"
-                                   Margin="0,4,0,0"
-                                   Text="{lex:Loc InstructionToEnterMixtures}"
-                                   ToolTip="{lex:Loc OdorPulsesExpressionNote}"
-                                   ToolTipService.ShowDuration="60000"/>
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <TextBlock TextWrapping="Wrap"
+                                       Margin="0,4,0,0"
+                                       Text="{lex:Loc InstructionToEnterMixtures}"/>
+                        </UserControl>
                     </StackPanel>
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}">
                     <CheckBox x:Name="chkWaitForPID"
-                                Content="{lex:Loc WaitForPID}"/>
+                              Content="{lex:Loc WaitForPID}"/>
                 </UserControl>
 
                 <!--Separator/>

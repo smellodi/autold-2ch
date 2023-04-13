@@ -354,22 +354,6 @@
 	<data name="PressCancel" xml:space="preserve">
 		<value>Paina “Peruuta”, jos haluat jatkaa tallentamatta</value>
 	</data>
-	<data name="OdorPulsesExpressionNote" xml:space="preserve">
-		<value>Huomautuksia:
-
-1. Pulssin kesto + mahdollinen lausekkeessa määritetty viive ei saa ylittää "Tuoksuvirtaus" määriteltyä yleistä kestoa.
-
-2. Pulssin vähimmäiskesto on 10 ms, maksimi on 65 355 ms.
-
-3. Korkeintaan yksi (jompikumpi) haju voi viivästyä
-
-
-Kuvattuja esimerkkejä:
-
-1=4x200,2=[100]4x100 - hajupulssi #1 on 4 ml/min ja kestää 200 ms; haju #2 alkaa virrata 100 ms viiveellä, virtaa 4 ml/min nopeudella ja kestää 100 ms.
-
-2=10x500 - vain haju #2 virtaa nopeudella 10 ml/min 500 ms:n ajan.</value>
-	</data>
 	<data name="Timer" xml:space="preserve">
 		<value>Ajastin</value>
 	</data>
@@ -492,5 +476,11 @@ Kuvattuja esimerkkejä:
 	</data>
 	<data name="VnA_Excited" xml:space="preserve">
 		<value>innostunut</value>
+	</data>
+	<data name="PracticeStageFlowDescription" xml:space="preserve">
+		<value>Tätä virtausta käytetään kunkin kaasun vapauttamiseen itsenäisesti. Harjoitteluvaiheessa käytetään seuraavia pareja: IPA-IPA. nButanoli-nButanoli, IPA-nButanoli</value>
+	</data>
+	<data name="TestStageFlowDescription" xml:space="preserve">
+		<value>Tämä virtaus jaetaan kaasujen kesken</value>
 	</data>
 </root>

@@ -354,22 +354,6 @@
 	<data name="PressCancel" xml:space="preserve">
     <value>Press 'Cancel' to continue without saving</value>
   </data>
-	<data name="OdorPulsesExpressionNote" xml:space="preserve">
-		<value>Notes: 
-
-1. Pulse duration + possible delay defined in an expression must not exceed the general duration defined as "Odor flow".
-
-2. Minimum pulse duration is 10ms, maximum is 65 355 ms.
-
-3. At most one (either) odor may have a delay
-
-
-Examples described:
-
-1=4x200,2=[100]4x100 - the pulse of odor #1 of 4 ml/min lasts 200 ms; odor #2 start flowing with 100 ms delay, flows with 4 ml/min speed and lasts for 100 ms.
-
-2=10x500 - only odor #2 is flowing with the speed 10 ml/min for 500 ms.</value>
-	</data>
 	<data name="Timer" xml:space="preserve">
 		<value>Timer</value>
 	</data>
@@ -492,5 +476,11 @@ Examples described:
 	</data>
 	<data name="VnA_Excited" xml:space="preserve">
 		<value>excited</value>
+	</data>
+	<data name="PracticeStageFlowDescription" xml:space="preserve">
+		<value>This flow will be used to release each gas independently. The following pairs will be used in the practicing stage: IPA-IPA. nButanol-nButanol, IPA-nButanol</value>
+	</data>
+	<data name="TestStageFlowDescription" xml:space="preserve">
+		<value>This flow will be shared between the gases</value>
 	</data>
 </root>
