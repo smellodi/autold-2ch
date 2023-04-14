@@ -64,9 +64,7 @@
                         </UserControl>
                         <TextBlock TextWrapping="Wrap"
                                    Margin="0,4,0,0"
-                                   Text="{lex:Loc CommaSeparatedListWithExpressions}"
-                                   ToolTip="{lex:Loc OdorPulsesExpressionNote}"
-                                   ToolTipService.ShowDuration="60000"/>
+                                   Text="{lex:Loc CommaSeparatedListWithExpressions}"/>
                     </StackPanel>
                 </UserControl>
 

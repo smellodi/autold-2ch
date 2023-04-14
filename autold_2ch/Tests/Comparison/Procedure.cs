@@ -233,7 +233,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
                 : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
 
-            Debug.WriteLine($"PULSE: {pulse}");
+            Debug.WriteLine($"[PULSE] {pulse}");
             //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
             /*
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
@@ -245,7 +245,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     _settings.Gas1, pulse.Channel1?.Flow ?? 0,
                     _settings.Gas2, pulse.Channel2?.Flow ?? 0
                 ) * EXPECTED_PID_REDUCTION;
-                Debug.WriteLine(_PIDThreshold);
+                Debug.WriteLine($"[PROC] waiting for the level - {_PIDThreshold}");
             }
             else
             {

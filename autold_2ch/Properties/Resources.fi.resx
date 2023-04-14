@@ -489,4 +489,7 @@
 	<data name="GasPresentation" xml:space="preserve">
 		<value>Kaasun esittäjä DMS:lle</value>
 	</data>
+	<data name="PIDSampling" xml:space="preserve">
+		<value>PID-näytteenotto</value>
+	</data>
 </root>

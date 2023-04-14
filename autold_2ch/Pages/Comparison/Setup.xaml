@@ -130,16 +130,6 @@
                     <CheckBox x:Name="chkWaitForPID"
                               Content="{lex:Loc WaitForPID}"/>
                 </UserControl>
-
-                <!--Separator/>
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDSampling}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Ms}">
-                        <TextBox x:Name="txbPIDSamplingInterval"
-                                 Text="1000"
-                                 ToolTip="{lex:Loc IntPos}"/>
-                    </UserControl>
-                </UserControl-->
-
             </StackPanel>
         </Border>
 

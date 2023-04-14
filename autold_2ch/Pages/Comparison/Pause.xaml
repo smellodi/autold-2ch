@@ -24,6 +24,8 @@
         </Grid.LayoutTransform>
         
         <TextBlock Grid.Column="0" Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc Comparison}"/>
+            <Run Text=" - "/>
             <Run Text="{lex:Loc Pause}"/>
         </TextBlock>
 

@@ -1,17 +1,11 @@
-# Olfactory test platform
+# Automatic Olfactory Display (AutOlD) for 2 channels
 
-Dedicated for running tests associated with scented air production and odorant type/level recognition.
-
-[Full documentation](https://tuni.sharepoint.com/:w:/s/TG-ProScents/EW_zr0V_uOpCkavwB9Dg0kcBagAzzogahZlLc4DnyQjfLw?e=Uau2Jy)
-
-[Portable software package](https://tuni.sharepoint.com/:u:/s/TG-ProScents/ESV9_fIxMgFMlgHAgeb3nMoBNTDkUKgnVg_07hBLHvSWIQ?e=tKs8fM)
-
-[Installation setup package](https://tuni.sharepoint.com/:u:/s/TG-ProScents/EW7DI4JoK-VPk8q-c3GmblMBXCo2hmDOOmY_xZ69hV32ig?e=B5XQby)
+Dedicated for running tests associated with scented air production and odorant type recognition by participants.
 
 ## Development environment and features
 
-- Microsoft Visual Studio Community 2019, Version 16.9.4 (May 2021)
-- .NET Core 3.1 (LTS)
+- Microsoft Visual Studio Community 2022
+- .NET 6.0 (LTS)
 - C# 9.0
 - Zeta Resource Editor
 - Tested only as x86-32 application.
@@ -21,6 +15,14 @@ Dedicated for running tests associated with scented air production and odorant t
 NuGet packages:
 - System.IO.Ports
 - System.Management
-- NAudio
+- System.Text.Json
 - WPFLocalizeExtension
 - ScottPlot.WPF
+- RestSharp
+
+External dependencies:
+- `..\..\smop\smop.ion-vision\bin\Debug\net6.0-windows\Smop.IonVision.dll`
+
+    1. step one level up from the autold_2ch root folder
+    2. `git clone https://github.com/lexasss/smod.git`
+    3. build the `smop.ion-vision` project

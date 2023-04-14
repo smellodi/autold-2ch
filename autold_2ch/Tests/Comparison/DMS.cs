@@ -150,7 +150,14 @@ namespace Olfactory2Ch.Tests.Comparison
 
         // Internal
 
-        readonly Communicator _comunicator = new("Properties/IonVision.json", Storage.Instance.IsDebugging);
+        static string IonVisionSettingsFilename = "Properties/IonVision.json";
+
+        static DMS()
+        {
+            Smop.IonVision.Settings.DefaultFilename = IonVisionSettingsFilename;
+        }
+
+        readonly Communicator _comunicator = new(IonVisionSettingsFilename, Storage.Instance.IsDebugging);
         readonly FlowLogger _eventLogger = FlowLogger.Instance;
 
         string _folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\scan" ;

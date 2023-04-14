@@ -489,4 +489,7 @@
 	<data name="GasPresentation" xml:space="preserve">
 		<value>Gas presenter for DMS</value>
 	</data>
+	<data name="PIDSampling" xml:space="preserve">
+		<value>PID sampling</value>
+	</data>
 </root>
