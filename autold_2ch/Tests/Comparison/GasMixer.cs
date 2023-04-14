@@ -48,7 +48,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         static readonly Dictionary<Gas, GasProp> GasProperties = new() {
             { Gas.nButanol, new GasProp() { Weight = 1.0 } },
-            { Gas.IPA, new GasProp() { Weight = 2.0 } },
+            { Gas.IPA, new GasProp() { Weight = 1.0 } },
         };
 
         static GasMixer()
@@ -75,7 +75,7 @@ namespace Olfactory2Ch.Tests.Comparison
                         if (GasProperties.ContainsKey(gas))
                         {
                             GasProperties[gas] = record.Value;
-                            Debug.WriteLine($"{gas} PROPS: {record.Value}");
+                            Debug.WriteLine($"[MIXER] {gas}: {record.Key} = {record.Value}");
                         }
                         else
                         {

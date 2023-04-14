@@ -483,4 +483,10 @@
 	<data name="TestStageFlowDescription" xml:space="preserve">
 		<value>This flow will be shared between the gases</value>
 	</data>
+	<data name="GasSniffer" xml:space="preserve">
+		<value>Smeller</value>
+	</data>
+	<data name="GasPresentation" xml:space="preserve">
+		<value>Gas presenter for DMS</value>
+	</data>
 </root>

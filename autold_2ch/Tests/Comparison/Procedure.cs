@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using Olfactory2Ch.Comm;
@@ -13,6 +14,7 @@ namespace Olfactory2Ch.Tests.Comparison
     {
         public enum Answer
         {
+            None,
             Same,
             Different
         }
@@ -127,6 +129,8 @@ namespace Olfactory2Ch.Tests.Comparison
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
             }
 
+            _dms.Init(_settings);
+
             Next();
         }
 
@@ -196,6 +200,7 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly CommMonitor _monitor = CommMonitor.Instance;
         readonly System.Timers.Timer _timer = new();
         readonly Dispatcher _dispatcher;
+        readonly DMS _dms = new();
 
         Settings _settings;
         Comparison.Stage _stage;
@@ -206,7 +211,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         DispatchOnce _runner;
         PulsesController _pulseController;
-        DispatchOnce _pulseFinisher;
+        //DispatchOnce _pulseFinisher;
 
         private void PrepareOdors(int mixID)
         {
@@ -228,7 +233,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
                 : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
 
-            Debug.WriteLine(pulse);
+            Debug.WriteLine($"PULSE: {pulse}");
             //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
             /*
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
@@ -249,17 +254,22 @@ namespace Olfactory2Ch.Tests.Comparison
                     (pulse.Channel2?.Valve ?? MFC.ValvesOpened.None);
                 _mfc.OdorDirection = valves;
 
+                Task.Delay(500).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+
                 StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
             }
         }
 
         private void StopOdorFlow()
         {
+            _dms.SaveScan();
+
             if (_mfc.OdorDirection != MFC.ValvesOpened.None)
             {
                 _mfc.OdorDirection = MFC.ValvesOpened.None;
                 //_dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
             }
+
             StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, NextMixtureID()));
         }
 
@@ -302,7 +312,7 @@ namespace Olfactory2Ch.Tests.Comparison
             _runner?.Stop();
             _timer.Stop();
             _pulseController?.Terminate();
-            _pulseFinisher?.Stop();
+            //_pulseFinisher?.Stop();
         }
 
         private void CheckPID(double pid)
@@ -313,6 +323,10 @@ namespace Olfactory2Ch.Tests.Comparison
                 {
                     _PIDThreshold = 0;
                     _pulseController.Run();
+
+                    var pair = _settings.PairsOfMixtures[_step];
+                    Task.Delay(500).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+
                     StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
                 }
             }
@@ -324,7 +338,7 @@ namespace Olfactory2Ch.Tests.Comparison
         }
 
         // Event handlers
-
+        /*
         private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
         {
             if (e.IsLast)
@@ -341,7 +355,7 @@ namespace Olfactory2Ch.Tests.Comparison
             {
                 StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
             }
-        }
+        }*/
 
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

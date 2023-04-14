@@ -140,7 +140,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
 
         DispatchOnce _runner;
         PulsesController _pulseController;
-        DispatchOnce _pulseFinisher;
+        //DispatchOnce _pulseFinisher;
 
         private void StartOdorFlow()
         {
@@ -209,7 +209,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
             _runner?.Stop();
             _timer.Stop();
             _pulseController?.Terminate();
-            _pulseFinisher?.Stop();
+            //_pulseFinisher?.Stop();
         }
 
         // Event handlers

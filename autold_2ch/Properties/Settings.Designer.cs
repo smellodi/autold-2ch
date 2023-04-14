@@ -442,5 +442,17 @@ namespace Olfactory2Ch.Properties {
                 this["Test_CMP_PracticeOdorFlow"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Human")]
+        public string Test_CMP_Sniffer {
+            get {
+                return ((string)(this["Test_CMP_Sniffer"]));
+            }
+            set {
+                this["Test_CMP_Sniffer"] = value;
+            }
+        }
     }
 }

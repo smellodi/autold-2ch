@@ -23,6 +23,7 @@ namespace Olfactory2Ch.Tests.Comparison
             };
             _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
             _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+            _gasPresenterPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
             _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
             _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
         }
@@ -34,13 +35,20 @@ namespace Olfactory2Ch.Tests.Comparison
             _current = _current switch
             {
                 null => _setupPage,
-                Setup _ => _productionPracticePage,
+                Setup _ => _settings.Sniffer switch
+                {
+                    GasSniffer.Human => _productionPracticePage,
+                    GasSniffer.DMS => _gasPresenterPage,
+                    _ => throw new NotImplementedException($"Unhandled sniffer in {Name}"),
+                },
                 Production prod =>
-                    prod.Stage switch {
+                    prod.Stage switch
+                    {
                         Stage.Practice => _pausePage,
                         Stage.Test => _vnaPage,
                         _ => throw new NotImplementedException($"Unhandled production stage in {Name}"),
                     },
+                GasPresenter _ => null,
                 Pause _ => _productionTestPage,
                 VnA _ => null,
                 _ => throw new NotImplementedException($"Unhandled page in {Name}"),
@@ -53,6 +61,10 @@ namespace Olfactory2Ch.Tests.Comparison
             else if (_current is Pause pausePage)
             {
                 pausePage.Init(_settings, (previousPage as Production).Results);
+            }
+            else if (_current is GasPresenter gasPresenterPage)
+            {
+                gasPresenterPage.Init(_settings);
             }
 
             return _current;
@@ -87,6 +99,7 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly Setup _setupPage = new();
         readonly Production _productionPracticePage = new(Stage.Practice);
         readonly Production _productionTestPage = new(Stage.Test);
+        readonly GasPresenter _gasPresenterPage = new();
         readonly Pause _pausePage = new();
         readonly VnA _vnaPage = new();
 

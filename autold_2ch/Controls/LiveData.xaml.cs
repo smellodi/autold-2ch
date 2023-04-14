@@ -44,9 +44,10 @@ namespace Olfactory2Ch.Controls
             _data.Clear();
             
             _scatter.Update(new double[] { 0 }, new double[] { 0 });
-            
+
             chart.Plot.AxisAuto();
             chart.Render();
+            //chart.Refresh();
         }
 
         public void Reset(double step, double baseline = 0)
@@ -70,6 +71,7 @@ namespace Olfactory2Ch.Controls
             _scatter.Update(x, y);
             chart.Plot.AxisAuto();
             chart.Render();
+            //chart.Refresh();
         }
 
         public void Add(double timestamp, double value)
@@ -86,6 +88,7 @@ namespace Olfactory2Ch.Controls
             _scatter.Update(x, y);
             chart.Plot.AxisAuto();
             chart.Render();
+            //chart.Refresh();
         }
 
 

@@ -8,7 +8,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="580" d:DesignWidth="600"
+      d:DesignHeight="650" d:DesignWidth="600"
       Title="{lex:Loc Setup}">
 
     <Grid>
@@ -41,6 +41,14 @@
                 <Label Style="{StaticResource FormHeader}"
                        Content="{lex:Loc Settings}"/>
 
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc GasSniffer}">
+                    <UserControl Style="{StaticResource ValueWithUnit}">
+                        <ComboBox x:Name="cmbGasSniffer"
+                                  VerticalContentAlignment="Center"
+                                  SelectionChanged="GasSniffer_SelectionChanged"/>
+                    </UserControl>
+                </UserControl>
+
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                         <TextBox x:Name="txbFreshAirFlow"
@@ -49,7 +57,8 @@
                     </UserControl>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}">
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}"
+                             IsEnabled="{Binding IsHumanSniffer}">
                     <StackPanel>
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                             <TextBox x:Name="txbPracticeOdorFlow"
@@ -116,7 +125,8 @@
                     </StackPanel>
                 </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}">
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}"
+                             IsEnabled="{Binding IsHumanSniffer}">
                     <CheckBox x:Name="chkWaitForPID"
                               Content="{lex:Loc WaitForPID}"/>
                 </UserControl>

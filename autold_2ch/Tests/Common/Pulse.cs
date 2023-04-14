@@ -71,12 +71,12 @@ namespace Olfactory2Ch.Tests.Common
         {
             return $"{ID}{Pulse.DELIM_EXPRESSION}"
                 + (Delay > 0 ? $"[{Delay}]" : "")
-                + (_duration > 0 ? $"{Flow}{Pulse.DELIM_BY}{_duration}" : Flow.ToString());
+                + (_duration > 0 ? $"{Flow:F1}{Pulse.DELIM_BY}{_duration}" : $"{Flow:F1}");
         }
 
         // Internal
 
-        int _duration;
+        readonly int _duration;
     }
 
     /// <summary>
@@ -213,7 +213,8 @@ namespace Olfactory2Ch.Tests.Common
         }
 
         // Internal
-        (int, int, double, int) Parse(string channel)
+
+        private static (int, int, double, int) Parse(string channel)
         {
             string[] p = channel.Split(DELIM_EXPRESSION);
             if (p.Length != 2)
@@ -226,7 +227,7 @@ namespace Olfactory2Ch.Tests.Common
                 throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidChannelID"), p[0]));
             }
 
-            Regex regex = new Regex(@"^(\[(?<delay>[0-9]+)\])?(?<flow>[0-9\.]+)(x(?<duration>[0-9]+))?$");
+            var regex = new Regex(@"^(\[(?<delay>[0-9]+)\])?(?<flow>[0-9\.]+)(x(?<duration>[0-9]+))?$");
             var match = regex.Match(p[1]);
 
             if (!match.Success || match.Groups.Count < 1)

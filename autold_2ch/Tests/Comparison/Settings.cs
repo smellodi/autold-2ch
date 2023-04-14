@@ -8,7 +8,23 @@ namespace Olfactory2Ch.Tests.Comparison
     {
         Odor1,
         Odor2,
-        Mix50,  // All other possible values must in the form "Mix[1-99]"
+        // All other possible values must in the form "Mix[1-99]"
+        Mix01, Mix02, Mix03, Mix04, Mix05, Mix06, Mix07, Mix08, Mix09,
+        Mix10, Mix11, Mix12, Mix13, Mix14, Mix15, Mix16, Mix17, Mix18, Mix19,
+        Mix20, Mix21, Mix22, Mix23, Mix24, Mix25, Mix26, Mix27, Mix28, Mix29,
+        Mix30, Mix31, Mix32, Mix33, Mix34, Mix35, Mix36, Mix37, Mix38, Mix39,
+        Mix40, Mix41, Mix42, Mix43, Mix44, Mix45, Mix46, Mix47, Mix48, Mix49,
+        Mix50, Mix51, Mix52, Mix53, Mix54, Mix55, Mix56, Mix57, Mix58, Mix59,
+        Mix60, Mix61, Mix62, Mix63, Mix64, Mix65, Mix66, Mix67, Mix68, Mix69,
+        Mix70, Mix71, Mix72, Mix73, Mix74, Mix75, Mix76, Mix77, Mix78, Mix79,
+        Mix80, Mix81, Mix82, Mix83, Mix84, Mix85, Mix86, Mix87, Mix88, Mix89,
+        Mix90, Mix91, Mix92, Mix93, Mix94, Mix95, Mix96, Mix97, Mix98, Mix99,
+    }
+
+    public enum GasSniffer
+    {
+        Human,
+        DMS
     }
 
     public class MixturePair
@@ -41,6 +57,7 @@ namespace Olfactory2Ch.Tests.Comparison
     {
         //public const int MIN_FLOW_DURATION = 10; // ms
 
+        public GasSniffer Sniffer;
         public double FreshAirFlow;
         public double PracticeOdorFlow;
         public double TestOdorFlow;
@@ -55,6 +72,7 @@ namespace Olfactory2Ch.Tests.Comparison
         public int OdorFlowDurationMs => (int)(OdorFlowDuration * 1000);
         public Dictionary<string, string> Params => new()
         {
+            { "sniffer", Sniffer.ToString() },
             { "fresh", FreshAirFlow.ToString() },
             { "practice_flow", PracticeOdorFlow.ToString() },
             { "test_flow", TestOdorFlow.ToString() },
@@ -69,6 +87,7 @@ namespace Olfactory2Ch.Tests.Comparison
         {
             var settings = Properties.Settings.Default;
 
+            Sniffer = (GasSniffer)Enum.Parse(typeof(GasSniffer), settings.Test_CMP_Sniffer);
             FreshAirFlow = settings.Test_CMP_FreshAirFlow;
             PracticeOdorFlow = settings.Test_CMP_PracticeOdorFlow;
             TestOdorFlow = settings.Test_CMP_TestOdorFlow;
@@ -85,6 +104,7 @@ namespace Olfactory2Ch.Tests.Comparison
         {
             var settings = Properties.Settings.Default;
 
+            settings.Test_CMP_Sniffer = Sniffer.ToString();
             settings.Test_CMP_FreshAirFlow = FreshAirFlow;
             settings.Test_CMP_PracticeOdorFlow = PracticeOdorFlow;
             settings.Test_CMP_TestOdorFlow = TestOdorFlow;

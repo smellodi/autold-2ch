@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using Olfactory2Ch.Comm;
@@ -7,9 +8,12 @@ using Olfactory2Ch.Tests.Comparison;
 
 namespace Olfactory2Ch.Pages.Comparison
 {
-    public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
+    public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator, INotifyPropertyChanged
     {
         public event EventHandler<Settings> Next;
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool IsHumanSniffer { get; private set; } = true;
 
         public Setup()
         {
@@ -19,6 +23,11 @@ namespace Olfactory2Ch.Pages.Comparison
                 .BindScaleToZoomLevel(sctScale)
                 .BindVisibilityToDebug(lblDebug);
 
+            DataContext = this;
+
+            cmbGasSniffer.ItemsSource = Enum.GetValues(typeof(GasSniffer));
+
+            cmbGasSniffer.SelectedItem = _settings.Sniffer;
             txbFreshAirFlow.Text = _settings.FreshAirFlow.ToString("F1");
             txbPracticeOdorFlow.Text = _settings.PracticeOdorFlow.ToString("F1");
             txbTestOdorFlow.Text = _settings.TestOdorFlow.ToString("F1");
@@ -82,6 +91,7 @@ namespace Olfactory2Ch.Pages.Comparison
             }
             else
             {
+                _settings.Sniffer = (GasSniffer)cmbGasSniffer.SelectedItem;
                 _settings.FreshAirFlow = double.Parse(txbFreshAirFlow.Text);
                 _settings.PracticeOdorFlow = double.Parse(txbPracticeOdorFlow.Text);
                 _settings.TestOdorFlow = double.Parse(txbTestOdorFlow.Text);
@@ -103,6 +113,12 @@ namespace Olfactory2Ch.Pages.Comparison
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Next?.Invoke(this, null);
+        }
+
+        private void GasSniffer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IsHumanSniffer = (GasSniffer)cmbGasSniffer.SelectedItem == GasSniffer.Human;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHumanSniffer)));
         }
     }
 }

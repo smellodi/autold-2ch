@@ -483,4 +483,10 @@
 	<data name="TestStageFlowDescription" xml:space="preserve">
 		<value>Tämä virtaus jaetaan kaasujen kesken</value>
 	</data>
+	<data name="GasSniffer" xml:space="preserve">
+		<value>Tuoksuja</value>
+	</data>
+	<data name="GasPresentation" xml:space="preserve">
+		<value>Kaasun esittäjä DMS:lle</value>
+	</data>
 </root>

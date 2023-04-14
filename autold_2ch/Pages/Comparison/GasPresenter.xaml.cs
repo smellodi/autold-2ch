@@ -6,17 +6,11 @@ using Olfactory2Ch.Tests.Comparison;
 
 namespace Olfactory2Ch.Pages.Comparison
 {
-    public partial class Production : Page, IPage<EventArgs>
+    public partial class GasPresenter : Page, IPage<EventArgs>
     {
         public event EventHandler<EventArgs> Next;
 
-        public Stage Stage { get; private set; }
-
-        public Tests.ITestEmulator Emulator => _procedure;
-
-        public (MixturePair,Procedure.Answer)[] Results => _procedure.Results.ToArray();
-
-        public Production(Stage stage)
+        public GasPresenter()
         {
             DataContext = this;
 
@@ -25,46 +19,17 @@ namespace Olfactory2Ch.Pages.Comparison
             Storage.Instance.BindScaleToZoomLevel(sctScale);
             Storage.Instance.BindVisibilityToDebug(lblDebug);
 
-            Stage = stage;
-
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
-            _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => RequestAnswer());
+            _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => SaveScanResults());
             _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
         }
 
         public void Init(Settings settings)
         {
-            if (Stage == Stage.Practice)
-            {
-                // modify the settings for the practicing page:
-                settings = new Settings()
-                {
-                    // Most of the settings are same...
-                    FreshAirFlow = settings.FreshAirFlow,
-                    Gas1 = settings.Gas1,
-                    Gas2 = settings.Gas2,
-                    InitialPause = settings.InitialPause,
-                    OdorFlowDuration = settings.OdorFlowDuration,
-                    WaitForPID = settings.WaitForPID,
-                    PracticeOdorFlow = settings.PracticeOdorFlow,
-                    TestOdorFlow = settings.TestOdorFlow,
-
-                    // ..and only the flow and gas pairs are different
-                    PairsOfMixtures = new MixturePair[]
-                    {
-                        new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor2 },
-                        new MixturePair { Mix1 = Mixture.Odor1, Mix2 = Mixture.Odor1 },
-                        new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor1 },
-                    }
-                };
-            }
-
             _settings = settings;
 
-            _procedure.Start(settings, Stage);
-
-            UpdateUI();
+            _procedure.Start(settings, Stage.Test);
         }
 
         public void Interrupt()
@@ -78,8 +43,6 @@ namespace Olfactory2Ch.Pages.Comparison
         readonly Procedure _procedure = new();
 
         Settings _settings;
-
-        private void UpdateUI() { }
 
         private void SetStage(Procedure.Stage stage)
         {
@@ -110,24 +73,22 @@ namespace Olfactory2Ch.Pages.Comparison
             }
         }
 
-        private void RequestAnswer()
+        private void SaveScanResults()
         {
             wtiOdor1.Progress = 0;
             wtiOdor2.Progress = 0;
-            stpAnswer.Visibility = Visibility.Visible;
+
+            _procedure.SetResult(Procedure.Answer.None);
         }
 
         private void FinilizeTrial(bool noMoreTrials)
         {
-            stpAnswer.Visibility = Visibility.Hidden;
-
             if (noMoreTrials)
             {
                 Next?.Invoke(this, new EventArgs());
             }
             else
             {
-                UpdateUI();
                 Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
             }
         }
@@ -140,16 +101,6 @@ namespace Olfactory2Ch.Pages.Comparison
             // Do I need to show a confirmation dialog here?
             _procedure.Stop();
             Next?.Invoke(this, new EventArgs());
-        }
-
-        private void Same_Click(object sender, RoutedEventArgs e)
-        {
-            _procedure.SetResult(Procedure.Answer.Same);
-        }
-
-        private void Different_Click(object sender, RoutedEventArgs e)
-        {
-            _procedure.SetResult(Procedure.Answer.Different);
         }
     }
 }
