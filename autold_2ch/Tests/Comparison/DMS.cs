@@ -21,14 +21,14 @@ namespace Olfactory2Ch.Tests.Comparison
             }
         }
 
-        public void Init(Settings settings)
+        public string Init(Settings settings)
         {
             _settings = settings;
             _isActive = settings.Sniffer == GasSniffer.DMS;
 
             if (!_isActive)
             {
-                return;
+                return null;
             }
 
             var subfolder = $"scan_{DateTime.Now:u}".ToPath();
@@ -37,23 +37,36 @@ namespace Olfactory2Ch.Tests.Comparison
 
             _eventLogger.Add(LogSource.Comparison, "DMS", "folder", subfolder);
 
+            string error = null;
+
             Task.Run(async () =>
             {
                 _isActive = await _comunicator.CheckConnection();
                 if (!_isActive)
                 {
                     SystemSounds.Exclamation.Play();
+                    error = "Cannot connect to DMS";
                     return;
                 }
 
                 if (_isActive)
                 {
-                    await Task.Delay(300);
-                    PrintResponse("set project", await _comunicator.SetProject());
-                    await Task.Delay(300);
-                    PrintResponse("set param", await _comunicator.SetParameter());
+                    try
+                    {
+                        await Task.Delay(300);
+                        PrintResponse("set project", await _comunicator.SetProject());
+                        await Task.Delay(300);
+                        PrintResponse("set param", await _comunicator.SetParameter());
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[DMS] project/parameter set error: {ex}");
+                        error = "Failed to set th escan project or parameter";
+                    }
                 }
             }).Wait();
+
+            return error;
         }
         
         public async void StartScan(MixturePair pair, MixtureID mixtureID)
@@ -86,14 +99,31 @@ namespace Olfactory2Ch.Tests.Comparison
                 Debug.WriteLine($"[DMS] marker error: {ex}");
             }
 
-            PrintResponse("start scan", await _comunicator.StartScan());
+            try
+            {
+                PrintResponse("start scan", await _comunicator.StartScan());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] scan start error: {ex}");
+                _scanStartError = "Failed to start a new scan";
+            }
         }
 
-        public void SaveScan()
+        public string SaveScan()
         {
             if (!_isActive)
             {
-                return;
+                return null;
+            }
+
+            string error = null;
+
+            if (_scanStartError != null)
+            {
+                error = _scanStartError;
+                _scanStartError = null;
+                return error;
             }
 
             Task.Run(async () =>
@@ -112,6 +142,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] waiting error: {ex}");
+                    error = "Failed to finilize waiting for completing the scan";
                     return;
                 }
 
@@ -125,6 +156,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] data retrieval error: {ex}");
+                    error = "Failed to retrieve the scan result";
                     return;
                 }
 
@@ -142,10 +174,13 @@ namespace Olfactory2Ch.Tests.Comparison
                     catch (Exception ex)
                     {
                         Debug.WriteLine($"[DMS] saving data error: {ex}");
+                        error = "Failed to save the scan result";
                     }
                 }
                 await Task.Delay(300);
             }).Wait();
+
+            return error;
         }
 
         // Internal
@@ -164,6 +199,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         Settings _settings;
         bool _isActive;
+        string _scanStartError = null;
 
         private void PrintResponse<T>(string request, API.Response<T> response)
         {

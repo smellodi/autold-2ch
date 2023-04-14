@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Threading;
 using Olfactory2Ch.Tests.Comparison;
 
@@ -23,6 +24,7 @@ namespace Olfactory2Ch.Pages.Comparison
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
             _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => SaveScanResults());
             _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
+            _procedure.DNSError += (s, description) => Dispatcher.Invoke(() => DisplayDNSError(description));
         }
 
         public void Init(Settings settings)
@@ -91,6 +93,25 @@ namespace Olfactory2Ch.Pages.Comparison
             {
                 Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
             }
+        }
+
+        private void DisplayDNSError(string error)
+        {
+            var margin = new Thickness(0, 2, 0, 2);
+            var padding = new Thickness(32, 6, 32, 6);
+            var colorError = new SolidColorBrush(Color.FromRgb(0xff, 0xc8, 0xc0));
+
+            var lblMsg = new Label()
+            {
+                Content = error,
+                Padding = padding,
+                Margin = margin,
+                //HorizontalContentAlignment = HorizontalAlignment.Center,
+                Background = colorError
+            };
+
+            stpDMSErrors.Children.Add(lblMsg);
+            scvDMSErrors.ScrollToEnd();
         }
 
 

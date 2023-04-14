@@ -51,6 +51,7 @@ namespace Olfactory2Ch.Tests.Comparison
         public event EventHandler<double> Data;
         public event EventHandler<Stage> StageChanged;
         public event EventHandler RequestAnswer;
+        public event EventHandler<string> DNSError;
         /// <summary>
         /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
         /// </summary>
@@ -129,7 +130,11 @@ namespace Olfactory2Ch.Tests.Comparison
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
             }
 
-            _dms.Init(_settings);
+            var error = _dms.Init(_settings);
+            if (error != null)
+            {
+                DNSError?.Invoke(this, error);
+            }
 
             Next();
         }
@@ -262,7 +267,13 @@ namespace Olfactory2Ch.Tests.Comparison
 
         private void StopOdorFlow()
         {
-            _dms.SaveScan();
+            var error = _dms.SaveScan();
+            if (error != null)
+            {
+                var step = _settings.PairsOfMixtures[_step];
+                var info = _mixtureID == MixtureID.First ? step.Mix1 : step.Mix2;
+                DNSError?.Invoke(this, $"[{_step + 1}.{(int)_mixtureID}] {info}: {error}");
+            }
 
             if (_mfc.OdorDirection != MFC.ValvesOpened.None)
             {

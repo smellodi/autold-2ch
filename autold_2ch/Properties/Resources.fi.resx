@@ -409,7 +409,7 @@
 		<value>Vertailu</value>
 	</data>
 	<data name="InstructionToEnterMixtures" xml:space="preserve">
-		<value>Jokainen rivi sisältää parin "Haju1", "Haju2" tai "MixNN" (NN = 1...99) pilkulla erotettuna</value>
+		<value>Jokainen rivi sisältää parin "Haju1", "Haju2" tai "MixNN" (NN = 01...99) pilkulla erotettuna</value>
 	</data>
 	<data name="PairsOfMixtures" xml:space="preserve">
 		<value>Seosparit</value>

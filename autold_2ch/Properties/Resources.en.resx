@@ -409,7 +409,7 @@
 		<value>Comparison</value>
 	</data>
 	<data name="InstructionToEnterMixtures" xml:space="preserve">
-		<value>Each line contains a pair of "Odor1", "Odor2" or "MixNN" (NN = 1..99) separated by comma</value>
+		<value>Each line contains a pair of "Odor1", "Odor2" or "MixNN" (NN = 01..99) separated by comma</value>
 	</data>
 	<data name="PairsOfMixtures" xml:space="preserve">
 		<value>Pairs of mixtures</value>
