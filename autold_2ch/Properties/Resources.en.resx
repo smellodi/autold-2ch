@@ -492,4 +492,46 @@
 	<data name="PIDSampling" xml:space="preserve">
 		<value>PID sampling</value>
 	</data>
+	<data name="DMSConnecting" xml:space="preserve">
+		<value>Connecting...</value>
+	</data>
+	<data name="Wait" xml:space="preserve">
+		<value>Initializing the DMS</value>
+	</data>
+	<data name="DMSSettingProject" xml:space="preserve">
+		<value>Loading the project...</value>
+	</data>
+	<data name="DMSSettingParameter" xml:space="preserve">
+		<value>Loading the parameter...</value>
+	</data>
+	<data name="DMSLoadingParameter" xml:space="preserve">
+		<value>Waiting for the system to the ready...</value>
+	</data>
+	<data name="DMSReady" xml:space="preserve">
+		<value>DMS is ready now</value>
+	</data>
+	<data name="DMSErrorInstruction" xml:space="preserve">
+		<value>Please close the app and start the procedure again</value>
+	</data>
+	<data name="DMSErrorCannotConnect" xml:space="preserve">
+		<value>Cannot connect to DMS</value>
+	</data>
+	<data name="DMSErrorProject" xml:space="preserve">
+		<value>Failed to set the scan project</value>
+	</data>
+	<data name="DMSErrorParameter" xml:space="preserve">
+		<value>Failed to set the scan parameter</value>
+	</data>
+	<data name="DMSErrorStartScan" xml:space="preserve">
+		<value>Failed to start a new scan</value>
+	</data>
+	<data name="DMSErrorScanWait" xml:space="preserve">
+		<value>Failed to finilize waiting for completing the scan</value>
+	</data>
+	<data name="DMSErrorScanResult" xml:space="preserve">
+		<value>Failed to retrieve the scan result</value>
+	</data>
+	<data name="DMSErrorScanSave" xml:space="preserve">
+		<value>Failed to save the scan result</value>
+	</data>
 </root>

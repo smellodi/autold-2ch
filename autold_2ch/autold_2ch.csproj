@@ -21,6 +21,7 @@
     <None Remove="Assets\images\information.png" />
     <None Remove="Assets\images\pen.png" />
     <None Remove="Assets\images\question.png" />
+    <None Remove="Assets\images\wait.gif" />
     <None Remove="Assets\main.png" />
   </ItemGroup>
 
@@ -30,10 +31,12 @@
     <PackageReference Include="System.IO.Ports" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.1" />
     <PackageReference Include="System.Text.Json" Version="7.0.2" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
     <PackageReference Include="WPFLocalizeExtension" Version="3.10.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\images\wait.gif" />
     <Resource Include="Properties\BuildCode.txt" />
     <Resource Include="Assets\icons\main.png" />
     <Resource Include="Assets\icons\monitor.png" />
@@ -101,6 +104,9 @@
   <ItemGroup>
     <Page Update="Pages\Comparison\GasPresenter.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pages\Comparison\Wait.xaml">
+      <SubType>Designer</SubType>
     </Page>
     <Page Update="Pages\Comparison\Production.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>

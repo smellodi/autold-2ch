@@ -13,7 +13,9 @@ namespace Olfactory2Ch.Tests.Comparison
 {
     internal class DMS
     {
-        public DMS()
+        public static DMS Instance => _instance ??= new();
+
+        private DMS()
         {
             var logFolder = Properties.Settings.Default.Logger_Folder;
             _folder = string.IsNullOrEmpty(logFolder) 
@@ -27,7 +29,7 @@ namespace Olfactory2Ch.Tests.Comparison
             }
         }
 
-        public string Init(Settings settings)
+        public async Task<string> Init(Settings settings)
         {
             _settings = settings;
             _isActive = settings.Sniffer == GasSniffer.DMS;
@@ -43,38 +45,67 @@ namespace Olfactory2Ch.Tests.Comparison
 
             _eventLogger.Add(LogSource.Comparison, "DMS", "folder", subfolder);
 
-            string error = null;
-
-            Task.Run(async () =>
+            try
             {
-                _isActive = await _comunicator.CheckConnection();
-                if (!_isActive)
-                {
-                    SystemSounds.Exclamation.Play();
-                    error = "Cannot connect to DMS";
-                    return;
-                }
+                await _comunicator.SetSettingsClock();
+                _isActive = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] set clock error: {ex}");
+            }
 
-                if (_isActive)
-                {
-                    try
-                    {
-                        await Task.Delay(INTER_REQUEST_PAUSE);
-                        PrintResponse("set project", await _comunicator.SetProject());
-                        await Task.Delay(INTER_REQUEST_PAUSE);
-                        PrintResponse("set param", await _comunicator.SetParameter());
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"[DMS] project/parameter set error: {ex}");
-                        error = "Failed to set th escan project or parameter";
-                    }
-                }
-            }).Wait();
+            if (!_isActive)
+            {
+                SystemSounds.Exclamation.Play();
+                return L10n.T("DMSErrorCannotConnect");
+            }
 
-            return error;
+            return null;
         }
-        
+
+        public async Task<string> SetProject()
+        {
+            if (!_isActive)
+            {
+                return null;
+            }
+
+            try
+            {
+                await Task.Delay(INTER_REQUEST_PAUSE);
+                PrintResponse("set project", await _comunicator.SetProject());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] project set error: {ex}");
+                return L10n.T("DMSErrorProject");
+            }
+
+            return null;
+        }
+
+        public async Task<string> SetParams()
+        {
+            if (!_isActive)
+            {
+                return null;
+            }
+
+            try
+            {
+                await Task.Delay(INTER_REQUEST_PAUSE);
+                PrintResponse("set param", await _comunicator.SetParameter());
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] parameter set error: {ex}");
+                return L10n.T("DMSErrorParameter");
+            }
+
+            return null;
+        }
+
         public async void StartScan(MixturePair pair, MixtureID mixtureID)
         {
             if (!_isActive)
@@ -112,7 +143,7 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             {
                 Debug.WriteLine($"[DMS] scan start error: {ex}");
-                _scanStartError = "Failed to start a new scan";
+                _scanStartError = L10n.T("DMSErrorScanStart");
             }
         }
 
@@ -147,7 +178,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] waiting error: {ex}");
-                    error = "Failed to finilize waiting for completing the scan";
+                    error = L10n.T("DMSErrorScanWait");
                     return;
                 }
 
@@ -162,7 +193,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] data retrieval error: {ex}");
-                    error = "Failed to retrieve the scan result";
+                    error = L10n.T("DMSErrorScanResult");
                     return;
                 }
 
@@ -180,7 +211,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     catch (Exception ex)
                     {
                         Debug.WriteLine($"[DMS] saving data error: {ex}");
-                        error = "Failed to save the scan result";
+                        error = L10n.T("DMSErrorScanSave");
                     }
                 }
             }).Wait();
@@ -194,6 +225,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         const int INTER_REQUEST_PAUSE = 150;
 
+        static DMS _instance;
 
         static DMS()
         {

@@ -131,12 +131,6 @@ namespace Olfactory2Ch.Tests.Comparison
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
             }
 
-            var error = _dms.Init(_settings);
-            if (error != null)
-            {
-                DNSError?.Invoke(this, error);
-            }
-
             Next();
         }
 
@@ -207,7 +201,7 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly CommMonitor _monitor = CommMonitor.Instance;
         readonly System.Timers.Timer _timer = new();
         readonly Dispatcher _dispatcher;
-        readonly DMS _dms = new();
+        readonly DMS _dms = DMS.Instance;
 
         Settings _settings;
         Comparison.Stage _stage;

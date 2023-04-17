@@ -19,13 +19,32 @@ namespace Olfactory2Ch.Tests.Comparison
             _setupPage.Next += (s, e) =>
             {
                 _settings = e;
+
+                if (_settings.Sniffer == GasSniffer.DMS)
+                {
+                    _waitPage = new();
+                    _waitPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                    
+                    _gasPresenterPage = new();
+                    _gasPresenterPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                }
+                else
+                {
+                    _productionPracticePage = new(Stage.Practice);
+                    _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+
+                    _productionTestPage = new(Stage.Test);
+                    _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+
+                    _pausePage = new();
+                    _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+
+                    _vnaPage = new();
+                    _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                }
+
                 PageDone?.Invoke(this, new PageDoneEventArgs(_settings != null));
             };
-            _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            _gasPresenterPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-            _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
         }
 
         public Page NextPage(object param = null)
@@ -38,7 +57,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 Setup _ => _settings.Sniffer switch
                 {
                     GasSniffer.Human => _productionPracticePage,
-                    GasSniffer.DMS => _gasPresenterPage,
+                    GasSniffer.DMS => _waitPage,
                     _ => throw new NotImplementedException($"Unhandled sniffer in {Name}"),
                 },
                 Production prod =>
@@ -48,6 +67,7 @@ namespace Olfactory2Ch.Tests.Comparison
                         Stage.Test => _vnaPage,
                         _ => throw new NotImplementedException($"Unhandled production stage in {Name}"),
                     },
+                Wait _ => _gasPresenterPage,
                 GasPresenter _ => null,
                 Pause _ => _productionTestPage,
                 VnA _ => null,
@@ -61,6 +81,10 @@ namespace Olfactory2Ch.Tests.Comparison
             else if (_current is Pause pausePage)
             {
                 pausePage.Init(_settings, (previousPage as Production).Results);
+            }
+            else if (_current is Wait waitPage)
+            {
+                waitPage.Init(_settings);
             }
             else if (_current is GasPresenter gasPresenterPage)
             {
@@ -97,11 +121,12 @@ namespace Olfactory2Ch.Tests.Comparison
         // Internal
 
         readonly Setup _setupPage = new();
-        readonly Production _productionPracticePage = new(Stage.Practice);
-        readonly Production _productionTestPage = new(Stage.Test);
-        readonly GasPresenter _gasPresenterPage = new();
-        readonly Pause _pausePage = new();
-        readonly VnA _vnaPage = new();
+        Wait _waitPage;
+        GasPresenter _gasPresenterPage;
+        Production _productionPracticePage;
+        Production _productionTestPage;
+        Pause _pausePage;
+        VnA _vnaPage;
 
         Page _current = null;
 

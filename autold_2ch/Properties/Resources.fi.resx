@@ -492,4 +492,46 @@
 	<data name="PIDSampling" xml:space="preserve">
 		<value>PID-näytteenotto</value>
 	</data>
+	<data name="DMSErrorCannotConnect" xml:space="preserve">
+		<value>Ei voi muodostaa yhteyttä DMS:ään</value>
+	</data>
+	<data name="DMSErrorProject" xml:space="preserve">
+		<value>Skannausprojektin asettaminen epäonnistui</value>
+	</data>
+	<data name="DMSErrorParameter" xml:space="preserve">
+		<value>Skannausparametrin asettaminen epäonnistui</value>
+	</data>
+	<data name="DMSErrorStartScan" xml:space="preserve">
+		<value>Uuden skannauksen aloittaminen epäonnistui</value>
+	</data>
+	<data name="DMSErrorScanWait" xml:space="preserve">
+		<value>Skannauksen valmistumisen odottamisen viimeistely epäonnistui</value>
+	</data>
+	<data name="DMSErrorScanResult" xml:space="preserve">
+		<value>Skannaustuloksen hakeminen epäonnistui</value>
+	</data>
+	<data name="DMSErrorScanSave" xml:space="preserve">
+		<value>Skannaustuloksen tallentaminen epäonnistui</value>
+	</data>
+	<data name="DMSConnecting" xml:space="preserve">
+		<value>Yhdistetään...</value>
+	</data>
+	<data name="Wait" xml:space="preserve">
+		<value>DMS:n alustus</value>
+	</data>
+	<data name="DMSSettingProject" xml:space="preserve">
+		<value>Ladataan projektia...</value>
+	</data>
+	<data name="DMSSettingParameter" xml:space="preserve">
+		<value>Ladataan parametria...</value>
+	</data>
+	<data name="DMSLoadingParameter" xml:space="preserve">
+		<value>Odotetaan järjestelmän valmistumista...</value>
+	</data>
+	<data name="DMSReady" xml:space="preserve">
+		<value>DMS on nyt valmis</value>
+	</data>
+	<data name="DMSErrorInstruction" xml:space="preserve">
+		<value>Sulje sovellus ja aloita toimenpide uudelleen.</value>
+	</data>
 </root>

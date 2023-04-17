@@ -114,8 +114,7 @@
                                      MinLines="5"
                                      MaxLines="8"
                                      VerticalContentAlignment="Top"
-                                     Text="Odor1, Odor2"
-                                     ToolTip="{lex:Loc CommaSeparatedValues}"/>
+                                     Text="Odor1, Odor2"/>
                         </UserControl>
                         <UserControl Style="{StaticResource ValueWithUnit}">
                             <TextBlock TextWrapping="Wrap"
