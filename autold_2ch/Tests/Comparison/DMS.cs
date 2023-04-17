@@ -15,6 +15,12 @@ namespace Olfactory2Ch.Tests.Comparison
     {
         public DMS()
         {
+            var logFolder = Properties.Settings.Default.Logger_Folder;
+            _folder = string.IsNullOrEmpty(logFolder) 
+                ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+                : logFolder;
+            _folder = Path.Combine(_folder, "dms");
+
             if (!Directory.Exists(_folder))
             {
                 Directory.CreateDirectory(_folder);
@@ -53,9 +59,9 @@ namespace Olfactory2Ch.Tests.Comparison
                 {
                     try
                     {
-                        await Task.Delay(300);
+                        await Task.Delay(INTER_REQUEST_PAUSE);
                         PrintResponse("set project", await _comunicator.SetProject());
-                        await Task.Delay(300);
+                        await Task.Delay(INTER_REQUEST_PAUSE);
                         PrintResponse("set param", await _comunicator.SetParameter());
                     }
                     catch (Exception ex)
@@ -92,7 +98,6 @@ namespace Olfactory2Ch.Tests.Comparison
                     $"set scan marker '{comment}'",
                     await _comunicator.SetScanResultComment(new Comment(comment))
                 );
-                await Task.Delay(300);
             }
             catch (Exception ex)
             {
@@ -101,6 +106,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
             try
             {
+                await Task.Delay(INTER_REQUEST_PAUSE);
                 PrintResponse("start scan", await _comunicator.StartScan());
             }
             catch (Exception ex)
@@ -137,7 +143,6 @@ namespace Olfactory2Ch.Tests.Comparison
                         PrintResponse("scan progress", res);
                         await Task.Delay(1000);
                     }
-                    await Task.Delay(300);
                 }
                 catch (Exception ex)
                 {
@@ -150,6 +155,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 API.Response<ScanResult> dataRetrievalResult = null;
                 try
                 {
+                    await Task.Delay(INTER_REQUEST_PAUSE);
                     dataRetrievalResult = await _comunicator.GetScanResult();
                     PrintResponse("get scan", dataRetrievalResult);
                 }
@@ -177,7 +183,6 @@ namespace Olfactory2Ch.Tests.Comparison
                         error = "Failed to save the scan result";
                     }
                 }
-                await Task.Delay(300);
             }).Wait();
 
             return error;
@@ -185,7 +190,10 @@ namespace Olfactory2Ch.Tests.Comparison
 
         // Internal
 
-        static string IonVisionSettingsFilename = "Properties/IonVision.json";
+        static readonly string IonVisionSettingsFilename = "Properties/IonVision.json";
+
+        const int INTER_REQUEST_PAUSE = 150;
+
 
         static DMS()
         {
@@ -195,13 +203,13 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly Communicator _comunicator = new(IonVisionSettingsFilename, Storage.Instance.IsDebugging);
         readonly FlowLogger _eventLogger = FlowLogger.Instance;
 
-        string _folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\scan" ;
+        string _folder;
 
         Settings _settings;
         bool _isActive;
         string _scanStartError = null;
 
-        private void PrintResponse<T>(string request, API.Response<T> response)
+        private static void PrintResponse<T>(string request, API.Response<T> response)
         {
             if (response.Value is Confirm confirm)
             {

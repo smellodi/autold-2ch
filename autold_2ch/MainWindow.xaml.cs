@@ -27,7 +27,7 @@ namespace Olfactory2Ch
             LocalizeDictionary.Instance.OutputMissingKeys = true;
             LocalizeDictionary.Instance.MissingKeyEvent += (s, e) => e.MissingKeyResult = $"[MISSING] {e.Key}";
 
-            Title = $"{App.Name} v{App.Version} [build {Properties.Resources.BuildCode.Trim()}]";
+            Title = $"{App.Name} v{App.Version} [build {Properties.Resources.BuildCode.Trim().Replace(' ', '0')}]";
 
             _monitor = new CommMonitor();
             _monitor.Hide();

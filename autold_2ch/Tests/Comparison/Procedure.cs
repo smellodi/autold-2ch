@@ -52,6 +52,7 @@ namespace Olfactory2Ch.Tests.Comparison
         public event EventHandler<Stage> StageChanged;
         public event EventHandler RequestAnswer;
         public event EventHandler<string> DNSError;
+        
         /// <summary>
         /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
         /// </summary>
@@ -197,6 +198,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         const double UPDATE_INTERVAL_IN_SECONDS = 0.5;
         const double EXPECTED_PID_REDUCTION = 0.85;     // must be < 0.9
+        const int DMS_SCAN_DELAY = 500;
 
         readonly MFC _mfc = MFC.Instance;
         readonly PID _pid = PID.Instance;
@@ -259,7 +261,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     (pulse.Channel2?.Valve ?? MFC.ValvesOpened.None);
                 _mfc.OdorDirection = valves;
 
-                Task.Delay(500).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                Task.Delay(DMS_SCAN_DELAY).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
 
                 StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
             }
@@ -336,7 +338,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     _pulseController.Run();
 
                     var pair = _settings.PairsOfMixtures[_step];
-                    Task.Delay(500).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                    Task.Delay(DMS_SCAN_DELAY).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
 
                     StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
                 }
