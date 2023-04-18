@@ -534,4 +534,7 @@
 	<data name="DMSErrorInstruction" xml:space="preserve">
 		<value>Sulje sovellus ja aloita toimenpide uudelleen.</value>
 	</data>
+	<data name="RandomizeOrder" xml:space="preserve">
+		<value>satunnaista järjestystä</value>
+	</data>
 </root>

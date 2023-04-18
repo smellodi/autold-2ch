@@ -65,7 +65,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
 
         public void EmulationFinilize()
         {
-            _step = _settings.Pulses.Length - 1;
+            _step = _pulses.Length - 1;
         }
 
         public void Start(Settings settings)
@@ -94,16 +94,22 @@ namespace Olfactory2Ch.Tests.OdorProduction
 
             _logger.Start(_settings.PIDReadingInterval);
 
+            _pulses = _settings.Pulses;
+            if (_settings.RandomizeOrder)
+            {
+                new Random().Shuffle(_pulses);
+            }
+
             Next();
         }
 
         public void Next()
         {
-            var pulse = _settings.Pulses[_step];
+            var pulse = _pulses[_step];
 
             _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
-            _runner = Utils.DispatchOnce
+            _runner = DispatchOnce
                 .Do(0.1, () =>
                 {
                     _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
@@ -137,6 +143,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
         Settings _settings;
 
         int _step = 0;
+        Pulse[] _pulses = null;
 
         DispatchOnce _runner;
         PulsesController _pulseController;
@@ -144,7 +151,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
 
         private void StartOdorFlow()
         {
-            var pulse = _settings.Pulses[_step];
+            var pulse = _pulses[_step];
             _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
             _pulseController.PulseStateChanged += PulseStateChanged;
             _pulseController.Run();
@@ -166,7 +173,7 @@ namespace Olfactory2Ch.Tests.OdorProduction
         {
             _runner = null;
 
-            var noMoreTrials = ++_step >= _settings.Pulses.Length;
+            var noMoreTrials = ++_step >= _pulses.Length;
             if (noMoreTrials)
             {
                 Stop();

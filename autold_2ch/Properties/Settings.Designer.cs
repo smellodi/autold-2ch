@@ -454,5 +454,17 @@ namespace Olfactory2Ch.Properties {
                 this["Test_CMP_Sniffer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Test_OP_RandomizeOrder {
+            get {
+                return ((bool)(this["Test_OP_RandomizeOrder"]));
+            }
+            set {
+                this["Test_OP_RandomizeOrder"] = value;
+            }
+        }
     }
 }

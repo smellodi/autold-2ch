@@ -27,6 +27,7 @@ namespace Olfactory2Ch.Pages.OdorProduction
             txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
             chkUseValveControllerTimer.IsChecked = _settings.UseValveTimer;
             chkManualFlowStop.IsChecked = _settings.ManualFlowStop;
+            chkRandomizeOrder.IsChecked = _settings.RandomizeOrder;
         }
 
         public void EmulationInit() { }
@@ -116,6 +117,7 @@ namespace Olfactory2Ch.Pages.OdorProduction
                 _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
                 _settings.UseValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
                 _settings.ManualFlowStop = chkManualFlowStop.IsChecked ?? false;
+                _settings.RandomizeOrder = chkRandomizeOrder.IsChecked ?? false;
 
                 _settings.Save();
 

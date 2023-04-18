@@ -96,7 +96,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         public void EmulationFinilize()
         {
-            _step = _settings.PairsOfMixtures.Length - 1;
+            _step = _pairsOfMixtures.Length - 1;
         }
 
         public void Start(Settings settings, Comparison.Stage stage)
@@ -131,12 +131,20 @@ namespace Olfactory2Ch.Tests.Comparison
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
             }
 
+            _pairsOfMixtures = _settings.PairsOfMixtures;
+
+            if (_settings.Sniffer == GasSniffer.Human)
+            {
+                var random = new Random();
+                random.Shuffle(_pairsOfMixtures);
+            }
+
             Next();
         }
 
         public void Next()
         {
-            var pair = _settings.PairsOfMixtures[_step];
+            var pair = _pairsOfMixtures[_step];
 
             //_dataLogger.Add(pair.ToString());
             _testLogger.Add(LogSource.Comparison, "trial", "pair", pair.ToString());
@@ -169,7 +177,7 @@ namespace Olfactory2Ch.Tests.Comparison
             //_dataLogger.Add($"A={answer}");
             _testLogger.Add(LogSource.Comparison, "trial", "answer", answer.ToString());
 
-            var pair = _settings.PairsOfMixtures[_step];
+            var pair = _pairsOfMixtures[_step];
             Results.Add((pair, answer));
 
             Finilize();
@@ -207,6 +215,7 @@ namespace Olfactory2Ch.Tests.Comparison
         Comparison.Stage _stage;
 
         int _step = 0;
+        MixturePair[] _pairsOfMixtures = null;
         MixtureID _mixtureID = MixtureID.None;
         double _PIDThreshold = 0;
 
@@ -216,7 +225,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         private void PrepareOdors(int mixID)
         {
-            var pair = _settings.PairsOfMixtures[_step];
+            var pair = _pairsOfMixtures[_step];
             var pulse = _stage == Comparison.Stage.Test
                 ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
                 : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
@@ -229,7 +238,7 @@ namespace Olfactory2Ch.Tests.Comparison
         {
             _mixtureID = NextMixtureID();
 
-            var pair = _settings.PairsOfMixtures[_step];
+            var pair = _pairsOfMixtures[_step];
             var pulse = _stage == Comparison.Stage.Test
                 ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
                 : GasMixer.ToPulse(pair, mixID, _settings.PracticeOdorFlow, _settings.OdorFlowDurationMs);
@@ -266,7 +275,7 @@ namespace Olfactory2Ch.Tests.Comparison
             var error = _dms.SaveScan();
             if (error != null)
             {
-                var step = _settings.PairsOfMixtures[_step];
+                var step = _pairsOfMixtures[_step];
                 var info = _mixtureID == MixtureID.First ? step.Mix1 : step.Mix2;
                 DNSError?.Invoke(this, $"[{_step + 1}.{(int)_mixtureID}] {info}: {error}");
             }
@@ -285,7 +294,7 @@ namespace Olfactory2Ch.Tests.Comparison
             _runner = null;
             _mixtureID = MixtureID.None;
 
-            var noMoreTrials = ++_step >= _settings.PairsOfMixtures.Length;
+            var noMoreTrials = ++_step >= _pairsOfMixtures.Length;
             if (noMoreTrials)
             {
                 Stop();
@@ -331,7 +340,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     _PIDThreshold = 0;
                     _pulseController.Run();
 
-                    var pair = _settings.PairsOfMixtures[_step];
+                    var pair = _pairsOfMixtures[_step];
                     Task.Delay(DMS_SCAN_DELAY).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
 
                     StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));

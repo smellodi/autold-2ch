@@ -534,4 +534,7 @@
 	<data name="DMSErrorScanSave" xml:space="preserve">
 		<value>Failed to save the scan result</value>
 	</data>
+	<data name="RandomizeOrder" xml:space="preserve">
+		<value>randomize order</value>
+	</data>
 </root>

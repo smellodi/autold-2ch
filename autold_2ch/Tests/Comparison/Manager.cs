@@ -20,27 +20,30 @@ namespace Olfactory2Ch.Tests.Comparison
             {
                 _settings = e;
 
-                if (_settings.Sniffer == GasSniffer.DMS)
+                if (_settings != null)
                 {
-                    _waitPage = new();
-                    _waitPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-                    
-                    _gasPresenterPage = new();
-                    _gasPresenterPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
-                }
-                else
-                {
-                    _productionPracticePage = new(Stage.Practice);
-                    _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                    if (_settings.Sniffer == GasSniffer.DMS)
+                    {
+                        _waitPage = new();
+                        _waitPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
 
-                    _productionTestPage = new(Stage.Test);
-                    _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                        _gasPresenterPage = new();
+                        _gasPresenterPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                    }
+                    else
+                    {
+                        _productionPracticePage = new(Stage.Practice);
+                        _productionPracticePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
 
-                    _pausePage = new();
-                    _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                        _productionTestPage = new(Stage.Test);
+                        _productionTestPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
 
-                    _vnaPage = new();
-                    _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                        _pausePage = new();
+                        _pausePage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+
+                        _vnaPage = new();
+                        _vnaPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
+                    }
                 }
 
                 PageDone?.Invoke(this, new PageDoneEventArgs(_settings != null));

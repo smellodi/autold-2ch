@@ -110,5 +110,8 @@
     <Setting Name="Test_CMP_Sniffer" Type="System.String" Scope="User">
       <Value Profile="(Default)">Human</Value>
     </Setting>
+    <Setting Name="Test_OP_RandomizeOrder" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
