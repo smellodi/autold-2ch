@@ -12,7 +12,7 @@ using IndicatorDataSource = Olfactory2Ch.Controls.ChannelIndicator.DataSource;
 
 namespace Olfactory2Ch.Pages
 {
-    public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged
+    public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, IDisposable
     {
         public event EventHandler<Tests.Test> Next;
         public event PropertyChangedEventHandler PropertyChanged;
@@ -111,6 +111,14 @@ namespace Olfactory2Ch.Pages
             });
 
             UpdateUI();
+        }
+
+        public void Dispose()
+        {
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
+            Task.Delay(300).Wait();
         }
 
 
@@ -309,7 +317,7 @@ namespace Olfactory2Ch.Pages
                 var updateInterval = dataSource switch
                 {
                     IndicatorDataSource.CleanAir or IndicatorDataSource.ScentedAir1 or IndicatorDataSource.ScentedAir2 => MFC_UPDATE_INTERVAL,
-                    IndicatorDataSource.Loop or IndicatorDataSource.PID => PID_UPDATE_INTERVAL,
+                    IndicatorDataSource.Temp or IndicatorDataSource.PID => PID_UPDATE_INTERVAL,
                     _ => throw new NotImplementedException($"Data source {dataSource} is now supported")
                 };
                 lmsGraph.Reset(updateInterval, baseValue);
@@ -330,11 +338,11 @@ namespace Olfactory2Ch.Pages
 
         private void UpdateIndicators(PIDSample sample)
         {
-            chiPIDTemp.Value = sample.Loop;
+            chiPIDTemp.Value = sample.Temperature;
             chiPIDVoltage.Value = sample.PID;
 
             double timestamp = 0.001 * sample.Time;
-            UpdateGraph(IndicatorDataSource.Loop, timestamp, sample.Loop);
+            UpdateGraph(IndicatorDataSource.Temp, timestamp, sample.Temperature);
             UpdateGraph(IndicatorDataSource.PID, timestamp, sample.PID);
         }
 
@@ -347,7 +355,7 @@ namespace Olfactory2Ch.Pages
 
         private void ResetIndicatorGraphValue(PIDSample? sample)
         {
-            ResetGraph(IndicatorDataSource.Loop, sample?.Loop ?? 0);
+            ResetGraph(IndicatorDataSource.Temp, sample?.Temperature ?? 0);
             ResetGraph(IndicatorDataSource.PID, sample?.PID ?? 0);
         }
 

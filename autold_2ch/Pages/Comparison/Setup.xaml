@@ -8,9 +8,11 @@
       lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="650" d:DesignWidth="600"
+      d:DesignHeight="750" d:DesignWidth="600"
       Title="{lex:Loc Setup}">
-
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="bool2vis"/>
+    </Page.Resources>
     <Grid>
         <Grid.LayoutTransform>
             <ScaleTransform x:Name="sctScale"/>
@@ -49,6 +51,42 @@
                     </UserControl>
                 </UserControl>
 
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc DMSSettings}"
+                             Visibility="{Binding IsDMSSniffer, Converter={StaticResource bool2vis}}">
+                    <UserControl Style="{StaticResource ValueWithUnit}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Content="IP"/>
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Content="{lex:Loc Project}"/>
+                            <Label Grid.Row="2" Grid.Column="0"
+                                   Content="{lex:Loc Parameter}"/>
+
+                            <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
+                                     LostFocus="txbDMSIP_LostFocus"/>
+                            <ComboBox x:Name="cmbDMSProject" Grid.Row="1" Grid.Column="1"
+                                      Margin="0,4,0,0"
+                                      VerticalContentAlignment="Center"
+                                      SelectionChanged="DMSProject_SelectionChanged"/>
+                            <ComboBox x:Name="cmbDMSParameter" Grid.Row="2" Grid.Column="1"
+                                      Margin="0,4,0,0"
+                                      VerticalContentAlignment="Center"
+                                      IsEnabled="False"
+                                      SelectionChanged="DMSParameter_SelectionChanged"/>
+                        </Grid>
+                    </UserControl>
+                </UserControl>
+
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
                     <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                         <TextBox x:Name="txbFreshAirFlow"
@@ -58,7 +96,7 @@
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}"
-                             IsEnabled="{Binding IsHumanSniffer}">
+                             Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
                     <StackPanel>
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
                             <TextBox x:Name="txbPracticeOdorFlow"
@@ -125,7 +163,7 @@
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}"
-                             IsEnabled="{Binding IsHumanSniffer}">
+                             Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
                     <CheckBox x:Name="chkWaitForPID"
                               Content="{lex:Loc WaitForPID}"/>
                 </UserControl>

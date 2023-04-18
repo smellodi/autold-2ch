@@ -537,4 +537,13 @@
 	<data name="RandomizeOrder" xml:space="preserve">
 		<value>satunnaista järjestystä</value>
 	</data>
+	<data name="DMSSettings" xml:space="preserve">
+		<value>DMS asetukset</value>
+	</data>
+	<data name="Project" xml:space="preserve">
+		<value>Projektti</value>
+	</data>
+	<data name="Parameter" xml:space="preserve">
+		<value>Parametri</value>
+	</data>
 </root>

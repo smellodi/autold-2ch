@@ -199,6 +199,7 @@ namespace Olfactory2Ch
             if (!e.Cancel)
             {
                 _storage.Dispose();
+                _setupPage.Dispose();
 
                 var settings = Properties.Settings.Default;
                 settings.MainWindow_X = Left;

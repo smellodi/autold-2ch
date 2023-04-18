@@ -213,7 +213,7 @@ namespace Olfactory2Ch.Comm
                     // temp
                     var temp = new PID.BtoD
                     {
-                        f = 29f
+                        f = 25f + (float)e(0.05)
                     };
                     buffer[19] = temp.B1;
                     buffer[20] = temp.B0;

@@ -437,11 +437,11 @@ namespace Olfactory2Ch.Comm
             sample.PID_PPM = responseScaled.RegsPID.f;
             sample.Input = responseScaled.Regs10VRef.f;
             sample.Light = responseScaled.RegsLight.f;
-            sample.Temperature = responseScaled.RegsRTD.f;
+            sample.Temperature = responseScaled.RegsTemp.f;
 
             return Error.Success;
         }
-
+        
         /// <summary>
         /// Send a query to the PID SDK board.
         /// 

@@ -10,7 +10,7 @@
       lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
       lex:ResxLocalizationProvider.DefaultDictionary="Resources"
       mc:Ignorable="d" 
-      d:DesignHeight="520" d:DesignWidth="1000"
+      d:DesignHeight="540" d:DesignWidth="1000"
       Title="{lex:Loc Setup}"
       Focusable="True"
       KeyDown="Page_KeyDown"
@@ -255,7 +255,7 @@
                                             Units="C"
                                             Precision="2"
                                             Value="0.0"
-                                            Source="Loop"
+                                            Source="Temp"
                                             Tag="PID"
                                             MouseDown="ChannelIndicator_MouseDown"/>
                     <local:ChannelIndicator x:Name="chiPIDVoltage"

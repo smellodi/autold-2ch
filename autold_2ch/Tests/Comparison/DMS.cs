@@ -15,6 +15,10 @@ namespace Olfactory2Ch.Tests.Comparison
     {
         public static DMS Instance => _instance ??= new();
 
+        public static DMS Recreate() => _instance = new DMS();
+
+        public Smop.IonVision.Settings Settings => _comunicator.Settings;
+
         private DMS()
         {
             var logFolder = Properties.Settings.Default.Logger_Folder;
@@ -26,6 +30,52 @@ namespace Olfactory2Ch.Tests.Comparison
             if (!Directory.Exists(_folder))
             {
                 Directory.CreateDirectory(_folder);
+            }
+        }
+
+        public string[] GetProjects()
+        {
+            Task.Delay(150).Wait();
+
+            try
+            {
+                var task = _comunicator.GetProjects();
+                task.Wait();
+
+                if (!task.Result.Success)
+                {
+                    throw new Exception(task.Result.Error);
+                }
+
+                return task.Result.Value;
+            }
+            catch (Exception ex)
+            { 
+                Debug.WriteLine($"[DMS] get projects error: {ex}");
+                return new string[] { };
+            }
+        }
+
+        public Parameter[] GetProjectParameters(string projectName)
+        {
+            Task.Delay(150).Wait();
+
+            try
+            {
+                var task = _comunicator.GetProjectDefinition(new ProjectAsName(projectName));
+                task.Wait();
+
+                if (!task.Result.Success)
+                {
+                    throw new Exception(task.Result.Error);
+                }
+
+                return task.Result.Value.Parameters;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] get project parameters error: {ex}");
+                return new Parameter[] { };
             }
         }
 

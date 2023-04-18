@@ -10,6 +10,7 @@ namespace Olfactory2Ch.Utils
             string[] temp = s.Split(invalidChars, StringSplitOptions.RemoveEmptyEntries);
             return string.Join(replacement, temp);
         }
+        public static bool IsIP(this string s) => System.Net.IPAddress.TryParse(s, out _);
     }
 
     internal static class RandomExtensions

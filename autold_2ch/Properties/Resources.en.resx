@@ -537,4 +537,13 @@
 	<data name="RandomizeOrder" xml:space="preserve">
 		<value>randomize order</value>
 	</data>
+	<data name="DMSSettings" xml:space="preserve">
+		<value>DMS settings</value>
+	</data>
+	<data name="Project" xml:space="preserve">
+		<value>Project</value>
+	</data>
+	<data name="Parameter" xml:space="preserve">
+		<value>Parameter</value>
+	</data>
 </root>
