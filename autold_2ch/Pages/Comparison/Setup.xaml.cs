@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using Olfactory2Ch.Comm;
@@ -97,6 +99,33 @@ namespace Olfactory2Ch.Pages.Comparison
             return null;
         }
 
+        private void LoadDMSProps()
+        {
+            if (IsDMSSniffer)
+            {
+                txbDMSIP.Text = _dms.Settings.IP;
+                cmbDMSProject.ItemsSource = _dms.GetProjects();
+                cmbDMSProject.SelectedItem = _dms.Settings.Project;
+                btnStart.IsEnabled = cmbDMSParameter.SelectedItem != null;
+            }
+            else
+            {
+                btnStart.IsEnabled = true;
+            }
+        }
+
+        private void ApplyDMSIP(string newIP)
+        {
+            if (newIP.IsIP() && newIP != _dms.Settings.IP)
+            {
+                _dms.Settings.IP = newIP;
+                _dms.Settings.Save();
+                _dms = DMS.Recreate();
+
+                LoadDMSProps();
+            }
+        }
+
 
         // UI events
 
@@ -151,17 +180,7 @@ namespace Olfactory2Ch.Pages.Comparison
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHumanSniffer)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDMSSniffer)));
 
-            if (IsDMSSniffer)
-            {
-                txbDMSIP.Text = _dms.Settings.IP;
-                cmbDMSProject.ItemsSource = _dms.GetProjects();
-                cmbDMSProject.SelectedItem = _dms.Settings.Project;
-                btnStart.IsEnabled = cmbDMSParameter.SelectedItem != null;
-            }
-            else
-            {
-                btnStart.IsEnabled = true;
-            }
+            LoadDMSProps();
         }
 
         private void DMSProject_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -192,12 +211,14 @@ namespace Olfactory2Ch.Pages.Comparison
 
         private void txbDMSIP_LostFocus(object sender, RoutedEventArgs e)
         {
-            var newIP = txbDMSIP.Text;
-            if (newIP.IsIP() && newIP != _dms.Settings.IP)
+            ApplyDMSIP(txbDMSIP.Text);
+        }
+
+        private void txbDMSIP_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == System.Windows.Input.Key.Enter)
             {
-                _dms.Settings.IP = newIP;
-                _dms.Settings.Save();
-                _dms = DMS.Recreate();
+                ApplyDMSIP(txbDMSIP.Text);
             }
         }
     }

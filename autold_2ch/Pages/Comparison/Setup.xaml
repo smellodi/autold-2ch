@@ -66,13 +66,17 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0"
+                                   VerticalAlignment="Bottom"
                                    Content="IP"/>
                             <Label Grid.Row="1" Grid.Column="0"
+                                   VerticalAlignment="Bottom"
                                    Content="{lex:Loc Project}"/>
                             <Label Grid.Row="2" Grid.Column="0"
+                                   VerticalAlignment="Bottom"
                                    Content="{lex:Loc Parameter}"/>
 
                             <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
+                                     KeyUp="txbDMSIP_KeyUp"
                                      LostFocus="txbDMSIP_LostFocus"/>
                             <ComboBox x:Name="cmbDMSProject" Grid.Row="1" Grid.Column="1"
                                       Margin="0,4,0,0"
