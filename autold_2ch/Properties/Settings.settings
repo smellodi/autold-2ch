@@ -113,5 +113,8 @@
     <Setting Name="Test_OP_RandomizeOrder" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="Test_CMP_DMSSniffingDelay" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

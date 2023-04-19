@@ -200,7 +200,6 @@ namespace Olfactory2Ch.Tests.Comparison
 
         const double UPDATE_INTERVAL_IN_SECONDS = 0.5;
         const double EXPECTED_PID_REDUCTION = 0.85;     // must be < 0.9
-        const int DMS_SCAN_DELAY = 500;
 
         readonly MFC _mfc = MFC.Instance;
         readonly PID _pid = PID.Instance;
@@ -264,7 +263,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     (pulse.Channel2?.Valve ?? MFC.ValvesOpened.None);
                 _mfc.OdorDirection = valves;
 
-                Task.Delay(DMS_SCAN_DELAY).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
 
                 StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
             }
@@ -341,7 +340,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     _pulseController.Run();
 
                     var pair = _pairsOfMixtures[_step];
-                    Task.Delay(DMS_SCAN_DELAY).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                    Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
 
                     StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
                 }

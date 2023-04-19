@@ -67,6 +67,7 @@ namespace Olfactory2Ch.Tests.Comparison
         public double InitialPause;
         public double OdorFlowDuration;
         public bool WaitForPID;
+        public double DMSSniffingDelay;
         //public int PIDReadingInterval;
 
         public int OdorFlowDurationMs => (int)(OdorFlowDuration * 1000);
@@ -81,6 +82,7 @@ namespace Olfactory2Ch.Tests.Comparison
             { "pause", InitialPause.ToString() },
             { "flow", OdorFlowDuration.ToString() },
             { "use_pid", WaitForPID.ToString() },
+            { "dms_sniffing_delay", DMSSniffingDelay.ToString("F2") },
         };
 
         public Settings()
@@ -97,6 +99,7 @@ namespace Olfactory2Ch.Tests.Comparison
             InitialPause = settings.Test_CMP_InitialPause;
             OdorFlowDuration = settings.Test_CMP_OdorFlowDuration;
             WaitForPID = settings.Test_CMP_WaitForPID;
+            DMSSniffingDelay = settings.Test_CMP_DMSSniffingDelay;
             //PIDReadingInterval = settings.Test_OP_PIDReadingInterval;
         }
 
@@ -112,6 +115,7 @@ namespace Olfactory2Ch.Tests.Comparison
             settings.Test_CMP_InitialPause = InitialPause;
             settings.Test_CMP_OdorFlowDuration = OdorFlowDuration;
             settings.Test_CMP_WaitForPID = WaitForPID;
+            settings.Test_CMP_DMSSniffingDelay = DMSSniffingDelay;
             //settings.Test_OP_PIDReadingInterval = PIDReadingInterval;
 
             settings.Save();

@@ -546,4 +546,7 @@
 	<data name="Parameter" xml:space="preserve">
 		<value>Parameter</value>
 	</data>
+	<data name="SniffingDelay" xml:space="preserve">
+		<value>Scan delay</value>
+	</data>
 </root>

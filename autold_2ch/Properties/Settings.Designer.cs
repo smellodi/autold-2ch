@@ -466,5 +466,17 @@ namespace Olfactory2Ch.Properties {
                 this["Test_OP_RandomizeOrder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double Test_CMP_DMSSniffingDelay {
+            get {
+                return ((double)(this["Test_CMP_DMSSniffingDelay"]));
+            }
+            set {
+                this["Test_CMP_DMSSniffingDelay"] = value;
+            }
+        }
     }
 }

@@ -42,6 +42,7 @@ namespace Olfactory2Ch.Pages.Comparison
             txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
             txbPairsOfMixtures.Text = _settings.SerializeMixtures();
             chkWaitForPID.IsChecked = _settings.WaitForPID;
+            txbDMSSniffingDelay.Text = _settings.DMSSniffingDelay.ToString("F1");
             //txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
         }
 
@@ -86,6 +87,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 new Utils.Validation(txbTestOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorFlowDuration, 0.1, MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbDMSSniffingDelay, 0, 30, Utils.Validation.ValueFormat.Float),
                 //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
             };
 
@@ -150,6 +152,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
                 _settings.PairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);
                 _settings.WaitForPID = chkWaitForPID.IsChecked ?? false;
+                _settings.DMSSniffingDelay = double.Parse(txbDMSSniffingDelay.Text);
                 //_settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
                 _settings.Save();

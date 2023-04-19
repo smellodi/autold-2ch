@@ -63,6 +63,7 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0"
@@ -74,6 +75,9 @@
                             <Label Grid.Row="2" Grid.Column="0"
                                    VerticalAlignment="Bottom"
                                    Content="{lex:Loc Parameter}"/>
+                            <Label Grid.Row="3" Grid.Column="0"
+                                   VerticalAlignment="Bottom"
+                                   Content="{lex:Loc SniffingDelay}"/>
 
                             <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
                                      KeyUp="txbDMSIP_KeyUp"
@@ -87,6 +91,8 @@
                                       VerticalContentAlignment="Center"
                                       IsEnabled="False"
                                       SelectionChanged="DMSParameter_SelectionChanged"/>
+                            <TextBox x:Name="txbDMSSniffingDelay" Grid.Row="3" Grid.Column="1"
+                                     Margin="0,4,0,0"/>
                         </Grid>
                     </UserControl>
                 </UserControl>

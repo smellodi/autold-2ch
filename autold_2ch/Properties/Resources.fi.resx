@@ -546,4 +546,7 @@
 	<data name="Parameter" xml:space="preserve">
 		<value>Parametri</value>
 	</data>
+	<data name="SniffingDelay" xml:space="preserve">
+		<value>Skannauksen viive</value>
+	</data>
 </root>
