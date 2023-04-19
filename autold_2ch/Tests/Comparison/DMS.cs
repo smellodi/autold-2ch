@@ -61,7 +61,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
             try
             {
-                var result = await _comunicator.GetProjectDefinition(new ProjectAsName(projectName));
+                var result = await _comunicator.GetProjectDefinition(projectName);
 
                 if (!result.Success)
                 {
@@ -95,7 +95,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
             try
             {
-                await _comunicator.SetSettingsClock();
+                await _comunicator.SetClock();
                 _isActive = true;
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 {
                     throw new Exception(result.Error);
                 }
-                return result.Value.parameter.Name;
+                return result.Value.Parameter.Name;
             }
             catch (Exception ex)
             {
@@ -227,7 +227,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 var comment = string.Join(',', marker);
                 PrintResponse(
                     $"set scan marker '{comment}'",
-                    await _comunicator.SetScanResultComment(new Comment(comment))
+                    await _comunicator.SetScanResultComment(new Comments() { Text = comment })
                 );
             }
             catch (Exception ex)
