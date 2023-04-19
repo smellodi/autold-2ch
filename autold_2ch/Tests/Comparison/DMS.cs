@@ -33,21 +33,20 @@ namespace Olfactory2Ch.Tests.Comparison
             }
         }
 
-        public string[] GetProjects()
+        public async Task<string[]> GetProjects()
         {
-            Task.Delay(150).Wait();
+            await Task.Delay(150);
 
             try
             {
-                var task = _comunicator.GetProjects();
-                task.Wait();
+                var result = await _comunicator.GetProjects();
 
-                if (!task.Result.Success)
+                if (!result.Success)
                 {
-                    throw new Exception(task.Result.Error);
+                    throw new Exception(result.Error);
                 }
 
-                return task.Result.Value;
+                return result.Value;
             }
             catch (Exception ex)
             { 
@@ -56,21 +55,20 @@ namespace Olfactory2Ch.Tests.Comparison
             }
         }
 
-        public Parameter[] GetProjectParameters(string projectName)
+        public async Task<Parameter[]> GetProjectParameters(string projectName)
         {
-            Task.Delay(150).Wait();
+            await Task.Delay(150);
 
             try
             {
-                var task = _comunicator.GetProjectDefinition(new ProjectAsName(projectName));
-                task.Wait();
+                var result = await _comunicator.GetProjectDefinition(new ProjectAsName(projectName));
 
-                if (!task.Result.Success)
+                if (!result.Success)
                 {
-                    throw new Exception(task.Result.Error);
+                    throw new Exception(result.Error);
                 }
 
-                return task.Result.Value.Parameters;
+                return result.Value.Parameters;
             }
             catch (Exception ex)
             {
@@ -108,10 +106,36 @@ namespace Olfactory2Ch.Tests.Comparison
             if (!_isActive)
             {
                 SystemSounds.Exclamation.Play();
-                return L10n.T("DMSErrorCannotConnect");
+                return L10n.T("CannotConnectToDMS");
             }
 
             return null;
+        }
+
+        public async Task<string> GetProject()
+        {
+            if (!_isActive)
+            {
+                return null;
+            }
+
+            try
+            {
+                await Task.Delay(INTER_REQUEST_PAUSE);
+
+                var result = await _comunicator.GetProject();
+                PrintResponse("get project", result);
+                if (!result.Success)
+                {
+                    throw new Exception(result.Error);
+                }
+                return result.Value.Project;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] project get error: {ex}");
+                return L10n.T("ScanProjectFailed");
+            }
         }
 
         public async Task<string> SetProject()
@@ -129,10 +153,36 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             {
                 Debug.WriteLine($"[DMS] project set error: {ex}");
-                return L10n.T("DMSErrorProject");
+                return L10n.T("ScanProjectFailed");
             }
 
             return null;
+        }
+
+        public async Task<string> GetParam()
+        {
+            if (!_isActive)
+            {
+                return null;
+            }
+
+            try
+            {
+                await Task.Delay(INTER_REQUEST_PAUSE);
+
+                var result = await _comunicator.GetParameter();
+                PrintResponse("get param", result);
+                if (!result.Success)
+                {
+                    throw new Exception(result.Error);
+                }
+                return result.Value.parameter.Name;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] parameter get error: {ex}");
+                return L10n.T("ScanParameterFailed");
+            }
         }
 
         public async Task<string> SetParams()
@@ -150,7 +200,7 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             {
                 Debug.WriteLine($"[DMS] parameter set error: {ex}");
-                return L10n.T("DMSErrorParameter");
+                return L10n.T("ScanParameterFailed");
             }
 
             return null;
@@ -193,7 +243,7 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             {
                 Debug.WriteLine($"[DMS] scan start error: {ex}");
-                _scanStartError = L10n.T("DMSErrorScanStart");
+                _scanStartError = L10n.T("ScanStartFailed");
             }
         }
 
@@ -228,7 +278,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] waiting error: {ex}");
-                    error = L10n.T("DMSErrorScanWait");
+                    error = L10n.T("ScanWaitFailed");
                     return;
                 }
 
@@ -243,7 +293,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[DMS] data retrieval error: {ex}");
-                    error = L10n.T("DMSErrorScanResult");
+                    error = L10n.T("ScanResultFailed");
                     return;
                 }
 
@@ -261,7 +311,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     catch (Exception ex)
                     {
                         Debug.WriteLine($"[DMS] saving data error: {ex}");
-                        error = L10n.T("DMSErrorScanSave");
+                        error = L10n.T("ScanSaveFailed");
                     }
                 }
             }).Wait();

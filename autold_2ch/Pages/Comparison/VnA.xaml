@@ -55,17 +55,17 @@
                            Text="{lex:Loc VnA_Instruction}"
                            Margin="0,12"/>
                 <local:Scale9 x:Name="sclQ1"
-                              Title="{lex:Loc VnA_Valence}"
-                              Description="{lex:Loc VnA_ValenceDescription}"
-                              LeftValue="{lex:Loc VnA_Unpleasant}"
-                              RightValue="{lex:Loc VnA_Pleasant}"
+                              Title="{lex:Loc Valence}"
+                              Description="{lex:Loc ValenceDescription}"
+                              LeftValue="{lex:Loc Unpleasant}"
+                              RightValue="{lex:Loc Pleasant}"
                               DataContext="q1"
                               ValueChanged="ScaleValue_Changed"/>
                 <local:Scale9 x:Name="sclQ2"
-                              Title="{lex:Loc VnA_Arousal}"
-                              Description="{lex:Loc VnA_ArousalDescription}"
-                              LeftValue="{lex:Loc VnA_Calm}"
-                              RightValue="{lex:Loc VnA_Excited}"
+                              Title="{lex:Loc Arousal}"
+                              Description="{lex:Loc ArousalDescription}"
+                              LeftValue="{lex:Loc Calm}"
+                              RightValue="{lex:Loc Excited}"
                               DataContext="q2"
                               ValueChanged="ScaleValue_Changed"/>
                 <Rectangle Fill="Black" Height="1"/>

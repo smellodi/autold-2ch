@@ -444,16 +444,16 @@
 	<data name="VnA_Instruction" xml:space="preserve">
 		<value>Täytä kyselylomake</value>
 	</data>
-	<data name="VnA_Valence" xml:space="preserve">
+	<data name="Valence" xml:space="preserve">
 		<value>Valenssi</value>
 	</data>
-	<data name="VnA_ValenceDescription" xml:space="preserve">
+	<data name="ValenceDescription" xml:space="preserve">
 		<value>miellyttävyyden taso</value>
 	</data>
-	<data name="VnA_Arousal" xml:space="preserve">
+	<data name="Arousal" xml:space="preserve">
 		<value>Kiihotus</value>
 	</data>
-	<data name="VnA_ArousalDescription" xml:space="preserve">
+	<data name="ArousalDescription" xml:space="preserve">
 		<value>autonomisen aktivoinnin taso</value>
 	</data>
 	<data name="PracticeOdorFlow" xml:space="preserve">
@@ -465,16 +465,16 @@
 	<data name="PauseInfo" xml:space="preserve">
 		<value>Hengitä syvään...</value>
 	</data>
-	<data name="VnA_Unpleasant" xml:space="preserve">
+	<data name="Unpleasant" xml:space="preserve">
 		<value>epämiellyttävää</value>
 	</data>
-	<data name="VnA_Pleasant" xml:space="preserve">
+	<data name="Pleasant" xml:space="preserve">
 		<value>miellyttävä</value>
 	</data>
-	<data name="VnA_Calm" xml:space="preserve">
+	<data name="Calm" xml:space="preserve">
 		<value>rauhallinen</value>
 	</data>
-	<data name="VnA_Excited" xml:space="preserve">
+	<data name="Excited" xml:space="preserve">
 		<value>innostunut</value>
 	</data>
 	<data name="PracticeStageFlowDescription" xml:space="preserve">
@@ -492,25 +492,25 @@
 	<data name="PIDSampling" xml:space="preserve">
 		<value>PID-näytteenotto</value>
 	</data>
-	<data name="DMSErrorCannotConnect" xml:space="preserve">
+	<data name="CannotConnectToDMS" xml:space="preserve">
 		<value>Ei voi muodostaa yhteyttä DMS:ään</value>
 	</data>
-	<data name="DMSErrorProject" xml:space="preserve">
+	<data name="ScanProjectFailed" xml:space="preserve">
 		<value>Skannausprojektin asettaminen epäonnistui</value>
 	</data>
-	<data name="DMSErrorParameter" xml:space="preserve">
+	<data name="ScanParameterFailed" xml:space="preserve">
 		<value>Skannausparametrin asettaminen epäonnistui</value>
 	</data>
-	<data name="DMSErrorStartScan" xml:space="preserve">
+	<data name="ScanStartFailed" xml:space="preserve">
 		<value>Uuden skannauksen aloittaminen epäonnistui</value>
 	</data>
-	<data name="DMSErrorScanWait" xml:space="preserve">
+	<data name="ScanWaitFailed" xml:space="preserve">
 		<value>Skannauksen valmistumisen odottamisen viimeistely epäonnistui</value>
 	</data>
-	<data name="DMSErrorScanResult" xml:space="preserve">
+	<data name="ScanResultFailed" xml:space="preserve">
 		<value>Skannaustuloksen hakeminen epäonnistui</value>
 	</data>
-	<data name="DMSErrorScanSave" xml:space="preserve">
+	<data name="ScanSaveFailed" xml:space="preserve">
 		<value>Skannaustuloksen tallentaminen epäonnistui</value>
 	</data>
 	<data name="DMSConnecting" xml:space="preserve">
@@ -519,19 +519,19 @@
 	<data name="Wait" xml:space="preserve">
 		<value>DMS:n alustus</value>
 	</data>
-	<data name="DMSSettingProject" xml:space="preserve">
+	<data name="LoadingProject" xml:space="preserve">
 		<value>Ladataan projektia...</value>
 	</data>
-	<data name="DMSSettingParameter" xml:space="preserve">
+	<data name="LoadingParameter" xml:space="preserve">
 		<value>Ladataan parametria...</value>
 	</data>
-	<data name="DMSLoadingParameter" xml:space="preserve">
+	<data name="WaitingSystemReady" xml:space="preserve">
 		<value>Odotetaan järjestelmän valmistumista...</value>
 	</data>
 	<data name="DMSReady" xml:space="preserve">
 		<value>DMS on nyt valmis</value>
 	</data>
-	<data name="DMSErrorInstruction" xml:space="preserve">
+	<data name="CloseAppAndRestart" xml:space="preserve">
 		<value>Sulje sovellus ja aloita toimenpide uudelleen.</value>
 	</data>
 	<data name="RandomizeOrder" xml:space="preserve">

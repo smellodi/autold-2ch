@@ -22,24 +22,43 @@ namespace Olfactory2Ch.Pages.ThresholdTest
         {
             Task.Run(async () =>
             {
-                await Task.Delay(1000);
+                await Task.Delay(INTER_REQUEST_INTERVAL);
                 if (!HandleError(await _dms.Init(settings)))
                     return;
 
-                Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("DMSSettingProject"));
-                await Task.Delay(1000);
+                Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("LoadingProject"));
 
-                if (!HandleError(await _dms.SetProject()))
-                    return;
+                await Task.Delay(INTER_REQUEST_INTERVAL);
+                var project = await _dms.GetProject();
+                if (project != _dms.Settings.Project)
+                {
+                    await Task.Delay(INTER_REQUEST_INTERVAL);
+                    if (!HandleError(await _dms.SetProject()))
+                        return;
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"No need to change the project");
+                }
 
-                Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("DMSSettingParameter"));
-                await Task.Delay(1000);
+                Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("LoadingParameter"));
 
-                if (!HandleError(await _dms.SetParams()))
-                    return;
+                await Task.Delay(INTER_REQUEST_INTERVAL);
+                var param = await _dms.GetParam();
 
-                Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("DMSLoadingParameter"));
-                await Task.Delay(PARAMETER_LOADING_DURATION);
+                if (param != _dms.Settings.ParameterName)
+                {
+                    await Task.Delay(INTER_REQUEST_INTERVAL);
+                    if (!HandleError(await _dms.SetParams()))
+                        return;
+
+                    Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("WaitingSystemReady"));
+                    await Task.Delay(PARAMETER_LOADING_DURATION);
+                }
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine($"No need to change the param");
+                }
 
                 Dispatcher.Invoke(() => lblInfo.Content = Utils.L10n.T("DMSReady"));
                 await Task.Delay(1000);
@@ -52,13 +71,14 @@ namespace Olfactory2Ch.Pages.ThresholdTest
 
         readonly DMS _dms = DMS.Instance;
 
+        const int INTER_REQUEST_INTERVAL = 1000;
         const int PARAMETER_LOADING_DURATION = 10000; // ms
 
         private bool HandleError(string error)
         {
             if (error != null)
             {
-                string errorInstruction = Utils.L10n.T("DMSErrorInstruction");
+                string errorInstruction = Utils.L10n.T("CloseAppAndRestart");
                 Dispatcher.Invoke(() => lblInfo.Content = $"{error}\n{errorInstruction}");
             }
             return error == null;

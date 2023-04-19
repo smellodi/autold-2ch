@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Olfactory2Ch.Comm;
@@ -99,12 +100,12 @@ namespace Olfactory2Ch.Pages.Comparison
             return null;
         }
 
-        private void LoadDMSProps()
+        private async Task LoadDMSProps()
         {
             if (IsDMSSniffer)
             {
                 txbDMSIP.Text = _dms.Settings.IP;
-                cmbDMSProject.ItemsSource = _dms.GetProjects();
+                cmbDMSProject.ItemsSource = await _dms.GetProjects();
                 cmbDMSProject.SelectedItem = _dms.Settings.Project;
                 btnStart.IsEnabled = cmbDMSParameter.SelectedItem != null;
             }
@@ -114,7 +115,7 @@ namespace Olfactory2Ch.Pages.Comparison
             }
         }
 
-        private void ApplyDMSIP(string newIP)
+        private async Task ApplyDMSIP(string newIP)
         {
             if (newIP.IsIP() && newIP != _dms.Settings.IP)
             {
@@ -122,7 +123,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 _dms.Settings.Save();
                 _dms = DMS.Recreate();
 
-                LoadDMSProps();
+                await LoadDMSProps();
             }
         }
 
@@ -174,22 +175,27 @@ namespace Olfactory2Ch.Pages.Comparison
             Next?.Invoke(this, null);
         }
 
-        private void GasSniffer_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void GasSniffer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             IsHumanSniffer = (GasSniffer)cmbGasSniffer.SelectedItem == GasSniffer.Human;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHumanSniffer)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDMSSniffer)));
 
-            LoadDMSProps();
+            if (IsDMSSniffer)
+            {
+                btnStart.IsEnabled = false;
+            }
+
+            await LoadDMSProps();
         }
 
-        private void DMSProject_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void DMSProject_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             cmbDMSParameter.IsEnabled = cmbDMSProject.SelectedItem != null;
 
             if (cmbDMSProject.SelectedItem != null)
             {
-                cmbDMSParameter.ItemsSource = _dms.GetProjectParameters((string)cmbDMSProject.SelectedItem).Select(p => new DMSProjectParam(p));
+                cmbDMSParameter.ItemsSource = (await _dms.GetProjectParameters((string)cmbDMSProject.SelectedItem)).Select(p => new DMSProjectParam(p));
                 var current = cmbDMSParameter.Items.Cast<DMSProjectParam>().FirstOrDefault(item => item.Name == _dms.Settings.ParameterName);
                 if (current != null)
                 {
@@ -209,16 +215,16 @@ namespace Olfactory2Ch.Pages.Comparison
             btnStart.IsEnabled = cmbDMSParameter.SelectedItem != null;
         }
 
-        private void txbDMSIP_LostFocus(object sender, RoutedEventArgs e)
+        private async void txbDMSIP_LostFocus(object sender, RoutedEventArgs e)
         {
-            ApplyDMSIP(txbDMSIP.Text);
+            await ApplyDMSIP(txbDMSIP.Text);
         }
 
-        private void txbDMSIP_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private async void txbDMSIP_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
             {
-                ApplyDMSIP(txbDMSIP.Text);
+                await ApplyDMSIP(txbDMSIP.Text);
             }
         }
     }
