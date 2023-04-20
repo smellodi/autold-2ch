@@ -148,7 +148,7 @@ namespace Olfactory2Ch.Tests.Comparison
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
-                PrintResponse("set project", await _comunicator.SetProject());
+                PrintResponse("set project", await _comunicator.SetProjectAndWait());
             }
             catch (Exception ex)
             {
@@ -195,7 +195,7 @@ namespace Olfactory2Ch.Tests.Comparison
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
-                PrintResponse("set param", await _comunicator.SetParameter());
+                PrintResponse("set param", await _comunicator.SetParameterAndPreload());
             }
             catch (Exception ex)
             {
