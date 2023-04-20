@@ -549,4 +549,7 @@
 	<data name="SniffingDelay" xml:space="preserve">
 		<value>Scan delay</value>
 	</data>
+	<data name="DMSAPIVerionIsNotSupported" xml:space="preserve">
+		<value>DMS API v{0} is not supported, expected v{1}</value>
+	</data>
 </root>

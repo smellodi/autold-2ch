@@ -64,6 +64,7 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
 
                             <Label Grid.Row="0" Grid.Column="0"
@@ -93,6 +94,8 @@
                                       SelectionChanged="DMSParameter_SelectionChanged"/>
                             <TextBox x:Name="txbDMSSniffingDelay" Grid.Row="3" Grid.Column="1"
                                      Margin="0,4,0,0"/>
+                            <Label x:Name="lblDMSWarning" Grid.Row="4" Grid.ColumnSpan="2"
+                                   Foreground="DarkRed"/>
                         </Grid>
                     </UserControl>
                 </UserControl>

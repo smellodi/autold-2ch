@@ -18,6 +18,10 @@ namespace Olfactory2Ch.Tests.Comparison
         public static DMS Recreate() => _instance = new DMS();
 
         public Smop.IonVision.Settings Settings => _comunicator.Settings;
+        public string SupportedVersion => _comunicator.SupportedVersion;
+        public string DetectedVersion { get; private set; } = null;
+        public bool? IsConnected { get; private set; } = null;
+        public bool? IsCorrectVersion { get; private set; } = null;
 
         private DMS()
         {
@@ -33,9 +37,33 @@ namespace Olfactory2Ch.Tests.Comparison
             }
         }
 
+        public async Task Precheck()
+        {
+            await Task.Delay(INTER_REQUEST_PAUSE);
+
+            try
+            {
+                var result = await _comunicator.GetSystemInfo();
+
+                IsConnected = result.Success;
+
+                if (!result.Success)
+                {
+                    throw new Exception(result.Error);
+                }
+
+                DetectedVersion = result.Value.CurrentVersion;
+                IsCorrectVersion = result.Value.CurrentVersion == _comunicator.SupportedVersion;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] get system info error: {ex}");
+            }
+        }
+
         public async Task<string[]> GetProjects()
         {
-            await Task.Delay(150);
+            await Task.Delay(INTER_REQUEST_PAUSE);
 
             try
             {
@@ -51,13 +79,13 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             { 
                 Debug.WriteLine($"[DMS] get projects error: {ex}");
-                return new string[] { };
+                return Array.Empty<string>();
             }
         }
 
         public async Task<Parameter[]> GetProjectParameters(string projectName)
         {
-            await Task.Delay(150);
+            await Task.Delay(INTER_REQUEST_PAUSE);
 
             try
             {
@@ -73,7 +101,7 @@ namespace Olfactory2Ch.Tests.Comparison
             catch (Exception ex)
             {
                 Debug.WriteLine($"[DMS] get project parameters error: {ex}");
-                return new Parameter[] { };
+                return Array.Empty<Parameter>();
             }
         }
 

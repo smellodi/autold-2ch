@@ -106,6 +106,20 @@ namespace Olfactory2Ch.Pages.Comparison
         {
             if (IsDMSSniffer)
             {
+                await _dms.Precheck();
+                if (_dms.IsConnected == false)
+                {
+                    lblDMSWarning.Content = L10n.T("CannotConnectToDMS");
+                }
+                else if (_dms.IsCorrectVersion == false)
+                {
+                    lblDMSWarning.Content = string.Format(L10n.T("DMSAPIVerionIsNotSupported"), _dms.DetectedVersion, _dms.SupportedVersion);
+                }
+                else
+                {
+                    lblDMSWarning.Content = null;
+                }
+
                 txbDMSIP.Text = _dms.Settings.IP;
                 cmbDMSProject.ItemsSource = await _dms.GetProjects();
                 cmbDMSProject.SelectedItem = _dms.Settings.Project;

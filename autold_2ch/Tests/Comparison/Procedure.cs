@@ -138,6 +138,10 @@ namespace Olfactory2Ch.Tests.Comparison
                 var random = new Random();
                 random.Shuffle(_pairsOfMixtures);
             }
+            else
+            {
+                _dms = DMS.Instance;
+            }
 
             Next();
         }
@@ -208,10 +212,10 @@ namespace Olfactory2Ch.Tests.Comparison
         readonly CommMonitor _monitor = CommMonitor.Instance;
         readonly System.Timers.Timer _timer = new();
         readonly Dispatcher _dispatcher;
-        readonly DMS _dms = DMS.Instance;
 
         Settings _settings;
         Comparison.Stage _stage;
+        DMS _dms = null;
 
         int _step = 0;
         MixturePair[] _pairsOfMixtures = null;
@@ -263,7 +267,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     (pulse.Channel2?.Valve ?? MFC.ValvesOpened.None);
                 _mfc.OdorDirection = valves;
 
-                Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms?.StartScan(pair, _mixtureID));
 
                 StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
             }
@@ -271,7 +275,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
         private void StopOdorFlow()
         {
-            var error = _dms.SaveScan();
+            var error = _dms?.SaveScan();
             if (error != null)
             {
                 var step = _pairsOfMixtures[_step];
@@ -340,7 +344,7 @@ namespace Olfactory2Ch.Tests.Comparison
                     _pulseController.Run();
 
                     var pair = _pairsOfMixtures[_step];
-                    Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms.StartScan(pair, _mixtureID));
+                    Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms?.StartScan(pair, _mixtureID));
 
                     StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
                 }

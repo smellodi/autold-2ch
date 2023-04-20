@@ -20,6 +20,8 @@ namespace Olfactory2Ch.Pages.ThresholdTest
 
         public void Init(Settings settings)
         {
+            _dms = DMS.Instance;
+
             Task.Run(async () =>
             {
                 await Task.Delay(INTER_REQUEST_INTERVAL);
@@ -69,7 +71,7 @@ namespace Olfactory2Ch.Pages.ThresholdTest
 
         // Internal
 
-        readonly DMS _dms = DMS.Instance;
+        DMS _dms = null;
 
         const int INTER_REQUEST_INTERVAL = 1000;
         const int PARAMETER_LOADING_DURATION = 10000; // ms

@@ -549,4 +549,7 @@
 	<data name="SniffingDelay" xml:space="preserve">
 		<value>Skannauksen viive</value>
 	</data>
+	<data name="DMSAPIVerionIsNotSupported" xml:space="preserve">
+		<value>DMS-sovellusliittymän v{0} ei tueta, odotettu {1}</value>
+	</data>
 </root>

@@ -10,7 +10,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="0" checksum="1080988887" /&gt;&lt;item type="2" checksum="3307123006" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="0" checksum="-1021619515" /&gt;&lt;item type="2" checksum="2707683299" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="sendFileToTranslator.fileGroupsListBox">autold_2ch\Properties\Resources</globalSetting>
     <userSetting name="olequ@LAPTOP-BNL99RMU.filesInitialDir">autold_2ch\Properties</userSetting>
     <userSetting name="olequ@LAPTOP-BNL99RMU.FindText">
