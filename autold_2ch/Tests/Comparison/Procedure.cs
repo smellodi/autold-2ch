@@ -131,14 +131,28 @@ namespace Olfactory2Ch.Tests.Comparison
                 _testLogger.Add(LogSource.Comparison, "config", param.Key, param.Value);
             }
 
-            _pairsOfMixtures = _settings.PairsOfMixtures;
-
-            if (_settings.Sniffer == GasSniffer.Human)
+            var blockLength = _settings.PairsOfMixtures.Length;
+            _pairsOfMixtures = new MixturePair[_settings.Repetitions * blockLength];
+            for (int blockID = 0; blockID < _settings.Repetitions; ++blockID)
             {
-                var random = new Random();
-                random.Shuffle(_pairsOfMixtures);
+                for (int i = 0; i < blockLength; ++i)
+                {
+                    _pairsOfMixtures[blockID * blockLength + i] = _settings.PairsOfMixtures[i];
+                }
+
+                if (_settings.Sniffer == GasSniffer.Human)
+                {
+                    var random = new Random();
+                    random.Shuffle(_pairsOfMixtures, blockID * blockLength, blockLength);
+                }
             }
-            else
+
+            foreach (var pm in _pairsOfMixtures)
+            {
+                Debug.WriteLine(pm);
+            }
+
+            if (_settings.Sniffer == GasSniffer.DMS)
             {
                 _dms = DMS.Instance;
             }

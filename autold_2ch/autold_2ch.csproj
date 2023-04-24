@@ -19,6 +19,7 @@
     <None Remove="Assets\images\error.png" />
     <None Remove="Assets\images\exclamation.png" />
     <None Remove="Assets\images\information.png" />
+    <None Remove="Assets\images\loading.gif" />
     <None Remove="Assets\images\pen.png" />
     <None Remove="Assets\images\question.png" />
     <None Remove="Assets\images\wait.gif" />
@@ -36,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\images\loading.gif" />
     <Resource Include="Assets\images\wait.gif" />
     <Resource Include="Properties\BuildCode.txt" />
     <Resource Include="Assets\icons\main.png" />

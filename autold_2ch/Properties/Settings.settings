@@ -116,5 +116,8 @@
     <Setting Name="Test_CMP_DMSSniffingDelay" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0.5</Value>
     </Setting>
+    <Setting Name="Test_CMP_Repetitions" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

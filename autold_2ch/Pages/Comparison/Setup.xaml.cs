@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -43,6 +41,7 @@ namespace Olfactory2Ch.Pages.Comparison
             txbPairsOfMixtures.Text = _settings.SerializeMixtures();
             chkWaitForPID.IsChecked = _settings.WaitForPID;
             txbDMSSniffingDelay.Text = _settings.DMSSniffingDelay.ToString("F1");
+            txbRepetitions.Text = _settings.Repetitions.ToString();
             //txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
         }
 
@@ -88,6 +87,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
                 new Utils.Validation(txbOdorFlowDuration, 0.1, MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbDMSSniffingDelay, 0, 30, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbRepetitions, 1, 100, Utils.Validation.ValueFormat.Integer),
                 //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
             };
 
@@ -106,6 +106,9 @@ namespace Olfactory2Ch.Pages.Comparison
         {
             if (IsDMSSniffer)
             {
+                lblDMSWarning.Content = null;
+                imgDMSLoading.Visibility = Visibility.Visible;
+
                 await _dms.Precheck();
                 if (_dms.IsConnected == false)
                 {
@@ -119,6 +122,8 @@ namespace Olfactory2Ch.Pages.Comparison
                 {
                     lblDMSWarning.Content = null;
                 }
+
+                imgDMSLoading.Visibility = Visibility.Hidden;
 
                 txbDMSIP.Text = _dms.Settings.IP;
                 cmbDMSProject.ItemsSource = await _dms.GetProjects();
@@ -167,6 +172,7 @@ namespace Olfactory2Ch.Pages.Comparison
                 _settings.PairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);
                 _settings.WaitForPID = chkWaitForPID.IsChecked ?? false;
                 _settings.DMSSniffingDelay = double.Parse(txbDMSSniffingDelay.Text);
+                _settings.Repetitions = int.Parse(txbRepetitions.Text);
                 //_settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
                 _settings.Save();

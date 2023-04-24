@@ -43,6 +43,7 @@ namespace Olfactory2Ch.Tests.Comparison
 
             try
             {
+                await Task.Delay(1000);
                 var result = await _comunicator.GetSystemInfo();
 
                 IsConnected = result.Success;
@@ -57,10 +58,45 @@ namespace Olfactory2Ch.Tests.Comparison
             }
             catch (Exception ex)
             {
+                IsConnected = false;
                 Debug.WriteLine($"[DMS] get system info error: {ex}");
             }
         }
 
+        public async Task<string> Init(Settings settings)
+        {
+            _settings = settings;
+            _isActive = settings.Sniffer == GasSniffer.DMS;
+
+            if (!_isActive)
+            {
+                return null;
+            }
+
+            var subfolder = $"scan_{DateTime.Now:u}".ToPath();
+            _folder = Path.Combine(_folder, subfolder);
+            Directory.CreateDirectory(_folder);
+
+            _eventLogger.Add(LogSource.Comparison, "DMS", "folder", subfolder);
+
+            try
+            {
+                await _comunicator.SetClock();
+                _isActive = true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DMS] set clock error: {ex}");
+            }
+
+            if (!_isActive)
+            {
+                SystemSounds.Exclamation.Play();
+                return L10n.T("CannotConnectToDMS");
+            }
+
+            return null;
+        }
         public async Task<string[]> GetProjects()
         {
             await Task.Delay(INTER_REQUEST_PAUSE);
@@ -103,41 +139,6 @@ namespace Olfactory2Ch.Tests.Comparison
                 Debug.WriteLine($"[DMS] get project parameters error: {ex}");
                 return Array.Empty<Parameter>();
             }
-        }
-
-        public async Task<string> Init(Settings settings)
-        {
-            _settings = settings;
-            _isActive = settings.Sniffer == GasSniffer.DMS;
-
-            if (!_isActive)
-            {
-                return null;
-            }
-
-            var subfolder = $"scan_{DateTime.Now:u}".ToPath();
-            _folder = Path.Combine(_folder, subfolder);
-            Directory.CreateDirectory(_folder);
-
-            _eventLogger.Add(LogSource.Comparison, "DMS", "folder", subfolder);
-
-            try
-            {
-                await _comunicator.SetClock();
-                _isActive = true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"[DMS] set clock error: {ex}");
-            }
-
-            if (!_isActive)
-            {
-                SystemSounds.Exclamation.Play();
-                return L10n.T("CannotConnectToDMS");
-            }
-
-            return null;
         }
 
         public async Task<string> GetProject()

@@ -40,6 +40,8 @@ namespace Olfactory2Ch.Pages.Comparison
                 // modify the settings for the practicing page:
                 settings = new Settings()
                 {
+                    Sniffer = GasSniffer.Human,
+
                     // Most of the settings are same...
                     FreshAirFlow = settings.FreshAirFlow,
                     Gas1 = settings.Gas1,
@@ -51,6 +53,7 @@ namespace Olfactory2Ch.Pages.Comparison
                     TestOdorFlow = settings.TestOdorFlow,
 
                     // ..and only the flow and gas pairs are different
+                    Repetitions = 1,
                     PairsOfMixtures = new MixturePair[]
                     {
                         new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor2 },

@@ -552,4 +552,10 @@
 	<data name="DMSAPIVerionIsNotSupported" xml:space="preserve">
 		<value>DMS API v{0} is not supported, expected v{1}</value>
 	</data>
+	<data name="Repetitions" xml:space="preserve">
+		<value>Repetitions</value>
+	</data>
+	<data name="Times" xml:space="preserve">
+		<value>times</value>
+	</data>
 </root>

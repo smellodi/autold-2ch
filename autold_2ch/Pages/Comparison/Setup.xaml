@@ -3,6 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:gif="http://wpfanimatedgif.codeplex.com"
       xmlns:lex="http://wpflocalizeextension.codeplex.com"
       lex:LocalizeDictionary.DesignCulture="en"
       lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
@@ -94,8 +95,18 @@
                                       SelectionChanged="DMSParameter_SelectionChanged"/>
                             <TextBox x:Name="txbDMSSniffingDelay" Grid.Row="3" Grid.Column="1"
                                      Margin="0,4,0,0"/>
-                            <Label x:Name="lblDMSWarning" Grid.Row="4" Grid.ColumnSpan="2"
-                                   Foreground="DarkRed"/>
+                            <StackPanel Grid.Row="4" Grid.ColumnSpan="2"
+                                        Orientation="Horizontal">
+                                <Image x:Name="imgDMSLoading"
+                                       Width="16"
+                                       Height="16"
+                                       Margin="0,4,4,0"
+                                       Visibility="Hidden"
+                                       HorizontalAlignment="Left"
+                                       gif:ImageBehavior.AnimatedSource="/Assets/images/loading.gif" />
+                                <Label x:Name="lblDMSWarning" 
+                                       Foreground="DarkRed"/>
+                            </StackPanel>
                         </Grid>
                     </UserControl>
                 </UserControl>
@@ -173,6 +184,14 @@
                                        Text="{lex:Loc InstructionToEnterMixtures}"/>
                         </UserControl>
                     </StackPanel>
+                </UserControl>
+
+                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Repetitions}">
+                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Times}">
+                        <TextBox x:Name="txbRepetitions"
+                                 Text="1"
+                                 ToolTip="{lex:Loc NumPos}"/>
+                    </UserControl>
                 </UserControl>
 
                 <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}"

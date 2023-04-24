@@ -15,15 +15,17 @@ namespace Olfactory2Ch.Utils
 
     internal static class RandomExtensions
     {
-        public static void Shuffle<T>(this Random rng, T[] array)
+        public static void Shuffle<T>(this Random rng, T[] array, int offset = 0, int length = -1)
         {
-            int n = array.Length;
-            while (n > 1)
+            length = length < 0 ? array.Length - offset : Math.Min(length, array.Length - offset);
+            var n = length;
+
+            while (n-- > 0)
             {
-                int k = rng.Next(n--);
-                T temp = array[n];
-                array[n] = array[k];
-                array[k] = temp;
+                int k = rng.Next(length);
+                T temp = array[offset + n];
+                array[offset + n] = array[offset + k];
+                array[offset + k] = temp;
             }
         }
     }
