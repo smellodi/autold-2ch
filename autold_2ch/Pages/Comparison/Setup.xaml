@@ -173,8 +173,8 @@
                                      TextWrapping="Wrap"
                                      AcceptsReturn="True"
                                      VerticalScrollBarVisibility="Auto"
-                                     MinLines="5"
-                                     MaxLines="8"
+                                     MinLines="4"
+                                     MaxLines="6"
                                      VerticalContentAlignment="Top"
                                      Text="Odor1, Odor2"/>
                         </UserControl>

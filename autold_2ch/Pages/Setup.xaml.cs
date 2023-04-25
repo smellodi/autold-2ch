@@ -138,9 +138,9 @@ namespace Olfactory2Ch.Pages
 
         Controls.ChannelIndicator _currentIndicator = null;
 
-        private string ScentedAir(int id) => Utils.L10n.T("ScentedAir") + $" #{id}";
+        private static string ScentedAir(int id) => Utils.L10n.T("ScentedAir") + $" #{id}";
 
-        private void UpdatePortList(ComboBox cmb)
+        private static void UpdatePortList(ComboBox cmb)
         {
             var current = cmb.SelectedValue;
 

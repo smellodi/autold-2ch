@@ -52,7 +52,7 @@ namespace Olfactory2Ch.Pages.Comparison
                     PracticeOdorFlow = settings.PracticeOdorFlow,
                     TestOdorFlow = settings.TestOdorFlow,
 
-                    // ..and only the flow and gas pairs are different
+                    // ..and only the number of repetitions and gas pairs are different
                     Repetitions = 1,
                     PairsOfMixtures = new MixturePair[]
                     {

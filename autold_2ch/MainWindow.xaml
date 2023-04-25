@@ -6,7 +6,7 @@
         mc:Ignorable="d"
         Icon="/Assets/icons/main.png"
         Height="900" Width="1200"
-        MinHeight="860" MinWidth="700"
+        MinHeight="768" MinWidth="700"
         Loaded="Window_Loaded"
         PreviewKeyDown="Window_PreviewKeyDown"
         PreviewMouseWheel="Window_PreviewMouseWheel" 
