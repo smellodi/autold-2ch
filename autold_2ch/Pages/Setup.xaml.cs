@@ -226,19 +226,14 @@ namespace Olfactory2Ch.Pages
             _mfcTimer.Stop();
             _pidTimer.Stop();
 
-            await Dispatcher.Yield();
-
             SaveSettings();
+
+            await Dispatcher.Yield();
         }
 
         private void LoadSettings()
         {
             var settings = Properties.Settings.Default;
-            txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
-            txbOdor1.Text = settings.Setup_MFC_Odor1.ToString();
-            txbOdor2.Text = settings.Setup_MFC_Odor2.ToString();
-            cmbGas1.SelectedItem = (Gas)settings.Setup_Gas1;
-            cmbGas2.SelectedItem = (Gas)settings.Setup_Gas2;
 
             foreach (string item in cmbMFCPort.Items)
             {
@@ -257,6 +252,12 @@ namespace Olfactory2Ch.Pages
                     break;
                 }
             }
+
+            txbFreshAir.Text = settings.Setup_MFC_FreshAir.ToString();
+            txbOdor1.Text = settings.Setup_MFC_Odor1.ToString();
+            txbOdor2.Text = settings.Setup_MFC_Odor2.ToString();
+            cmbGas1.SelectedItem = (Gas)settings.Setup_Gas1;
+            cmbGas2.SelectedItem = (Gas)settings.Setup_Gas2;
         }
 
         private void SaveSettings()
