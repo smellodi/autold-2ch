@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
 
-namespace Olfactory2Ch.Utils
+namespace AutOlD2Ch.Utils
 {
     public partial class MsgBox : Window
     {

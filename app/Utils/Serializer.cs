@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Olfactory2Ch.Utils
+namespace AutOlD2Ch.Utils
 {
     internal static class Serializer
     {

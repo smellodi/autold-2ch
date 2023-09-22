@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Olfactory2Ch.Properties {
+namespace AutOlD2Ch.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Olfactory2Ch.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Olfactory2Ch.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AutOlD2Ch.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace Olfactory2Ch.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 20230405.1618 
+        ///   Looks up a localized string similar to 230428.1418 
         ///.
         /// </summary>
         internal static string BuildCode {

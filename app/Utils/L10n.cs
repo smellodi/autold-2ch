@@ -1,6 +1,6 @@
 ﻿using WPFLocalizeExtension.Engine;
 
-namespace Olfactory2Ch.Utils
+namespace AutOlD2Ch.Utils
 {
     public static class L10n
     {

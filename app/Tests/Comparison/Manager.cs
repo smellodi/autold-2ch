@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows.Controls;
-using Olfactory2Ch.Pages.Comparison;
-using Olfactory2Ch.Pages.ThresholdTest;
+using AutOlD2Ch.Pages.Comparison;
+using AutOlD2Ch.Pages.ThresholdTest;
 
-namespace Olfactory2Ch.Tests.Comparison
+namespace AutOlD2Ch.Tests.Comparison
 {
     /// <summary>
     /// Manages the order of pages in the Comparison

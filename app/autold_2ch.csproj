@@ -4,7 +4,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
-    <RootNamespace>Olfactory2Ch</RootNamespace>
+    <RootNamespace>AutOlD2Ch</RootNamespace>
     <Company>Tampere University</Company>
     <Authors>Oleg Spakov</Authors>
   </PropertyGroup>

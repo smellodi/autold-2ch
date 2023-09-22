@@ -1,4 +1,4 @@
-﻿using Olfactory2Ch.Utils;
+﻿using AutOlD2Ch.Utils;
 using Smop.IonVision;
 using System;
 using System.Collections.Generic;
@@ -7,9 +7,9 @@ using System.IO;
 using System.Media;
 using System.Text.Json;
 using System.Threading.Tasks;
-using static Olfactory2Ch.Tests.Comparison.Procedure;
+using static AutOlD2Ch.Tests.Comparison.Procedure;
 
-namespace Olfactory2Ch.Tests.Comparison
+namespace AutOlD2Ch.Tests.Comparison
 {
     internal class DMS
     {
@@ -256,7 +256,7 @@ namespace Olfactory2Ch.Tests.Comparison
                 var comment = string.Join(',', marker);
                 PrintResponse(
                     $"set scan marker '{comment}'",
-                    await _comunicator.SetScanResultComment(new Comments() { Text = comment })
+                    await _comunicator.SetScanResultComment(new { Text = comment })
                 );
             }
             catch (Exception ex)

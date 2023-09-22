@@ -2,10 +2,10 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using Olfactory2Ch.Comm;
-using Olfactory2Ch.Utils;
+using AutOlD2Ch.Comm;
+using AutOlD2Ch.Utils;
 
-namespace Olfactory2Ch
+namespace AutOlD2Ch
 {
     public partial class CommMonitor : Window
     {

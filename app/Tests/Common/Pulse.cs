@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Olfactory2Ch.Tests.Common
+namespace AutOlD2Ch.Tests.Common
 {
     /// <summary>
     /// Describes a single channel pulse

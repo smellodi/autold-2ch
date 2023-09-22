@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Olfactory2Ch.Comm;
-using Olfactory2Ch.Tests.Comparison;
-using Olfactory2Ch.Utils;
+using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Comparison;
+using AutOlD2Ch.Utils;
 using Smop.IonVision;
 
-namespace Olfactory2Ch.Pages.Comparison
+namespace AutOlD2Ch.Pages.Comparison
 {
     public partial class Setup : Page, IPage<Tests.Comparison.Settings>, Tests.ITestEmulator, INotifyPropertyChanged
     {

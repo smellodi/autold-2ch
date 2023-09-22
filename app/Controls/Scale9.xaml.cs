@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory2Ch.Controls
+namespace AutOlD2Ch.Controls
 {
     public partial class Scale9 : UserControl, INotifyPropertyChanged
     {

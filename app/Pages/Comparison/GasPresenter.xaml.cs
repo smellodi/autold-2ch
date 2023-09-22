@@ -3,9 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Olfactory2Ch.Tests.Comparison;
+using AutOlD2Ch.Tests.Comparison;
 
-namespace Olfactory2Ch.Pages.Comparison
+namespace AutOlD2Ch.Pages.Comparison
 {
     public partial class GasPresenter : Page, IPage<EventArgs>
     {

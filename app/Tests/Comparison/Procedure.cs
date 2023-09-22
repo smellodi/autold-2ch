@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using Olfactory2Ch.Comm;
-using Olfactory2Ch.Tests.Common;
-using Olfactory2Ch.Utils;
+using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Common;
+using AutOlD2Ch.Utils;
 
-namespace Olfactory2Ch.Tests.Comparison
+namespace AutOlD2Ch.Tests.Comparison
 {
     public class Procedure : ITestEmulator
     {

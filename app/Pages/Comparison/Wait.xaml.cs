@@ -1,9 +1,9 @@
-﻿using Olfactory2Ch.Tests.Comparison;
+﻿using AutOlD2Ch.Tests.Comparison;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Olfactory2Ch.Pages.ThresholdTest
+namespace AutOlD2Ch.Pages.ThresholdTest
 {
     public partial class Wait : Page, IPage<EventArgs>
     {

@@ -2,11 +2,11 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory2Ch
+namespace AutOlD2Ch
 {
     public partial class App : Application
     {
-        public static readonly string Name = "AutOlD";
+        public static readonly string Name = "AutOlD 2-channel";
         public static readonly string Version = "1.3";
 
         // Set the US-culture across the application to avoid decimal point parsing/logging issues

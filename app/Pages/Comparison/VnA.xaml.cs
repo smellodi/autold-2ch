@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace Olfactory2Ch.Pages.ThresholdTest
+namespace AutOlD2Ch.Pages.ThresholdTest
 {
     public partial class VnA : Page, IPage<EventArgs>
     {

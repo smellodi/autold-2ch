@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace Olfactory2Ch.Comm
+namespace AutOlD2Ch.Comm
 {
     public struct MFCChannel
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Olfactory2Ch.Utils
+namespace AutOlD2Ch.Utils
 {
     /// <summary>
     /// Current timestamp to be used everywhere to get syncronized records

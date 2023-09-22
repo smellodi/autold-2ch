@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
-using Olfactory2Ch.Comm;
-using Olfactory2Ch.Tests.Common;
+using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Common;
 
-namespace Olfactory2Ch.Tests.Comparison
+namespace AutOlD2Ch.Tests.Comparison
 {
     internal class GasMixer
     {

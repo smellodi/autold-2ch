@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Olfactory2Ch
+namespace AutOlD2Ch
 {
     [Flags]
     public enum LogSource

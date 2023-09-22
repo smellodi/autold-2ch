@@ -1,11 +1,11 @@
-﻿using Olfactory2Ch.Utils;
+﻿using AutOlD2Ch.Utils;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
 using WPFLocalizeExtension.Engine;
 
-namespace Olfactory2Ch
+namespace AutOlD2Ch
 {
     public partial class MainWindow : Window
     {

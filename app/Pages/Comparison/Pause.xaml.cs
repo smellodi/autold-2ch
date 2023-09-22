@@ -1,11 +1,11 @@
-﻿using Olfactory2Ch.Tests.Comparison;
+﻿using AutOlD2Ch.Tests.Comparison;
 using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Controls;
-using Olfactory2Ch.Comm;
+using AutOlD2Ch.Comm;
 
-namespace Olfactory2Ch.Pages.ThresholdTest
+namespace AutOlD2Ch.Pages.ThresholdTest
 {
     public partial class Pause : Page, IPage<EventArgs>
     {

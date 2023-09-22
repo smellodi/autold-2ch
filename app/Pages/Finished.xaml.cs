@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Olfactory2Ch.Pages
+namespace AutOlD2Ch.Pages
 {
     public partial class Finished : Page, IPage<bool>, INotifyPropertyChanged
     {

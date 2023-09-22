@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Olfactory2Ch.Utils
+namespace AutOlD2Ch.Utils
 {
     internal static class StringExtensions
     {

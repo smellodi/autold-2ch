@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Olfactory2Ch.Pages
+namespace AutOlD2Ch.Pages
 {
     internal interface IPage<T>
     {

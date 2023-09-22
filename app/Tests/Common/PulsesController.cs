@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Olfactory2Ch.Tests.Common
+namespace AutOlD2Ch.Tests.Common
 {
     /// <summary>
     /// Generates a list of pulse state changes, and fires each change event at its proper time

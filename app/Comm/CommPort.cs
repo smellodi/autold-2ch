@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.IO.Ports;
 
-namespace Olfactory2Ch.Comm
+namespace AutOlD2Ch.Comm
 {
     /// <summary>
     /// A subset of Windows ERROR_XXX codes that are used to return from methods
