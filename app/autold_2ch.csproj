@@ -5,6 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <RootNamespace>Olfactory2Ch</RootNamespace>
+    <Company>Tampere University</Company>
+    <Authors>Oleg Spakov</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
