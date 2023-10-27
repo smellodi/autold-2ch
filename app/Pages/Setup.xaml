@@ -50,7 +50,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
             <RowDefinition />
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
@@ -59,164 +58,166 @@
                    Style="{StaticResource PageTitle}"
                    Text="{lex:Loc Setup}"/>
 
-        <StackPanel Grid.Row="2" Grid.Column="0"
-                    Orientation="Vertical"
-                    HorizontalAlignment="Center"
-                    Margin="12,0,0,0">
-            <Border Style="{StaticResource Form}" Margin="0,0,0,12">
-                <StackPanel>
-                    <Label Style="{StaticResource FormHeader}"
-                           Content="{lex:Loc SerialPorts}"/>
+        <ScrollViewer Grid.Row="2" Grid.Column="0"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Margin="12,0,0,0">
+                <Border Style="{StaticResource Form}" Margin="0,0,0,12">
+                    <StackPanel>
+                        <Label Style="{StaticResource FormHeader}"
+                               Content="{lex:Loc SerialPorts}"/>
 
-                    <UserControl Style="{StaticResource FormRow}" Tag="MFC">
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox x:Name="cmbMFCPort"
-                                      VerticalContentAlignment="Center"
-                                      SelectionChanged="Port_SelectionChanged"/>
-                            <Button x:Name="btnMFCToggle"
-                                    IsEnabled="{Binding ElementName=cmbMFCPort, Path=SelectedItem, Converter={StaticResource obj2bool}}"
-                                    Content="{lex:Loc {Binding MFCAction}}"
-                                    Click="MFCToggle_Click"/>
-                        </StackPanel>
-                    </UserControl>
-                    <UserControl Style="{StaticResource FormRow}" Tag="PID">
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox x:Name="cmbPIDPort"
-                                      VerticalContentAlignment="Center"
-                                      SelectionChanged="Port_SelectionChanged"/>
-                            <Button x:Name="btnPIDToggle"
-                                    IsEnabled="{Binding ElementName=cmbPIDPort, Path=SelectedItem, Converter={StaticResource obj2bool}}"
-                                    Content="{lex:Loc {Binding PIDAction}}"
-                                    Click="PIDToggle_Click"/>
-                        </StackPanel>
-                    </UserControl>
-                    <Separator/>
-                    <TextBlock Margin="8,0"
-                               MaxWidth="265"
-                               HorizontalAlignment="Left"
-                               Text="{lex:Loc InfoF2}"
-                               TextWrapping="Wrap"/>
-                    <TextBlock Margin="8,4"
-                               MaxWidth="265"
-                               HorizontalAlignment="Left"
-                               Text="{lex:Loc InfoF5}"
-                               TextWrapping="Wrap"/>
-                </StackPanel>
-            </Border>
+                        <UserControl Style="{StaticResource FormRow}" Tag="MFC">
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="cmbMFCPort"
+                                          VerticalContentAlignment="Center"
+                                          SelectionChanged="Port_SelectionChanged"/>
+                                <Button x:Name="btnMFCToggle"
+                                        IsEnabled="{Binding ElementName=cmbMFCPort, Path=SelectedItem, Converter={StaticResource obj2bool}}"
+                                        Content="{lex:Loc {Binding MFCAction}}"
+                                        Click="MFCToggle_Click"/>
+                            </StackPanel>
+                        </UserControl>
+                        <UserControl Style="{StaticResource FormRow}" Tag="PID">
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox x:Name="cmbPIDPort"
+                                          VerticalContentAlignment="Center"
+                                          SelectionChanged="Port_SelectionChanged"/>
+                                <Button x:Name="btnPIDToggle"
+                                        IsEnabled="{Binding ElementName=cmbPIDPort, Path=SelectedItem, Converter={StaticResource obj2bool}}"
+                                        Content="{lex:Loc {Binding PIDAction}}"
+                                        Click="PIDToggle_Click"/>
+                            </StackPanel>
+                        </UserControl>
+                        <Separator/>
+                        <TextBlock Margin="8,0"
+                                   MaxWidth="265"
+                                   HorizontalAlignment="Left"
+                                   Text="{lex:Loc InfoF2}"
+                                   TextWrapping="Wrap"/>
+                        <TextBlock Margin="8,4"
+                                   MaxWidth="265"
+                                   HorizontalAlignment="Left"
+                                   Text="{lex:Loc InfoF5}"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Border>
+        
+                <Border Style="{StaticResource Form}" Margin="0,0,0,12">
+                    <StackPanel x:Name="grdPlayground"
+                                IsEnabled="False">
+                        <Label Style="{StaticResource FormHeader}"
+                               Content="{lex:Loc MFCPlayground}"/>
 
-            <Border Style="{StaticResource Form}" Margin="0,0,0,12">
-                <StackPanel x:Name="grdPlayground"
-                            IsEnabled="False">
-                    <Label Style="{StaticResource FormHeader}"
-                           Content="{lex:Loc MFCPlayground}"/>
+                        <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
+                                    <TextBox x:Name="txbFreshAir"
+                                             VerticalContentAlignment="Center"
+                                             Text="5.0"
+                                             ToolTip="{lex:Loc NumNotNeg}"
+                                             KeyUp="FreshAir_KeyUp"/>
+                                </UserControl>
+                                <Button Grid.Column="1"
+                                        Content="{lex:Loc Set}"
+                                        Click="SetFreshAir_Click"/>
+                            </Grid>
+                        </UserControl>
 
-                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <UserControl Grid.Column="0" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
-                                <TextBox x:Name="txbFreshAir"
-                                         VerticalContentAlignment="Center"
-                                         Text="5.0"
-                                         ToolTip="{lex:Loc NumNotNeg}"
-                                         KeyUp="FreshAir_KeyUp"/>
-                            </UserControl>
-                            <Button Grid.Column="1"
-                                    Content="{lex:Loc Set}"
-                                    Click="SetFreshAir_Click"/>
-                        </Grid>
-                    </UserControl>
+                        <Separator/>
 
-                    <Separator/>
+                        <UserControl Margin="0,8,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110" />
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                    <UserControl Margin="0,8,0,0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="110" />
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <ComboBox x:Name="cmbGas1" Grid.Column="0"
-                                      SelectionChanged="Gas_SelectionChanged"/>
+                                <ComboBox x:Name="cmbGas1" Grid.Column="0"
+                                          SelectionChanged="Gas_SelectionChanged"/>
                             
-                            <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                                <TextBox x:Name="txbOdor1"
-                                         VerticalContentAlignment="Center"
-                                         Text="8.0"
-                                         ToolTip="{lex:Loc NumNotNeg}"
-                                         KeyUp="Odor1_KeyUp"/>
-                            </UserControl>
-                            <Button Grid.Column="2" 
-                                    Content="{lex:Loc Set}"
-                                    Click="SetOdor1_Click"/>
-                            <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                       VerticalAlignment="Center">
-                                <RadioButton x:Name="rdbValve1ToWaste"
-                                             GroupName="valve1"
-                                             IsChecked="True"
-                                             Content="{lex:Loc Waste}"
-                                             Click="SetDirection_Click"/>
-                                <RadioButton x:Name="rdbValve1ToUser"
-                                             GroupName="valve1"
-                                             Content="{lex:Loc User}"
-                                             Margin="16,0,0,0"
-                                             Click="SetDirection_Click"/>
-                            </WrapPanel>
-                        </Grid>
-                    </UserControl>
+                                <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                                    <TextBox x:Name="txbOdor1"
+                                             VerticalContentAlignment="Center"
+                                             Text="8.0"
+                                             ToolTip="{lex:Loc NumNotNeg}"
+                                             KeyUp="Odor1_KeyUp"/>
+                                </UserControl>
+                                <Button Grid.Column="2" 
+                                        Content="{lex:Loc Set}"
+                                        Click="SetOdor1_Click"/>
+                                <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                           VerticalAlignment="Center">
+                                    <RadioButton x:Name="rdbValve1ToWaste"
+                                                 GroupName="valve1"
+                                                 IsChecked="True"
+                                                 Content="{lex:Loc Waste}"
+                                                 Click="SetDirection_Click"/>
+                                    <RadioButton x:Name="rdbValve1ToUser"
+                                                 GroupName="valve1"
+                                                 Content="{lex:Loc User}"
+                                                 Margin="16,0,0,0"
+                                                 Click="SetDirection_Click"/>
+                                </WrapPanel>
+                            </Grid>
+                        </UserControl>
                     
-                    <Separator/>
+                        <Separator/>
 
-                    <UserControl Margin="0,8,0,0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="110"/>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="100"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        <UserControl Margin="0,8,0,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="110"/>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="100"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                            <ComboBox x:Name="cmbGas2" Grid.Column="0"
-                                      SelectionChanged="Gas_SelectionChanged"/>
+                                <ComboBox x:Name="cmbGas2" Grid.Column="0"
+                                          SelectionChanged="Gas_SelectionChanged"/>
 
-                            <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                                <TextBox x:Name="txbOdor2"
-                                         VerticalContentAlignment="Center"
-                                         Text="8.0"
-                                         ToolTip="{lex:Loc NumNotNeg}"
-                                         KeyUp="Odor2_KeyUp"/>
-                            </UserControl>
-                            <Button Grid.Column="2" 
-                                    Content="{lex:Loc Set}"
-                                    Click="SetOdor2_Click"/>
-                            <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
-                                       VerticalAlignment="Center">
-                                <RadioButton x:Name="rdbValve2ToWaste"
-                                             GroupName="valve2"
-                                             IsChecked="True"
-                                             Content="{lex:Loc Waste}"
-                                             Click="SetDirection_Click"/>
-                                <RadioButton x:Name="rdbValve2ToUser"
-                                             GroupName="valve2"
-                                             Content="{lex:Loc User}"
-                                             Margin="16,0,0,0"
-                                             Click="SetDirection_Click"/>
-                            </WrapPanel>
-                        </Grid>
-                    </UserControl>
-                </StackPanel>
-            </Border>
-        </StackPanel>
+                                <UserControl Grid.Column="1" Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                                    <TextBox x:Name="txbOdor2"
+                                             VerticalContentAlignment="Center"
+                                             Text="8.0"
+                                             ToolTip="{lex:Loc NumNotNeg}"
+                                             KeyUp="Odor2_KeyUp"/>
+                                </UserControl>
+                                <Button Grid.Column="2" 
+                                        Content="{lex:Loc Set}"
+                                        Click="SetOdor2_Click"/>
+                                <WrapPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                                           VerticalAlignment="Center">
+                                    <RadioButton x:Name="rdbValve2ToWaste"
+                                                 GroupName="valve2"
+                                                 IsChecked="True"
+                                                 Content="{lex:Loc Waste}"
+                                                 Click="SetDirection_Click"/>
+                                    <RadioButton x:Name="rdbValve2ToUser"
+                                                 GroupName="valve2"
+                                                 Content="{lex:Loc User}"
+                                                 Margin="16,0,0,0"
+                                                 Click="SetDirection_Click"/>
+                                </WrapPanel>
+                            </Grid>
+                        </UserControl>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
 
         <StackPanel Grid.Row="2" Grid.Column="1" x:Name="stpMeasurements"
                     Margin="12,0">

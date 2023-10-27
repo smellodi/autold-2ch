@@ -26,8 +26,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition />
+            <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -40,169 +39,171 @@
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Form}">
-            <StackPanel Width="480">
-                <Label Style="{StaticResource FormHeader}"
-                       Content="{lex:Loc Settings}"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="480">
+                    <Label Style="{StaticResource FormHeader}"
+                           Content="{lex:Loc Settings}"/>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc GasSniffer}">
-                    <UserControl Style="{StaticResource ValueWithUnit}">
-                        <ComboBox x:Name="cmbGasSniffer"
-                                  VerticalContentAlignment="Center"
-                                  SelectionChanged="GasSniffer_SelectionChanged"/>
-                    </UserControl>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc DMSSettings}"
-                             Visibility="{Binding IsDMSSniffer, Converter={StaticResource bool2vis}}">
-                    <UserControl Style="{StaticResource ValueWithUnit}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-
-                            <Label Grid.Row="0" Grid.Column="0"
-                                   VerticalAlignment="Bottom"
-                                   Content="IP"/>
-                            <Label Grid.Row="1" Grid.Column="0"
-                                   VerticalAlignment="Bottom"
-                                   Content="{lex:Loc Project}"/>
-                            <Label Grid.Row="2" Grid.Column="0"
-                                   VerticalAlignment="Bottom"
-                                   Content="{lex:Loc Parameter}"/>
-                            <Label Grid.Row="3" Grid.Column="0"
-                                   VerticalAlignment="Bottom"
-                                   Content="{lex:Loc SniffingDelay}"/>
-
-                            <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
-                                     KeyUp="txbDMSIP_KeyUp"
-                                     LostFocus="txbDMSIP_LostFocus"/>
-                            <ComboBox x:Name="cmbDMSProject" Grid.Row="1" Grid.Column="1"
-                                      Margin="0,4,0,0"
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc GasSniffer}">
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <ComboBox x:Name="cmbGasSniffer"
                                       VerticalContentAlignment="Center"
-                                      SelectionChanged="DMSProject_SelectionChanged"/>
-                            <ComboBox x:Name="cmbDMSParameter" Grid.Row="2" Grid.Column="1"
-                                      Margin="0,4,0,0"
-                                      VerticalContentAlignment="Center"
-                                      IsEnabled="False"
-                                      SelectionChanged="DMSParameter_SelectionChanged"/>
-                            <TextBox x:Name="txbDMSSniffingDelay" Grid.Row="3" Grid.Column="1"
-                                     Margin="0,4,0,0"/>
-                            <StackPanel Grid.Row="4" Grid.ColumnSpan="2"
-                                        Orientation="Horizontal">
-                                <Image x:Name="imgDMSLoading"
-                                       Width="16"
-                                       Height="16"
-                                       Margin="0,4,4,0"
-                                       Visibility="Hidden"
-                                       HorizontalAlignment="Left"
-                                       gif:ImageBehavior.AnimatedSource="/Assets/images/loading.gif" />
-                                <Label x:Name="lblDMSWarning" 
-                                       Foreground="DarkRed"/>
-                            </StackPanel>
-                        </Grid>
+                                      SelectionChanged="GasSniffer_SelectionChanged"/>
+                        </UserControl>
                     </UserControl>
-                </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
-                        <TextBox x:Name="txbFreshAirFlow"
-                                 Text="5"
-                                 ToolTip="{lex:Loc NumPos}"/>
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc DMSSettings}"
+                                 Visibility="{Binding IsDMSSniffer, Converter={StaticResource bool2vis}}">
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <Label Grid.Row="0" Grid.Column="0"
+                                       VerticalAlignment="Bottom"
+                                       Content="IP"/>
+                                <Label Grid.Row="1" Grid.Column="0"
+                                       VerticalAlignment="Bottom"
+                                       Content="{lex:Loc Project}"/>
+                                <Label Grid.Row="2" Grid.Column="0"
+                                       VerticalAlignment="Bottom"
+                                       Content="{lex:Loc Parameter}"/>
+                                <Label Grid.Row="3" Grid.Column="0"
+                                       VerticalAlignment="Bottom"
+                                       Content="{lex:Loc SniffingDelay}"/>
+
+                                <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
+                                         KeyUp="txbDMSIP_KeyUp"
+                                         LostFocus="txbDMSIP_LostFocus"/>
+                                <ComboBox x:Name="cmbDMSProject" Grid.Row="1" Grid.Column="1"
+                                          Margin="0,4,0,0"
+                                          VerticalContentAlignment="Center"
+                                          SelectionChanged="DMSProject_SelectionChanged"/>
+                                <ComboBox x:Name="cmbDMSParameter" Grid.Row="2" Grid.Column="1"
+                                          Margin="0,4,0,0"
+                                          VerticalContentAlignment="Center"
+                                          IsEnabled="False"
+                                          SelectionChanged="DMSParameter_SelectionChanged"/>
+                                <TextBox x:Name="txbDMSSniffingDelay" Grid.Row="3" Grid.Column="1"
+                                         Margin="0,4,0,0"/>
+                                <StackPanel Grid.Row="4" Grid.ColumnSpan="2"
+                                            Orientation="Horizontal">
+                                    <Image x:Name="imgDMSLoading"
+                                           Width="16"
+                                           Height="16"
+                                           Margin="0,4,4,0"
+                                           Visibility="Hidden"
+                                           HorizontalAlignment="Left"
+                                           gif:ImageBehavior.AnimatedSource="/Assets/images/loading.gif" />
+                                    <Label x:Name="lblDMSWarning" 
+                                           Foreground="DarkRed"/>
+                                </StackPanel>
+                            </Grid>
+                        </UserControl>
                     </UserControl>
-                </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}"
-                             Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
-                    <StackPanel>
-                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                            <TextBox x:Name="txbPracticeOdorFlow"
-                                     Text="30"
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
+                            <TextBox x:Name="txbFreshAirFlow"
+                                     Text="5"
                                      ToolTip="{lex:Loc NumPos}"/>
                         </UserControl>
-                        <UserControl Style="{StaticResource ValueWithUnit}">
-                            <TextBlock TextWrapping="Wrap"
-                                       Margin="0,4,0,0"
-                                       Text="{lex:Loc PracticeStageFlowDescription}"/>
-                        </UserControl>
-                    </StackPanel>
-                </UserControl>
+                    </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorFlow}">
-                    <StackPanel>
-                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
-                            <TextBox x:Name="txbTestOdorFlow"
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PracticeOdorFlow}"
+                                 Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
+                        <StackPanel>
+                            <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                                <TextBox x:Name="txbPracticeOdorFlow"
+                                         Text="30"
+                                         ToolTip="{lex:Loc NumPos}"/>
+                            </UserControl>
+                            <UserControl Style="{StaticResource ValueWithUnit}">
+                                <TextBlock TextWrapping="Wrap"
+                                           Margin="0,4,0,0"
+                                           Text="{lex:Loc PracticeStageFlowDescription}"/>
+                            </UserControl>
+                        </StackPanel>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc OdorFlow}">
+                        <StackPanel>
+                            <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc MlMin}">
+                                <TextBox x:Name="txbTestOdorFlow"
+                                         Text="20"
+                                         ToolTip="{lex:Loc NumPos}"/>
+                            </UserControl>
+                            <UserControl Style="{StaticResource ValueWithUnit}">
+                                <TextBlock TextWrapping="Wrap"
+                                           Margin="0,4,0,0"
+                                           Text="{lex:Loc TestStageFlowDescription}"/>
+                            </UserControl>
+                        </StackPanel>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc InitialPause}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Seconds}">
+                            <TextBox x:Name="txbInitialPause"
                                      Text="20"
                                      ToolTip="{lex:Loc NumPos}"/>
                         </UserControl>
-                        <UserControl Style="{StaticResource ValueWithUnit}">
-                            <TextBlock TextWrapping="Wrap"
-                                       Margin="0,4,0,0"
-                                       Text="{lex:Loc TestStageFlowDescription}"/>
-                        </UserControl>
-                    </StackPanel>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc InitialPause}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Seconds}">
-                        <TextBox x:Name="txbInitialPause"
-                                 Text="20"
-                                 ToolTip="{lex:Loc NumPos}"/>
                     </UserControl>
-                </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PulseDuration}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Seconds}">
-                        <TextBox x:Name="txbOdorFlowDuration"
-                                 Text="20"
-                                 ToolTip="{lex:Loc NumPos}"/>
-                    </UserControl>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PairsOfMixtures}">
-                    <StackPanel>
-                        <UserControl Style="{StaticResource ValueWithUnit}">
-                            <TextBox x:Name="txbPairsOfMixtures"
-                                     TextWrapping="Wrap"
-                                     AcceptsReturn="True"
-                                     VerticalScrollBarVisibility="Auto"
-                                     MinLines="4"
-                                     MaxLines="6"
-                                     VerticalContentAlignment="Top"
-                                     Text="Odor1, Odor2"/>
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PulseDuration}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Seconds}">
+                            <TextBox x:Name="txbOdorFlowDuration"
+                                     Text="20"
+                                     ToolTip="{lex:Loc NumPos}"/>
                         </UserControl>
-                        <UserControl Style="{StaticResource ValueWithUnit}">
-                            <TextBlock TextWrapping="Wrap"
-                                       Margin="0,4,0,0"
-                                       Text="{lex:Loc InstructionToEnterMixtures}"/>
-                        </UserControl>
-                    </StackPanel>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Repetitions}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Times}">
-                        <TextBox x:Name="txbRepetitions"
-                                 Text="1"
-                                 ToolTip="{lex:Loc NumPos}"/>
                     </UserControl>
-                </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}"
-                             Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
-                    <CheckBox x:Name="chkWaitForPID"
-                              Content="{lex:Loc WaitForPID}"/>
-                </UserControl>
-            </StackPanel>
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PairsOfMixtures}">
+                        <StackPanel>
+                            <UserControl Style="{StaticResource ValueWithUnit}">
+                                <TextBox x:Name="txbPairsOfMixtures"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         MinLines="4"
+                                         MaxLines="6"
+                                         VerticalContentAlignment="Top"
+                                         Text="Odor1, Odor2"/>
+                            </UserControl>
+                            <UserControl Style="{StaticResource ValueWithUnit}">
+                                <TextBlock TextWrapping="Wrap"
+                                           Margin="0,4,0,0"
+                                           Text="{lex:Loc InstructionToEnterMixtures}"/>
+                            </UserControl>
+                        </StackPanel>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Repetitions}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Times}">
+                            <TextBox x:Name="txbRepetitions"
+                                     Text="1"
+                                     ToolTip="{lex:Loc NumPos}"/>
+                        </UserControl>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDUsage}"
+                                 Visibility="{Binding IsHumanSniffer, Converter={StaticResource bool2vis}}">
+                        <CheckBox x:Name="chkWaitForPID"
+                                  Content="{lex:Loc WaitForPID}"/>
+                    </UserControl>
+                </StackPanel>
+            </ScrollViewer>
         </Border>
 
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10" 
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="10" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Style="{StaticResource Next}"

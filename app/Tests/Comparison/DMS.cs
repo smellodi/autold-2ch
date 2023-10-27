@@ -361,7 +361,7 @@ namespace AutOlD2Ch.Tests.Comparison
             Smop.IonVision.Settings.DefaultFilename = IonVisionSettingsFilename;
         }
 
-        readonly Communicator _comunicator = new(IonVisionSettingsFilename);// Storage.Instance.IsDebugging);
+        readonly Communicator _comunicator = new(IonVisionSettingsFilename, Storage.Instance.IsDebugging);
         readonly FlowLogger _eventLogger = FlowLogger.Instance;
 
         string _folder;

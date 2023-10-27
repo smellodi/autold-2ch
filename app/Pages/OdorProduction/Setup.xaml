@@ -23,8 +23,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="20"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition />
+            <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
 
@@ -37,102 +36,104 @@
 
         <Border Grid.Row="2" Grid.Column="1"
                 Style="{StaticResource Form}">
-            <StackPanel Width="460">
-                <Label Style="{StaticResource FormHeader}"
-                       Content="{lex:Loc Settings}"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="460">
+                    <Label Style="{StaticResource FormHeader}"
+                           Content="{lex:Loc Settings}"/>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
-                        <TextBox x:Name="txbFreshAir"
-                                 Text="5"
-                                 ToolTip="{lex:Loc NumPos}"/>
-                    </UserControl>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ScentedAir}">
-                    <StackPanel>
-                        <UserControl Style="{StaticResource ValueWithUnit}">
-                            <TextBox x:Name="txbPulses"
-                                     TextWrapping="Wrap"
-                                     AcceptsReturn="True"
-                                     VerticalScrollBarVisibility="Auto"
-                                     MinLines="5"
-                                     MaxLines="8"
-                                     VerticalContentAlignment="Top"
-                                     Text="1=4x200,2=8x500 1=16x500,2=[250]10x250 1=[250]32x250,2=20x500"
-                                     ToolTip="{lex:Loc CommaSeparatedValues}"/>
-                        </UserControl>
-                        <TextBlock TextWrapping="Wrap"
-                                   Margin="0,4,0,0"
-                                   Text="{lex:Loc CommaSeparatedListWithExpressions}"/>
-                        <CheckBox x:Name="chkRandomizeOrder"
-                                  Margin="0,12,0,0"
-                                  VerticalAlignment="Center"
-                                  Content="{lex:Loc RandomizeOrder}"/>
-                    </StackPanel>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRowLow}" Tag="{lex:Loc DurationsSec}">
-                    <Grid Margin="10,0,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <UserControl Grid.Column="0"
-                                     Style="{StaticResource ValueWithLabelAbove}"
-                                     Margin="0,0,4,0"
-                                     Tag="{lex:Loc InitialPause}">
-                            <TextBox x:Name="txbInitialPause"
-                                     Text="60"
-                                     ToolTip="{lex:Loc IntNotNeg}"/>
-                        </UserControl>
-                        <UserControl Grid.Column="1"
-                                     Style="{StaticResource ValueWithLabelAbove}"
-                                     Margin="0,0,4,0"
-                                     Tag="{lex:Loc OdorFlow}">
-                            <TextBox x:Name="txbOdorFlowDuration"
-                                     Text="10"
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
+                            <TextBox x:Name="txbFreshAir"
+                                     Text="5"
                                      ToolTip="{lex:Loc NumPos}"/>
                         </UserControl>
-                        <UserControl Grid.Column="2"
-                                     Style="{StaticResource ValueWithLabelAbove}"
-                                     Tag="{lex:Loc FinalPause}">
-                            <TextBox x:Name="txbFinalPause"
-                                     Text="30"
-                                     ToolTip="{lex:Loc IntNotNeg}"/>
-                        </UserControl>
-                    </Grid>
-                </UserControl>
-
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ManualControl}">
-                    <CheckBox x:Name="chkManualFlowStop"
-                              VerticalAlignment="Center"
-                              ToolTip="{lex:Loc ManualFlowStopTip}"
-                              Content="{lex:Loc ManualFlowStop}"/>
-                </UserControl>
-
-                <Separator/>
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDSampling}">
-                    <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Ms}">
-                        <TextBox x:Name="txbPIDSamplingInterval"
-                                 Text="1000"
-                                 ToolTip="{lex:Loc IntPos}"/>
                     </UserControl>
-                </UserControl>
 
-                <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Timer}">
-                    <CheckBox x:Name="chkUseValveControllerTimer"
-                              VerticalAlignment="Center">
-                        <TextBlock Text="{lex:Loc UseValveControllerTimer}"
-                                   TextWrapping="Wrap"/>
-                    </CheckBox>
-                </UserControl>
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ScentedAir}">
+                        <StackPanel>
+                            <UserControl Style="{StaticResource ValueWithUnit}">
+                                <TextBox x:Name="txbPulses"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         VerticalScrollBarVisibility="Auto"
+                                         MinLines="5"
+                                         MaxLines="8"
+                                         VerticalContentAlignment="Top"
+                                         Text="1=4x200,2=8x500 1=16x500,2=[250]10x250 1=[250]32x250,2=20x500"
+                                         ToolTip="{lex:Loc CommaSeparatedValues}"/>
+                            </UserControl>
+                            <TextBlock TextWrapping="Wrap"
+                                       Margin="0,4,0,0"
+                                       Text="{lex:Loc CommaSeparatedListWithExpressions}"/>
+                            <CheckBox x:Name="chkRandomizeOrder"
+                                      Margin="0,12,0,0"
+                                      VerticalAlignment="Center"
+                                      Content="{lex:Loc RandomizeOrder}"/>
+                        </StackPanel>
+                    </UserControl>
 
-            </StackPanel>
+                    <UserControl Style="{StaticResource FormRowLow}" Tag="{lex:Loc DurationsSec}">
+                        <Grid Margin="10,0,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <UserControl Grid.Column="0"
+                                         Style="{StaticResource ValueWithLabelAbove}"
+                                         Margin="0,0,4,0"
+                                         Tag="{lex:Loc InitialPause}">
+                                <TextBox x:Name="txbInitialPause"
+                                         Text="60"
+                                         ToolTip="{lex:Loc IntNotNeg}"/>
+                            </UserControl>
+                            <UserControl Grid.Column="1"
+                                         Style="{StaticResource ValueWithLabelAbove}"
+                                         Margin="0,0,4,0"
+                                         Tag="{lex:Loc OdorFlow}">
+                                <TextBox x:Name="txbOdorFlowDuration"
+                                         Text="10"
+                                         ToolTip="{lex:Loc NumPos}"/>
+                            </UserControl>
+                            <UserControl Grid.Column="2"
+                                         Style="{StaticResource ValueWithLabelAbove}"
+                                         Tag="{lex:Loc FinalPause}">
+                                <TextBox x:Name="txbFinalPause"
+                                         Text="30"
+                                         ToolTip="{lex:Loc IntNotNeg}"/>
+                            </UserControl>
+                        </Grid>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ManualControl}">
+                        <CheckBox x:Name="chkManualFlowStop"
+                                  VerticalAlignment="Center"
+                                  ToolTip="{lex:Loc ManualFlowStopTip}"
+                                  Content="{lex:Loc ManualFlowStop}"/>
+                    </UserControl>
+
+                    <Separator/>
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc PIDSampling}">
+                        <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc Ms}">
+                            <TextBox x:Name="txbPIDSamplingInterval"
+                                     Text="1000"
+                                     ToolTip="{lex:Loc IntPos}"/>
+                        </UserControl>
+                    </UserControl>
+
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc Timer}">
+                        <CheckBox x:Name="chkUseValveControllerTimer"
+                                  VerticalAlignment="Center">
+                            <TextBlock Text="{lex:Loc UseValveControllerTimer}"
+                                       TextWrapping="Wrap"/>
+                        </CheckBox>
+                    </UserControl>
+
+                </StackPanel>
+            </ScrollViewer>
         </Border>
 
-        <StackPanel Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10" 
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="10" 
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
             <Button Style="{StaticResource Next}"

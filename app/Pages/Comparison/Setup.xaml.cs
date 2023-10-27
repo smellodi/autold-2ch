@@ -85,7 +85,7 @@ namespace AutOlD2Ch.Pages.Comparison
                 new Utils.Validation(txbPracticeOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbTestOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-                new Utils.Validation(txbOdorFlowDuration, 0.1, MFC.MAX_SHORT_PULSE_DURATION / 1000, Utils.Validation.ValueFormat.Float),
+                new Utils.Validation(txbOdorFlowDuration, 0.1, 60 * 60, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbDMSSniffingDelay, 0, 30, Utils.Validation.ValueFormat.Float),
                 new Utils.Validation(txbRepetitions, 1, 100, Utils.Validation.ValueFormat.Integer),
                 //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
