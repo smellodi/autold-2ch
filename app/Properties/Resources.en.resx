@@ -550,7 +550,7 @@
 		<value>Scan delay</value>
 	</data>
 	<data name="DMSAPIVerionIsNotSupported" xml:space="preserve">
-		<value>DMS API v{0} is not supported, expected v{1}</value>
+		<value>DMS API v{0} does not match the expected version {1}</value>
 	</data>
 	<data name="Repetitions" xml:space="preserve">
 		<value>Repetitions</value>

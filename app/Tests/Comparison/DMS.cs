@@ -167,7 +167,7 @@ namespace AutOlD2Ch.Tests.Comparison
             }
         }
 
-        public async Task<string> SetProject()
+        public async Task<string> SetProject(int waitingDuration)
         {
             if (!_isActive)
             {
@@ -177,7 +177,7 @@ namespace AutOlD2Ch.Tests.Comparison
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
-                PrintResponse("set project", await _comunicator.SetProjectAndWait());
+                PrintResponse("set project", await _comunicator.SetProjectAndWait(waitingDuration));
             }
             catch (Exception ex)
             {
@@ -361,7 +361,7 @@ namespace AutOlD2Ch.Tests.Comparison
             Smop.IonVision.Settings.DefaultFilename = IonVisionSettingsFilename;
         }
 
-        readonly Communicator _comunicator = new(IonVisionSettingsFilename, Storage.Instance.IsDebugging);
+        readonly Communicator _comunicator = new(IonVisionSettingsFilename);// Storage.Instance.IsDebugging);
         readonly FlowLogger _eventLogger = FlowLogger.Instance;
 
         string _folder;

@@ -35,7 +35,7 @@ namespace AutOlD2Ch.Pages.ThresholdTest
                 if (project != _dms.Settings.Project)
                 {
                     await Task.Delay(INTER_REQUEST_INTERVAL);
-                    if (!HandleError(await _dms.SetProject()))
+                    if (!HandleError(await _dms.SetProject(PROJECT_LOADING_DURATION)))
                         return;
                 }
                 else
@@ -73,8 +73,9 @@ namespace AutOlD2Ch.Pages.ThresholdTest
 
         DMS _dms = null;
 
-        const int INTER_REQUEST_INTERVAL = 1000;
-        const int PARAMETER_LOADING_DURATION = 10000; // ms
+        const int INTER_REQUEST_INTERVAL = 1000;        // ms
+        const int PARAMETER_LOADING_DURATION = 10000;   // ms
+        const int PROJECT_LOADING_DURATION = 3000;      // ms
 
         private bool HandleError(string error)
         {
