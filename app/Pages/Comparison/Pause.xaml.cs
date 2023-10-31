@@ -17,6 +17,7 @@ namespace AutOlD2Ch.Pages.ThresholdTest
 
             Storage.Instance
                 .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
                 .BindVisibilityToDebug(lblDebug);
 
             if (Focusable)

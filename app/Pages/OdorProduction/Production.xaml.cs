@@ -109,8 +109,10 @@ namespace AutOlD2Ch.Pages.OdorProduction
 
             InitializeComponent();
 
-            Storage.Instance.BindScaleToZoomLevel(sctScale);
-            Storage.Instance.BindVisibilityToDebug(lblDebug);
+            Storage.Instance
+                .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
+                .BindVisibilityToDebug(lblDebug);
 
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));

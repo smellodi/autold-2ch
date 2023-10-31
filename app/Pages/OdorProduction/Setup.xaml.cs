@@ -17,6 +17,7 @@ namespace AutOlD2Ch.Pages.OdorProduction
 
             Storage.Instance
                 .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
                 .BindVisibilityToDebug(lblDebug);
 
             txbFreshAir.Text = _settings.FreshAir.ToString("F1");

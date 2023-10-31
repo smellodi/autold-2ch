@@ -81,4 +81,25 @@ namespace AutOlD2Ch.Utils
             throw new NotImplementedException();
         }
     }
+
+    public class ZoomToPercentageConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value.GetType() == typeof(float) || value.GetType() == typeof(double))
+            {
+                double number = (double)value * 100;
+                return $"{number:F0}%";
+            }
+            else
+            {
+                return "NaN";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

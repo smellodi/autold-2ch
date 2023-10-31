@@ -93,6 +93,19 @@ namespace AutOlD2Ch
             return this;
         }
 
+        public Storage BindContentToZoomLevel(DependencyObject obj)
+        {
+            var zoomValueBinding = new Binding(nameof(ZoomLevel))
+            {
+                Source = this,
+                Converter = new Utils.ZoomToPercentageConverter()
+            };
+
+            BindingOperations.SetBinding(obj, ContentControl.ContentProperty, zoomValueBinding);
+
+            return this;
+        }
+
         public Storage UnbindVisibilityToDebug(DependencyObject obj)
         {
             BindingOperations.ClearBinding(obj, UIElement.VisibilityProperty);
@@ -104,6 +117,12 @@ namespace AutOlD2Ch
             BindingOperations.ClearBinding(obj, ScaleTransform.ScaleXProperty);
             BindingOperations.ClearBinding(obj, ScaleTransform.ScaleYProperty);
 
+            return this;
+        }
+
+        public Storage UnbindContentToZoomLevel(DependencyObject obj)
+        {
+            BindingOperations.ClearBinding(obj, ContentControl.ContentProperty);
             return this;
         }
 

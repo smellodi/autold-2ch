@@ -25,8 +25,10 @@ namespace AutOlD2Ch.Pages
         {
             InitializeComponent();
 
-            Storage.Instance.BindScaleToZoomLevel(sctScale);
-            Storage.Instance.BindVisibilityToDebug(lblDebug);
+            Storage.Instance
+                .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
+                .BindVisibilityToDebug(lblDebug);
 
             DataContext = this;
         }

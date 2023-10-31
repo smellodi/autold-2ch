@@ -26,6 +26,7 @@ namespace AutOlD2Ch.Pages.Comparison
 
             Storage.Instance
                 .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
                 .BindVisibilityToDebug(lblDebug);
 
             DataContext = this;

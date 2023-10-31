@@ -33,6 +33,7 @@ namespace AutOlD2Ch.Pages
 
             Storage.Instance
                 .BindScaleToZoomLevel(sctScale)
+                .BindContentToZoomLevel(lblZoom)
                 .BindVisibilityToDebug(lblDebug);
 
             UpdatePortList(cmbPIDPort);
