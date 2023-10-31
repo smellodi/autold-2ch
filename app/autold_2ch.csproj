@@ -6,7 +6,10 @@
     <UseWPF>true</UseWPF>
     <RootNamespace>AutOlD2Ch</RootNamespace>
     <Company>Tampere University</Company>
-    <Authors>Oleg Spakov</Authors>
+    <Authors>Oleg Špakov</Authors>
+    <LangVersion>11.0</LangVersion>
+    <ApplicationIcon>Assets\icons\main.ico</ApplicationIcon>
+    <PackageIcon>main.png</PackageIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,6 +29,10 @@
     <None Remove="Assets\images\question.png" />
     <None Remove="Assets\images\wait.gif" />
     <None Remove="Assets\main.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\icons\main.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,6 +101,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Assets\icons\main.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="Properties\GasProps.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
