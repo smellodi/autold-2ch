@@ -61,10 +61,6 @@ namespace AutOlD2Ch.Tests.OdorProduction
         public static Pulse[] ParsePulses(string input, out string error)
         {
             var pulsesStr = input.Split(Pulse.DELIM_LIST);
-            if (pulsesStr.Length < 1)
-            {
-                error = Utils.L10n.T("EmptyList");
-            }
 
             var pulses = new List<Pulse>();
 

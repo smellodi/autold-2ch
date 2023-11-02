@@ -10,7 +10,7 @@ using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch.Tests.Comparison
 {
-    public class Procedure : ITestEmulator
+    public class Procedure : ITestEmulator, IDisposable
     {
         public enum Answer
         {
@@ -214,6 +214,13 @@ namespace AutOlD2Ch.Tests.Comparison
             }
         }
 
+        public void Dispose()
+        {
+            _timer.Dispose();
+            _runner?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
         // Internal
 
         const double UPDATE_INTERVAL_IN_SECONDS = 0.5;
@@ -308,6 +315,7 @@ namespace AutOlD2Ch.Tests.Comparison
 
         private void Finilize()
         {
+            _runner?.Dispose();
             _runner = null;
             _mixtureID = MixtureID.None;
 

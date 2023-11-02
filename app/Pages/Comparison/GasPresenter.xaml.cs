@@ -7,7 +7,7 @@ using AutOlD2Ch.Tests.Comparison;
 
 namespace AutOlD2Ch.Pages.Comparison
 {
-    public partial class GasPresenter : Page, IPage<EventArgs>
+    public partial class GasPresenter : Page, IPage<EventArgs>, IDisposable
     {
         public event EventHandler<EventArgs> Next;
 
@@ -39,6 +39,12 @@ namespace AutOlD2Ch.Pages.Comparison
         public void Interrupt()
         {
             _procedure.Stop();
+        }
+
+        public void Dispose()
+        {
+            _procedure.Dispose();
+            GC.SuppressFinalize(this);
         }
 
 

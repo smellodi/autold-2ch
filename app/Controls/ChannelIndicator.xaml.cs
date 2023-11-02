@@ -28,7 +28,7 @@ namespace AutOlD2Ch.Controls
         {
             if (sender is ChannelIndicator instance)
             {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Title)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Title)));
             }
         }
 
@@ -53,8 +53,8 @@ namespace AutOlD2Ch.Controls
         {
             if (sender is ChannelIndicator instance)
             {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Value)));
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Value)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
             }
         }
 
@@ -79,7 +79,7 @@ namespace AutOlD2Ch.Controls
         {
             if (sender is ChannelIndicator instance)
             {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Units)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Units)));
             }
         }
 
@@ -104,7 +104,7 @@ namespace AutOlD2Ch.Controls
         {
             if (sender is ChannelIndicator instance)
             {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(IsActive)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(IsActive)));
             }
         }
 
@@ -129,8 +129,8 @@ namespace AutOlD2Ch.Controls
         {
             if (sender is ChannelIndicator instance)
             {
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(Precision)));
-                instance.PropertyChanged(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Precision)));
+                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
             }
         }
 

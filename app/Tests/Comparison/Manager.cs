@@ -8,7 +8,7 @@ namespace AutOlD2Ch.Tests.Comparison
     /// <summary>
     /// Manages the order of pages in the Comparison
     /// </summary>
-    public class Manager : ITestManager
+    public class Manager : ITestManager, IDisposable
     {
         public event EventHandler<PageDoneEventArgs> PageDone;
 
@@ -119,6 +119,12 @@ namespace AutOlD2Ch.Tests.Comparison
                 case EmulationCommand.ForceToFinishWithResult: if (_current is Production prodPage) prodPage.Emulator.EmulationFinilize(); break;
                 default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
+        }
+
+        public void Dispose()
+        {
+            _gasPresenterPage?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         // Internal

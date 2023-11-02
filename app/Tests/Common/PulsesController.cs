@@ -7,7 +7,7 @@ namespace AutOlD2Ch.Tests.Common
     /// <summary>
     /// Generates a list of pulse state changes, and fires each change event at its proper time
     /// </summary>
-    public class PulsesController
+    public class PulsesController : IDisposable
     {
         public class PulseStateChangedEventArgs : EventArgs
         {
@@ -26,14 +26,14 @@ namespace AutOlD2Ch.Tests.Common
 
             public PulseStateChangedEventArgs(ChannelPulse startingChannel, ChannelPulse ongoingChannel = null, bool isLast = false)
             {
-                StartingChannels = startingChannel != null ? new ChannelPulse[] { startingChannel } : new ChannelPulse[] { };
-                OngoingChannels = ongoingChannel != null ? new ChannelPulse[] { ongoingChannel } : new ChannelPulse[] { };
+                StartingChannels = startingChannel != null ? new ChannelPulse[] { startingChannel } : Array.Empty<ChannelPulse>();
+                OngoingChannels = ongoingChannel != null ? new ChannelPulse[] { ongoingChannel } : Array.Empty<ChannelPulse>();
                 IsLast = isLast;
             }
             public PulseStateChangedEventArgs(ChannelPulse[] startingChannels, ChannelPulse[] ongoingChannels = null)
             {
-                StartingChannels = startingChannels != null ? startingChannels : new ChannelPulse[] { };
-                OngoingChannels = ongoingChannels != null ? ongoingChannels : new ChannelPulse[] { };
+                StartingChannels = startingChannels ?? Array.Empty<ChannelPulse>();
+                OngoingChannels = ongoingChannels ?? Array.Empty<ChannelPulse>();
             }
 
             public override string ToString()
@@ -73,7 +73,7 @@ namespace AutOlD2Ch.Tests.Common
         /// </summary>
         public void Run()
         {
-            List<ChannelEvent> events = new List<ChannelEvent>();
+            var events = new List<ChannelEvent>();
             if (_pulse.Channel1 != null)
             {
                 events.Add(new ChannelEvent(_pulse.Channel1.Delay, _pulse.Channel1, ChannelEvent.EventType.Start));
@@ -110,6 +110,12 @@ namespace AutOlD2Ch.Tests.Common
         public void Terminate()
         {
             _runner?.Stop();
+        }
+
+        public void Dispose()
+        {
+            _runner?.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         // Internal
@@ -244,8 +250,8 @@ namespace AutOlD2Ch.Tests.Common
 
             // Internal
 
-            readonly List<ChannelEvent> _starting = new List<ChannelEvent>();
-            readonly List<ChannelEvent> _ending = new List<ChannelEvent>();
+            readonly List<ChannelEvent> _starting = new();
+            readonly List<ChannelEvent> _ending = new();
             readonly PulseEvent _previousEvent;
         }
 

@@ -60,12 +60,12 @@ namespace AutOlD2Ch.Comm
         /// <summary>
         /// Fires when COM port is closed
         /// </summary>
-        public virtual event EventHandler Closed;
+        public event EventHandler Closed;
 
         /// <summary>
         /// Fires when high-level error (Sistem.IO.Ports.SerialPort) is received from COM port
         /// </summary>
-        public virtual event EventHandler<Result> RequestResult;
+        public event EventHandler<Result> RequestResult;
 
         public bool IsOpen { get; protected set; } = false;
         public bool IsDebugging { get; set; } = false;

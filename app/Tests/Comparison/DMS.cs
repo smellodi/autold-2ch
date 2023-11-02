@@ -11,7 +11,7 @@ using static AutOlD2Ch.Tests.Comparison.Procedure;
 
 namespace AutOlD2Ch.Tests.Comparison
 {
-    internal class DMS
+    internal class DMS : IDisposable
     {
         public static DMS Instance => _instance ??= new();
 
@@ -346,6 +346,12 @@ namespace AutOlD2Ch.Tests.Comparison
             }).Wait();
 
             return error;
+        }
+
+        public void Dispose()
+        {
+            _comunicator.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         // Internal

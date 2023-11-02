@@ -7,7 +7,7 @@ using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch.Tests.OdorProduction
 {
-    public class Procedure : ITestEmulator
+    public class Procedure : ITestEmulator, IDisposable
     {
         [Flags]
         public enum Stage
@@ -131,6 +131,14 @@ namespace AutOlD2Ch.Tests.OdorProduction
             _mfc.OdorDirection = MFC.ValvesOpened.None;
         }
 
+        public void Dispose()
+        {
+            _timer.Dispose();
+            _runner?.Dispose();
+            _pulseController?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
         // Internal
 
         readonly MFC _mfc = MFC.Instance;
@@ -171,6 +179,7 @@ namespace AutOlD2Ch.Tests.OdorProduction
 
         private void Finilize()
         {
+            _runner?.Dispose();
             _runner = null;
 
             var noMoreTrials = ++_step >= _pulses.Length;

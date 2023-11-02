@@ -189,7 +189,7 @@ namespace AutOlD2Ch.Comm
                 {
                     _odor1 = value;
                 }
-                CommandResult(this, new CommandResultArgs(ODOR1_CHANNEL + CMD_SET, val, result));
+                CommandResult?.Invoke(this, new CommandResultArgs(ODOR1_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -207,7 +207,7 @@ namespace AutOlD2Ch.Comm
                 {
                     _odor2 = value;
                 }
-                CommandResult(this, new CommandResultArgs(ODOR2_CHANNEL + CMD_SET, val, result));
+                CommandResult?.Invoke(this, new CommandResultArgs(ODOR2_CHANNEL + CMD_SET, val, result));
             }
         }
 
@@ -296,7 +296,7 @@ namespace AutOlD2Ch.Comm
             {
                 try
                 {
-                    if (error == Error.Success && _channels.HasFlag(Channels.A))
+                    if (_channels.HasFlag(Channels.A))
                     {
                         error = ReadChannelValues(Channel.A, out MFCChannel freshAir);
                         sample.A = freshAir;

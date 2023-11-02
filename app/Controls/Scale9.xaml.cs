@@ -158,14 +158,15 @@ namespace AutOlD2Ch.Controls
             get
             {
                 RadioButton rdb = grdScale.Children.OfType<RadioButton>().FirstOrDefault(item => item.IsChecked ?? false);
-                return rdb == null ? null : int.Parse(rdb.DataContext as string);
+                var value = rdb?.DataContext as string;
+                return value == null ? null : int.Parse(value);
             }
             set
             {
                 var rdbs = grdScale.Children.OfType<RadioButton>();
                 if (0 <= value && value < rdbs.Count())
                 {
-                    rdbs.ElementAt(value ?? 0).IsChecked = true;
+                    rdbs.ElementAt((int)value).IsChecked = true;
                 }
             }
         }

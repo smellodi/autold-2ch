@@ -132,11 +132,6 @@ namespace AutOlD2Ch.Tests.Comparison
         public static MixturePair[] ParsePairsOfMixtures(string input, out string error)
         {
             var mixtures = input.Split('\n');
-            if (mixtures.Length < 1)
-            {
-                error = Utils.L10n.T("EmptyList");
-            }
-
             var result = new List<MixturePair>();
 
             foreach (var mixtureStr in mixtures)

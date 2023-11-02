@@ -6,7 +6,7 @@ using AutOlD2Ch.Comm;
 
 namespace AutOlD2Ch
 {
-    public class SyncLogger : Logger<SyncLogger.Record>
+    public class SyncLogger : Logger<SyncLogger.Record>, IDisposable
     {
         public class Record
         {
@@ -89,6 +89,12 @@ namespace AutOlD2Ch
         public void Finilize()
         {
             _timer.Stop();
+        }
+
+        public void Dispose()
+        {
+            _timer.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         // Internal methods

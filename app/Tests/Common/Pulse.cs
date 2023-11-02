@@ -121,7 +121,7 @@ namespace AutOlD2Ch.Tests.Common
         public Pulse(string input)
         {
             string[] channels = input.Split(DELIM_CHANNELS);
-            if (channels.Length < 1 || channels.Length > 2)
+            if (channels.Length > 2)
             {
                 throw new ArgumentException(string.Format(Utils.L10n.T("PulseInvalidNumberOfChannels"), input));
             }

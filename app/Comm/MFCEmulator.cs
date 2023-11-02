@@ -2,7 +2,7 @@
 
 namespace AutOlD2Ch.Comm
 {
-    internal class MFCEmulator
+    internal class MFCEmulator : IDisposable
     {
         public static MFCEmulator Instance => _instance ??= new();
 
@@ -81,6 +81,13 @@ namespace AutOlD2Ch.Comm
             }
         }
 
+        public void Dispose()
+        {
+            _valve1ShortPulseTimer?.Dispose();
+            _valve2ShortPulseTimer?.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
         // Internal
 
         static MFCEmulator _instance;
@@ -153,6 +160,7 @@ namespace AutOlD2Ch.Comm
                         {
                             _valve1ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                             {
+                                _valve1ShortPulseTimer.Dispose();
                                 _valve1ShortPulseTimer = null;
                             });
                         }
@@ -162,6 +170,7 @@ namespace AutOlD2Ch.Comm
                         {
                             _valve2ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                             {
+                                _valve2ShortPulseTimer.Dispose();
                                 _valve2ShortPulseTimer = null;
                             });
                         }

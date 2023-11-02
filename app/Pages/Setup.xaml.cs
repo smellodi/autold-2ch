@@ -119,6 +119,11 @@ namespace AutOlD2Ch.Pages
             _mfcTimer.Stop();
             _pidTimer.Stop();
 
+            _mfcTimer.Dispose();
+            _pidTimer.Dispose();
+
+            GC.SuppressFinalize(this);
+
             Task.Delay(300).Wait();
         }
 
