@@ -550,5 +550,17 @@ namespace AutOlD2Ch.Properties {
                 this["Test_LC_LptPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Test_LC_ComPort {
+            get {
+                return ((string)(this["Test_LC_ComPort"]));
+            }
+            set {
+                this["Test_LC_ComPort"] = value;
+            }
+        }
     }
 }

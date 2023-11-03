@@ -7,7 +7,7 @@ using System.Windows.Threading;
 
 namespace AutOlD2Ch.Pages.LptController;
 
-public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
+public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged, IDisposable
 {
     #region IsOdor1Flow property
 
@@ -100,6 +100,12 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     public void Interrupt()
     {
         _procedure.Stop();
+    }
+
+    public void Dispose()
+    {
+        _procedure.Dispose();
+        GC.SuppressFinalize(this);
     }
 
 

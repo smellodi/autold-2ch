@@ -8,6 +8,7 @@ namespace AutOlD2Ch.Tests.LptController;
 public class Settings
 {
     public int LptPort;
+    public string ComPort;
     public double FreshAir;
     public double OdorFlowDuration;
     public Dictionary<int, Pulse> Pulses;
@@ -20,6 +21,7 @@ public class Settings
         var settings = Properties.Settings.Default;
 
         LptPort = settings.Test_LC_LptPort;
+        ComPort = settings.Test_LC_ComPort;
         FreshAir = settings.Test_LC_FreshAir;
         OdorFlowDuration = settings.Test_LC_OdorFlowDuration;
         Pulses = ParsePulses(settings.Test_LC_Pulses, out string _);
@@ -31,6 +33,7 @@ public class Settings
         var settings = Properties.Settings.Default;
 
         settings.Test_LC_LptPort = LptPort;
+        settings.Test_LC_ComPort = ComPort;
         settings.Test_LC_FreshAir = FreshAir;
         settings.Test_LC_Pulses = SerializePulses();
         settings.Test_LC_OdorFlowDuration = OdorFlowDuration;

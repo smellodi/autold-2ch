@@ -565,7 +565,7 @@
 		<value>LPT port</value>
 	</data>
 	<data name="LptNotSelected" xml:space="preserve">
-		<value>LPT not selected</value>
+		<value>LPT port not selected</value>
 	</data>
 	<data name="MarkersAndScents" xml:space="preserve">
 		<value>Markers and scents</value>
@@ -575,5 +575,11 @@
 	</data>
 	<data name="Marker" xml:space="preserve">
 		<value>Marker</value>
+	</data>
+	<data name="ComPort" xml:space="preserve">
+		<value>COM port</value>
+	</data>
+	<data name="ComNotSelected" xml:space="preserve">
+		<value>COM port not selected</value>
 	</data>
 </root>

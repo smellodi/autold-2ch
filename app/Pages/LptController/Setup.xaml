@@ -47,6 +47,12 @@
                         </UserControl>
                     </UserControl>
 
+                    <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc ComPort}">
+                        <UserControl Style="{StaticResource ValueWithUnit}">
+                            <ComboBox x:Name="cmbComPort"/>
+                        </UserControl>
+                    </UserControl>
+
                     <UserControl Style="{StaticResource FormRow}" Tag="{lex:Loc CleanAir}">
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                             <TextBox x:Name="txbFreshAir"

@@ -80,6 +80,9 @@ namespace AutOlD2Ch
 
         private void OnSetupPage_Next(object sender, Tests.Test test)
         {
+            if (_currentTest is IDisposable d)
+                d.Dispose();
+
             _currentTest = test switch
             {
                 Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
@@ -128,6 +131,8 @@ namespace AutOlD2Ch
             if (!e.CanContinue)
             {
                 _currentTest.Interrupt();
+                if (_currentTest is IDisposable d)
+                    d.Dispose();
                 _currentTest = null;
                 Content = _setupPage;
 
@@ -142,7 +147,11 @@ namespace AutOlD2Ch
                 {
                     _finishedPage.TestName = _currentTest.Name;
                     Content = _finishedPage;
+
+                    if (_currentTest is IDisposable d)
+                        d.Dispose();
                     _currentTest = null;
+
                     DispatchOnceUI.Do(0.1, () => SaveLoggingData());  // let the page to change, then try to save data
                 }
                 else
@@ -193,6 +202,8 @@ namespace AutOlD2Ch
             if (_currentTest != null)
             {
                 _currentTest.Interrupt();
+                if (_currentTest is IDisposable d)
+                    d.Dispose();
             }
 
             e.Cancel = SaveLoggingData() == SavingResult.Cancel;

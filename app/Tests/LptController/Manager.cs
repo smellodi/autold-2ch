@@ -7,7 +7,7 @@ namespace AutOlD2Ch.Tests.LptController;
 /// <summary>
 /// Manages the order of pages in the LPT Controller
 /// </summary>
-public class Manager : ITestManager
+public class Manager : ITestManager, IDisposable
 {
     public event EventHandler<PageDoneEventArgs> PageDone;
 
@@ -53,6 +53,11 @@ public class Manager : ITestManager
         {
             _productionPage.Interrupt();
         }
+    }
+
+    public void Dispose()
+    {
+        _productionPage.Dispose();
     }
 
     public void Emulate(EmulationCommand command, params object[] args) { }

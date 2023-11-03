@@ -20,11 +20,37 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
             .BindContentToZoomLevel(lblZoom)
             .BindVisibilityToDebug(lblDebug);
 
+        UpdateComPortList(cmbComPort);
+        _usb.Inserted += (s, e) => Dispatcher.Invoke(() =>
+        {
+            UpdateComPortList(cmbComPort);
+        });
+
+        _usb.Removed += (s, e) => Dispatcher.Invoke(() =>
+        {
+            UpdateComPortList(cmbComPort);
+        });
+
         cmbLptPort.ItemsSource = LptPort.GetPorts();
         if (cmbLptPort.Items.Count > _settings.LptPort)
+        {
             cmbLptPort.SelectedIndex = _settings.LptPort;
+        }
         else if (cmbLptPort.Items.Count > 0)
+        {
             cmbLptPort.SelectedIndex = 0;
+        }
+
+        if (cmbComPort.Items.Count > 0)
+        {
+            foreach (string port in cmbComPort.Items)
+            {
+                if (port == _settings.ComPort)
+                {
+                    cmbComPort.SelectedItem = port;
+                }
+            }
+        }
 
         txbFreshAir.Text = _settings.FreshAir.ToString("F1");
         txbPulses.Text = _settings.SerializePulses();
@@ -40,12 +66,44 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
     // Internal
 
     readonly Settings _settings = new();
+    readonly USB _usb = new();
+
+    private static void UpdateComPortList(ComboBox cmb)
+    {
+        var current = cmb.SelectedValue;
+
+        cmb.Items.Clear();
+
+        var availablePorts = System.IO.Ports.SerialPort.GetPortNames();
+        var ports = new HashSet<string>(availablePorts);
+        foreach (var port in ports)
+        {
+            cmb.Items.Add(port);
+        }
+
+        if (current != null)
+        {
+            foreach (var item in ports)
+            {
+                if (item == current.ToString())
+                {
+                    cmb.SelectedItem = item;
+                    break;
+                }
+            }
+        }
+    }
 
     private Utils.Validation CheckInput()
     {
-        /*if (cmbLptPort.SelectedIndex < 0)
+        /*
+        if (cmbLptPort.SelectedIndex < 0)
         {
             return new Utils.Validation(cmbLptPort, Utils.L10n.T("LptNotSelected"));
+        }
+        if (cmbComPort.SelectedIndex < 0)
+        {
+            return new Utils.Validation(cmbComPort, Utils.L10n.T("ComNotSelected"));
         }*/
 
         var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string error);
@@ -133,11 +191,12 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
         }
         else
         {
+            _settings.LptPort = cmbLptPort.SelectedIndex;
+            _settings.ComPort = (string)cmbLptPort.SelectedItem;
             _settings.FreshAir = double.Parse(txbFreshAir.Text);
             _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string _);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
             _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
-            _settings.LptPort = cmbLptPort.SelectedIndex;
 
             _settings.Save();
 
