@@ -192,7 +192,7 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
         else
         {
             _settings.LptPort = cmbLptPort.SelectedIndex;
-            _settings.ComPort = (string)cmbLptPort.SelectedItem;
+            _settings.ComPort = (string)cmbComPort.SelectedItem;
             _settings.FreshAir = double.Parse(txbFreshAir.Text);
             _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? _);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);

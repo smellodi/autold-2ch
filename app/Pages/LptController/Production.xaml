@@ -57,7 +57,7 @@
                        Style="{StaticResource Status}"/>
             </WrapPanel>
 
-            <Grid>
+            <Grid MinWidth="280">
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="12"/>

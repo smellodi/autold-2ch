@@ -60,17 +60,8 @@ public class Procedure : IDisposable
         _settings = settings;
 
         try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
-        try {
-            _comPort = new System.IO.Ports.SerialPort(_settings.ComPort)
-            {
-                StopBits = System.IO.Ports.StopBits.One,
-                Parity = System.IO.Ports.Parity.None,
-                Handshake = System.IO.Ports.Handshake.None,
-                BaudRate = 115200,
-                DataBits = 8,
-            };
-            _comPort.Open();
-        } catch { }
+        try { _comPort = new ComPort(_settings.ComPort); } catch { }
+
         _lptPortReadingCancellationTokenSource = new();
         _marker = _lptPort?.ReadData() ?? 0;
 
@@ -119,11 +110,7 @@ public class Procedure : IDisposable
         _pulseController?.Dispose();
         GC.SuppressFinalize(this);
 
-        if (_comPort != null)
-        {
-            try { _comPort.Close(); }                               // Port were in use? Simply close handle.
-            finally { _comPort = null; }
-        }
+        _comPort?.Dispose();
     }
 
     // Internal
@@ -142,7 +129,7 @@ public class Procedure : IDisposable
 
     DispatchOnce? _runner;
     PulsesController? _pulseController;
-    System.IO.Ports.SerialPort? _comPort;
+    ComPort? _comPort;
     LptPort? _lptPort;
 
     CancellationTokenSource _lptPortReadingCancellationTokenSource = new();
@@ -178,12 +165,7 @@ public class Procedure : IDisposable
             }
             else if (_marker > 0)
             {
-                if (_comPort != null)
-                {
-                    var buffer = new byte[] { (byte)_marker, 0 };
-                    _comPort.Write(buffer, 0, buffer.Length);
-                }
-
+                _comPort?.SendMarker((byte)_marker);
                 UseOdor(_marker);
             }
         }
