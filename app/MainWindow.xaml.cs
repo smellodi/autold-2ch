@@ -63,7 +63,7 @@ namespace AutOlD2Ch
             }
 
             SyncLogger syncLogger = SyncLogger.Instance;
-            syncLogger.Finilize();
+            syncLogger.Stop();
             if (syncLogger.HasRecords)
             {
                 var savingResult = syncLogger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
@@ -131,7 +131,7 @@ namespace AutOlD2Ch
                 _currentTest = null;
                 Content = _setupPage;
 
-                SyncLogger.Instance.Finilize();
+                SyncLogger.Instance.Stop();
                 SyncLogger.Instance.Clear();
                 FlowLogger.Instance.Clear();
             }

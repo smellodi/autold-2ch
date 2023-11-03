@@ -86,7 +86,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
         _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
         _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
         _procedure.Marker += (s, marker) => Dispatcher.Invoke(() => lblMarker.Content = marker);
-        _procedure.Finished += (s, e) => Dispatcher.Invoke(() => Finilize());
+        _procedure.Finished += (s, e) => Dispatcher.Invoke(() => FinalizeTest());
     }
 
     public void Init(Settings settings)
@@ -109,8 +109,6 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
 
     Settings _settings;
     Procedure.Stage _stage = Procedure.Stage.None;
-
-    bool _isOdorFlowPhase = false;
 
     private void UpdateUI()
     {
@@ -139,6 +137,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
             (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) => 
                 _settings.OdorFlowDuration,
             Procedure.Stage.None => 0,
+            Procedure.Stage.OdorFlow => 0,
             _ => throw new NotImplementedException($"Stage '{_stage}' of LTP Controller does not exist")
         };
 
@@ -150,9 +149,16 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
         {
             wtiWaiting.Start(pause);
         }
+        else if (!IsOdorFlow)
+        {
+            wtiWaiting.Reset();
+            lblMarker.Content = "-";
+        }
+
+        UpdateUI();
     }
 
-    private void Finilize()
+    private void FinalizeTest()
     {
         SetStage(Procedure.Stage.None);
 

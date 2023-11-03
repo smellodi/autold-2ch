@@ -48,7 +48,7 @@ namespace AutOlD2Ch.Pages.Comparison
 
         public void EmulationInit() { }
 
-        public void EmulationFinilize() { }
+        public void EmulationFinalize() { }
 
 
         // Internal

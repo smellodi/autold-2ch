@@ -63,7 +63,7 @@ namespace AutOlD2Ch.Tests.OdorProduction
             // nothing is needed here
         }
 
-        public void EmulationFinilize()
+        public void EmulationFinalize()
         {
             _step = _pulses.Length - 1;
         }
@@ -116,9 +116,9 @@ namespace AutOlD2Ch.Tests.OdorProduction
                     _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
                     StageChanged?.Invoke(this, Stage.InitWait);
                 })
-                .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, () => StartOdorFlow())
-                .Then(_settings.OdorFlowDuration, () => StopOdorFlow())
-                .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, () => Finilize());
+                .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, StartOdorFlow)
+                .Then(_settings.OdorFlowDuration, StopOdorFlow)
+                .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, FinalizeTest);
         }
 
         public void Stop()
@@ -177,7 +177,7 @@ namespace AutOlD2Ch.Tests.OdorProduction
             StageChanged?.Invoke(this, Stage.FinalWait);
         }
 
-        private void Finilize()
+        private void FinalizeTest()
         {
             _runner?.Dispose();
             _runner = null;

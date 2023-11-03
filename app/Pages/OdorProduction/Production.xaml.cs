@@ -116,7 +116,7 @@ namespace AutOlD2Ch.Pages.OdorProduction
 
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
-            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
+            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));
         }
 
         public void Init(Settings settings)
@@ -191,7 +191,7 @@ namespace AutOlD2Ch.Pages.OdorProduction
             }
         }
 
-        private void FinilizeTrial(bool noMoreTrials)
+        private void FinalizeTrial(bool noMoreTrials)
         {
             SetStage(Procedure.Stage.None);
 

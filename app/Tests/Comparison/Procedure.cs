@@ -94,7 +94,7 @@ namespace AutOlD2Ch.Tests.Comparison
             // nothing is needed here
         }
 
-        public void EmulationFinilize()
+        public void EmulationFinalize()
         {
             _step = _pairsOfMixtures.Length - 1;
         }
@@ -177,7 +177,7 @@ namespace AutOlD2Ch.Tests.Comparison
                 _runner.ThenWait();
             }
 
-            _runner.Then(_settings.OdorFlowDuration, () => StopOdorFlow())
+            _runner.Then(_settings.OdorFlowDuration, StopOdorFlow)
                 .Then(0.1, () => PrepareOdors(1))
                 .Then(_settings.InitialPause, () => StartOdorFlow(1));
 
@@ -198,7 +198,7 @@ namespace AutOlD2Ch.Tests.Comparison
             var pair = _pairsOfMixtures[_step];
             Results.Add((pair, answer));
 
-            Finilize();
+            FinalizeTest();
         }
 
         public void Stop()
@@ -313,7 +313,7 @@ namespace AutOlD2Ch.Tests.Comparison
             StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, NextMixtureID()));
         }
 
-        private void Finilize()
+        private void FinalizeTest()
         {
             _runner?.Dispose();
             _runner = null;

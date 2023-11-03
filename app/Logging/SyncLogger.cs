@@ -86,7 +86,7 @@ namespace AutOlD2Ch
             }
         }
 
-        public void Finilize()
+        public void Stop()
         {
             _timer.Stop();
         }

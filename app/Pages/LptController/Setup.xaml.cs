@@ -34,7 +34,7 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
 
     public void EmulationInit() { }
 
-    public void EmulationFinilize() { }
+    public void EmulationFinalize() { }
 
 
     // Internal
@@ -43,10 +43,10 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
 
     private Utils.Validation CheckInput()
     {
-        if (cmbLptPort.SelectedIndex < 0)
+        /*if (cmbLptPort.SelectedIndex < 0)
         {
             return new Utils.Validation(cmbLptPort, Utils.L10n.T("LptNotSelected"));
-        }
+        }*/
 
         var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string error);
         if (pulses == null)

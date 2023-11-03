@@ -32,7 +32,7 @@ namespace AutOlD2Ch.Pages.Comparison
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
             _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => RequestAnswer());
-            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
+            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));
         }
 
         public void Init(Settings settings)
@@ -122,7 +122,7 @@ namespace AutOlD2Ch.Pages.Comparison
             stpAnswer.Visibility = Visibility.Visible;
         }
 
-        private void FinilizeTrial(bool noMoreTrials)
+        private void FinalizeTrial(bool noMoreTrials)
         {
             stpAnswer.Visibility = Visibility.Hidden;
 

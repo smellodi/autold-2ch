@@ -33,7 +33,7 @@ namespace AutOlD2Ch.Pages.OdorProduction
 
         public void EmulationInit() { }
 
-        public void EmulationFinilize() { }
+        public void EmulationFinalize() { }
 
 
         // Internal

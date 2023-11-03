@@ -25,7 +25,7 @@ namespace AutOlD2Ch.Pages.Comparison
             _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
             _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
             _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => SaveScanResults());
-            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinilizeTrial(noMoreTrials));
+            _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));
             _procedure.DNSError += (s, description) => Dispatcher.Invoke(() => DisplayDNSError(description));
         }
 
@@ -91,7 +91,7 @@ namespace AutOlD2Ch.Pages.Comparison
             _procedure.SetResult(Procedure.Answer.None);
         }
 
-        private void FinilizeTrial(bool noMoreTrials)
+        private void FinalizeTrial(bool noMoreTrials)
         {
             if (noMoreTrials)
             {

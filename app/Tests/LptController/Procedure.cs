@@ -60,9 +60,9 @@ public class Procedure : IDisposable
     {
         _settings = settings;
 
-        _lptPort = LptPort.GetPorts()[_settings.LptPort];
+        try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
         _lptPortReadingCancellationTokenSource = new();
-        _marker = _lptPort.ReadData();
+        _marker = _lptPort?.ReadData() ?? 0;
 
         // catch window closing event, so we do not display termination message due to MFC comm closed
         Application.Current.MainWindow.Closing += MainWindow_Closing;
@@ -132,7 +132,10 @@ public class Procedure : IDisposable
         try
         {
             await Task.Delay(LPT_READING_INTERVAL, _lptPortReadingCancellationTokenSource.Token);
-            CheckMarker();
+            if (_runner == null)
+            {
+                CheckMarker();
+            }
             _ = ReadPortStatus();
         }
         catch (OperationCanceledException)
@@ -141,9 +144,10 @@ public class Procedure : IDisposable
         }
     }
 
+    Random _rnd = new();
     private void CheckMarker()
     {
-        var data = _lptPort.ReadData();
+        var data = _lptPort?.ReadData() ?? (short)(_rnd.NextDouble() < 0.002 ? 1 : (_rnd.NextDouble() < 0.005 ? 2 : 0));
         if (data != _marker)
         {
             _marker = data;

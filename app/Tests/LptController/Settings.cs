@@ -7,8 +7,6 @@ namespace AutOlD2Ch.Tests.LptController;
 
 public class Settings
 {
-    public const int MIN_FLOW_DURATION = 10; // ms
-
     public int LptPort;
     public double FreshAir;
     public double OdorFlowDuration;
@@ -34,17 +32,18 @@ public class Settings
 
         settings.Test_LC_LptPort = LptPort;
         settings.Test_LC_FreshAir = FreshAir;
-        settings.Test_LC_Pulses = string.Join(Pulse.DELIM_LIST[0], Pulses.Select(pulse => pulse.ToString()));
+        settings.Test_LC_Pulses = SerializePulses();
         settings.Test_LC_OdorFlowDuration = OdorFlowDuration;
         settings.Test_LC_PIDReadingInterval = PIDReadingInterval;
 
         settings.Save();
     }
 
-    public string SerializePulses()
-    {
-        return string.Join(Pulse.DELIM_LIST[1], Pulses.Select(pulse => pulse.ToString()));
-    }
+    public string SerializePulses() => string.Join(
+        Pulse.DELIM_EXPRESSION_WITH_MARKER, Pulses.Select(
+            kv => $"{kv.Key}{Pulse.DELIM_MARKER} {kv.Value}"
+        )
+    );
 
     public static Dictionary<int, Pulse> ParsePulses(string input, out string error)
     {

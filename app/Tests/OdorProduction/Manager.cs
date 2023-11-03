@@ -60,7 +60,7 @@ namespace AutOlD2Ch.Tests.OdorProduction
             switch (command)
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
-                case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinilize(); break;
+                case EmulationCommand.ForceToFinishWithResult: _productionPage.Emulator.EmulationFinalize(); break;
                 default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }

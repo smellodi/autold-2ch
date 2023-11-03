@@ -116,7 +116,7 @@ namespace AutOlD2Ch.Tests.Comparison
             switch (command)
             {
                 case EmulationCommand.EnableEmulation: (_setupPage as ITestEmulator).EmulationInit(); break;
-                case EmulationCommand.ForceToFinishWithResult: if (_current is Production prodPage) prodPage.Emulator.EmulationFinilize(); break;
+                case EmulationCommand.ForceToFinishWithResult: if (_current is Production prodPage) prodPage.Emulator.EmulationFinalize(); break;
                 default: throw new NotImplementedException($"Emulation command '{command}' is not recognized in {Name}");
             }
         }
