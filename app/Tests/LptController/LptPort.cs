@@ -336,8 +336,29 @@ public class LptPort
 
     #endregion
 
+    /// <summary>
+    /// Generates a random marker
+    /// </summary>
+    /// <param name="set">set of available marker. The last marker must be the terminating marker that occurs much more rarely than others</param>
+    /// <returns>a marker, or 0</returns>
+    public static short Emulate(short[] set)
+    {
+        if (set.Length < 1)
+            return 0;
+
+        var value = _rnd.NextDouble();
+        if (value < 0.0002)
+            return set[^1];
+        else if (value < 0.002)
+            return set[_rnd.Next(set.Length - 1)];
+        else
+            return 0;
+    }
+
 
     // Internal
+
+    readonly static Random _rnd = new();
 
     private static bool GetBit(int address, byte bit)
     {

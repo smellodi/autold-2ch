@@ -7,6 +7,7 @@ using AutOlD2Ch.Comm;
 using AutOlD2Ch.Pages.LptController;
 using AutOlD2Ch.Tests.Common;
 using AutOlD2Ch.Utils;
+using System.Linq;
 
 namespace AutOlD2Ch.Tests.LptController;
 
@@ -90,7 +91,17 @@ public class Procedure : IDisposable
 
         _logger.Start(_settings.PIDReadingInterval);
 
-        _ = ReadPortStatus();
+        if (_lptPort == null)
+        {
+            var markers = _settings.Pulses.Select(kv => (short)kv.Key);
+            markers.Append(MARKER_FINISHED);
+            EmulatedMarkers = markers.ToArray();
+        }
+
+        if (_lptPort != null || Storage.Instance.IsDebugging)
+        {
+            _ = ReadPortStatus();
+        }
     }
 
     public void Stop()
@@ -135,6 +146,8 @@ public class Procedure : IDisposable
     CancellationTokenSource _lptPortReadingCancellationTokenSource = new();
     short _marker;
 
+    short[] EmulatedMarkers = Array.Empty<short>();
+
     private async Task ReadPortStatus()
     {
         try
@@ -152,10 +165,9 @@ public class Procedure : IDisposable
         }
     }
 
-    Random _rnd = new();
     private void CheckMarker()
     {
-        var data = _lptPort?.ReadData() ?? (short)(_rnd.NextDouble() < 0.002 ? 1 : (_rnd.NextDouble() < 0.005 ? 2 : 0));
+        var data = _lptPort?.ReadData() ?? LptPort.Emulate(EmulatedMarkers);
         if (data != _marker)
         {
             _marker = data;

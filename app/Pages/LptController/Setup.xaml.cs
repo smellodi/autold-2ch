@@ -96,11 +96,11 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 
     private Utils.Validation? CheckInput()
     {
-        /*
-        if (cmbLptPort.SelectedIndex < 0)
+        if (!Storage.Instance.IsDebugging && cmbLptPort.SelectedIndex < 0)
         {
             return new Utils.Validation(cmbLptPort, Utils.L10n.T("LptNotSelected"));
         }
+        /*
         if (cmbComPort.SelectedIndex < 0)
         {
             return new Utils.Validation(cmbComPort, Utils.L10n.T("ComNotSelected"));
