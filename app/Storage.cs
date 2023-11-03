@@ -5,154 +5,153 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace AutOlD2Ch
+namespace AutOlD2Ch;
+
+/// <summary>
+/// Cross-app storage, mainly used to share the app state
+/// </summary>
+public class Storage : INotifyPropertyChanged, IDisposable
 {
-    /// <summary>
-    /// Cross-app storage, mainly used to share the app state
-    /// </summary>
-    public class Storage : INotifyPropertyChanged, IDisposable
+    // Instance
+    public static Storage Instance => _instance ??= new();
+
+    // Event
+
+    public enum Data
     {
-        // Instance
-        public static Storage Instance => _instance ??= new();
+        IsDebugging,
+        ZoomLevel,
+    }
 
-        // Event
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        public enum Data
+    // Variables
+
+    public bool IsDebugging
+    {
+        get => _isDebugging;
+        set
         {
-            IsDebugging,
-            ZoomLevel,
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // Variables
-
-        public bool IsDebugging
-        {
-            get => _isDebugging;
-            set
+            if (_isDebugging != value)
             {
-                if (_isDebugging != value)
-                {
-                    _isDebugging = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDebugging)));
-                }
+                _isDebugging = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsDebugging)));
             }
         }
+    }
 
-        public double ZoomLevel
+    public double ZoomLevel
+    {
+        get => _zoomLevel;
+        set
         {
-            get => _zoomLevel;
-            set
+            if (_zoomLevel != value)
             {
-                if (_zoomLevel != value)
-                {
-                    _zoomLevel = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ZoomLevel)));
-                }
+                _zoomLevel = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ZoomLevel)));
             }
         }
+    }
 
-        // Actions
+    // Actions
 
-        public void ZoomIn()
+    public void ZoomIn()
+    {
+        ZoomLevel = Utils.MathExt.Limit(_zoomLevel + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
+    }
+
+    public void ZoomOut()
+    {
+        ZoomLevel = Utils.MathExt.Limit(_zoomLevel - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
+    }
+
+    // Helpers
+
+    public Storage BindVisibilityToDebug(DependencyObject obj)
+    {
+        var isDebuggingBinding = new Binding(nameof(IsDebugging))
         {
-            ZoomLevel = Utils.MathExt.Limit(_zoomLevel + ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
-        }
+            Source = this,
+            Converter = new BooleanToVisibilityConverter()
+        };
 
-        public void ZoomOut()
+        BindingOperations.SetBinding(obj, UIElement.VisibilityProperty, isDebuggingBinding);
+
+        return this;
+    }
+
+    public Storage BindScaleToZoomLevel(DependencyObject obj)
+    {
+        var zoomLevelBinding = new Binding(nameof(ZoomLevel))
         {
-            ZoomLevel = Utils.MathExt.Limit(_zoomLevel - ZOOM_STEP, ZOOM_MIN, ZOOM_MAX);
-        }
+            Source = this
+        };
 
-        // Helpers
+        BindingOperations.SetBinding(obj, ScaleTransform.ScaleXProperty, zoomLevelBinding);
+        BindingOperations.SetBinding(obj, ScaleTransform.ScaleYProperty, zoomLevelBinding);
 
-        public Storage BindVisibilityToDebug(DependencyObject obj)
+        return this;
+    }
+
+    public Storage BindContentToZoomLevel(DependencyObject obj)
+    {
+        var zoomValueBinding = new Binding(nameof(ZoomLevel))
         {
-            var isDebuggingBinding = new Binding(nameof(IsDebugging))
-            {
-                Source = this,
-                Converter = new BooleanToVisibilityConverter()
-            };
+            Source = this,
+            Converter = new Utils.ZoomToPercentageConverter()
+        };
 
-            BindingOperations.SetBinding(obj, UIElement.VisibilityProperty, isDebuggingBinding);
+        BindingOperations.SetBinding(obj, ContentControl.ContentProperty, zoomValueBinding);
 
-            return this;
-        }
+        return this;
+    }
 
-        public Storage BindScaleToZoomLevel(DependencyObject obj)
-        {
-            var zoomLevelBinding = new Binding(nameof(ZoomLevel))
-            {
-                Source = this
-            };
+    public Storage UnbindVisibilityToDebug(DependencyObject obj)
+    {
+        BindingOperations.ClearBinding(obj, UIElement.VisibilityProperty);
+        return this;
+    }
 
-            BindingOperations.SetBinding(obj, ScaleTransform.ScaleXProperty, zoomLevelBinding);
-            BindingOperations.SetBinding(obj, ScaleTransform.ScaleYProperty, zoomLevelBinding);
+    public Storage UnbindScaleToZoomLevel(DependencyObject obj)
+    {
+        BindingOperations.ClearBinding(obj, ScaleTransform.ScaleXProperty);
+        BindingOperations.ClearBinding(obj, ScaleTransform.ScaleYProperty);
 
-            return this;
-        }
+        return this;
+    }
 
-        public Storage BindContentToZoomLevel(DependencyObject obj)
-        {
-            var zoomValueBinding = new Binding(nameof(ZoomLevel))
-            {
-                Source = this,
-                Converter = new Utils.ZoomToPercentageConverter()
-            };
+    public Storage UnbindContentToZoomLevel(DependencyObject obj)
+    {
+        BindingOperations.ClearBinding(obj, ContentControl.ContentProperty);
+        return this;
+    }
 
-            BindingOperations.SetBinding(obj, ContentControl.ContentProperty, zoomValueBinding);
+    // Other
 
-            return this;
-        }
+    public void Dispose()
+    {
+        var settings = Properties.Settings.Default;
 
-        public Storage UnbindVisibilityToDebug(DependencyObject obj)
-        {
-            BindingOperations.ClearBinding(obj, UIElement.VisibilityProperty);
-            return this;
-        }
+        settings.App_ZoomLevel = _zoomLevel;
 
-        public Storage UnbindScaleToZoomLevel(DependencyObject obj)
-        {
-            BindingOperations.ClearBinding(obj, ScaleTransform.ScaleXProperty);
-            BindingOperations.ClearBinding(obj, ScaleTransform.ScaleYProperty);
+        settings.Save();
+    }
 
-            return this;
-        }
+    // Internal data
 
-        public Storage UnbindContentToZoomLevel(DependencyObject obj)
-        {
-            BindingOperations.ClearBinding(obj, ContentControl.ContentProperty);
-            return this;
-        }
+    static Storage _instance;
 
-        // Other
+    const double ZOOM_MIN = 0.8;
+    const double ZOOM_MAX = 2.0;
+    const double ZOOM_STEP = 0.1;
 
-        public void Dispose()
-        {
-            var settings = Properties.Settings.Default;
+    bool _isDebugging = false;
+    double _zoomLevel = 1;
 
-            settings.App_ZoomLevel = _zoomLevel;
+    private Storage() 
+    {
+        var settings = Properties.Settings.Default;
 
-            settings.Save();
-        }
-
-        // Internal data
-
-        static Storage _instance;
-
-        const double ZOOM_MIN = 0.8;
-        const double ZOOM_MAX = 2.0;
-        const double ZOOM_STEP = 0.1;
-
-        bool _isDebugging = false;
-        double _zoomLevel = 1;
-
-        private Storage() 
-        {
-            var settings = Properties.Settings.Default;
-
-            _zoomLevel = settings.App_ZoomLevel;
-        }
+        _zoomLevel = settings.App_ZoomLevel;
     }
 }

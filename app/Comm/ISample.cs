@@ -1,8 +1,7 @@
-﻿namespace AutOlD2Ch.Comm
+﻿namespace AutOlD2Ch.Comm;
+
+public interface ISample
 {
-    public interface ISample
-    {
-        public long Time { get; }
-        public double MainValue { get; }
-    }
+    public long Time { get; }
+    public double MainValue { get; }
 }

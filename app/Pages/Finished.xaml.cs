@@ -3,65 +3,64 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace AutOlD2Ch.Pages
+namespace AutOlD2Ch.Pages;
+
+public partial class Finished : Page, IPage<bool>, INotifyPropertyChanged
 {
-    public partial class Finished : Page, IPage<bool>, INotifyPropertyChanged
+    public event EventHandler<bool> Next;       // true: exit, false: return to the front page
+    public event EventHandler RequestSaving;
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public string TestName
     {
-        public event EventHandler<bool> Next;       // true: exit, false: return to the front page
-        public event EventHandler RequestSaving;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public string TestName
+        get => _testName;
+        set
         {
-            get => _testName;
-            set
-            {
-                _testName = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TestName)));
-            }
+            _testName = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(TestName)));
         }
+    }
 
-        public Finished()
-        {
-            InitializeComponent();
+    public Finished()
+    {
+        InitializeComponent();
 
-            Storage.Instance
-                .BindScaleToZoomLevel(sctScale)
-                .BindContentToZoomLevel(lblZoom)
-                .BindVisibilityToDebug(lblDebug);
+        Storage.Instance
+            .BindScaleToZoomLevel(sctScale)
+            .BindContentToZoomLevel(lblZoom)
+            .BindVisibilityToDebug(lblDebug);
 
-            DataContext = this;
-        }
+        DataContext = this;
+    }
 
-        public void DisableSaving()
-        {
-            btnSaveData.IsEnabled = false;
-        }
+    public void DisableSaving()
+    {
+        btnSaveData.IsEnabled = false;
+    }
 
-        // Internal
+    // Internal
 
-        string _testName = "";
+    string _testName = "";
 
-        // UI events
+    // UI events
 
-        private void Page_GotFocus(object sender, RoutedEventArgs e)
-        {
-            btnSaveData.IsEnabled = true;
-        }
+    private void Page_GotFocus(object sender, RoutedEventArgs e)
+    {
+        btnSaveData.IsEnabled = true;
+    }
 
-        private void SaveData_Click(object sender, RoutedEventArgs e)
-        {
-            RequestSaving?.Invoke(this, new EventArgs());
-        }
+    private void SaveData_Click(object sender, RoutedEventArgs e)
+    {
+        RequestSaving?.Invoke(this, new EventArgs());
+    }
 
-        private void Return_Click(object sender, RoutedEventArgs e)
-        {
-            Next?.Invoke(this, false);
-        }
+    private void Return_Click(object sender, RoutedEventArgs e)
+    {
+        Next?.Invoke(this, false);
+    }
 
-        private void Exit_Click(object sender, RoutedEventArgs e)
-        {
-            Next?.Invoke(this, true);
-        }
+    private void Exit_Click(object sender, RoutedEventArgs e)
+    {
+        Next?.Invoke(this, true);
     }
 }

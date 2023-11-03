@@ -3,162 +3,161 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace AutOlD2Ch.Controls
+namespace AutOlD2Ch.Controls;
+
+public partial class ChannelIndicator : UserControl, INotifyPropertyChanged
 {
-    public partial class ChannelIndicator : UserControl, INotifyPropertyChanged
+    public enum DataSource { CleanAir, ScentedAir1, ScentedAir2, PID, Loop, Temp }
+
+    #region Title property
+
+    [Description("Title"), Category("Common Properties")]
+    public string Title
     {
-        public enum DataSource { CleanAir, ScentedAir1, ScentedAir2, PID, Loop, Temp }
+        get => (string)GetValue(TitleProperty);
+        set => SetValue(TitleProperty, value);
+    }
 
-        #region Title property
+    public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+        nameof(Title),
+        typeof(string),
+        typeof(ChannelIndicator),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTitlePropertyChanged)));
 
-        [Description("Title"), Category("Common Properties")]
-        public string Title
+    private static void OnTitlePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is ChannelIndicator instance)
         {
-            get => (string)GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Title)));
         }
+    }
 
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            nameof(Title),
-            typeof(string),
-            typeof(ChannelIndicator),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnTitlePropertyChanged)));
+    #endregion 
 
-        private static void OnTitlePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    #region Value property
+
+    [Description("Value"), Category("Common Properties")]
+    public double Value
+    {
+        get => (double)GetValue(ValueProperty);
+        set => SetValue(ValueProperty, value);
+    }
+
+    public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
+        nameof(Value),
+        typeof(double),
+        typeof(ChannelIndicator),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(OnValuePropertyChanged)));
+
+    private static void OnValuePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is ChannelIndicator instance)
         {
-            if (sender is ChannelIndicator instance)
-            {
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Title)));
-            }
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Value)));
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
         }
+    }
 
-        #endregion 
+    #endregion 
 
-        #region Value property
+    #region Units property
 
-        [Description("Value"), Category("Common Properties")]
-        public double Value
+    [Description("Units"), Category("Common Properties")]
+    public string Units
+    {
+        get => (string)GetValue(UnitsProperty);
+        set => SetValue(UnitsProperty, value);
+    }
+
+    public static readonly DependencyProperty UnitsProperty = DependencyProperty.Register(
+        nameof(Units),
+        typeof(string),
+        typeof(ChannelIndicator),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(OnUnitsPropertyChanged)));
+
+    private static void OnUnitsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is ChannelIndicator instance)
         {
-            get => (double)GetValue(ValueProperty);
-            set => SetValue(ValueProperty, value);
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Units)));
         }
+    }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            nameof(Value),
-            typeof(double),
-            typeof(ChannelIndicator),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnValuePropertyChanged)));
+    #endregion 
 
-        private static void OnValuePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    #region IsActive property
+
+    [Description("Is the indicator active"), Category("Common Properties")]
+    public bool IsActive
+    {
+        get => (bool)GetValue(IsActiveProperty);
+        set => SetValue(IsActiveProperty, value);
+    }
+
+    public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
+        nameof(IsActive),
+        typeof(bool),
+        typeof(ChannelIndicator),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsActivePropertyChanged)));
+
+    private static void OnIsActivePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is ChannelIndicator instance)
         {
-            if (sender is ChannelIndicator instance)
-            {
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Value)));
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
-            }
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(IsActive)));
         }
+    }
 
-        #endregion 
+    #endregion
 
-        #region Units property
+    #region Precision property
 
-        [Description("Units"), Category("Common Properties")]
-        public string Units
+    [Description("Precision"), Category("Common Properties")]
+    public int Precision
+    {
+        get => (int)GetValue(PrecisionProperty);
+        set => SetValue(PrecisionProperty, Math.Max(0, value));
+    }
+
+    public static readonly DependencyProperty PrecisionProperty = DependencyProperty.Register(
+        nameof(Precision),
+        typeof(int),
+        typeof(ChannelIndicator),
+        new FrameworkPropertyMetadata(new PropertyChangedCallback(OnPrecisionPropertyChanged)));
+
+    private static void OnPrecisionPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (sender is ChannelIndicator instance)
         {
-            get => (string)GetValue(UnitsProperty);
-            set => SetValue(UnitsProperty, value);
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Precision)));
+            instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
         }
+    }
 
-        public static readonly DependencyProperty UnitsProperty = DependencyProperty.Register(
-            nameof(Units),
-            typeof(string),
-            typeof(ChannelIndicator),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnUnitsPropertyChanged)));
+    #endregion
 
-        private static void OnUnitsPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is ChannelIndicator instance)
-            {
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Units)));
-            }
-        }
+    #region Source property
 
-        #endregion 
+    [Description("Data source"), Category("Common Properties")]
+    public DataSource Source
+    {
+        get => (DataSource)GetValue(SourceProperty);
+        set => SetValue(SourceProperty, value);
+    }
 
-        #region IsActive property
+    public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
+        nameof(Source),
+        typeof(DataSource),
+        typeof(ChannelIndicator));
 
-        [Description("Is the indicator active"), Category("Common Properties")]
-        public bool IsActive
-        {
-            get => (bool)GetValue(IsActiveProperty);
-            set => SetValue(IsActiveProperty, value);
-        }
+    #endregion
 
-        public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
-            nameof(IsActive),
-            typeof(bool),
-            typeof(ChannelIndicator),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnIsActivePropertyChanged)));
+    public string ValueStr => Value.ToString($"F{Precision}");
 
-        private static void OnIsActivePropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is ChannelIndicator instance)
-            {
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(IsActive)));
-            }
-        }
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion
-
-        #region Precision property
-
-        [Description("Precision"), Category("Common Properties")]
-        public int Precision
-        {
-            get => (int)GetValue(PrecisionProperty);
-            set => SetValue(PrecisionProperty, Math.Max(0, value));
-        }
-
-        public static readonly DependencyProperty PrecisionProperty = DependencyProperty.Register(
-            nameof(Precision),
-            typeof(int),
-            typeof(ChannelIndicator),
-            new FrameworkPropertyMetadata(new PropertyChangedCallback(OnPrecisionPropertyChanged)));
-
-        private static void OnPrecisionPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (sender is ChannelIndicator instance)
-            {
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(Precision)));
-                instance.PropertyChanged?.Invoke(instance, new PropertyChangedEventArgs(nameof(ValueStr)));
-            }
-        }
-
-        #endregion
-
-        #region Source property
-
-        [Description("Data source"), Category("Common Properties")]
-        public DataSource Source
-        {
-            get => (DataSource)GetValue(SourceProperty);
-            set => SetValue(SourceProperty, value);
-        }
-
-        public static readonly DependencyProperty SourceProperty = DependencyProperty.Register(
-            nameof(Source),
-            typeof(DataSource),
-            typeof(ChannelIndicator));
-
-        #endregion
-
-        public string ValueStr => Value.ToString($"F{Precision}");
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ChannelIndicator()
-        {
-            InitializeComponent();
-        }
+    public ChannelIndicator()
+    {
+        InitializeComponent();
     }
 }

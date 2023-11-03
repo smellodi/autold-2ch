@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace AutOlD2Ch.Pages
+namespace AutOlD2Ch.Pages;
+
+internal interface IPage<T>
 {
-    internal interface IPage<T>
-    {
-        event EventHandler<T> Next;
-    }
+    event EventHandler<T> Next;
 }

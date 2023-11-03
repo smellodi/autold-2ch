@@ -4,72 +4,71 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace AutOlD2Ch.Pages.ThresholdTest
+namespace AutOlD2Ch.Pages.ThresholdTest;
+
+public partial class VnA : Page, IPage<EventArgs>
 {
-    public partial class VnA : Page, IPage<EventArgs>
+    public event EventHandler<EventArgs> Next;
+
+    public string Header => "VnA";
+
+    public Dictionary<string, string> Entries => new Dictionary<string, string>()
     {
-        public event EventHandler<EventArgs> Next;
+        { "Valence", sclQ1.Value?.ToString() },
+        { "Arousal", sclQ2.Value?.ToString() },
+    };
 
-        public string Header => "VnA";
+    public VnA()
+    {
+        InitializeComponent();
 
-        public Dictionary<string, string> Entries => new Dictionary<string, string>()
+        Storage.Instance
+            .BindScaleToZoomLevel(sctScale)
+            .BindContentToZoomLevel(lblZoom)
+            .BindVisibilityToDebug(lblDebug);
+
+        if (Focusable)
         {
-            { "Valence", sclQ1.Value?.ToString() },
-            { "Arousal", sclQ2.Value?.ToString() },
-        };
-
-        public VnA()
-        {
-            InitializeComponent();
-
-            Storage.Instance
-                .BindScaleToZoomLevel(sctScale)
-                .BindContentToZoomLevel(lblZoom)
-                .BindVisibilityToDebug(lblDebug);
-
-            if (Focusable)
-            {
-                Focus();
-            }
+            Focus();
         }
+    }
 
-        // Internal
+    // Internal
 
-        private void UpdateUI()
+    private void UpdateUI()
+    {
+        btnNext.IsEnabled =
+            sclQ1.Value != null &&
+            sclQ2.Value != null;
+    }
+
+    private void ScaleValue_Changed(object sender, RoutedEventArgs e)
+    {
+        UpdateUI();
+    }
+    
+    // UI
+
+    private void Page_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.F2)
         {
-            btnNext.IsEnabled =
-                sclQ1.Value != null &&
-                sclQ2.Value != null;
-        }
+            sclQ1.Value = 2;
+            sclQ2.Value = 2;
 
-        private void ScaleValue_Changed(object sender, RoutedEventArgs e)
-        {
             UpdateUI();
         }
-        
-        // UI
+    }
 
-        private void Page_KeyDown(object sender, KeyEventArgs e)
+    private void Next_Click(object sender, RoutedEventArgs e)
+    {
+        var _eventLogger = FlowLogger.Instance;
+
+        foreach (var entry in Entries)
         {
-            if (e.Key == Key.F2)
-            {
-                sclQ1.Value = 2;
-                sclQ2.Value = 2;
-
-                UpdateUI();
-            }
+            _eventLogger.Add(LogSource.Comparison, Header, entry.Key, entry.Value);
         }
 
-        private void Next_Click(object sender, RoutedEventArgs e)
-        {
-            var _eventLogger = FlowLogger.Instance;
-
-            foreach (var entry in Entries)
-            {
-                _eventLogger.Add(LogSource.Comparison, Header, entry.Key, entry.Value);
-            }
-
-            Next?.Invoke(this, new EventArgs());
-        }
+        Next?.Invoke(this, new EventArgs());
     }
 }
