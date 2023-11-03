@@ -558,4 +558,22 @@
 	<data name="Times" xml:space="preserve">
 		<value>times</value>
 	</data>
+	<data name="LptController" xml:space="preserve">
+		<value>LPT Controller</value>
+	</data>
+	<data name="LptPort" xml:space="preserve">
+		<value>LPT port</value>
+	</data>
+	<data name="LptNotSelected" xml:space="preserve">
+		<value>LPT not selected</value>
+	</data>
+	<data name="MarkersAndScents" xml:space="preserve">
+		<value>Markers and scents</value>
+	</data>
+	<data name="DescriptionOfMarkersAndScents" xml:space="preserve">
+		<value>A list of expressions, one per line. Each expression starts with the marker ID followed by ':', and then one or two sub-expressions of the form '&lt;channel=1|2&gt;=[&lt;delay=ms&gt;]&lt;flow=ml/min&gt;x&lt;duration=ms&gt;' separated by comma. Example: '1:1=4x200,2=[100]4x100'</value>
+	</data>
+	<data name="Marker" xml:space="preserve">
+		<value>Marker</value>
+	</data>
 </root>

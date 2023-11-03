@@ -106,7 +106,7 @@ namespace AutOlD2Ch.Pages.OdorProduction
                 var msg = Utils.L10n.T("CorrectAndTryAgain");
                 Utils.MsgBox.Error(App.Name, $"{validation}.\n{msg}");
                 validation.Source.Focus();
-                validation.Source.SelectAll();
+                (validation.Source as TextBox)?.SelectAll();
             }
             else
             {

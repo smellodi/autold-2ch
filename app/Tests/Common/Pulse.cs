@@ -85,6 +85,8 @@ namespace AutOlD2Ch.Tests.Common
     public class Pulse
     {
         public static readonly char[] DELIM_LIST = new char[] { ' ', '\n' };
+        public static readonly char DELIM_EXPRESSION_WITH_MARKER = '\n';
+        public static readonly char DELIM_MARKER = ':';
         public static readonly char DELIM_CHANNELS = ',';
         public static readonly char DELIM_EXPRESSION = '=';
         public static readonly char DELIM_BY = 'x';

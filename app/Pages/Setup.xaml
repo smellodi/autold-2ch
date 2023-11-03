@@ -289,6 +289,10 @@
 
         <WrapPanel Grid.Row="4" Grid.Column="0"
                    Style="{StaticResource Buttons}">
+            <Button x:Name="btnLptController"
+                Style="{StaticResource Next}"
+                Content="{lex:Loc LptController}"
+                Click="LptController_Click"/>
             <Button x:Name="btnComparison"
                 Style="{StaticResource Next}"
                 Content="{lex:Loc Comparison}"

@@ -10,8 +10,14 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="1975546383" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="2169552683" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="sendFileToTranslator.fileGroupsListBox">app\Properties\Resources</globalSetting>
+    <globalSetting name="receiveFileFromTranslator.sourceFilePathTextEdit.Text">
+    </globalSetting>
+    <globalSetting name="receiveFileFromTranslator.fileGroupsListBox">
+    </globalSetting>
+    <globalSetting name="receiveFileFromTranslator.languagesToImportCheckListBox">
+    </globalSetting>
     <userSetting name="olequ@LAPTOP-BNL99RMU.filesInitialDir">app\Properties</userSetting>
     <userSetting name="olequ@LAPTOP-BNL99RMU.FindText">
     </userSetting>

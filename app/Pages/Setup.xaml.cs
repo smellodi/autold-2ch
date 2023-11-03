@@ -182,6 +182,7 @@ namespace AutOlD2Ch.Pages
 
             btnOdorProduction.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
             btnComparison.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
+            btnLptController.IsEnabled = _pid.IsOpen && _mfc.IsOpen;
 
             grdPlayground.IsEnabled = _mfc.IsOpen;
 
@@ -528,6 +529,14 @@ namespace AutOlD2Ch.Pages
                 (true, true) => MFC.ValvesOpened.All,
                 _ => throw new NotImplementedException()
             };
+        }
+
+        private void LptController_Click(object sender, RoutedEventArgs e)
+        {
+            _mfcTimer.Stop();
+            _pidTimer.Stop();
+
+            Next?.Invoke(this, Tests.Test.LptController);
         }
 
         private void Comparison_Click(object sender, RoutedEventArgs e)

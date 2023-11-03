@@ -160,7 +160,7 @@ namespace AutOlD2Ch.Pages.Comparison
                 var msg = Utils.L10n.T("CorrectAndTryAgain");
                 Utils.MsgBox.Error(App.Name, $"{validation}.\n{msg}");
                 validation.Source.Focus();
-                validation.Source.SelectAll();
+                (validation.Source as TextBox)?.SelectAll();
             }
             else
             {

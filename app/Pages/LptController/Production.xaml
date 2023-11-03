@@ -1,0 +1,110 @@
+﻿<Page x:Class="AutOlD2Ch.Pages.LptController.Production"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AutOlD2Ch.Controls"
+      xmlns:lex="http://wpflocalizeextension.codeplex.com"
+      lex:LocalizeDictionary.DesignCulture="en"
+      lex:ResxLocalizationProvider.DefaultAssembly="autold_2ch"
+      lex:ResxLocalizationProvider.DefaultDictionary="Resources"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="{lex:Loc Pulses}">
+    
+    <Page.Resources>
+        <Style x:Key="Status" TargetType="Label">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushFontDark}"/>
+        </Style>
+    </Page.Resources>
+    
+    <Grid>
+        <Grid.LayoutTransform>
+            <ScaleTransform x:Name="sctScale"/>
+        </Grid.LayoutTransform>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource PageTitle}">
+            <Run Text="{lex:Loc LptController}"/>
+            <Run Text=" - "/>
+            <Run Text="{lex:Loc Session}"/>
+        </TextBlock>
+
+        <StackPanel Grid.Row="1"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+            <WrapPanel HorizontalAlignment="Center">
+                <Label Content="{lex:Loc Marker}"
+                       Style="{StaticResource Status}"/>
+                <Label x:Name="lblMarker"
+                       Style="{StaticResource Status}"
+                       Content="-"/>
+            </WrapPanel>
+            <WrapPanel Margin="0,12"
+                       HorizontalAlignment="Center">
+                <Label Content="{lex:Loc PulseFlowRate}"
+                       Style="{StaticResource Status}"/>
+                <Label x:Name="lblOdorStatus"
+                       Style="{StaticResource Status}"
+                       Content="XX"/>
+                <Label Content="{lex:Loc MlMin}"
+                       Style="{StaticResource Status}"/>
+            </WrapPanel>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="12"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <local:StageDisplay x:Name="pdsOdor1Flow" Grid.Column="0"
+                                    Text="{Binding Label_Channel1}"
+                                    IsCurrent="{Binding IsOdor1Flow}"/>
+                <local:StageDisplay x:Name="pdsOdor2Flow" Grid.Column="1"
+                                    Text="{Binding Label_Channel2}"
+                                    IsCurrent="{Binding IsOdor2Flow}"/>
+                <local:StageDisplay x:Name="pdsOdorFlow" Grid.Row="1" Grid.ColumnSpan="2"
+                                    IsCurrent="{Binding IsOdorFlow, Mode=OneWay}"/>
+            </Grid>
+
+            <local:WaitingInstruction x:Name="wtiWaiting"/>
+
+            <WrapPanel HorizontalAlignment="Center"
+                       Margin="0,12">
+                <Label Margin="0,4,0,0"
+                       VerticalContentAlignment="Center"
+                       FontSize="14">
+                    <TextBlock>
+                        <Run Text="{lex:Loc PIDVoltage}"/>
+                        <Run Text=" ("/>
+                        <Run Text="{lex:Loc MV}"/>
+                        <Run Text=")"/>
+                    </TextBlock>
+                </Label>
+                <Label x:Name="lblPID"
+                       VerticalContentAlignment="Bottom"
+                       Content="0.0"
+                       FontSize="26"
+                       Foreground="{StaticResource BrushFontDark}"/>
+            </WrapPanel>
+        </StackPanel>
+
+        <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
+                Style="{StaticResource Next}"
+                Content="{lex:Loc Interrupt}"
+                Click="Interrupt_Click"/>
+
+        <Label x:Name="lblZoom" Style="{StaticResource ZoomIndicator}"/>
+        <Label x:Name="lblDebug" Style="{StaticResource DebugWarning}" Visibility="Collapsed"/>
+    </Grid>
+</Page>

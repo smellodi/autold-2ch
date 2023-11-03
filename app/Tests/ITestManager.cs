@@ -6,7 +6,8 @@ namespace AutOlD2Ch.Tests
     public enum Test
     {
         OdorProduction,
-        Comparison
+        Comparison,
+        LptController,
     }
 
     public class PageDoneEventArgs : EventArgs

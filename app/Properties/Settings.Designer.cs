@@ -490,5 +490,65 @@ namespace AutOlD2Ch.Properties {
                 this["Test_CMP_Repetitions"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public double Test_LC_FreshAir {
+            get {
+                return ((double)(this["Test_LC_FreshAir"]));
+            }
+            set {
+                this["Test_LC_FreshAir"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("15")]
+        public double Test_LC_OdorFlowDuration {
+            get {
+                return ((double)(this["Test_LC_OdorFlowDuration"]));
+            }
+            set {
+                this["Test_LC_OdorFlowDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Test_LC_Pulses {
+            get {
+                return ((string)(this["Test_LC_Pulses"]));
+            }
+            set {
+                this["Test_LC_Pulses"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("200")]
+        public int Test_LC_PIDReadingInterval {
+            get {
+                return ((int)(this["Test_LC_PIDReadingInterval"]));
+            }
+            set {
+                this["Test_LC_PIDReadingInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Test_LC_LptPort {
+            get {
+                return ((int)(this["Test_LC_LptPort"]));
+            }
+            set {
+                this["Test_LC_LptPort"] = value;
+            }
+        }
     }
 }

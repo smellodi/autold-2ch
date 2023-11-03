@@ -140,7 +140,7 @@ namespace AutOlD2Ch.Utils
                 _ => throw new NotImplementedException("Unknown icon")
             };
 
-            var uriSource = new Uri($@"/autold;component/Assets/images/{iconFilename}.png", UriKind.Relative);
+            var uriSource = new Uri($@"/autold_2ch;component/Assets/images/{iconFilename}.png", UriKind.Relative);
             imgIcon.Source = new BitmapImage(uriSource);
 
             if (customButtons != null)

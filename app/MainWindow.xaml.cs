@@ -84,6 +84,7 @@ namespace AutOlD2Ch
             {
                 Tests.Test.OdorProduction => new Tests.OdorProduction.Manager(),
                 Tests.Test.Comparison => new Tests.Comparison.Manager(),
+                Tests.Test.LptController => new Tests.LptController.Manager(),
                 _ => throw new NotImplementedException($"The test '{test}' logic is not implemented yet"),
             };
 

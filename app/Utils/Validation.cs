@@ -16,7 +16,7 @@ namespace AutOlD2Ch.Utils
             Unknown = NumberStyles.Any,
         }
 
-        public readonly TextBox Source;
+        public readonly Control Source;
         public readonly double Min;
         public readonly double Max;
         public readonly ValueFormat Format;
@@ -41,7 +41,7 @@ namespace AutOlD2Ch.Utils
             Max = max;
             Format = format;
 
-            _value = Source.Text;
+            _value = (Source as TextBox)?.Text;
         }
 
         public Validation(TextBox textbox, string value, double min, double max, ValueFormat format)
@@ -54,14 +54,14 @@ namespace AutOlD2Ch.Utils
             _value = value;
         }
 
-        public Validation(TextBox textbox, string externalError)
+        public Validation(Control textbox, string externalError)
         {
             Source = textbox;
             Format = ValueFormat.Unknown;
             ExternalError = externalError;
 
             _code = ValidityViolationCode.ExternallyDetectedError;
-            _value = Source.Text;
+            _value = (Source as TextBox)?.Text;
         }
 
         public override string ToString()
@@ -112,7 +112,7 @@ namespace AutOlD2Ch.Utils
                     App.Name + " - " + L10n.T("Validator"),
                     $"{validation}.\n{msg}");
                 validation.Source.Focus();
-                validation.Source.SelectAll();
+                (validation.Source as TextBox)?.SelectAll();
 
                 return false;
             }

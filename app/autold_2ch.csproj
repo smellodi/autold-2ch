@@ -75,6 +75,12 @@
     <Compile Update="Pages\Comparison\Setup.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Pages\LptController\Production.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Pages\LptController\Setup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Pages\OdorProduction\Production.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -130,6 +136,12 @@
     <Page Update="Pages\Comparison\Setup.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+    <Page Update="Pages\LptController\Production.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+    <Page Update="Pages\LptController\Setup.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
     <Page Update="Pages\OdorProduction\Production.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
@@ -142,6 +154,10 @@
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="for /f &quot;skip=1&quot; %25%25x in ('wmic os get localdatetime') do if not defined isodate set isodate=%25%25x&#xD;&#xA;set today=%25isodate:~2,2%25%25isodate:~4,2%25%25isodate:~6,2%25.%25time:~0,2%25%25time:~3,2%25&#xD;&#xA;echo %25today%25 &gt; &quot;$(ProjectDir)\Properties\BuildCode.txt&quot;" />
+  </Target>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(SolutionDir)InpOut\bin-x64\inpoutx64.dll&quot; &quot;$(TargetDir)&quot; /Y /I" />
   </Target>
 
 </Project>
