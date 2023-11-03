@@ -12,10 +12,10 @@ using Smop.IonVision;
 
 namespace AutOlD2Ch.Pages.Comparison;
 
-public partial class Setup : Page, IPage<Tests.Comparison.Settings>, Tests.ITestEmulator, INotifyPropertyChanged
+public partial class Setup : Page, IPage<Tests.Comparison.Settings?>, Tests.ITestEmulator, INotifyPropertyChanged
 {
-    public event EventHandler<Tests.Comparison.Settings> Next;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<Tests.Comparison.Settings?>? Next;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public bool IsHumanSniffer { get; private set; } = true;
     public bool IsDMSSniffer => !IsHumanSniffer;
@@ -72,9 +72,9 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings>, Tests.ITest
     
     DMS _dms = DMS.Instance;
 
-    private Utils.Validation CheckInput()
+    private Utils.Validation? CheckInput()
     {
-        var pairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string error);
+        var pairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string? error);
         if (pairsOfMixtures == null)
         {
             return new Utils.Validation(txbPairsOfMixtures, error);
@@ -170,7 +170,7 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings>, Tests.ITest
             _settings.TestOdorFlow = double.Parse(txbTestOdorFlow.Text);
             _settings.InitialPause = int.Parse(txbInitialPause.Text);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
-            _settings.PairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string _);
+            _settings.PairsOfMixtures = Tests.Comparison.Settings.ParsePairsOfMixtures(txbPairsOfMixtures.Text.Replace("\r\n", "\n"), out string? _);
             _settings.WaitForPID = chkWaitForPID.IsChecked ?? false;
             _settings.DMSSniffingDelay = double.Parse(txbDMSSniffingDelay.Text);
             _settings.Repetitions = int.Parse(txbRepetitions.Text);

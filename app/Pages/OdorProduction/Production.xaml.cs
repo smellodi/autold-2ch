@@ -98,8 +98,8 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     public string Label_Channel1 => Utils.L10n.T("Channel") + " #1";
     public string Label_Channel2 => Utils.L10n.T("Channel") + " #2";
 
-    public event EventHandler<EventArgs> Next;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<EventArgs>? Next;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public Tests.ITestEmulator Emulator => _procedure;
 
@@ -141,13 +141,16 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
 
     readonly Procedure _procedure = new();
 
-    Settings _settings;
+    Settings? _settings;
     Procedure.Stage _stage = Procedure.Stage.None;
 
     bool _isOdorFlowPhase = false;
 
     private void UpdateUI()
     {
+        if (_settings == null)
+            return;
+
         var pulse = _settings.Pulses[_procedure.Step];
         lblOdorStatus.Content = $"{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}";
 
@@ -159,6 +162,9 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
 
     private void SetStage(Procedure.Stage stage)
     {
+        if (_settings == null)
+            return;
+
         bool isOdorFlowContinuing =
             (_stage.HasFlag(Procedure.Stage.Odor1Flow) || _stage.HasFlag(Procedure.Stage.Odor2Flow)) &&
             (stage.HasFlag(Procedure.Stage.Odor1Flow) || stage.HasFlag(Procedure.Stage.Odor2Flow));

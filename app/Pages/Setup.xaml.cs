@@ -14,8 +14,8 @@ namespace AutOlD2Ch.Pages;
 
 public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, IDisposable
 {
-    public event EventHandler<Tests.Test> Next;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<Tests.Test>? Next;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public double Scale { get; private set; } = 1;
 
@@ -78,7 +78,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
             if (_mfc.IsOpen)
             {
                 var result = _mfc.GetSample(out MFCSample sample);
-                _monitor.LogData(LogSource.MFC, sample);
+                _monitor?.LogData(LogSource.MFC, sample);
                 UpdateIndicators(sample);
             }
             else
@@ -87,7 +87,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
                 {
                     Time = Utils.Timestamp.Ms
                 };
-                _monitor.LogData(LogSource.MFC, sample);
+                _monitor?.LogData(LogSource.MFC, sample);
             }
         });
 
@@ -98,7 +98,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
             if (_pid.IsOpen)
             {
                 var result = _pid.GetSample(out PIDSample sample);
-                _monitor.LogData(LogSource.PID, sample);
+                _monitor?.LogData(LogSource.PID, sample);
                 UpdateIndicators(sample);
             }
             else
@@ -107,7 +107,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
                 {
                     Time = Utils.Timestamp.Ms
                 };
-                _monitor.LogData(LogSource.PID, sample);
+                _monitor?.LogData(LogSource.PID, sample);
             }
         });
 
@@ -137,12 +137,12 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
     readonly MFC _mfc = MFC.Instance;
     readonly PID _pid = PID.Instance;
 
-    CommMonitor _monitor;
+    CommMonitor? _monitor;
 
     readonly System.Timers.Timer _mfcTimer = new();
     readonly System.Timers.Timer _pidTimer = new();
 
-    Controls.ChannelIndicator _currentIndicator = null;
+    Controls.ChannelIndicator? _currentIndicator = null;
 
     private static string ScentedAir(int id) => Utils.L10n.T("ScentedAir") + $" #{id}";
 
@@ -209,7 +209,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
             success = result.Error == Error.Success;
 
             LogSource source = port.Name == "PID" ? LogSource.PID : LogSource.MFC;
-            _monitor.LogResult(source, result);
+            _monitor?.LogResult(source, result);
         }
         else
         {
@@ -373,8 +373,11 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
     private void Page_Loaded(object sender, RoutedEventArgs e)
     {
         _monitor = CommMonitor.Instance;
-        _monitor.MFCUpdateInterval = MFC_UPDATE_INTERVAL;
-        _monitor.PIDUpdateInterval = PID_UPDATE_INTERVAL;
+        if (_monitor != null)
+        {
+            _monitor.MFCUpdateInterval = MFC_UPDATE_INTERVAL;
+            _monitor.PIDUpdateInterval = PID_UPDATE_INTERVAL;
+        }
 
         if (Focusable)
         {
@@ -426,17 +429,17 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
             Storage.Instance.IsDebugging = true;
             lblDebug.Visibility = Visibility.Visible;
 
-            MFCToggle_Click(this, null);
-            PIDToggle_Click(this, null);
+            MFCToggle_Click(this, new RoutedEventArgs());
+            PIDToggle_Click(this, new RoutedEventArgs());
         }
     }
 
-    private void Port_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Port_SelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
         UpdateUI();
     }
 
-    private void MFCToggle_Click(object sender, RoutedEventArgs e)
+    private void MFCToggle_Click(object? sender, RoutedEventArgs e)
     {
         if (!Toggle(_mfc, (string)cmbMFCPort.SelectedItem))
         {
@@ -490,7 +493,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
 
     private void SetFreshAir_Click(object sender, RoutedEventArgs e)
     {
-        Utils.Validation.Do(txbFreshAir, 0, 10, (object s, double value) => _mfc.FreshAirSpeed = value );
+        Utils.Validation.Do(txbFreshAir, 0, 10, (object? s, double value) => _mfc.FreshAirSpeed = value );
     }
 
     private void Odor1_KeyUp(object sender, KeyEventArgs e)
@@ -511,12 +514,12 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
 
     private void SetOdor1_Click(object sender, RoutedEventArgs e)
     {
-        Utils.Validation.Do(txbOdor1, 0, 500, (object s, double value) => _mfc.Odor1Speed = value );
+        Utils.Validation.Do(txbOdor1, 0, 500, (object? s, double value) => _mfc.Odor1Speed = value );
     }
 
     private void SetOdor2_Click(object sender, RoutedEventArgs e)
     {
-        Utils.Validation.Do(txbOdor2, 0, 500, (object s, double value) => _mfc.Odor2Speed = value);
+        Utils.Validation.Do(txbOdor2, 0, 500, (object? s, double value) => _mfc.Odor2Speed = value);
     }
 
     private void SetDirection_Click(object sender, RoutedEventArgs e)

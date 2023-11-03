@@ -5,8 +5,8 @@ namespace AutOlD2Ch;
 
 internal class USB
 {
-    public event EventHandler<string> Inserted;
-    public event EventHandler<string> Removed;
+    public event EventHandler<string>? Inserted;
+    public event EventHandler<string>? Removed;
 
     public USB()
     {

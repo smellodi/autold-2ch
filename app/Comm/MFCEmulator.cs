@@ -90,7 +90,7 @@ internal class MFCEmulator : IDisposable
 
     // Internal
 
-    static MFCEmulator _instance;
+    static MFCEmulator? _instance;
 
     readonly Random _rnd = new((int)DateTime.Now.Ticks);
 
@@ -107,8 +107,8 @@ internal class MFCEmulator : IDisposable
 
     MFC.ValvesOpened _odorDirection = MFC.ValvesOpened.None;
 
-    Utils.DispatchOnce _valve1ShortPulseTimer = null;
-    Utils.DispatchOnce _valve2ShortPulseTimer = null;
+    Utils.DispatchOnce? _valve1ShortPulseTimer = null;
+    Utils.DispatchOnce? _valve2ShortPulseTimer = null;
     bool _isValve1InShortPulseMode = false;
     bool _isValve2InShortPulseMode = false;
 
@@ -160,7 +160,7 @@ internal class MFCEmulator : IDisposable
                     {
                         _valve1ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                         {
-                            _valve1ShortPulseTimer.Dispose();
+                            _valve1ShortPulseTimer?.Dispose();
                             _valve1ShortPulseTimer = null;
                         });
                     }
@@ -170,7 +170,7 @@ internal class MFCEmulator : IDisposable
                     {
                         _valve2ShortPulseTimer = Utils.DispatchOnce.Do(0.001 * value, () =>
                         {
-                            _valve2ShortPulseTimer.Dispose();
+                            _valve2ShortPulseTimer?.Dispose();
                             _valve2ShortPulseTimer = null;
                         });
                     }

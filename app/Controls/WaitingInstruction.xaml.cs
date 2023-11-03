@@ -8,7 +8,7 @@ namespace AutOlD2Ch.Controls;
 
 public partial class WaitingInstruction : UserControl, INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     #region Text property
 
@@ -92,7 +92,7 @@ public partial class WaitingInstruction : UserControl, INotifyPropertyChanged
     const double UPDATE_INTERVAL = 0.1;
 
     double _start = 0;
-    DispatchOnceUI _timer;
+    DispatchOnceUI? _timer;
 
     private void UpdateProgress()
     {

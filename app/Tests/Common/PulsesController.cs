@@ -24,13 +24,13 @@ public class PulsesController : IDisposable
         /// </summary>
         public bool IsLast { get; set; } = false;
 
-        public PulseStateChangedEventArgs(ChannelPulse startingChannel, ChannelPulse ongoingChannel = null, bool isLast = false)
+        public PulseStateChangedEventArgs(ChannelPulse? startingChannel, ChannelPulse? ongoingChannel = null, bool isLast = false)
         {
             StartingChannels = startingChannel != null ? new ChannelPulse[] { startingChannel } : Array.Empty<ChannelPulse>();
             OngoingChannels = ongoingChannel != null ? new ChannelPulse[] { ongoingChannel } : Array.Empty<ChannelPulse>();
             IsLast = isLast;
         }
-        public PulseStateChangedEventArgs(ChannelPulse[] startingChannels, ChannelPulse[] ongoingChannels = null)
+        public PulseStateChangedEventArgs(ChannelPulse[]? startingChannels, ChannelPulse[]? ongoingChannels = null)
         {
             StartingChannels = startingChannels ?? Array.Empty<ChannelPulse>();
             OngoingChannels = ongoingChannels ?? Array.Empty<ChannelPulse>();
@@ -55,7 +55,7 @@ public class PulsesController : IDisposable
         }
     }
 
-    public event EventHandler<PulseStateChangedEventArgs> PulseStateChanged;
+    public event EventHandler<PulseStateChangedEventArgs>? PulseStateChanged;
 
     /// <summary>
     /// Constructor
@@ -100,7 +100,7 @@ public class PulsesController : IDisposable
         for (int i = 2; i < pulseEvents.Length; i++)
         {
             var evt = pulseEvents[i];
-            _runner.Then(evt.Interval, () =>
+            _runner?.Then(evt.Interval, () =>
             {
                 PulseStateChanged?.Invoke(this, evt.ToStateChange());
             });
@@ -150,10 +150,10 @@ public class PulsesController : IDisposable
         public double Interval => (double)(Delay - (Previous?.Delay ?? 0)) / 1000;
         public ChannelEvent[] Starting => _starting.ToArray();
         public ChannelEvent[] Ending => _ending.ToArray();
-        public PulseEvent Previous => _previousEvent;
-        public PulseEvent Next { get; set; }
+        public PulseEvent? Previous => _previousEvent;
+        public PulseEvent? Next { get; set; }
 
-        public PulseEvent(PulseEvent previousEvent, ChannelEvent evt)
+        public PulseEvent(PulseEvent? previousEvent, ChannelEvent evt)
         {
             _previousEvent = previousEvent;
             Delay = evt.Delay;
@@ -179,7 +179,7 @@ public class PulsesController : IDisposable
 
             var firstEvent = this;
             while (firstEvent.Previous != null) firstEvent = firstEvent.Previous;   // get the first event
-            while (firstEvent != this)
+            while (firstEvent != this && firstEvent != null)
             {
                 foreach (var evt in firstEvent.Starting)
                 {
@@ -192,9 +192,12 @@ public class PulsesController : IDisposable
                 firstEvent = firstEvent.Next;
             }
 
-            foreach (var evt in firstEvent.Ending)
+            if (firstEvent != null)
             {
-                activePulses.Remove(evt.Channel);
+                foreach (var evt in firstEvent.Ending)
+                {
+                    activePulses.Remove(evt.Channel);
+                }
             }
 
             var result = new PulseStateChangedEventArgs(
@@ -225,7 +228,7 @@ public class PulsesController : IDisposable
             var orderedEvents = events.OrderBy(evt => evt.Delay);
 
             List<PulseEvent> result = new();
-            PulseEvent currentEvent = null;
+            PulseEvent? currentEvent = null;
 
             foreach (var evt in orderedEvents)
             {
@@ -252,11 +255,11 @@ public class PulsesController : IDisposable
 
         readonly List<ChannelEvent> _starting = new();
         readonly List<ChannelEvent> _ending = new();
-        readonly PulseEvent _previousEvent;
+        readonly PulseEvent? _previousEvent;
     }
 
     readonly Pulse _pulse;
     readonly int _defaultPulseDuration;
 
-    Utils.DispatchOnce _runner;
+    Utils.DispatchOnce? _runner;
 }

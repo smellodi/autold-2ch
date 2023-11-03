@@ -14,7 +14,7 @@ public partial class MainWindow : Window
 
     readonly CommMonitor _monitor;
 
-    Tests.ITestManager _currentTest = null;
+    Tests.ITestManager? _currentTest = null;
 
     readonly Storage _storage = Storage.Instance;
 
@@ -78,7 +78,7 @@ public partial class MainWindow : Window
         return result;
     }
 
-    private void OnSetupPage_Next(object sender, Tests.Test test)
+    private void OnSetupPage_Next(object? sender, Tests.Test test)
     {
         if (_currentTest is IDisposable d)
             d.Dispose();
@@ -101,7 +101,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnFinishedPage_Next(object sender, bool exit)
+    private void OnFinishedPage_Next(object? sender, bool exit)
     {
         if (exit)
         {
@@ -116,7 +116,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnFinishedPage_RequestSaving(object sender, EventArgs e)
+    private void OnFinishedPage_RequestSaving(object? sender, EventArgs e)
     {
         var savingResult = SaveLoggingData();
         if (savingResult == null)
@@ -126,11 +126,11 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnTest_PageDone(object sender, Tests.PageDoneEventArgs e)
+    private void OnTest_PageDone(object? sender, Tests.PageDoneEventArgs e)
     {
         if (!e.CanContinue)
         {
-            _currentTest.Interrupt();
+            _currentTest?.Interrupt();
             if (_currentTest is IDisposable d)
                 d.Dispose();
             _currentTest = null;
@@ -142,10 +142,10 @@ public partial class MainWindow : Window
         }
         else
         {
-            var page = _currentTest.NextPage(e.Data);
+            var page = _currentTest?.NextPage(e.Data);
             if (page == null)
             {
-                _finishedPage.TestName = _currentTest.Name;
+                _finishedPage.TestName = _currentTest?.Name ?? "";
                 Content = _finishedPage;
 
                 if (_currentTest is IDisposable d)

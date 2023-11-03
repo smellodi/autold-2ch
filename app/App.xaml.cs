@@ -25,6 +25,6 @@ public partial class App : Application
 
     private void TextBox_GotFocus(object sender, RoutedEventArgs e)
     {
-        (sender as TextBox).SelectAll();
+        (sender as TextBox)?.SelectAll();
     }
 }

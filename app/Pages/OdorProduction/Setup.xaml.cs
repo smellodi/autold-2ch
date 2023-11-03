@@ -7,9 +7,9 @@ using Settings = AutOlD2Ch.Tests.OdorProduction.Settings;
 
 namespace AutOlD2Ch.Pages.OdorProduction;
 
-public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
+public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 {
-    public event EventHandler<Settings> Next;
+    public event EventHandler<Settings?>? Next;
 
     public Setup()
     {
@@ -40,9 +40,9 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
 
     readonly Settings _settings = new();
 
-    private Utils.Validation CheckInput()
+    private Utils.Validation? CheckInput()
     {
-        var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string error);
+        var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? error);
         if (pulses == null)
         {
             return new Utils.Validation(txbPulses, error);
@@ -111,7 +111,7 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
         else
         {
             _settings.FreshAir = double.Parse(txbFreshAir.Text);
-            _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string _);
+            _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? _);
             _settings.InitialPause = int.Parse(txbInitialPause.Text);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
             _settings.FinalPause = int.Parse(txbFinalPause.Text);

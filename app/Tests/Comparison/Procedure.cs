@@ -48,15 +48,15 @@ public class Procedure : ITestEmulator, IDisposable
         }
     }
 
-    public event EventHandler<double> Data;
-    public event EventHandler<Stage> StageChanged;
-    public event EventHandler RequestAnswer;
-    public event EventHandler<string> DNSError;
+    public event EventHandler<double>? Data;
+    public event EventHandler<Stage>? StageChanged;
+    public event EventHandler? RequestAnswer;
+    public event EventHandler<string>? DNSError;
     
     /// <summary>
     /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
     /// </summary>
-    public event EventHandler<bool> Finished;
+    public event EventHandler<bool>? Finished;
 
     public List<(MixturePair, Answer)> Results { get; } = new();
 
@@ -76,14 +76,14 @@ public class Procedure : ITestEmulator, IDisposable
                 if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
                     //_dataLogger.Add(pidSample);
-                    _monitor.LogData(LogSource.PID, pidSample);
+                    _monitor?.LogData(LogSource.PID, pidSample);
                     Data?.Invoke(this, pidSample.PID);
                     CheckPID(pidSample.PID);
                 }
                 if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                 {
                     //_dataLogger.Add(mfcSample);
-                    _monitor.LogData(LogSource.MFC, mfcSample);
+                    _monitor?.LogData(LogSource.MFC, mfcSample);
                 }
             });
         };
@@ -112,8 +112,11 @@ public class Procedure : ITestEmulator, IDisposable
         _mfc.Closed += MFC_Closed;
         _pid.Closed += PID_Closed;
 
-        _monitor.MFCUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
-        _monitor.PIDUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
+        if (_monitor != null)
+        {
+            _monitor.MFCUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
+            _monitor.PIDUpdateInterval = UPDATE_INTERVAL_IN_SECONDS;
+        }
 
         _mfc.FreshAirSpeed = _settings.FreshAirFlow;
         _mfc.OdorDirection = MFC.ValvesOpened.None; // should I add delay here?
@@ -162,31 +165,34 @@ public class Procedure : ITestEmulator, IDisposable
 
     public void Next()
     {
+        if (_settings == null)
+            return;
+
         var pair = _pairsOfMixtures[_step];
 
         //_dataLogger.Add(pair.ToString());
         _testLogger.Add(LogSource.Comparison, "trial", "pair", pair.ToString());
 
         _runner = DispatchOnce
-            .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))
+            .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))?
             .Then(0.1, () => PrepareOdors(0))
             .Then(_settings.InitialPause, () => StartOdorFlow(0));
         
         if (_settings.WaitForPID)
         {
-            _runner.ThenWait();
+            _runner?.ThenWait();
         }
 
-        _runner.Then(_settings.OdorFlowDuration, StopOdorFlow)
+        _runner?.Then(_settings.OdorFlowDuration, StopOdorFlow)
             .Then(0.1, () => PrepareOdors(1))
             .Then(_settings.InitialPause, () => StartOdorFlow(1));
 
         if (_settings.WaitForPID)
         {
-            _runner.ThenWait();
+            _runner?.ThenWait();
         }
 
-        _runner.Then(_settings.OdorFlowDuration, () => StopOdorFlow())
+        _runner?.Then(_settings.OdorFlowDuration, () => StopOdorFlow())
             .Then(2.0, () => RequestAnswer?.Invoke(this, new EventArgs()));
     }
 
@@ -230,25 +236,28 @@ public class Procedure : ITestEmulator, IDisposable
     readonly PID _pid = PID.Instance;
     //readonly SyncLogger _dataLogger = SyncLogger.Instance;
     readonly FlowLogger _testLogger = FlowLogger.Instance;
-    readonly CommMonitor _monitor = CommMonitor.Instance;
+    readonly CommMonitor? _monitor = CommMonitor.Instance;
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
 
-    Settings _settings;
+    Settings? _settings;
     Comparison.Stage _stage;
-    DMS _dms = null;
+    DMS? _dms = null;
 
     int _step = 0;
-    MixturePair[] _pairsOfMixtures = null;
+    MixturePair[] _pairsOfMixtures = Array.Empty<MixturePair>();
     MixtureID _mixtureID = MixtureID.None;
     double _PIDThreshold = 0;
 
-    DispatchOnce _runner;
-    PulsesController _pulseController;
+    DispatchOnce? _runner;
+    PulsesController? _pulseController;
     //DispatchOnce _pulseFinisher;
 
     private void PrepareOdors(int mixID)
     {
+        if (_settings == null)
+            return;
+
         var pair = _pairsOfMixtures[_step];
         var pulse = _stage == Comparison.Stage.Test
             ? GasMixer.ToPulse(pair, mixID, _settings.TestOdorFlow, _settings.OdorFlowDurationMs, _settings.Gas1, _settings.Gas2)
@@ -260,6 +269,9 @@ public class Procedure : ITestEmulator, IDisposable
 
     private void StartOdorFlow(int mixID)
     {
+        if (_settings == null)
+            return;
+
         _mixtureID = NextMixtureID();
 
         var pair = _pairsOfMixtures[_step];
@@ -358,18 +370,19 @@ public class Procedure : ITestEmulator, IDisposable
 
     private void CheckPID(double pid)
     {
-        if (_PIDThreshold != 0)
+        if (_settings == null)
+            return;
+
+        if (_PIDThreshold != 0 && pid > _PIDThreshold)
         {
-            if (pid > _PIDThreshold)
-            {
-                _PIDThreshold = 0;
-                _pulseController.Run();
+            _PIDThreshold = 0;
+            _pulseController?.Run();
 
-                var pair = _pairsOfMixtures[_step];
-                Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms?.StartScan(pair, _mixtureID));
+            var pair = _pairsOfMixtures[_step];
+            Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms?.StartScan(pair, _mixtureID));
 
-                StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
-            }
+            StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
+
         }
     }
 
@@ -398,17 +411,17 @@ public class Procedure : ITestEmulator, IDisposable
         }
     }*/
 
-    private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         StopTimers();
     }
 
-    private void MFC_Closed(object sender, EventArgs e)
+    private void MFC_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("MFC");
     }
 
-    private void PID_Closed(object sender, EventArgs e)
+    private void PID_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("PID");
     }

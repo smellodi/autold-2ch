@@ -29,7 +29,7 @@ public enum Error
 public class Result
 {
     public Error Error;
-    public string Reason;
+    public string Reason = "OK";
 
     public override string ToString()
     {
@@ -60,12 +60,12 @@ public abstract class CommPort
     /// <summary>
     /// Fires when COM port is closed
     /// </summary>
-    public event EventHandler Closed;
+    public event EventHandler? Closed;
 
     /// <summary>
     /// Fires when high-level error (Sistem.IO.Ports.SerialPort) is received from COM port
     /// </summary>
-    public event EventHandler<Result> RequestResult;
+    public event EventHandler<Result>? RequestResult;
 
     public bool IsOpen { get; protected set; } = false;
     public bool IsDebugging { get; set; } = false;
@@ -179,7 +179,7 @@ public abstract class CommPort
 
     // Internal
 
-    protected SerialPort _port;
+    protected SerialPort? _port;
     protected SerialError? _error = null;
 
     protected int _portSpeed = 19200;

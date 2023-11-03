@@ -9,7 +9,7 @@ namespace AutOlD2Ch;
 
 public partial class CommMonitor : Window
 {
-    public static CommMonitor Instance { get; private set; }
+    public static CommMonitor? Instance { get; private set; }
 
     /// <summary>
     /// Update interval in seconds

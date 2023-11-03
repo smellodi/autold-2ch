@@ -7,9 +7,9 @@ using Settings = AutOlD2Ch.Tests.LptController.Settings;
 
 namespace AutOlD2Ch.Pages.LptController;
 
-public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
+public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 {
-    public event EventHandler<Settings> Next;
+    public event EventHandler<Settings?>? Next;
 
     public Setup()
     {
@@ -94,7 +94,7 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
         }
     }
 
-    private Utils.Validation CheckInput()
+    private Utils.Validation? CheckInput()
     {
         /*
         if (cmbLptPort.SelectedIndex < 0)
@@ -106,7 +106,7 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
             return new Utils.Validation(cmbComPort, Utils.L10n.T("ComNotSelected"));
         }*/
 
-        var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string error);
+        var pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? error);
         if (pulses == null)
         {
             return new Utils.Validation(txbPulses, error);
@@ -194,7 +194,7 @@ public partial class Setup : Page, IPage<Settings>, Tests.ITestEmulator
             _settings.LptPort = cmbLptPort.SelectedIndex;
             _settings.ComPort = (string)cmbLptPort.SelectedItem;
             _settings.FreshAir = double.Parse(txbFreshAir.Text);
-            _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string _);
+            _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? _);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
             _settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 

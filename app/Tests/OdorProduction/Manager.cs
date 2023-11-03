@@ -9,7 +9,7 @@ namespace AutOlD2Ch.Tests.OdorProduction;
 /// </summary>
 public class Manager : ITestManager
 {
-    public event EventHandler<PageDoneEventArgs> PageDone;
+    public event EventHandler<PageDoneEventArgs>? PageDone;
 
     public string Name => Utils.L10n.T("OdorPulses");
 
@@ -23,7 +23,7 @@ public class Manager : ITestManager
         _productionPage.Next += (s, e) => PageDone?.Invoke(this, new PageDoneEventArgs(true));
     }
 
-    public Page NextPage(object param = null)
+    public Page? NextPage(object? param = null)
     {
         _current = _current switch
         {
@@ -33,7 +33,7 @@ public class Manager : ITestManager
             _ => throw new NotImplementedException($"Unhandled page in {Name}"),
         };
 
-        if (_current is Production page)
+        if (_current is Production page && _settings != null)
         {
             page.Init(_settings);
         }
@@ -41,7 +41,7 @@ public class Manager : ITestManager
         return _current;
     }
 
-    public Page Start()
+    public Page? Start()
     {
         _current = null;
         return NextPage();
@@ -70,7 +70,7 @@ public class Manager : ITestManager
     readonly Setup _setupPage = new();
     readonly Production _productionPage = new();
 
-    Page _current = null;
+    Page? _current = null;
 
-    Settings _settings;
+    Settings? _settings;
 }

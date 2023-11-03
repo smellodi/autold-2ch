@@ -20,10 +20,10 @@ public class Validation
     public readonly double Min;
     public readonly double Max;
     public readonly ValueFormat Format;
-    public readonly string ExternalError;
+    public readonly string? ExternalError;
 
-    public string Value => _value;
-    public double? AsNumber => IsValid ? double.Parse(_value) : null;
+    public string? Value => _value;
+    public double? AsNumber => IsValid && _value != null ? double.Parse(_value) : null;
 
     public bool IsValid
     {
@@ -54,7 +54,7 @@ public class Validation
         _value = value;
     }
 
-    public Validation(Control textbox, string externalError)
+    public Validation(Control textbox, string? externalError)
     {
         Source = textbox;
         Format = ValueFormat.Unknown;
@@ -72,19 +72,19 @@ public class Validation
             ValidityViolationCode.InvalidFormat => string.Format(L10n.T("ValueFormatNotValid"), _value, Format),
             ValidityViolationCode.TooLarge => string.Format(L10n.T("ValueTooLarge"), _value, Max),
             ValidityViolationCode.TooSmall => string.Format(L10n.T("ValueTooSmall"), _value, Min),
-            ValidityViolationCode.ExternallyDetectedError => ExternalError,
+            ValidityViolationCode.ExternallyDetectedError => ExternalError ?? "",
             _ => "unknown error",
         };
     }
 
     public static bool Do(TextBox textbox, double min, double max, EventHandler<int> action)
     {
-        return Do(textbox, min, max, ValueFormat.Integer, (object s, double e) => action(s, (int)e));
+        return Do(textbox, min, max, ValueFormat.Integer, (object? s, double e) => action(s, (int)e));
     }
 
     public static bool Do(TextBox textbox, double min, double max, EventHandler<double> action)
     {
-        return Do(textbox, min, max, ValueFormat.Float, (object s, double e) => action(s, e));
+        return Do(textbox, min, max, ValueFormat.Float, (object? s, double e) => action(s, e));
     }
 
     // Internal
@@ -100,7 +100,7 @@ public class Validation
     }
 
     ValidityViolationCode _code = ValidityViolationCode.OK;
-    string _value;
+    string? _value;
 
     private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action)
     {
@@ -121,7 +121,7 @@ public class Validation
         return true;
     }
 
-    private bool IsValidValue(string value)
+    private bool IsValidValue(string? value)
     {
         _value = value;
 

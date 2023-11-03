@@ -10,7 +10,7 @@ namespace AutOlD2Ch.Tests.Comparison;
 /// </summary>
 public class Manager : ITestManager, IDisposable
 {
-    public event EventHandler<PageDoneEventArgs> PageDone;
+    public event EventHandler<PageDoneEventArgs>? PageDone;
 
     public string Name => Utils.L10n.T("Comparison");
 
@@ -50,8 +50,11 @@ public class Manager : ITestManager, IDisposable
         };
     }
 
-    public Page NextPage(object param = null)
+    public Page? NextPage(object? param = null)
     {
+        if (_settings == null)
+            return null;
+
         var previousPage = _current;
 
         _current = _current switch
@@ -83,7 +86,7 @@ public class Manager : ITestManager, IDisposable
         }
         else if (_current is Pause pausePage)
         {
-            pausePage.Init(_settings, (previousPage as Production).Results);
+            pausePage.Init(_settings, (previousPage as Production)?.Results ?? Array.Empty<(MixturePair, Procedure.Answer)>());
         }
         else if (_current is Wait waitPage)
         {
@@ -97,7 +100,7 @@ public class Manager : ITestManager, IDisposable
         return _current;
     }
 
-    public Page Start()
+    public Page? Start()
     {
         _current = null;
         return NextPage();
@@ -130,14 +133,14 @@ public class Manager : ITestManager, IDisposable
     // Internal
 
     readonly Setup _setupPage = new();
-    Wait _waitPage;
-    GasPresenter _gasPresenterPage;
-    Production _productionPracticePage;
-    Production _productionTestPage;
-    Pause _pausePage;
-    VnA _vnaPage;
+    Wait? _waitPage;
+    GasPresenter? _gasPresenterPage;
+    Production? _productionPracticePage;
+    Production? _productionTestPage;
+    Pause? _pausePage;
+    VnA? _vnaPage;
 
-    Page _current = null;
+    Page? _current = null;
 
-    Settings _settings;
+    Settings? _settings;
 }

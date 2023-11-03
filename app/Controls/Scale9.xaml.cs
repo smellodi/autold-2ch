@@ -151,13 +151,13 @@ public partial class Scale9 : UserControl, INotifyPropertyChanged
     #endregion
 
     public event EventHandler<RoutedEventArgs> ValueChanged = delegate { };
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public int? Value
     {
         get
         {
-            RadioButton rdb = grdScale.Children.OfType<RadioButton>().FirstOrDefault(item => item.IsChecked ?? false);
+            RadioButton? rdb = grdScale.Children.OfType<RadioButton>().FirstOrDefault(item => item.IsChecked ?? false);
             var value = rdb?.DataContext as string;
             return value == null ? null : int.Parse(value);
         }
@@ -188,9 +188,9 @@ public partial class Scale9 : UserControl, INotifyPropertyChanged
 
         foreach (object ctrl in grdScale.Children)
         {
-            if (ctrl is RadioButton)
+            if (ctrl is RadioButton rdb)
             {
-                (ctrl as RadioButton).GroupName = group;
+                rdb.GroupName = group;
             }
         }
     }

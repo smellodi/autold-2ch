@@ -247,7 +247,7 @@ internal class PIDEmulator
 
     // Internal
 
-    static PIDEmulator _instance;
+    static PIDEmulator? _instance;
 
     readonly Random _rnd = new((int)DateTime.Now.Ticks);
     readonly OlfactoryDeviceModel _model = new();

@@ -94,11 +94,11 @@ public class Pulse
     /// <summary>
     /// Channel A, can be null
     /// </summary>
-    public ChannelPulse Channel1 { get; private set; }
+    public ChannelPulse? Channel1 { get; private set; }
     /// <summary>
     /// Channel B, can be null
     /// </summary>
-    public ChannelPulse Channel2 { get; private set; }
+    public ChannelPulse? Channel2 { get; private set; }
 
     /// <summary>
     /// Valves affected by this pulse

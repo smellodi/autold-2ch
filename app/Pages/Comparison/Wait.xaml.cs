@@ -7,7 +7,7 @@ namespace AutOlD2Ch.Pages.ThresholdTest;
 
 public partial class Wait : Page, IPage<EventArgs>
 {
-    public event EventHandler<EventArgs> Next;
+    public event EventHandler<EventArgs>? Next;
 
     public Wait()
     {
@@ -72,13 +72,13 @@ public partial class Wait : Page, IPage<EventArgs>
 
     // Internal
 
-    DMS _dms = null;
+    DMS? _dms = null;
 
     const int INTER_REQUEST_INTERVAL = 1000;        // ms
     const int PARAMETER_LOADING_DURATION = 10000;   // ms
     const int PROJECT_LOADING_DURATION = 3000;      // ms
 
-    private bool HandleError(string error)
+    private bool HandleError(string? error)
     {
         if (error != null)
         {

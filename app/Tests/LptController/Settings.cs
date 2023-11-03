@@ -24,7 +24,7 @@ public class Settings
         ComPort = settings.Test_LC_ComPort;
         FreshAir = settings.Test_LC_FreshAir;
         OdorFlowDuration = settings.Test_LC_OdorFlowDuration;
-        Pulses = ParsePulses(settings.Test_LC_Pulses, out string _);
+        Pulses = ParsePulses(settings.Test_LC_Pulses, out string? _);
         PIDReadingInterval = settings.Test_LC_PIDReadingInterval;
     }
 
@@ -48,7 +48,7 @@ public class Settings
         )
     );
 
-    public static Dictionary<int, Pulse> ParsePulses(string input, out string error)
+    public static Dictionary<int, Pulse> ParsePulses(string input, out string? error)
     {
         var pulsesStr = input
             .Split(Pulse.DELIM_EXPRESSION_WITH_MARKER)

@@ -137,7 +137,7 @@ public class MFC : CommPort<MFCSample>
         Mixer
     }
 
-    public event EventHandler<CommandResultArgs> CommandResult;
+    public event EventHandler<CommandResultArgs>? CommandResult;
     public event EventHandler<string> Message = delegate { };
 
     public override string Name => "MFC";
@@ -511,7 +511,7 @@ public class MFC : CommPort<MFCSample>
         All = A | B | C,
     }
 
-    static MFC _instance;
+    static MFC? _instance;
 
     Channels _channels = Channels.None;
 
@@ -548,7 +548,7 @@ public class MFC : CommPort<MFCSample>
         if (!IsDebugging)
         {
             char[] chars = new char[2] { mfcAddr, DATA_END };
-            _port.Write(chars, 0, 2);
+            _port?.Write(chars, 0, 2);
         }
         if (_error != null)
         {
@@ -698,14 +698,15 @@ public class MFC : CommPort<MFCSample>
     /// <returns>The string read from the port</returns>
     string ReadBytes()
     {
-        string response = "";
+        string response;
 
+        //string response = "";
         //var sw = System.Diagnostics.Stopwatch.StartNew();
 
         try
         {
             //* this works with _port.NewLine = "\r"
-            response = _port.ReadLine();
+            response = _port?.ReadLine() ?? "";
             /*/
             int duration = 0;
             int lastChar;
@@ -755,7 +756,7 @@ public class MFC : CommPort<MFCSample>
         {
             if (!IsDebugging)
             {
-                _port.Write(bytes, 0, bytes.Length);
+                _port?.Write(bytes, 0, bytes.Length);
                 if (_error != null)
                 {
                     return (Error)Marshal.GetLastWin32Error();

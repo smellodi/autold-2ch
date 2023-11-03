@@ -7,7 +7,6 @@ using AutOlD2Ch.Comm;
 using AutOlD2Ch.Pages.LptController;
 using AutOlD2Ch.Tests.Common;
 using AutOlD2Ch.Utils;
-using System.Runtime.ConstrainedExecution;
 
 namespace AutOlD2Ch.Tests.LptController;
 
@@ -22,12 +21,12 @@ public class Procedure : IDisposable
         OdorFlow = 4,
     }
 
-    public event EventHandler<double> Data;
-    public event EventHandler<string> Marker;
-    public event EventHandler<Stage> StageChanged;
-    public event EventHandler Finished;
+    public event EventHandler<double>? Data;
+    public event EventHandler<string>? Marker;
+    public event EventHandler<Stage>? StageChanged;
+    public event EventHandler? Finished;
 
-    public Pulse CurrentPulse { get; private set; } = null;
+    public Pulse? CurrentPulse { get; private set; } = null;
 
     public Procedure()
     {
@@ -44,13 +43,13 @@ public class Procedure : IDisposable
                 if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
                     _logger.Add(pidSample);
-                    _monitor.LogData(LogSource.PID, pidSample);
+                    _monitor?.LogData(LogSource.PID, pidSample);
                     Data?.Invoke(this, pidSample.PID);
                 }
                 if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                 {
                     _logger.Add(mfcSample);
-                    _monitor.LogData(LogSource.MFC, mfcSample);
+                    _monitor?.LogData(LogSource.MFC, mfcSample);
                 }
             });
         };
@@ -84,8 +83,11 @@ public class Procedure : IDisposable
         _pid.Closed += PID_Closed;
 
         var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
-        _monitor.MFCUpdateInterval = updateIntervalInSeconds;
-        _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+        if (_monitor != null)
+        {
+            _monitor.MFCUpdateInterval = updateIntervalInSeconds;
+            _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+        }
 
         _mfc.FreshAirSpeed = _settings.FreshAir;
         _mfc.OdorDirection = MFC.ValvesOpened.None;
@@ -132,17 +134,18 @@ public class Procedure : IDisposable
     readonly MFC _mfc = MFC.Instance;
     readonly PID _pid = PID.Instance;
     readonly SyncLogger _logger = SyncLogger.Instance;
-    readonly CommMonitor _monitor = CommMonitor.Instance;
+    readonly CommMonitor? _monitor = CommMonitor.Instance;
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
 
-    Settings _settings;
+    Settings? _settings;
 
-    DispatchOnce _runner;
-    PulsesController _pulseController;
-    System.IO.Ports.SerialPort _comPort;
-    LptPort _lptPort;
-    CancellationTokenSource _lptPortReadingCancellationTokenSource;
+    DispatchOnce? _runner;
+    PulsesController? _pulseController;
+    System.IO.Ports.SerialPort? _comPort;
+    LptPort? _lptPort;
+
+    CancellationTokenSource _lptPortReadingCancellationTokenSource = new();
     short _marker;
 
     private async Task ReadPortStatus()
@@ -188,7 +191,7 @@ public class Procedure : IDisposable
 
     private void UseOdor(int id)
     {
-        if (_settings.Pulses.TryGetValue(id, out Pulse pulse))
+        if (_settings!.Pulses.TryGetValue(id, out Pulse? pulse))
         {
             Marker?.Invoke(this, _marker.ToString());
 
@@ -197,7 +200,7 @@ public class Procedure : IDisposable
             _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
             _runner = DispatchOnce
-                .Do(0.1, StartOdorFlow)
+                .Do(0.1, StartOdorFlow)?
                 .Then(_settings.OdorFlowDuration, StopOdorFlow);
         }
         else
@@ -208,7 +211,10 @@ public class Procedure : IDisposable
 
     private void StartOdorFlow()
     {
-        _pulseController = new PulsesController(CurrentPulse, _settings.OdorFlowDurationMs);
+        if (CurrentPulse == null)
+            return;
+
+        _pulseController = new PulsesController(CurrentPulse, _settings!.OdorFlowDurationMs);
         _pulseController.PulseStateChanged += PulseStateChanged;
         _pulseController.Run();
     }
@@ -263,7 +269,7 @@ public class Procedure : IDisposable
 
     // Event handlers
 
-    private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
+    private void PulseStateChanged(object? sender, PulsesController.PulseStateChangedEventArgs e)
     {
         if (e.IsLast)
         {
@@ -301,7 +307,7 @@ public class Procedure : IDisposable
         {
             _mfc.StartPulse(
                 startingChannel.Valve,
-                startingChannel.GetDuration(_settings.OdorFlowDurationMs));
+                startingChannel.GetDuration(_settings!.OdorFlowDurationMs));
         }
 
         _mfc.OdorDirection = valves;
@@ -309,17 +315,17 @@ public class Procedure : IDisposable
         StageChanged?.Invoke(this, newStage | Stage.OdorFlow);
     }
 
-    private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         StopTimers();
     }
 
-    private void MFC_Closed(object sender, EventArgs e)
+    private void MFC_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("MFC");
     }
 
-    private void PID_Closed(object sender, EventArgs e)
+    private void PID_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("PID");
     }

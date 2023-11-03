@@ -23,7 +23,7 @@ public class Storage : INotifyPropertyChanged, IDisposable
         ZoomLevel,
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     // Variables
 
@@ -131,15 +131,15 @@ public class Storage : INotifyPropertyChanged, IDisposable
     public void Dispose()
     {
         var settings = Properties.Settings.Default;
-
         settings.App_ZoomLevel = _zoomLevel;
-
         settings.Save();
+
+        GC.SuppressFinalize(this);
     }
 
     // Internal data
 
-    static Storage _instance;
+    static Storage? _instance;
 
     const double ZOOM_MIN = 0.8;
     const double ZOOM_MAX = 2.0;

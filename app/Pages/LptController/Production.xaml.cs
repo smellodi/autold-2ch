@@ -69,8 +69,8 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
     public string Label_Channel1 => Utils.L10n.T("Channel") + " #1";
     public string Label_Channel2 => Utils.L10n.T("Channel") + " #2";
 
-    public event EventHandler<EventArgs> Next;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<EventArgs>? Next;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public Production()
     {
@@ -113,7 +113,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
 
     readonly Procedure _procedure = new();
 
-    Settings _settings;
+    Settings? _settings;
     Procedure.Stage _stage = Procedure.Stage.None;
 
     private void UpdateUI()
@@ -122,9 +122,9 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
 
         lblOdorStatus.Content = pulse != null ? $"{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}" : "";
 
-        pdsOdor1Flow.Duration = pulse?.Channel1?.GetDuration(_settings.OdorFlowDurationMs) ?? 0;
+        pdsOdor1Flow.Duration = pulse?.Channel1?.GetDuration(_settings!.OdorFlowDurationMs) ?? 0;
         pdsOdor1Flow.Delay = pulse?.Channel1?.Delay ?? 0;
-        pdsOdor2Flow.Duration = pulse?.Channel2?.GetDuration(_settings.OdorFlowDurationMs) ?? 0;
+        pdsOdor2Flow.Duration = pulse?.Channel2?.GetDuration(_settings!.OdorFlowDurationMs) ?? 0;
         pdsOdor2Flow.Delay = pulse?.Channel2?.Delay ?? 0;
     }
 
@@ -141,7 +141,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
             (Procedure.Stage.Odor1Flow | Procedure.Stage.OdorFlow) or
             (Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) or
             (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) => 
-                _settings.OdorFlowDuration,
+                _settings!.OdorFlowDuration,
             Procedure.Stage.None => 0,
             Procedure.Stage.OdorFlow => 0,
             _ => throw new NotImplementedException($"Stage '{_stage}' of LTP Controller does not exist")

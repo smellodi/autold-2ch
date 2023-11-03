@@ -65,12 +65,18 @@ internal class GasMixer
             };
 
             // Enum cannot be properly deserialized, so we use string as the type of keys
-            var gasProps = (Dictionary<string, GasProp>)JsonSerializer.Deserialize(gasPropsJson.Trim(), typeof(Dictionary<string, GasProp>), serializerOptions);
+            var gasProps = (Dictionary<string, GasProp>?)JsonSerializer.Deserialize(
+                gasPropsJson.Trim(),
+                typeof(Dictionary<string, GasProp>),
+                serializerOptions);
+
+            if (gasProps == null)
+                return;
 
             // Now the keys are converted to enums
             foreach (var record in gasProps)
             {
-                if (Enum.TryParse(typeof(Gas), record.Key, out object gasObj) && gasObj is Gas gas)
+                if (Enum.TryParse(typeof(Gas), record.Key, out object? gasObj) && gasObj is Gas gas)
                 {
                     if (GasProperties.ContainsKey(gas))
                     {

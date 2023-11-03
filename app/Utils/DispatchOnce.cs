@@ -19,7 +19,7 @@ public class DispatchOnceUI : DispatcherTimer
         }
     }
 
-    public static DispatchOnceUI Do(double seconds, Action action)
+    public static DispatchOnceUI? Do(double seconds, Action action)
     {
         if (seconds > 0)
         {
@@ -83,7 +83,7 @@ public class DispatchOnce : System.Timers.Timer
         }
     }
 
-    public static DispatchOnce Do(double seconds, Action action)
+    public static DispatchOnce? Do(double seconds, Action action)
     {
         if (seconds > 0)
         {
@@ -145,7 +145,7 @@ public class DispatchOnce : System.Timers.Timer
     struct ScheduledAction
     {
         public int Pause;
-        public Action Action;
+        public Action? Action;
     }
 
     readonly Queue<ScheduledAction> _actions = new();

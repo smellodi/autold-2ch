@@ -19,7 +19,7 @@ internal class DMS : IDisposable
 
     public Smop.IonVision.Settings Settings => _comunicator.Settings;
     public string SupportedVersion => _comunicator.SupportedVersion;
-    public string DetectedVersion { get; private set; } = null;
+    public string? DetectedVersion { get; private set; } = null;
     public bool? IsConnected { get; private set; } = null;
     public bool? IsCorrectVersion { get; private set; } = null;
 
@@ -53,8 +53,8 @@ internal class DMS : IDisposable
                 throw new Exception(result.Error);
             }
 
-            DetectedVersion = result.Value.CurrentVersion;
-            IsCorrectVersion = result.Value.CurrentVersion == _comunicator.SupportedVersion;
+            DetectedVersion = result.Value?.CurrentVersion;
+            IsCorrectVersion = result.Value?.CurrentVersion == _comunicator.SupportedVersion;
         }
         catch (Exception ex)
         {
@@ -63,7 +63,7 @@ internal class DMS : IDisposable
         }
     }
 
-    public async Task<string> Init(Settings settings)
+    public async Task<string?> Init(Settings settings)
     {
         _settings = settings;
         _isActive = settings.Sniffer == GasSniffer.DMS;
@@ -110,7 +110,7 @@ internal class DMS : IDisposable
                 throw new Exception(result.Error);
             }
 
-            return result.Value;
+            return result.Value ?? Array.Empty<string>();
         }
         catch (Exception ex)
         { 
@@ -132,7 +132,7 @@ internal class DMS : IDisposable
                 throw new Exception(result.Error);
             }
 
-            return result.Value.Parameters;
+            return result.Value?.Parameters ?? Array.Empty<Parameter>();
         }
         catch (Exception ex)
         {
@@ -141,7 +141,7 @@ internal class DMS : IDisposable
         }
     }
 
-    public async Task<string> GetProject()
+    public async Task<string?> GetProject()
     {
         if (!_isActive)
         {
@@ -158,7 +158,7 @@ internal class DMS : IDisposable
             {
                 throw new Exception(result.Error);
             }
-            return result.Value.Project;
+            return result.Value?.Project;
         }
         catch (Exception ex)
         {
@@ -167,7 +167,7 @@ internal class DMS : IDisposable
         }
     }
 
-    public async Task<string> SetProject(int waitingDuration)
+    public async Task<string?> SetProject(int waitingDuration)
     {
         if (!_isActive)
         {
@@ -188,7 +188,7 @@ internal class DMS : IDisposable
         return null;
     }
 
-    public async Task<string> GetParam()
+    public async Task<string?> GetParam()
     {
         if (!_isActive)
         {
@@ -205,7 +205,7 @@ internal class DMS : IDisposable
             {
                 throw new Exception(result.Error);
             }
-            return result.Value.Parameter.Name;
+            return result.Value?.Parameter.Name;
         }
         catch (Exception ex)
         {
@@ -214,7 +214,7 @@ internal class DMS : IDisposable
         }
     }
 
-    public async Task<string> SetParams()
+    public async Task<string?> SetParams()
     {
         if (!_isActive)
         {
@@ -237,7 +237,7 @@ internal class DMS : IDisposable
 
     public async void StartScan(MixturePair pair, MixtureID mixtureID)
     {
-        if (!_isActive)
+        if (!_isActive || _settings == null)
         {
             return;
         }
@@ -276,14 +276,14 @@ internal class DMS : IDisposable
         }
     }
 
-    public string SaveScan()
+    public string? SaveScan()
     {
         if (!_isActive)
         {
             return null;
         }
 
-        string error = null;
+        string? error = null;
 
         if (_scanStartError != null)
         {
@@ -312,7 +312,7 @@ internal class DMS : IDisposable
             }
 
             // Get the scan result
-            API.Response<ScanResult> dataRetrievalResult = null;
+            API.Response<ScanResult>? dataRetrievalResult = null;
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
@@ -360,7 +360,7 @@ internal class DMS : IDisposable
 
     const int INTER_REQUEST_PAUSE = 150;
 
-    static DMS _instance;
+    static DMS? _instance;
 
     static DMS()
     {
@@ -372,9 +372,9 @@ internal class DMS : IDisposable
 
     string _folder;
 
-    Settings _settings;
+    Settings? _settings;
     bool _isActive;
-    string _scanStartError = null;
+    string? _scanStartError = null;
 
     private static void PrintResponse<T>(string request, API.Response<T> response)
     {

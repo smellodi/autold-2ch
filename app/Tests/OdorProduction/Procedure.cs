@@ -23,12 +23,12 @@ public class Procedure : ITestEmulator, IDisposable
 
     public int Step => _step;
 
-    public event EventHandler<double> Data;
-    public event EventHandler<Stage> StageChanged;
+    public event EventHandler<double>? Data;
+    public event EventHandler<Stage>? StageChanged;
     /// <summary>
     /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
     /// </summary>
-    public event EventHandler<bool> Finished;
+    public event EventHandler<bool>? Finished;
 
 
     public Procedure()
@@ -46,13 +46,13 @@ public class Procedure : ITestEmulator, IDisposable
                 if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
                     _logger.Add(pidSample);
-                    _monitor.LogData(LogSource.PID, pidSample);
+                    _monitor?.LogData(LogSource.PID, pidSample);
                     Data?.Invoke(this, pidSample.PID);
                 }
                 if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                 {
                     _logger.Add(mfcSample);
-                    _monitor.LogData(LogSource.MFC, mfcSample);
+                    _monitor?.LogData(LogSource.MFC, mfcSample);
                 }
             });
         };
@@ -65,7 +65,10 @@ public class Procedure : ITestEmulator, IDisposable
 
     public void EmulationFinalize()
     {
-        _step = _pulses.Length - 1;
+        if (_pulses != null)
+        {
+            _step = _pulses.Length - 1;
+        }
     }
 
     public void Start(Settings settings)
@@ -81,8 +84,11 @@ public class Procedure : ITestEmulator, IDisposable
         _pid.Closed += PID_Closed;
 
         var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
-        _monitor.MFCUpdateInterval = updateIntervalInSeconds;
-        _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+        if (_monitor != null)
+        {
+            _monitor.MFCUpdateInterval = updateIntervalInSeconds;
+            _monitor.PIDUpdateInterval = updateIntervalInSeconds;
+        }
 
         _mfc.FreshAirSpeed = _settings.FreshAir;
         _mfc.OdorDirection = MFC.ValvesOpened.None; // should I add delay here?
@@ -105,6 +111,9 @@ public class Procedure : ITestEmulator, IDisposable
 
     public void Next()
     {
+        if (_pulses == null || _settings == null)
+            return;
+
         var pulse = _pulses[_step];
 
         _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
@@ -115,7 +124,7 @@ public class Procedure : ITestEmulator, IDisposable
                 _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
                 _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
                 StageChanged?.Invoke(this, Stage.InitWait);
-            })
+            })?
             .Then(_settings.InitialPause > 0 ? _settings.InitialPause : 0.1, StartOdorFlow)
             .Then(_settings.OdorFlowDuration, StopOdorFlow)
             .Then(_settings.FinalPause > 0 ? _settings.FinalPause : 0.1, FinalizeTest);
@@ -144,21 +153,24 @@ public class Procedure : ITestEmulator, IDisposable
     readonly MFC _mfc = MFC.Instance;
     readonly PID _pid = PID.Instance;
     readonly SyncLogger _logger = SyncLogger.Instance;
-    readonly CommMonitor _monitor = CommMonitor.Instance;
+    readonly CommMonitor? _monitor = CommMonitor.Instance;
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
 
-    Settings _settings;
+    Settings? _settings;
 
     int _step = 0;
-    Pulse[] _pulses = null;
+    Pulse[]? _pulses = null;
 
-    DispatchOnce _runner;
-    PulsesController _pulseController;
+    DispatchOnce? _runner;
+    PulsesController? _pulseController;
     //DispatchOnce _pulseFinisher;
 
     private void StartOdorFlow()
     {
+        if (_pulses == null || _settings == null)
+            return;
+
         var pulse = _pulses[_step];
         _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
         _pulseController.PulseStateChanged += PulseStateChanged;
@@ -167,7 +179,7 @@ public class Procedure : ITestEmulator, IDisposable
 
     private void StopOdorFlow()
     {
-        if (_settings.ManualFlowStop)
+        if (_settings?.ManualFlowStop ?? false)
         {
             _logger.Add("M");
             MsgBox.Notify(App.Name, L10n.T("ManualFlowStopMsg"), new string[] { L10n.T("Close") });
@@ -182,7 +194,7 @@ public class Procedure : ITestEmulator, IDisposable
         _runner?.Dispose();
         _runner = null;
 
-        var noMoreTrials = ++_step >= _pulses.Length;
+        var noMoreTrials = ++_step >= _pulses!.Length;
         if (noMoreTrials)
         {
             Stop();
@@ -230,13 +242,13 @@ public class Procedure : ITestEmulator, IDisposable
 
     // Event handlers
 
-    private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
+    private void PulseStateChanged(object? sender, PulsesController.PulseStateChangedEventArgs e)
     {
         if (e.IsLast)
         {
             _pulseController = null;
 
-            if (_mfc.OdorDirection != MFC.ValvesOpened.None && !_settings.ManualFlowStop)
+            if (_mfc.OdorDirection != MFC.ValvesOpened.None && !_settings!.ManualFlowStop)
             {
                 StageChanged?.Invoke(this, Stage.OdorFlow);
             }
@@ -264,7 +276,7 @@ public class Procedure : ITestEmulator, IDisposable
 
         _logger.Add("V" + ((int)valves).ToString("D2"));
 
-        if (_settings.UseValveTimer)
+        if (_settings!.UseValveTimer)
         {
             foreach (var startingChannel in e.StartingChannels)
             {
@@ -279,17 +291,17 @@ public class Procedure : ITestEmulator, IDisposable
         StageChanged?.Invoke(this, newStage | Stage.OdorFlow);
     }
 
-    private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+    private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
         StopTimers();
     }
 
-    private void MFC_Closed(object sender, EventArgs e)
+    private void MFC_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("MFC");
     }
 
-    private void PID_Closed(object sender, EventArgs e)
+    private void PID_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("PID");
     }

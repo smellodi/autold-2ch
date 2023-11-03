@@ -154,7 +154,7 @@ public partial class ChannelIndicator : UserControl, INotifyPropertyChanged
 
     public string ValueStr => Value.ToString($"F{Precision}");
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public ChannelIndicator()
     {

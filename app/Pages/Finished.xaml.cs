@@ -7,9 +7,9 @@ namespace AutOlD2Ch.Pages;
 
 public partial class Finished : Page, IPage<bool>, INotifyPropertyChanged
 {
-    public event EventHandler<bool> Next;       // true: exit, false: return to the front page
-    public event EventHandler RequestSaving;
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event EventHandler<bool>? Next;       // true: exit, false: return to the front page
+    public event EventHandler? RequestSaving;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public string TestName
     {

@@ -66,7 +66,7 @@ public abstract class Logger<T> where T : class
         }
     }
 
-    protected SavingResult PromptToSave(ref string filename, string greeting = "")
+    protected SavingResult PromptToSave(ref string? filename, string greeting = "")
     {
         if (!string.IsNullOrEmpty(greeting))
         {
@@ -93,14 +93,14 @@ public abstract class Logger<T> where T : class
         }
         else if (answer == Utils.MsgBox.Button.Yes)
         {
-            filename = Path.Combine(_folder, filename);
+            filename = Path.Combine(_folder, filename ?? "");
             return SavingResult.Save;
         }
 
         return SavingResult.Cancel;
     }
 
-    protected string AskFileName(string defaultFileName)
+    protected string? AskFileName(string? defaultFileName)
     {
         var savePicker = new Microsoft.Win32.SaveFileDialog()
         {
@@ -111,7 +111,7 @@ public abstract class Logger<T> where T : class
 
         if (savePicker.ShowDialog() ?? false)
         {
-            _folder = Path.GetDirectoryName(savePicker.FileName);
+            _folder = Path.GetDirectoryName(savePicker.FileName) ?? "";
             Properties.Settings.Default.Logger_Folder = _folder;
             Properties.Settings.Default.Save();
 
@@ -121,14 +121,14 @@ public abstract class Logger<T> where T : class
         return null;
     }
 
-    protected bool Save(string filename, IEnumerable<object> records, string header = "")
+    protected bool Save(string? filename, IEnumerable<object> records, string header = "")
     {
         if (string.IsNullOrEmpty(filename))
         {
             return false;
         }
 
-        var folder = Path.GetDirectoryName(filename);
+        var folder = Path.GetDirectoryName(filename) ?? "";
 
         if (!Directory.Exists(folder))
         {

@@ -76,7 +76,7 @@ public class FlowLogger : Logger<FlowLogger.Record>
 
     // Internal methods
 
-    static FlowLogger _instance = null;
+    static FlowLogger? _instance = null;
 
     protected override string Header => Record.HEADER;
 

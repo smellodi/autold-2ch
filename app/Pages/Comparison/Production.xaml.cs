@@ -8,7 +8,7 @@ namespace AutOlD2Ch.Pages.Comparison;
 
 public partial class Production : Page, IPage<EventArgs>
 {
-    public event EventHandler<EventArgs> Next;
+    public event EventHandler<EventArgs>? Next;
 
     public Stage Stage { get; private set; }
 
@@ -82,12 +82,15 @@ public partial class Production : Page, IPage<EventArgs>
 
     readonly Procedure _procedure = new();
 
-    Settings _settings;
+    Settings? _settings;
 
     private void UpdateUI() { }
 
     private void SetStage(Procedure.Stage stage)
     {
+        if (_settings == null)
+            return;
+
         var isOdorFlowing = stage.OutputValveStage == Procedure.OutputValveStage.Opened;
         double pause = isOdorFlowing ? _settings.OdorFlowDuration : _settings.InitialPause;
 

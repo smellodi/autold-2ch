@@ -99,7 +99,7 @@ public class SyncLogger : Logger<SyncLogger.Record>, IDisposable
 
     // Internal methods
 
-    static SyncLogger _instance = null;
+    static SyncLogger? _instance = null;
 
     protected override string Header => Record.HEADER;
 

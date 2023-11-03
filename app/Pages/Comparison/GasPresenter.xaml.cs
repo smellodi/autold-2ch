@@ -9,7 +9,7 @@ namespace AutOlD2Ch.Pages.Comparison;
 
 public partial class GasPresenter : Page, IPage<EventArgs>, IDisposable
 {
-    public event EventHandler<EventArgs> Next;
+    public event EventHandler<EventArgs>? Next;
 
     public GasPresenter()
     {
@@ -52,10 +52,13 @@ public partial class GasPresenter : Page, IPage<EventArgs>, IDisposable
 
     readonly Procedure _procedure = new();
 
-    Settings _settings;
+    Settings? _settings;
 
     private void SetStage(Procedure.Stage stage)
     {
+        if (_settings == null)
+            return;
+
         var isOdorFlowing = stage.OutputValveStage == Procedure.OutputValveStage.Opened;
         double pause = isOdorFlowing ? _settings.OdorFlowDuration : _settings.InitialPause;
 

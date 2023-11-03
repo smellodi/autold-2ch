@@ -26,7 +26,7 @@ public class Settings
         var settings = Properties.Settings.Default;
 
         FreshAir = settings.Test_OP_FreshAir;
-        Pulses = ParsePulses(settings.Test_OP_Pulses, out string _);
+        Pulses = ParsePulses(settings.Test_OP_Pulses, out string? _);
         InitialPause = settings.Test_OP_InitialPause;
         OdorFlowDuration = settings.Test_OP_OdorFlowDuration;
         FinalPause = settings.Test_OP_FinalPause;
@@ -58,7 +58,7 @@ public class Settings
         return string.Join(Pulse.DELIM_LIST[1], Pulses.Select(pulse => pulse.ToString()));
     }
 
-    public static Pulse[] ParsePulses(string input, out string error)
+    public static Pulse[] ParsePulses(string input, out string? error)
     {
         var pulsesStr = input.Split(Pulse.DELIM_LIST);
 
@@ -74,7 +74,7 @@ public class Settings
             catch (Exception ex)
             {
                 error = ex.Message;
-                return null;
+                return Array.Empty<Pulse>();
             }
         }
 

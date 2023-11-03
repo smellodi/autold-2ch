@@ -96,7 +96,7 @@ public class Settings
         TestOdorFlow = settings.Test_CMP_TestOdorFlow;
         Gas1 = (Comm.Gas)settings.Setup_Gas1;
         Gas2 = (Comm.Gas)settings.Setup_Gas2;
-        PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string _);
+        PairsOfMixtures = ParsePairsOfMixtures(settings.Test_CMP_Mixtures, out string? _);
         InitialPause = settings.Test_CMP_InitialPause;
         OdorFlowDuration = settings.Test_CMP_OdorFlowDuration;
         WaitForPID = settings.Test_CMP_WaitForPID;
@@ -129,7 +129,7 @@ public class Settings
         return PairsOfMixtures != null ? string.Join('\n', PairsOfMixtures.Select(pair => pair.ToString())) : "";
     }
 
-    public static MixturePair[] ParsePairsOfMixtures(string input, out string error)
+    public static MixturePair[] ParsePairsOfMixtures(string input, out string? error)
     {
         var mixtures = input.Split('\n');
         var result = new List<MixturePair>();
@@ -144,7 +144,7 @@ public class Settings
             catch (Exception ex)
             {
                 error = ex.Message;
-                return null;
+                return Array.Empty<MixturePair>();
             }
         }
 

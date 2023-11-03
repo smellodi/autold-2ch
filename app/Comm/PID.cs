@@ -182,9 +182,9 @@ public class PID : CommPort<PIDSample>
 
     // Internal
 
-    static PID _instance;
+    static PID? _instance;
 
-    PIDEmulator _emulator;
+    PIDEmulator? _emulator;
     PIDSample _lastSample = new();
 
     [StructLayout(LayoutKind.Explicit)]
@@ -470,7 +470,7 @@ public class PID : CommPort<PIDSample>
         }
         else
         {
-            _emulator.EmulateWrite(query);
+            _emulator?.EmulateWrite(query);
         }
         if (_error != null)
         {
@@ -514,7 +514,7 @@ public class PID : CommPort<PIDSample>
         {
             int readCount = !IsDebugging
                 ? _port.Read(buffer, offset, bytesRemaining)
-                : _emulator.EmulateReading(buffer, offset, bytesRemaining);
+                : _emulator?.EmulateReading(buffer, offset, bytesRemaining) ?? 0;
             if (_error != null)           // return immediately (with error) if port read fails.
             {
                 return (Error)Marshal.GetLastWin32Error();
@@ -648,7 +648,7 @@ public class PID : CommPort<PIDSample>
         byte[] bytes = new byte[size];
 
         IntPtr ptr = Marshal.AllocHGlobal(size);
-        Marshal.StructureToPtr(str, ptr, true);
+        Marshal.StructureToPtr(str!, ptr, true);
         Marshal.Copy(ptr, bytes, 0, size);
         Marshal.FreeHGlobal(ptr);
 
@@ -670,7 +670,10 @@ public class PID : CommPort<PIDSample>
 
         Marshal.Copy(bytes, 0, ptr, size);
 
-        str = (T)Marshal.PtrToStructure(ptr, str.GetType());
+        var s = (T?)Marshal.PtrToStructure(ptr, str.GetType());
+        if (s != null)
+            str = s;
+
         Marshal.FreeHGlobal(ptr);
 
         return str;

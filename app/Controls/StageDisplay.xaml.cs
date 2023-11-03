@@ -6,7 +6,7 @@ namespace AutOlD2Ch.Controls;
 
 public partial class StageDisplay : UserControl, INotifyPropertyChanged
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     #region IsCurrent property
 

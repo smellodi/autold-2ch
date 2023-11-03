@@ -8,14 +8,14 @@ namespace AutOlD2Ch.Pages.ThresholdTest;
 
 public partial class VnA : Page, IPage<EventArgs>
 {
-    public event EventHandler<EventArgs> Next;
+    public event EventHandler<EventArgs>? Next;
 
     public string Header => "VnA";
 
     public Dictionary<string, string> Entries => new Dictionary<string, string>()
     {
-        { "Valence", sclQ1.Value?.ToString() },
-        { "Arousal", sclQ2.Value?.ToString() },
+        { "Valence", sclQ1.Value?.ToString() ?? "" },
+        { "Arousal", sclQ2.Value?.ToString() ?? "" },
     };
 
     public VnA()

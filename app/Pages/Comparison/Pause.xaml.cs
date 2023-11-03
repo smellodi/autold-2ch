@@ -8,7 +8,7 @@ namespace AutOlD2Ch.Pages.ThresholdTest;
 
 public partial class Pause : Page, IPage<EventArgs>
 {
-    public event EventHandler<EventArgs> Next;
+    public event EventHandler<EventArgs>? Next;
 
     public Pause()
     {
