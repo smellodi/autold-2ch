@@ -19,7 +19,7 @@ public class Procedure : IDisposable
         None = 0,
         Odor1Flow = 1,
         Odor2Flow = 2,
-        OdorFlow = 4,
+        OdorFlow = 4,   /// this flag must be present when stage includes <see cref="Stage.Odor1Flow"/> or <see cref="Stage.Odor2Flow"/>
     }
 
     public event EventHandler<double>? Data;
@@ -33,9 +33,8 @@ public class Procedure : IDisposable
     {
         _dispatcher = Dispatcher.CurrentDispatcher;
 
-        FlowLogger.Instance.Clear();
-
-        _logger.Clear();
+        _eventLogger.Clear();
+        _dataLogger.Clear();
 
         _timer.Elapsed += (s, e) =>
         {
@@ -43,13 +42,13 @@ public class Procedure : IDisposable
             {
                 if (_pid.GetSample(out PIDSample pidSample).Error == Error.Success)
                 {
-                    _logger.Add(pidSample);
+                    _dataLogger.Add(pidSample);
                     _monitor?.LogData(LogSource.PID, pidSample);
                     Data?.Invoke(this, pidSample.PID);
                 }
                 if (_mfc.GetSample(out MFCSample mfcSample).Error == Error.Success)
                 {
-                    _logger.Add(mfcSample);
+                    _dataLogger.Add(mfcSample);
                     _monitor?.LogData(LogSource.MFC, mfcSample);
                 }
             });
@@ -89,12 +88,12 @@ public class Procedure : IDisposable
         _timer.AutoReset = true;
         _timer.Start();
 
-        _logger.Start(_settings.PIDReadingInterval);
+        _dataLogger.Start(_settings.PIDReadingInterval);
 
         if (_lptPort == null)
         {
-            var markers = _settings.Pulses.Select(kv => (short)kv.Key);
-            markers.Append(MARKER_FINISHED);
+            var markers = _settings.Pulses.Select(kv => (short)kv.Key).ToList();
+            markers.Add(MARKER_TOBII_FINISHED);
             EmulatedMarkers = markers.ToArray();
         }
 
@@ -107,6 +106,7 @@ public class Procedure : IDisposable
     public void Stop()
     {
         StopTimers();
+        _lptPortReadingCancellationTokenSource.Cancel();
 
         _mfc.IsInShortPulseMode = false;
         _mfc.Odor1Speed = MFC.ODOR_MIN_SPEED;
@@ -126,12 +126,14 @@ public class Procedure : IDisposable
 
     // Internal
 
-    const short MARKER_FINISHED = 255;
+    const short MARKER_TOBII_FINISHED = 255;
+    const byte MARKER_NEXUS_FINISHED = (byte)'#';
     const short LPT_READING_INTERVAL = 50;  // ms
 
     readonly MFC _mfc = MFC.Instance;
     readonly PID _pid = PID.Instance;
-    readonly SyncLogger _logger = SyncLogger.Instance;
+    readonly SyncLogger _dataLogger = SyncLogger.Instance;
+    readonly FlowLogger _eventLogger = FlowLogger.Instance;
     readonly CommMonitor? _monitor = CommMonitor.Instance;
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
@@ -159,10 +161,7 @@ public class Procedure : IDisposable
             }
             _ = ReadPortStatus();
         }
-        catch (OperationCanceledException)
-        {
-            Application.Current.Shutdown();
-        }
+        catch (OperationCanceledException) { }
     }
 
     private void CheckMarker()
@@ -171,13 +170,17 @@ public class Procedure : IDisposable
         if (data != _marker)
         {
             _marker = data;
-            if (_marker == MARKER_FINISHED)
+            _eventLogger.Add(LogSource.LptCtrl, "Marker", _marker.ToString());
+
+            if (_marker == MARKER_TOBII_FINISHED)
             {
+                _comPort?.SendMarker(TobiiToNexus(_marker));
+                _lptPortReadingCancellationTokenSource.Cancel();
                 FinalizeMarker();
             }
             else if (_marker > 0)
             {
-                _comPort?.SendMarker((byte)_marker);
+                _comPort?.SendMarker(TobiiToNexus(_marker));
                 UseOdor(_marker);
             }
         }
@@ -191,7 +194,7 @@ public class Procedure : IDisposable
 
             CurrentPulse = pulse;
 
-            _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
+            _dataLogger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
             _runner = DispatchOnce
                 .Do(0.1, StartOdorFlow)?
@@ -218,7 +221,7 @@ public class Procedure : IDisposable
         if (_mfc.OdorDirection != MFC.ValvesOpened.None)
         {
             _mfc.OdorDirection = MFC.ValvesOpened.None;
-            _logger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
+            _dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
         }
 
         CurrentPulse = null;
@@ -237,6 +240,8 @@ public class Procedure : IDisposable
             _mfc.Closed -= MFC_Closed;
             _pid.Closed -= PID_Closed;
         });
+
+        _dataLogger.Add("F");
 
         Finished?.Invoke(this, new EventArgs());
     }
@@ -259,6 +264,22 @@ public class Procedure : IDisposable
         _runner?.Stop();
         _timer.Stop();
         _pulseController?.Terminate();
+    }
+
+    private byte TobiiToNexus(short marker)
+    {
+        // We convert the Tobii's binary marker to an ASCII marker to be send to NeXus Trigger:
+        // either '1'-'9' if the the Tobii's marker is 1-9,
+        // or 'A'-'Z' if the Tobii's marker is 10-35
+        // or 'a'-'z' if the Tobii's marker is 36-61
+        return (byte)(marker switch
+        {
+            < 10 => marker + 0x30,
+            < 36 => (marker - 10) + 0x41,
+            < 62 => (marker - 36) + 0x61,
+            MARKER_TOBII_FINISHED => MARKER_NEXUS_FINISHED,
+            _ => 0
+        });
     }
 
     // Event handlers
@@ -295,7 +316,7 @@ public class Procedure : IDisposable
             _ => MFC.ValvesOpened.None
         };
 
-        _logger.Add("V" + ((int)valves).ToString("D2"));
+        _dataLogger.Add("V" + ((int)valves).ToString("D2"));
 
         foreach (var startingChannel in e.StartingChannels)
         {

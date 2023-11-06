@@ -16,7 +16,7 @@ public struct MFCChannel
     public double Setpoint { get; set; }
     public string Gas { get; set; }
 
-    public string ToString(char separator) => string.Join(separator, new string[] {
+    public readonly string ToString(char separator) => string.Join(separator, new string[] {
         MassFlow.ToString("F4"),
         Pressure.ToString("F1"),
         Temperature.ToString("F2"),
@@ -51,9 +51,9 @@ public struct MFCSample : ISample               // Sample record/vector; all the
     /// </summary>
     public MFCChannel C { get; set; }
 
-    public double MainValue => C.MassFlow;
+    public readonly double MainValue => C.MassFlow;
 
-    public override string ToString() => string.Join('\t', new string[] {
+    public override readonly string ToString() => string.Join('\t', new string[] {
         Time.ToString(),
         A.ToString('\t'),
         B.ToString('\t'),
@@ -123,18 +123,6 @@ public class MFC : CommPort<MFCSample>
         Valve1 = 10,
         Valve2 = 1,
         All = Valve1 | Valve2,
-    }
-
-    public enum FlowStartPoint
-    {
-        Chamber,
-        Valve1
-    }
-
-    public enum FlowEndPoint
-    {
-        User,
-        Mixer
     }
 
     public event EventHandler<CommandResultArgs>? CommandResult;

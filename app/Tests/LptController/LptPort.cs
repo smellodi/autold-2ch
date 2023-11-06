@@ -343,13 +343,13 @@ public class LptPort
     /// <returns>a marker, or 0</returns>
     public static short Emulate(short[] set)
     {
-        if (set.Length < 1)
+        if (set.Length == 0)
             return 0;
 
         var value = _rnd.NextDouble();
-        if (value < 0.0002)
+        if (value < 0.002)
             return set[^1];
-        else if (value < 0.002)
+        else if (value < 0.02)
             return set[_rnd.Next(set.Length - 1)];
         else
             return 0;

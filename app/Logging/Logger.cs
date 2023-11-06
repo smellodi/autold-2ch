@@ -14,6 +14,7 @@ public enum LogSource
     __MIN_TEST_ID = 4,
     OdProd = 4,
     Comparison = 5,
+    LptCtrl = 6,
 }
 
 public enum SavingResult
