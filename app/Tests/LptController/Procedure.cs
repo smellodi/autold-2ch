@@ -19,7 +19,7 @@ public class Procedure : IDisposable
         None = 0,
         Odor1Flow = 1,
         Odor2Flow = 2,
-        OdorFlow = 4,   /// this flag must be present when stage includes <see cref="Stage.Odor1Flow"/> or <see cref="Stage.Odor2Flow"/>
+        OdorFlow = 4,   /// this flag must be present when the stage includes <see cref="Stage.Odor1Flow"/> or <see cref="Stage.Odor2Flow"/>
     }
 
     public event EventHandler<double>? Data;
@@ -83,6 +83,8 @@ public class Procedure : IDisposable
         _mfc.FreshAirSpeed = _settings.FreshAir;
         _mfc.OdorDirection = MFC.ValvesOpened.None;
         _mfc.IsInShortPulseMode = false;
+        _mfc.Odor1Speed = MFC_FLOW_BETWEEN_PULSES;
+        _mfc.Odor2Speed = MFC_FLOW_BETWEEN_PULSES;
 
         _timer.Interval = _settings.PIDReadingInterval;
         _timer.AutoReset = true;
@@ -97,7 +99,7 @@ public class Procedure : IDisposable
             EmulatedMarkers = markers.ToArray();
         }
 
-        if (_lptPort != null || Storage.Instance.IsDebugging)
+        //if (_lptPort != null || Storage.Instance.IsDebugging)
         {
             _ = ReadPortStatus();
         }
@@ -128,7 +130,8 @@ public class Procedure : IDisposable
 
     const short MARKER_TOBII_FINISHED = 255;
     const byte MARKER_NEXUS_FINISHED = (byte)'#';
-    const short LPT_READING_INTERVAL = 50;  // ms
+    const short LPT_READING_INTERVAL = 50;      // ms
+    const double MFC_FLOW_BETWEEN_PULSES = 5;   // maybe, some odor flow must occur also pulses so that it is always ready to be presented
 
     readonly MFC _mfc = MFC.Instance;
     readonly PID _pid = PID.Instance;
@@ -175,7 +178,6 @@ public class Procedure : IDisposable
             if (_marker == MARKER_TOBII_FINISHED)
             {
                 _comPort?.SendMarker(TobiiToNexus(_marker));
-                _lptPortReadingCancellationTokenSource.Cancel();
                 FinalizeMarker();
             }
             else if (_marker > 0)
@@ -193,6 +195,8 @@ public class Procedure : IDisposable
             Marker?.Invoke(this, _marker.ToString());
 
             CurrentPulse = pulse;
+            _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
+            _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
 
             _dataLogger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
@@ -224,6 +228,9 @@ public class Procedure : IDisposable
             _dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
         }
 
+        _mfc.Odor1Speed = MFC_FLOW_BETWEEN_PULSES;
+        _mfc.Odor2Speed = MFC_FLOW_BETWEEN_PULSES;
+
         CurrentPulse = null;
 
         StageChanged?.Invoke(this, Stage.None);
@@ -242,6 +249,8 @@ public class Procedure : IDisposable
         });
 
         _dataLogger.Add("F");
+
+        Stop();
 
         Finished?.Invoke(this, new EventArgs());
     }
