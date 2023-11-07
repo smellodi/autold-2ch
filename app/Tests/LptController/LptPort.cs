@@ -346,7 +346,7 @@ public class LptPort
             Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
         }
 
-        return error;
+        return !error;
     }
 
     private static bool GetProp(ManagementBaseObject obj, string propName, out string result)
@@ -371,6 +371,6 @@ public class LptPort
             Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
         }
 
-        return error;
+        return !error;
     }
 }
