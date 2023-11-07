@@ -59,7 +59,7 @@ public class Procedure : IDisposable
     {
         _settings = settings;
 
-        try { _lptPort = LptPort.GetPorts(out string[] _)[_settings.LptPort]; } catch {  }
+        try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
         try { _comPort = new ComPort(_settings.ComPort); } catch { }
 
         _lptPortReadingCancellationTokenSource = new();

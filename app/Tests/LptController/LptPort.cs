@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Management;
 using System.Runtime.InteropServices;
 
@@ -68,103 +69,55 @@ public class LptPort
 
     #endregion
 
-    public static LptPort[] GetPorts(out string[] errors)
+    public static LptPort[] GetPorts()
     {
         var ports = new List<LptPort>();
-        var errs = new List<string>();
 
-        ManagementObjectSearcher lptPortSearcher;
-        try
-        {
-            lptPortSearcher = new ManagementObjectSearcher("Select * From Win32_ParallelPort");
-        }
-        catch (Exception ex)
-        {
-            errs.Add($"Exception when retrieving Win32_ParallelPort: {ex.Message}");
-            errors = errs.ToArray();
-            return ports.ToArray();
-        }
+        var lptPortSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_ParallelPort");
 
         foreach (var lptPort in lptPortSearcher.Get())
         {
-            ManagementObjectSearcher pnpSearcher;
-            try
-            {
-                pnpSearcher = new ManagementObjectSearcher("Select * From Win32_PnPAllocatedResource");
-            }
-            catch (Exception ex)
-            {
-                errs.Add($"Exception when retrieving Win32_PnPAllocatedResource for {lptPort.ClassPath}: {ex.Message}");
-                continue;
-            }
+            var portName = lptPort.Properties["Name"].Value.ToString() ?? lptPort.ClassPath.ToString();
 
-            string? searchTerm;
-            try
-            {
-                searchTerm = lptPort.Properties["PNPDeviceId"].Value.ToString()?.Replace(@"\", @"\\");
-            }
-            catch
-            {
-                errs.Add($"'PNPDeviceId' is not in {lptPort.ClassPath}... Skipped.");
-                continue;
-            }
+            // In addition we need to find the port's start and end adresses that are stored in some PNP resource
 
-            if (searchTerm is null)
+            if (!GetProp(lptPort, "PNPDeviceId", out string searchTerm))
                 continue;
 
+            searchTerm = searchTerm.Replace(@"\", @"\\");
+
+            var pnpSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPAllocatedResource");
             foreach (var pnp in pnpSearcher.Get())
             {
-                string? dependentValue, antecedentValue;
-                try
-                {
-                    dependentValue = pnp.Properties["dependent"].Value.ToString();
-                    antecedentValue = pnp.Properties["antecedent"].Value.ToString();
-                }
-                catch
-                {
-                    errs.Add($"'dependent' or 'antecedent' is not in {pnp.ClassPath}... Skipped.");
+                if (!GetProp(pnp, "dependent", out string dependentValue))
                     continue;
-                }
+                if (!GetProp(pnp, "antecedent", out string antecedentValue))
+                    continue;
 
-                if (dependentValue?.Contains(searchTerm) ?? false)
+                if (!dependentValue.Contains(searchTerm))
+                    continue;
+
+                var portResourceSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PortResource");
+                foreach (var portResource in portResourceSearcher.Get())
                 {
-                    ManagementObjectSearcher portResourceSearcher;
-                    try
-                    {
-                        portResourceSearcher = new ManagementObjectSearcher("Select * From Win32_PortResource");
-                    }
-                    catch (Exception ex)
-                    {
-                        errs.Add($"Exception when retrieving Win32_PortResource for {pnp.ClassPath}: {ex.Message}");
+                    if (portResource.ToString() != antecedentValue)
                         continue;
-                    }
 
-                    foreach (var portResource in portResourceSearcher.Get())
+                    if (!GetProp(portResource, "StartingAddress", out int startAddress))
+                        continue;
+                    if (!GetProp(portResource, "EndingAddress", out int endAddress))
+                        continue;
+
+                    ports.Add(new LptPort()
                     {
-                        if (portResource.ToString() == antecedentValue)
-                        {
-                            int startAddress, endAddress;
-                            try
-                            {
-                                startAddress = Convert.ToInt32(portResource.Properties["StartingAddress"].Value);
-                                endAddress = Convert.ToInt32(portResource.Properties["EndingAddress"].Value);
-                            }
-                            catch
-                            {
-                                errs.Add($"'StartingAddress' or 'EndingAddress' is not in {portResource.ClassPath}... Skipped.");
-                                continue;
-                            }
-                            ports.Add(new LptPort() {
-                                Name = lptPort.Properties["Name"].Value.ToString() ?? "LPT",
-                                FromAddress = startAddress,
-                                ToAddress = endAddress });
-                        }
-                    }
+                        Name = portName,
+                        FromAddress = startAddress,
+                        ToAddress = endAddress
+                    });
                 }
             }
         }
 
-        errors = errs.ToArray();
         return ports.ToArray();
     }
 
@@ -371,10 +324,53 @@ public class LptPort
     {
         return (Read(address) & (1 << bit)) > 0;
     }
+
     private static void SetBit(int address, byte bit, bool value)
     {
         short mask = (short)(1 << bit);
         var current = Read(address);
         Write(address, (short)(value ? current | mask : current & (~mask)));
+    }
+
+    private static bool GetProp(ManagementBaseObject obj, string propName, out int result)
+    {
+        var error = false;
+        result = 0;
+        try
+        {
+            result = Convert.ToInt32(obj.Properties[propName].Value);
+        }
+        catch
+        {
+            error = true;
+            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
+        }
+
+        return error;
+    }
+
+    private static bool GetProp(ManagementBaseObject obj, string propName, out string result)
+    {
+        var error = false;
+        result = "";
+        try
+        {
+            string? r = obj.Properties[propName].Value.ToString();
+            if (r == null)
+            {
+                throw new Exception("Value is null");
+            }
+            else
+            {
+                result = r;
+            }
+        }
+        catch
+        {
+            error = true;
+            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
+        }
+
+        return error;
     }
 }
