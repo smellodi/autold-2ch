@@ -59,7 +59,7 @@ public class Procedure : IDisposable
     {
         _settings = settings;
 
-        try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
+        try { _lptPort = LptPort.GetPorts(out string[] _)[_settings.LptPort]; } catch {  }
         try { _comPort = new ComPort(_settings.ComPort); } catch { }
 
         _lptPortReadingCancellationTokenSource = new();
@@ -266,8 +266,10 @@ public class Procedure : IDisposable
         _pulseController?.Terminate();
     }
 
-    private byte TobiiToNexus(short marker)
+    private static byte TobiiToNexus(short marker)
     {
+        // return (byte)marker;
+
         // We convert the Tobii's binary marker to an ASCII marker to be send to NeXus Trigger:
         // either '1'-'9' if the the Tobii's marker is 1-9,
         // or 'A'-'Z' if the Tobii's marker is 10-35

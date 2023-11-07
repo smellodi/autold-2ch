@@ -36,7 +36,7 @@ public class LptPort
     /// <summary>
     /// Same as <see cref="ReadAll"/> but with properly inversed pin values
     /// </summary>
-    /// <returns></returns>
+    /// <returns>Int32 value with properly inversed bits</returns>
     public int ReadAllAsPins() => ReadAll() ^ 0x000B8000;
 
     #region Static IO
@@ -68,9 +68,11 @@ public class LptPort
 
     #endregion
 
-    public static LptPort[] GetPorts()
+    public static LptPort[] GetPorts(out string[] errors)
     {
         var ports = new List<LptPort>();
+        var errs = new List<string>();
+
         ManagementObjectSearcher lptPortSearcher;
         try
         {
@@ -78,7 +80,8 @@ public class LptPort
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Exception when retrieving Win32_ParallelPort: {ex.Message}");
+            errs.Add($"Exception when retrieving Win32_ParallelPort: {ex.Message}");
+            errors = errs.ToArray();
             return ports.ToArray();
         }
 
@@ -91,7 +94,7 @@ public class LptPort
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception when retrieving Win32_PnPAllocatedResource for {lptPort.ClassPath}: {ex.Message}");
+                errs.Add($"Exception when retrieving Win32_PnPAllocatedResource for {lptPort.ClassPath}: {ex.Message}");
                 continue;
             }
 
@@ -102,7 +105,7 @@ public class LptPort
             }
             catch
             {
-                Console.WriteLine($"'PNPDeviceId' is not in {lptPort.ClassPath}... Skipped.");
+                errs.Add($"'PNPDeviceId' is not in {lptPort.ClassPath}... Skipped.");
                 continue;
             }
 
@@ -119,7 +122,7 @@ public class LptPort
                 }
                 catch
                 {
-                    Console.WriteLine($"'dependent' or 'antecedent' is not in {pnp.ClassPath}... Skipped.");
+                    errs.Add($"'dependent' or 'antecedent' is not in {pnp.ClassPath}... Skipped.");
                     continue;
                 }
 
@@ -132,7 +135,7 @@ public class LptPort
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Exception when retrieving Win32_PortResource for {pnp.ClassPath}: {ex.Message}");
+                        errs.Add($"Exception when retrieving Win32_PortResource for {pnp.ClassPath}: {ex.Message}");
                         continue;
                     }
 
@@ -148,16 +151,20 @@ public class LptPort
                             }
                             catch
                             {
-                                Console.WriteLine($"'StartingAddress' or 'EndingAddress' is not in {portResource.ClassPath}... Skipped.");
+                                errs.Add($"'StartingAddress' or 'EndingAddress' is not in {portResource.ClassPath}... Skipped.");
                                 continue;
                             }
-                            ports.Add(new LptPort() { Name = lptPort.Properties["Name"].Value.ToString() ?? "LPT", FromAddress = startAddress, ToAddress = endAddress });
+                            ports.Add(new LptPort() {
+                                Name = lptPort.Properties["Name"].Value.ToString() ?? "LPT",
+                                FromAddress = startAddress,
+                                ToAddress = endAddress });
                         }
                     }
                 }
             }
         }
 
+        errors = errs.ToArray();
         return ports.ToArray();
     }
 

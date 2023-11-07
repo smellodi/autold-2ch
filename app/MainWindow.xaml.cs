@@ -53,7 +53,7 @@ public partial class MainWindow : Window
         FlowLogger flowLogger = FlowLogger.Instance;
         if (flowLogger.HasTestRecords)
         {
-            var savingResult = flowLogger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+            var savingResult = flowLogger.SaveTo($"autold_events_{DateTime.Now:u}.txt".ToPath());
             if (savingResult != SavingResult.Cancel)
             {
                 _finishedPage.DisableSaving();
@@ -66,7 +66,7 @@ public partial class MainWindow : Window
         syncLogger.Stop();
         if (syncLogger.HasRecords)
         {
-            var savingResult = syncLogger.SaveTo($"olfactory_{DateTime.Now:u}.txt".ToPath());
+            var savingResult = syncLogger.SaveTo($"autold_pid_{DateTime.Now:u}.txt".ToPath());
             if (savingResult != SavingResult.Cancel)
             {
                 _finishedPage.DisableSaving();

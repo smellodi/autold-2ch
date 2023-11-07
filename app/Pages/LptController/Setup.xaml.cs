@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -31,7 +32,10 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             UpdateComPortList(cmbComPort);
         });
 
-        cmbLptPort.ItemsSource = LptPort.GetPorts();
+        cmbLptPort.ItemsSource = LptPort.GetPorts(out string[] errors);
+        foreach (var error in errors)
+            Debug.WriteLine($"[LPT] {error}");
+
         if (cmbLptPort.Items.Count > _settings.LptPort)
         {
             cmbLptPort.SelectedIndex = _settings.LptPort;
