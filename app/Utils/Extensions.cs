@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Management;
 
 namespace AutOlD2Ch.Utils;
 
@@ -82,5 +84,42 @@ internal static class RandomExtensions
             // Now open Excel, paste the result, calculate AVERAGE of each column, and draw a graph
         }
          */
+    }
+}
+
+internal static class ManagementBaseObjectExtensions
+{
+    public static bool TryGetProp(this ManagementBaseObject obj, string propName, out int result)
+    {
+        var error = false;
+        result = 0;
+        try
+        {
+            result = Convert.ToInt32(obj.Properties[propName].Value);
+        }
+        catch
+        {
+            error = true;
+            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
+        }
+
+        return !error;
+    }
+
+    public static bool TryGetProp(this ManagementBaseObject obj, string propName, out string result)
+    {
+        var error = false;
+        result = "";
+        try
+        {
+            result = obj.Properties[propName].Value.ToString() ?? throw new Exception("Value is null");
+        }
+        catch
+        {
+            error = true;
+            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
+        }
+
+        return !error;
     }
 }

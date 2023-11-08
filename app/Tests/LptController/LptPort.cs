@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Management;
 using System.Runtime.InteropServices;
+using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch.Pages.LptController;
 
@@ -81,7 +81,7 @@ public class LptPort
 
             // In addition we need to find the port's start and end adresses that are stored in some PNP resource
 
-            if (!GetProp(lptPort, "PNPDeviceId", out string searchTerm))
+            if (!lptPort.TryGetProp("PNPDeviceId", out string searchTerm))
                 continue;
 
             searchTerm = searchTerm.Replace(@"\", @"\\");
@@ -89,9 +89,9 @@ public class LptPort
             var pnpSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPAllocatedResource");
             foreach (var pnp in pnpSearcher.Get())
             {
-                if (!GetProp(pnp, "dependent", out string dependentValue))
+                if (!pnp.TryGetProp("dependent", out string dependentValue))
                     continue;
-                if (!GetProp(pnp, "antecedent", out string antecedentValue))
+                if (!pnp.TryGetProp("antecedent", out string antecedentValue))
                     continue;
 
                 if (!dependentValue.Contains(searchTerm))
@@ -103,9 +103,9 @@ public class LptPort
                     if (portResource.ToString() != antecedentValue)
                         continue;
 
-                    if (!GetProp(portResource, "StartingAddress", out int startAddress))
+                    if (!portResource.TryGetProp("StartingAddress", out int startAddress))
                         continue;
-                    if (!GetProp(portResource, "EndingAddress", out int endAddress))
+                    if (!portResource.TryGetProp("EndingAddress", out int endAddress))
                         continue;
 
                     ports.Add(new LptPort()
@@ -330,47 +330,5 @@ public class LptPort
         short mask = (short)(1 << bit);
         var current = Read(address);
         Write(address, (short)(value ? current | mask : current & (~mask)));
-    }
-
-    private static bool GetProp(ManagementBaseObject obj, string propName, out int result)
-    {
-        var error = false;
-        result = 0;
-        try
-        {
-            result = Convert.ToInt32(obj.Properties[propName].Value);
-        }
-        catch
-        {
-            error = true;
-            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
-        }
-
-        return !error;
-    }
-
-    private static bool GetProp(ManagementBaseObject obj, string propName, out string result)
-    {
-        var error = false;
-        result = "";
-        try
-        {
-            string? r = obj.Properties[propName].Value.ToString();
-            if (r == null)
-            {
-                throw new Exception("Value is null");
-            }
-            else
-            {
-                result = r;
-            }
-        }
-        catch
-        {
-            error = true;
-            Debug.WriteLine($"[LPT] '{propName}' is not in {obj.ClassPath}.");
-        }
-
-        return !error;
     }
 }
