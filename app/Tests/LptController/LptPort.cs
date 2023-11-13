@@ -69,15 +69,21 @@ public class LptPort
 
     #endregion
 
+    public static string VirtualPortClassGuid => "{4d36e978-e325-11ce-bfc1-08002be10318}";
+
     public static LptPort[] GetPorts()
     {
         var ports = new List<LptPort>();
 
-        var lptPortSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_ParallelPort");
+        //var lptPortSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_ParallelPort");
+        var lptPortSearcher = new ManagementObjectSearcher("root\\cimv2",
+                $"SELECT * FROM Win32_PnPEntity WHERE ClassGuid=\"{VirtualPortClassGuid}\"");
 
         foreach (var lptPort in lptPortSearcher.Get())
         {
             var portName = lptPort.Properties["Name"].Value.ToString() ?? lptPort.ClassPath.ToString();
+            if (!portName.Contains("LPT"))
+                continue;
 
             // In addition we need to find the port's start and end adresses that are stored in some PNP resource
 
