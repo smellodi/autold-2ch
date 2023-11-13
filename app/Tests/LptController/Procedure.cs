@@ -130,7 +130,7 @@ public class Procedure : IDisposable
 
     const short MARKER_TOBII_FINISHED = 255;
     const byte MARKER_NEXUS_FINISHED = (byte)'#';
-    const short LPT_READING_INTERVAL = 50;      // ms
+    const short LPT_READING_INTERVAL = 10;      // ms
     const double MFC_FLOW_BETWEEN_PULSES = 5;   // maybe, some odor flow must occur also pulses so that it is always ready to be presented
 
     readonly MFC _mfc = MFC.Instance;

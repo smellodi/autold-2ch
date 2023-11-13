@@ -120,7 +120,11 @@ public class LptPort
                         FromAddress = startAddress,
                         ToAddress = endAddress
                     });
+
+                    break;
                 }
+
+                break;
             }
         }
 

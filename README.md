@@ -24,5 +24,5 @@ External dependencies:
 - `..\..\smop\smop.ion-vision\bin\Debug\net6.0-windows\Smop.IonVision.dll`
 
     1. step one level up from the autold_2ch root folder
-    2. `git clone https://github.com/lexasss/smod.git`
+    2. `git clone https://github.com/smellodi/smop.git`
     3. build the `smop.ion-vision` project
