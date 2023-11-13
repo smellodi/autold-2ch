@@ -32,7 +32,10 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             UpdateComPortList(cmbComPort);
         });
 
-        cmbLptPort.ItemsSource = LptPort.GetPorts();
+        if (LptPort.IsAvailable() != 0)
+        {
+            cmbLptPort.ItemsSource = LptPort.GetPorts();
+        }
 
         if (cmbLptPort.Items.Count > _settings.LptPort)
         {
