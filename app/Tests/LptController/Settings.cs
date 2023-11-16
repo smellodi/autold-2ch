@@ -12,7 +12,6 @@ public class Settings
     public double FreshAir;
     public double OdorFlowDuration;
     public Dictionary<int, Pulse> Pulses;
-    //public int PIDReadingInterval;
 
     public int OdorFlowDurationMs => (int)(OdorFlowDuration * 1000);
 
@@ -25,7 +24,6 @@ public class Settings
         FreshAir = settings.Test_LC_FreshAir;
         OdorFlowDuration = settings.Test_LC_OdorFlowDuration;
         Pulses = ParsePulses(settings.Test_LC_Pulses, out string? _);
-        //PIDReadingInterval = settings.Test_LC_PIDReadingInterval;
     }
 
     public void Save()
@@ -37,7 +35,6 @@ public class Settings
         settings.Test_LC_FreshAir = FreshAir;
         settings.Test_LC_Pulses = SerializePulses();
         settings.Test_LC_OdorFlowDuration = OdorFlowDuration;
-        //settings.Test_LC_PIDReadingInterval = PIDReadingInterval;
 
         settings.Save();
     }

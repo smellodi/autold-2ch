@@ -79,24 +79,6 @@
 
             <local:WaitingInstruction x:Name="wtiWaiting"/>
 
-            <!--WrapPanel HorizontalAlignment="Center"
-                       Margin="0,12">
-                <Label Margin="0,4,0,0"
-                       VerticalContentAlignment="Center"
-                       FontSize="14">
-                    <TextBlock>
-                        <Run Text="{lex:Loc PIDVoltage}"/>
-                        <Run Text=" ("/>
-                        <Run Text="{lex:Loc MV}"/>
-                        <Run Text=")"/>
-                    </TextBlock>
-                </Label>
-                <Label x:Name="lblPID"
-                       VerticalContentAlignment="Bottom"
-                       Content="0.0"
-                       FontSize="26"
-                       Foreground="{StaticResource BrushFontDark}"/>
-            </WrapPanel-->
         </StackPanel>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"

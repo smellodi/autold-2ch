@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace AutOlD2Ch.Tests.LptController;
 
@@ -18,8 +19,15 @@ internal class ComPort: IDisposable
 
     public void SendMarker(byte marker)
     {
-        var buffer = new byte[] { marker, 0 };
-        _comPort.Write(buffer, 0, buffer.Length);
+        try
+        {
+            var buffer = new byte[] { marker, 0 };
+            _comPort.Write(buffer, 0, buffer.Length);
+        }
+        catch
+        {
+            Debug.WriteLine($"{_comPort.PortName} was closed when attempting to srite data to it [{marker}]");
+        }
     }
 
     public void Dispose()

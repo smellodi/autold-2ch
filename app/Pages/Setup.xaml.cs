@@ -58,16 +58,16 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
                 UpdatePortList(cmbMFCPort);
             });
 
-        _mfc.Closed += (s, e) =>
-        {
-            DisableIndicators("MFC");
-            UpdateUI();
-        };
-        _pid.Closed += (s, e) =>
-        {
-            DisableIndicators("PID");
-            UpdateUI();
-        };
+        _mfc.Closed += (s, e) => Dispatcher.Invoke(() =>
+            {
+                DisableIndicators("MFC");
+                UpdateUI();
+            });
+        _pid.Closed += (s, e) => Dispatcher.Invoke(() =>
+            {
+                DisableIndicators("PID");
+                UpdateUI();
+            });
 
 
         long startTs = Utils.Timestamp.Ms;

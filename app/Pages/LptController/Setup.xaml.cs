@@ -59,7 +59,6 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
         txbFreshAir.Text = _settings.FreshAir.ToString("F1");
         txbPulses.Text = _settings.SerializePulses();
         txbOdorFlowDuration.Text = _settings.OdorFlowDuration.ToString();
-        //txbPIDSamplingInterval.Text = _settings.PIDReadingInterval.ToString();
     }
 
     public void EmulationInit() { }
@@ -123,8 +122,6 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             new Utils.Validation(txbOdorFlowDuration, 0.1,
                     Comm.MFC.MAX_SHORT_PULSE_DURATION,
                     Utils.Validation.ValueFormat.Float),
-            //new Utils.Validation(txbPIDSamplingInterval, 100, 5000,
-            //        Utils.Validation.ValueFormat.Integer),
         };
 
         foreach (var (marker, pulse) in pulses)
@@ -200,7 +197,6 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             _settings.FreshAir = double.Parse(txbFreshAir.Text);
             _settings.Pulses = Settings.ParsePulses(txbPulses.Text.Replace("\r\n", "\n"), out string? _);
             _settings.OdorFlowDuration = double.Parse(txbOdorFlowDuration.Text);
-            //_settings.PIDReadingInterval = int.Parse(txbPIDSamplingInterval.Text);
 
             _settings.Save();
 
