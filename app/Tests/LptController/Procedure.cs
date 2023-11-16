@@ -22,7 +22,7 @@ public class Procedure : IDisposable
         OdorFlow = 4,   /// this flag must be present when the stage includes <see cref="Stage.Odor1Flow"/> or <see cref="Stage.Odor2Flow"/>
     }
 
-    public event EventHandler<double>? Data;
+    //public event EventHandler<double>? Data;
     public event EventHandler<string>? Marker;
     public event EventHandler<Stage>? StageChanged;
     public event EventHandler? Finished;
@@ -34,9 +34,11 @@ public class Procedure : IDisposable
         _dispatcher = Dispatcher.CurrentDispatcher;
 
         _eventLogger.Clear();
+
+        /*
         _dataLogger.Clear();
 
-        _timer.Elapsed += (s, e) =>
+        _odReadingTimer.Elapsed += (s, e) =>
         {
             _dispatcher.Invoke(() =>  // we let the timer to count further without waiting for the end of reading from serial ports
             {
@@ -53,6 +55,7 @@ public class Procedure : IDisposable
                 }
             });
         };
+        */
     }
 
     public void Start(Settings settings)
@@ -62,7 +65,7 @@ public class Procedure : IDisposable
         try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
         try { _comPort = new ComPort(_settings.ComPort); } catch { }
 
-        _lptPortReadingCancellationTokenSource = new();
+        //_lptPortReadingCancellationTokenSource = new();
         _marker = _lptPort?.ReadData() ?? 0;
 
         // catch window closing event, so we do not display termination message due to MFC comm closed
@@ -71,6 +74,8 @@ public class Procedure : IDisposable
         // If the test is in progress, display warning message and quit the app:
         // Or can we recover here by trying to open the COM port again?
         _mfc.Closed += MFC_Closed;
+
+        /*
         _pid.Closed += PID_Closed;
 
         var updateIntervalInSeconds = 0.001 * _settings.PIDReadingInterval;
@@ -78,7 +83,7 @@ public class Procedure : IDisposable
         {
             _monitor.MFCUpdateInterval = updateIntervalInSeconds;
             _monitor.PIDUpdateInterval = updateIntervalInSeconds;
-        }
+        }*/
 
         _mfc.FreshAirSpeed = _settings.FreshAir;
         _mfc.OdorDirection = MFC.ValvesOpened.None;
@@ -86,11 +91,14 @@ public class Procedure : IDisposable
         _mfc.Odor1Speed = MFC_FLOW_BETWEEN_PULSES;
         _mfc.Odor2Speed = MFC_FLOW_BETWEEN_PULSES;
 
-        _timer.Interval = _settings.PIDReadingInterval;
-        _timer.AutoReset = true;
-        _timer.Start();
+        /*
+        _odReadingTimer.Interval = _settings.PIDReadingInterval;
+        _odReadingTimer.AutoReset = true;
+        _odReadingTimer.Start();
 
         _dataLogger.Start(_settings.PIDReadingInterval);
+        */
+        _eventLogger.Add(LogSource.LptCtrl, "Session", "Start");
 
         if (_lptPort == null)
         {
@@ -100,15 +108,19 @@ public class Procedure : IDisposable
         }
 
         //if (_lptPort != null || Storage.Instance.IsDebugging)
-        {
-            _ = ReadPortStatus();
-        }
+        //{
+        //    _ = ReadPortStatus();
+        //}
+
+        var _lptReadingThread = new Thread(ReadPortStatus);
     }
 
-    public void Stop()
+    public void Stop(bool isCalledByMarker = false)
     {
         StopTimers();
-        _lptPortReadingCancellationTokenSource.Cancel();
+        //_lptPortReadingCancellationTokenSource.Cancel();
+
+        _eventLogger.Add(LogSource.LptCtrl, "Session", isCalledByMarker ? "Finished" : "Interrupted");
 
         _mfc.IsInShortPulseMode = false;
         _mfc.Odor1Speed = MFC.ODOR_MIN_SPEED;
@@ -118,7 +130,7 @@ public class Procedure : IDisposable
 
     public void Dispose()
     {
-        _timer.Dispose();
+        _odReadingTimer.Dispose();
         _runner?.Dispose();
         _pulseController?.Dispose();
         GC.SuppressFinalize(this);
@@ -134,11 +146,11 @@ public class Procedure : IDisposable
     const double MFC_FLOW_BETWEEN_PULSES = 5;   // maybe, some odor flow must occur also pulses so that it is always ready to be presented
 
     readonly MFC _mfc = MFC.Instance;
-    readonly PID _pid = PID.Instance;
-    readonly SyncLogger _dataLogger = SyncLogger.Instance;
+    //readonly PID _pid = PID.Instance;
+    //readonly SyncLogger _dataLogger = SyncLogger.Instance;
     readonly FlowLogger _eventLogger = FlowLogger.Instance;
-    readonly CommMonitor? _monitor = CommMonitor.Instance;
-    readonly System.Timers.Timer _timer = new();
+    //readonly CommMonitor? _monitor = CommMonitor.Instance;
+    readonly System.Timers.Timer _odReadingTimer = new();
     readonly Dispatcher _dispatcher;
 
     Settings? _settings;
@@ -147,12 +159,14 @@ public class Procedure : IDisposable
     PulsesController? _pulseController;
     ComPort? _comPort;
     LptPort? _lptPort;
+    Thread? _lptReadingThread;
 
-    CancellationTokenSource _lptPortReadingCancellationTokenSource = new();
+    //CancellationTokenSource _lptPortReadingCancellationTokenSource = new();
     short _marker;
 
     short[] EmulatedMarkers = Array.Empty<short>();
 
+    /*
     private async Task ReadPortStatus()
     {
         try
@@ -165,6 +179,24 @@ public class Procedure : IDisposable
             _ = ReadPortStatus();
         }
         catch (OperationCanceledException) { }
+    }*/
+    private void ReadPortStatus(object? obj)
+    {
+        try
+        {
+            while (_lptReadingThread!.ThreadState == ThreadState.Running)
+            {
+                if (_runner == null)
+                {
+                    CheckMarker();
+                }
+
+                Thread.Sleep(LPT_READING_INTERVAL);
+            }
+        }
+        catch (ThreadInterruptedException) { }
+
+        _lptReadingThread = null;
     }
 
     private void CheckMarker()
@@ -198,7 +230,8 @@ public class Procedure : IDisposable
             _mfc.Odor1Speed = pulse.Channel1?.Flow ?? MFC.ODOR_MIN_SPEED;
             _mfc.Odor2Speed = pulse.Channel2?.Flow ?? MFC.ODOR_MIN_SPEED;
 
-            _dataLogger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
+            //_dataLogger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
+            _eventLogger.Add(LogSource.LptCtrl, "Gas", pulse.ToString());
 
             _runner = DispatchOnce
                 .Do(0.1, StartOdorFlow)?
@@ -225,7 +258,8 @@ public class Procedure : IDisposable
         if (_mfc.OdorDirection != MFC.ValvesOpened.None)
         {
             _mfc.OdorDirection = MFC.ValvesOpened.None;
-            _dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
+            //_dataLogger.Add("V" + ((int)MFC.ValvesOpened.None).ToString("D2"));
+            _eventLogger.Add(LogSource.LptCtrl, "Gas", "Stop");
         }
 
         _mfc.Odor1Speed = MFC_FLOW_BETWEEN_PULSES;
@@ -245,19 +279,19 @@ public class Procedure : IDisposable
         {
             Application.Current.MainWindow.Closing -= MainWindow_Closing;
             _mfc.Closed -= MFC_Closed;
-            _pid.Closed -= PID_Closed;
+            //_pid.Closed -= PID_Closed;
         });
 
-        _dataLogger.Add("F");
+        //_dataLogger.Add("F");
 
-        Stop();
+        Stop(true);
 
         Finished?.Invoke(this, new EventArgs());
     }
 
     private void ExitOnDeviceError(string source)
     {
-        if (_timer.Enabled)
+        if (_odReadingTimer.Enabled)
         {
             StopTimers();
 
@@ -271,8 +305,9 @@ public class Procedure : IDisposable
     private void StopTimers()
     {
         _runner?.Stop();
-        _timer.Stop();
+        _odReadingTimer.Stop();
         _pulseController?.Terminate();
+        _lptReadingThread?.Interrupt();
     }
 
     private static byte TobiiToNexus(short marker)
@@ -327,7 +362,8 @@ public class Procedure : IDisposable
             _ => MFC.ValvesOpened.None
         };
 
-        _dataLogger.Add("V" + ((int)valves).ToString("D2"));
+        //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
+        _eventLogger.Add(LogSource.LptCtrl, "Gas", ((int)valves).ToString("D2"));
 
         foreach (var startingChannel in e.StartingChannels)
         {
@@ -351,8 +387,9 @@ public class Procedure : IDisposable
         ExitOnDeviceError("MFC");
     }
 
+    /*
     private void PID_Closed(object? sender, EventArgs e)
     {
         ExitOnDeviceError("PID");
-    }
+    }*/
 }

@@ -83,7 +83,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
             .BindContentToZoomLevel(lblZoom)
             .BindVisibilityToDebug(lblDebug);
 
-        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
+        //_procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
         _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
         _procedure.Marker += (s, marker) => Dispatcher.Invoke(() => lblMarker.Content = marker);
         _procedure.Finished += (s, e) => Dispatcher.Invoke(() => FinalizeTest());

@@ -79,7 +79,7 @@
 
             <local:WaitingInstruction x:Name="wtiWaiting"/>
 
-            <WrapPanel HorizontalAlignment="Center"
+            <!--WrapPanel HorizontalAlignment="Center"
                        Margin="0,12">
                 <Label Margin="0,4,0,0"
                        VerticalContentAlignment="Center"
@@ -96,7 +96,7 @@
                        Content="0.0"
                        FontSize="26"
                        Foreground="{StaticResource BrushFontDark}"/>
-            </WrapPanel>
+            </WrapPanel-->
         </StackPanel>
 
         <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="10"
