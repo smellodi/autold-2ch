@@ -52,6 +52,12 @@ public class Manager : ITestManager, IDisposable
 
     public Page? NextPage(object? param = null)
     {
+        if (_current == null)
+        {
+            _current = _setupPage;
+            return _current;
+        }
+
         if (_settings == null)
             return null;
 
@@ -59,7 +65,6 @@ public class Manager : ITestManager, IDisposable
 
         _current = _current switch
         {
-            null => _setupPage,
             Setup _ => _settings.Sniffer switch
             {
                 GasSniffer.Human => _productionPracticePage,
