@@ -22,8 +22,8 @@ public class Validation
     public readonly ValueFormat Format;
     public readonly string? ExternalError;
 
-    public string? Value => _value;
-    public double? AsNumber => IsValid && _value != null ? double.Parse(_value) : null;
+    public string? Value { get; private set; }
+    public double? AsNumber => IsValid && Value != null ? double.Parse(Value) : null;
 
     public bool IsValid
     {
@@ -41,7 +41,7 @@ public class Validation
         Max = max;
         Format = format;
 
-        _value = (Source as TextBox)?.Text;
+        Value = (Source as TextBox)?.Text;
     }
 
     public Validation(TextBox textbox, string value, double min, double max, ValueFormat format)
@@ -51,7 +51,7 @@ public class Validation
         Max = max;
         Format = format;
 
-        _value = value;
+        Value = value;
     }
 
     public Validation(Control textbox, string? externalError)
@@ -61,7 +61,7 @@ public class Validation
         ExternalError = externalError;
 
         _code = ValidityViolationCode.ExternallyDetectedError;
-        _value = (Source as TextBox)?.Text;
+        Value = (Source as TextBox)?.Text;
     }
 
     public override string ToString()
@@ -69,9 +69,9 @@ public class Validation
         return _code switch
         {
             ValidityViolationCode.EmptyList => L10n.T("EmptyList"),
-            ValidityViolationCode.InvalidFormat => string.Format(L10n.T("ValueFormatNotValid"), _value, Format),
-            ValidityViolationCode.TooLarge => string.Format(L10n.T("ValueTooLarge"), _value, Max),
-            ValidityViolationCode.TooSmall => string.Format(L10n.T("ValueTooSmall"), _value, Min),
+            ValidityViolationCode.InvalidFormat => string.Format(L10n.T("ValueFormatNotValid"), Value, Format),
+            ValidityViolationCode.TooLarge => string.Format(L10n.T("ValueTooLarge"), Value, Max),
+            ValidityViolationCode.TooSmall => string.Format(L10n.T("ValueTooSmall"), Value, Min),
             ValidityViolationCode.ExternallyDetectedError => ExternalError ?? "",
             _ => "unknown error",
         };
@@ -100,7 +100,6 @@ public class Validation
     }
 
     ValidityViolationCode _code = ValidityViolationCode.OK;
-    string? _value;
 
     private static bool Do(TextBox textbox, double min, double max, ValueFormat format, EventHandler<double> action)
     {
@@ -123,7 +122,7 @@ public class Validation
 
     private bool IsValidValue(string? value)
     {
-        _value = value;
+        Value = value;
 
         // not expresion, or the expression is a simple value
         if (Format == ValueFormat.Float)

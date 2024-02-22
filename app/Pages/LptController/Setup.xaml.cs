@@ -117,11 +117,8 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 
         var validations = new List<Utils.Validation>
         {
-            new Utils.Validation(txbFreshAir, 1, 10,
-                    Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbOdorFlowDuration, 0.1,
-                    Comm.MFC.MAX_SHORT_PULSE_DURATION,
-                    Utils.Validation.ValueFormat.Float),
+            new(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
+            new(txbOdorFlowDuration, 0.1, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Float),
         };
 
         foreach (var (marker, pulse) in pulses)
@@ -162,7 +159,7 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             }
         }
 
-        double.TryParse(txbOdorFlowDuration.Text, out double odorFlowDurationSec);
+        _ = double.TryParse(txbOdorFlowDuration.Text, out double odorFlowDurationSec);
 
         var longestDurationMs = pulses.Max(kv => kv.Value.GetDuration((int)(odorFlowDurationSec * 1000)));
         var isOdorFlowDurationLongEnough = new Utils.Validation(

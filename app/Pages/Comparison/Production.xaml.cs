@@ -58,9 +58,9 @@ public partial class Production : Page, IPage<EventArgs>
                 Repetitions = 1,
                 PairsOfMixtures = new MixturePair[]
                 {
-                    new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor2 },
-                    new MixturePair { Mix1 = Mixture.Odor1, Mix2 = Mixture.Odor1 },
-                    new MixturePair { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor1 },
+                    new() { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor2 },
+                    new() { Mix1 = Mixture.Odor1, Mix2 = Mixture.Odor1 },
+                    new() { Mix1 = Mixture.Odor2, Mix2 = Mixture.Odor1 },
                 }
             };
         }
@@ -68,8 +68,6 @@ public partial class Production : Page, IPage<EventArgs>
         _settings = settings;
 
         _procedure.Start(settings, Stage);
-
-        UpdateUI();
     }
 
     public void Interrupt()
@@ -83,8 +81,6 @@ public partial class Production : Page, IPage<EventArgs>
     readonly Procedure _procedure = new();
 
     Settings? _settings;
-
-    private void UpdateUI() { }
 
     private void SetStage(Procedure.Stage stage)
     {
@@ -135,7 +131,6 @@ public partial class Production : Page, IPage<EventArgs>
         }
         else
         {
-            UpdateUI();
             Utils.DispatchOnceUI.Do(0.1, () => _procedure.Next());
         }
     }

@@ -240,6 +240,8 @@ public class Procedure : ITestEmulator, IDisposable
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
 
+    readonly PulsesController? _pulseController;
+
     Settings? _settings;
     Comparison.Stage _stage;
     DMS? _dms = null;
@@ -250,7 +252,6 @@ public class Procedure : ITestEmulator, IDisposable
     double _PIDThreshold = 0;
 
     DispatchOnce? _runner;
-    PulsesController? _pulseController;
     //DispatchOnce _pulseFinisher;
 
     private void PrepareOdors(int mixID)

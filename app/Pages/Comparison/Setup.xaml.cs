@@ -82,14 +82,14 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings?>, Tests.ITes
 
         var validations = new List<Utils.Validation>
         {
-            new Utils.Validation(txbFreshAirFlow, 1, 10, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbPracticeOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbTestOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-            new Utils.Validation(txbOdorFlowDuration, 0.1, 60 * 60, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbDMSSniffingDelay, 0, 30, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbRepetitions, 1, 100, Utils.Validation.ValueFormat.Integer),
-            //new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
+            new(txbFreshAirFlow, 1, 10, Utils.Validation.ValueFormat.Float),
+            new(txbPracticeOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
+            new(txbTestOdorFlow, 1, 80, Utils.Validation.ValueFormat.Float),
+            new(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
+            new(txbOdorFlowDuration, 0.1, 60 * 60, Utils.Validation.ValueFormat.Float),
+            new(txbDMSSniffingDelay, 0, 30, Utils.Validation.ValueFormat.Float),
+            new(txbRepetitions, 1, 100, Utils.Validation.ValueFormat.Integer),
+            //new(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
         };
 
         foreach (var v in validations)
@@ -239,12 +239,12 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings?>, Tests.ITes
         btnStart.IsEnabled = cmbDMSParameter.SelectedItem != null;
     }
 
-    private async void txbDMSIP_LostFocus(object sender, RoutedEventArgs e)
+    private async void DmsIP_LostFocus(object sender, RoutedEventArgs e)
     {
         await ApplyDMSIP(txbDMSIP.Text);
     }
 
-    private async void txbDMSIP_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+    private async void DmsIP_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
     {
         if (e.Key == System.Windows.Input.Key.Enter)
         {

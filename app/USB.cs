@@ -52,7 +52,7 @@ internal class USB
         watcher.Start();
     }
 
-    private string FindPortName(PropertyDataCollection props)
+    private static string FindPortName(PropertyDataCollection props)
     {
         string result = "";
 

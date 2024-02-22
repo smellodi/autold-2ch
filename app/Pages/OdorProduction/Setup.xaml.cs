@@ -52,11 +52,11 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 
         var validations = new List<Utils.Validation>
         {
-            new Utils.Validation(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-            new Utils.Validation(txbOdorFlowDuration, 0.1, maxPulseDurationSec, Utils.Validation.ValueFormat.Float),
-            new Utils.Validation(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
-            new Utils.Validation(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
+            new(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
+            new(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
+            new(txbOdorFlowDuration, 0.1, maxPulseDurationSec, Utils.Validation.ValueFormat.Float),
+            new(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
+            new(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
         };
 
         foreach (var pulse in pulses)
@@ -83,7 +83,7 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             }
         }
 
-        double.TryParse(txbOdorFlowDuration.Text, out double odorFlowDurationSec);
+        _ = double.TryParse(txbOdorFlowDuration.Text, out double odorFlowDurationSec);
 
         var longestDurationMs = pulses.Max(pulse => pulse.GetDuration((int)(odorFlowDurationSec * 1000)));
         var isOdorFlowDurationLongEnough = new Utils.Validation(txbOdorFlowDuration, 0.001 * longestDurationMs, maxPulseDurationSec, Utils.Validation.ValueFormat.Float);

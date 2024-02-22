@@ -150,12 +150,12 @@ public class PulsesController : IDisposable
         public double Interval => (double)(Delay - (Previous?.Delay ?? 0)) / 1000;
         public ChannelEvent[] Starting => _starting.ToArray();
         public ChannelEvent[] Ending => _ending.ToArray();
-        public PulseEvent? Previous => _previousEvent;
+        public PulseEvent? Previous { get; }
         public PulseEvent? Next { get; set; }
 
         public PulseEvent(PulseEvent? previousEvent, ChannelEvent evt)
         {
-            _previousEvent = previousEvent;
+            Previous = previousEvent;
             Delay = evt.Delay;
             Add(evt);
         }
@@ -255,7 +255,6 @@ public class PulsesController : IDisposable
 
         readonly List<ChannelEvent> _starting = new();
         readonly List<ChannelEvent> _ending = new();
-        readonly PulseEvent? _previousEvent;
     }
 
     readonly Pulse _pulse;

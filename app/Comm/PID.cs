@@ -625,16 +625,13 @@ public class PID : CommPort<PIDSample>
     /// </summary>
     /// <param name="dword">32b</param>
     /// <returns>Fixed 32b</returns>
-    BtoD ModbusDWORDByteSwap(ref BtoD dword)
+    static BtoD ModbusDWORDByteSwap(ref BtoD dword) => new()
     {
-        return new BtoD()
-        {
-            B0 = dword.B1,
-            B1 = dword.B0,
-            B2 = dword.B3,
-            B3 = dword.B2,
-        };
-    }
+        B0 = dword.B1,
+        B1 = dword.B0,
+        B2 = dword.B3,
+        B3 = dword.B2,
+    };
 
     /// <summary>
     /// Makes an array of bytes out of a structure
@@ -642,7 +639,7 @@ public class PID : CommPort<PIDSample>
     /// <typeparam name="T">Structure type to convert to bytes</typeparam>
     /// <param name="str">Structure instance</param>
     /// <returns>Arrays of bytes</returns>
-    byte[] ToBytes<T>(T str)
+    static byte[] ToBytes<T>(T str)
     {
         int size = Marshal.SizeOf(str);
         byte[] bytes = new byte[size];
@@ -661,7 +658,7 @@ public class PID : CommPort<PIDSample>
     /// <typeparam name="T">Structure type to restore from bytes</typeparam>
     /// <param name="bytes">Array of bytes</param>
     /// <returns>Structure instance</returns>
-    T FromBytes<T>(byte[] bytes) where T : new()
+    static T FromBytes<T>(byte[] bytes) where T : new()
     {
         var str = new T();
 

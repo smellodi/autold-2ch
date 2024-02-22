@@ -23,7 +23,7 @@ internal class OlfactoryDeviceModel
     /// <summary>
     /// Current in mA
     /// </summary>
-    public float Loop => 11.5f + (float)Math.Sin(Utils.Timestamp.Ms % 5000 * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
+    public static float Loop => 11.5f + (float)Math.Sin(Utils.Timestamp.Ms % 5000 * 0.072 * Math.PI / 180f); // 5s is the breathing cycle
 
     /// <summary>
     /// Current PID value in mV
@@ -222,7 +222,7 @@ internal class PIDEmulator
                 // currloop
                 var cl = new PID.BtoD
                 {
-                    f = _model.Loop + (float)e(0.05)
+                    f = OlfactoryDeviceModel.Loop + (float)e(0.05)
                 };
                 buffer[23] = cl.B1;
                 buffer[24] = cl.B0;

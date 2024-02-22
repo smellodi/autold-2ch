@@ -136,37 +136,36 @@ public abstract class Logger<T> where T : class
             Directory.CreateDirectory(folder);
         }
 
-        using (StreamWriter writer = File.CreateText(filename))
+        using StreamWriter writer = File.CreateText(filename);
+
+        try
         {
-            try
+            if (!string.IsNullOrEmpty(header))
             {
-                if (!string.IsNullOrEmpty(header))
-                {
-                    writer.WriteLine(header);
-                }
-
-                writer.WriteLine(string.Join("\n", records));
-
-                var dataSavedInto = Utils.L10n.T("DataSavedInto");
-                Utils.MsgBox.Notify(
-                    App.Name + " - " + Utils.L10n.T("Logger"),
-                    $"{dataSavedInto}\n'{filename}'",
-                    Utils.MsgBox.Button.OK);
-
-                return true;
+                writer.WriteLine(header);
             }
-            catch (Exception ex)
+
+            writer.WriteLine(string.Join("\n", records));
+
+            var dataSavedInto = Utils.L10n.T("DataSavedInto");
+            Utils.MsgBox.Notify(
+                App.Name + " - " + Utils.L10n.T("Logger"),
+                $"{dataSavedInto}\n'{filename}'",
+                Utils.MsgBox.Button.OK);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            var failedToSave = Utils.L10n.T("FailedToSave");
+            var retry = Utils.L10n.T("Retry");
+            var answer = Utils.MsgBox.Ask(
+                App.Name + " - " + Utils.L10n.T("Logger"),
+                $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
+                Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No);
+            if (answer == Utils.MsgBox.Button.Yes)
             {
-                var failedToSave = Utils.L10n.T("FailedToSave");
-                var retry = Utils.L10n.T("Retry");
-                var answer = Utils.MsgBox.Ask(
-                    App.Name + " - " + Utils.L10n.T("Logger"),
-                    $"{failedToSave}\n'{filename}':\n\n{ex.Message}\n\n{retry}",
-                    Utils.MsgBox.Button.Yes, Utils.MsgBox.Button.No);
-                if (answer == Utils.MsgBox.Button.Yes)
-                {
-                    return Save(AskFileName(filename), records, header);
-                }
+                return Save(AskFileName(filename), records, header);
             }
         }
 

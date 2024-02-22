@@ -82,8 +82,8 @@
                                        Content="{lex:Loc SniffingDelay}"/>
 
                                 <TextBox x:Name="txbDMSIP" Grid.Row="0" Grid.Column="1"
-                                         KeyUp="txbDMSIP_KeyUp"
-                                         LostFocus="txbDMSIP_LostFocus"/>
+                                         KeyUp="DmsIP_KeyUp"
+                                         LostFocus="DmsIP_LostFocus"/>
                                 <ComboBox x:Name="cmbDMSProject" Grid.Row="1" Grid.Column="1"
                                           Margin="0,4,0,0"
                                           VerticalContentAlignment="Center"

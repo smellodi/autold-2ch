@@ -17,13 +17,13 @@ internal class GasMixer
         {
             Mixture.Odor1 => Mix(baseOdorFlow, flowDuration, gas1, gas2, 1.0),
             Mixture.Odor2 => Mix(baseOdorFlow, flowDuration, gas1, gas2, 0.0),
-            _ => Mix(baseOdorFlow, flowDuration, gas1, gas2, 0.01 * int.Parse(mixture.ToString().Substring(3)))
+            _ => Mix(baseOdorFlow, flowDuration, gas1, gas2, 0.01 * int.Parse(mixture.ToString()[3..]))
         };
     }
 
     public static Pulse ToPulse(MixturePair pair, int mixID, double gasOdorFlow, int flowDuration)
     {
-        List<ChannelPulse> channels = new List<ChannelPulse>();
+        var channels = new List<ChannelPulse>();
 
         var mixture = mixID == 0 ? pair.Mix1 : pair.Mix2;
 
@@ -103,7 +103,7 @@ internal class GasMixer
         double s1 = gas1Share;
         double s2 = 1.0 - gas1Share;
 
-        List<ChannelPulse> channels = new List<ChannelPulse>();
+        var channels = new List<ChannelPulse>();
         if (s1 > 0) channels.Add(new ChannelPulse(1, baseOdorFlow * s1 * w1, flowDuration));
         if (s2 > 0) channels.Add(new ChannelPulse(2, baseOdorFlow * s2 * w2, flowDuration));
 

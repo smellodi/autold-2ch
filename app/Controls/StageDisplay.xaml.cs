@@ -119,7 +119,7 @@ public partial class StageDisplay : UserControl, INotifyPropertyChanged
     bool _durationUnitsAreMs = true;
     bool _delayUnitsAreMs = true;
 
-    private string IntervalToStr(int ms, out bool isShownAsMs)
+    private static string IntervalToStr(int ms, out bool isShownAsMs)
     {
         isShownAsMs = ms < 1000;
         return isShownAsMs ? ms.ToString() : ((double)ms / 1000).ToString("0.##");

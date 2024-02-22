@@ -68,7 +68,7 @@ public class Settings
         {
             try
             {
-                Pulse pulse = new Pulse(pulseStr);
+                var pulse = new Pulse(pulseStr);
                 pulses.Add(pulse);
             }
             catch (Exception ex)

@@ -21,7 +21,7 @@ public class Procedure : ITestEmulator, IDisposable
         OdorFlow = 32,
     }
 
-    public int Step => _step;
+    public int Step { get; private set; } = 0;
 
     public event EventHandler<double>? Data;
     public event EventHandler<Stage>? StageChanged;
@@ -67,7 +67,7 @@ public class Procedure : ITestEmulator, IDisposable
     {
         if (_pulses != null)
         {
-            _step = _pulses.Length - 1;
+            Step = _pulses.Length - 1;
         }
     }
 
@@ -114,7 +114,7 @@ public class Procedure : ITestEmulator, IDisposable
         if (_pulses == null || _settings == null)
             return;
 
-        var pulse = _pulses[_step];
+        var pulse = _pulses[Step];
 
         _logger.Add($"S{pulse.Channel1?.Flow ?? 0}/{pulse.Channel2?.Flow ?? 0}");
 
@@ -158,8 +158,6 @@ public class Procedure : ITestEmulator, IDisposable
     readonly Dispatcher _dispatcher;
 
     Settings? _settings;
-
-    int _step = 0;
     Pulse[]? _pulses = null;
 
     DispatchOnce? _runner;
@@ -171,7 +169,7 @@ public class Procedure : ITestEmulator, IDisposable
         if (_pulses == null || _settings == null)
             return;
 
-        var pulse = _pulses[_step];
+        var pulse = _pulses[Step];
         _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
         _pulseController.PulseStateChanged += PulseStateChanged;
         _pulseController.Run();
@@ -194,7 +192,7 @@ public class Procedure : ITestEmulator, IDisposable
         _runner?.Dispose();
         _runner = null;
 
-        var noMoreTrials = ++_step >= _pulses!.Length;
+        var noMoreTrials = ++Step >= _pulses!.Length;
         if (noMoreTrials)
         {
             Stop();

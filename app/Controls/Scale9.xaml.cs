@@ -158,8 +158,7 @@ public partial class Scale9 : UserControl, INotifyPropertyChanged
         get
         {
             RadioButton? rdb = grdScale.Children.OfType<RadioButton>().FirstOrDefault(item => item.IsChecked ?? false);
-            var value = rdb?.DataContext as string;
-            return value == null ? null : int.Parse(value);
+            return rdb?.DataContext is not string value ? null : int.Parse(value);
         }
         set
         {

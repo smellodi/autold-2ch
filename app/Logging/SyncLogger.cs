@@ -13,15 +13,15 @@ public class SyncLogger : Logger<SyncLogger.Record>, IDisposable
         public static string DELIM => ",";
         public static string HEADER => $"Time [ms]{DELIM}PID [mV]{DELIM}Loop [mA]{DELIM}QMa [std]{DELIM}QMb [std]{DELIM}QMc [std]{DELIM}Pa [mbar]{DELIM}Pb [mbar]{DELIM}Pc [mbar]{DELIM}Ta [C]{DELIM}Tb [C]{DELIM}Tc [C]{DELIM}Mark";
 
-        public long Time => _time;
+        public long Time { get; }
 
         public Record(ref MFCSample mfcSample, ref PIDSample pidSample, string[] events)
         {
-            _time = mfcSample.Time > pidSample.Time ? mfcSample.Time : pidSample.Time;
+            Time = mfcSample.Time > pidSample.Time ? mfcSample.Time : pidSample.Time;
 
             _fields = new string[]
             {
-                _time.ToString(),
+                Time.ToString(),
                 pidSample.PID.ToString("F4"),
                 pidSample.Loop.ToString("F4"),
                 mfcSample.A.MassFlow.ToString("F2"),
@@ -45,7 +45,6 @@ public class SyncLogger : Logger<SyncLogger.Record>, IDisposable
         // Internal
 
         readonly string[] _fields;
-        readonly long _time;
     }
 
     public static SyncLogger Instance => _instance ??= new();

@@ -58,6 +58,7 @@ public class Manager : ITestManager, IDisposable
     public void Dispose()
     {
         _productionPage.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     public void Emulate(EmulationCommand command, params object[] args) { }
