@@ -36,7 +36,7 @@ public partial class Wait : Page, IPage<EventArgs>
             if (project != _dms.Settings.Project)
             {
                 await Task.Delay(INTER_REQUEST_INTERVAL);
-                if (!HandleError(await _dms.SetProject(PROJECT_LOADING_DURATION)))
+                if (!HandleError(await _dms.SetProject()))
                     return;
             }
             else
@@ -76,7 +76,6 @@ public partial class Wait : Page, IPage<EventArgs>
 
     const int INTER_REQUEST_INTERVAL = 1000;        // ms
     const int PARAMETER_LOADING_DURATION = 10000;   // ms
-    const int PROJECT_LOADING_DURATION = 3000;      // ms
 
     private bool HandleError(string? error)
     {

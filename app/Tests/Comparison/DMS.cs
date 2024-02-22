@@ -167,7 +167,7 @@ internal class DMS : IDisposable
         }
     }
 
-    public async Task<string?> SetProject(int waitingDuration)
+    public async Task<string?> SetProject()
     {
         if (!_isActive)
         {
@@ -177,7 +177,7 @@ internal class DMS : IDisposable
         try
         {
             await Task.Delay(INTER_REQUEST_PAUSE);
-            PrintResponse("set project", await _comunicator.SetProjectAndWait(waitingDuration));
+            PrintResponse("set project", await _comunicator.SetProjectAndWait());
         }
         catch (Exception ex)
         {
@@ -361,11 +361,6 @@ internal class DMS : IDisposable
     const int INTER_REQUEST_PAUSE = 150;
 
     static DMS? _instance;
-
-    static DMS()
-    {
-        Smop.IonVision.Settings.DefaultFilename = IonVisionSettingsFilename;
-    }
 
     readonly Communicator _comunicator = new(IonVisionSettingsFilename, Storage.Instance.IsDebugging);
     readonly FlowLogger _eventLogger = FlowLogger.Instance;
