@@ -1,12 +1,12 @@
-﻿using System;
-using System.Threading;
-using System.Windows;
-using System.Windows.Threading;
-using AutOlD2Ch.Comm;
+﻿using AutOlD2Ch.Comm;
 using AutOlD2Ch.Pages.LptController;
 using AutOlD2Ch.Tests.Common;
 using AutOlD2Ch.Utils;
+using System;
 using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace AutOlD2Ch.Tests.LptController;
 
@@ -38,7 +38,7 @@ public class Procedure : IDisposable
     {
         _settings = settings;
 
-        try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch {  }
+        try { _lptPort = LptPort.GetPorts()[_settings.LptPort]; } catch { }
         try { _comPort = new ComPort(_settings.ComPort); } catch { }
 
         _marker = _lptPort?.ReadData() ?? 0;

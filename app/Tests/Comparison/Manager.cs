@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Controls;
-using AutOlD2Ch.Pages.Comparison;
+﻿using AutOlD2Ch.Pages.Comparison;
 using AutOlD2Ch.Pages.ThresholdTest;
+using System;
+using System.Windows.Controls;
 
 namespace AutOlD2Ch.Tests.Comparison;
 

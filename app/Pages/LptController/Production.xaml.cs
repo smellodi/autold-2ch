@@ -140,7 +140,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
         {
             (Procedure.Stage.Odor1Flow | Procedure.Stage.OdorFlow) or
             (Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) or
-            (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) => 
+            (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) =>
                 _settings!.OdorFlowDuration,
             Procedure.Stage.None => 0,
             Procedure.Stage.OdorFlow => 0,

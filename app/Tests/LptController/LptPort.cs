@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AutOlD2Ch.Utils;
+using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Runtime.InteropServices;
-using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch.Pages.LptController;
 

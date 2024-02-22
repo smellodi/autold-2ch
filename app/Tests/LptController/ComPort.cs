@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace AutOlD2Ch.Tests.LptController;
 
-internal class ComPort: IDisposable
+internal class ComPort : IDisposable
 {
     public ComPort(string name)
     {

@@ -1,14 +1,14 @@
-﻿using System;
+﻿using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Comparison;
+using AutOlD2Ch.Utils;
+using Smop.IonVision;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using AutOlD2Ch.Comm;
-using AutOlD2Ch.Tests.Comparison;
-using AutOlD2Ch.Utils;
-using Smop.IonVision;
 
 namespace AutOlD2Ch.Pages.Comparison;
 
@@ -69,7 +69,7 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings?>, Tests.ITes
     }
 
     readonly Tests.Comparison.Settings _settings = new();
-    
+
     DMS _dms = DMS.Instance;
 
     private Utils.Validation? CheckInput()

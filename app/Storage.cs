@@ -148,7 +148,7 @@ public class Storage : INotifyPropertyChanged, IDisposable
     bool _isDebugging = false;
     double _zoomLevel = 1;
 
-    private Storage() 
+    private Storage()
     {
         var settings = Properties.Settings.Default;
 

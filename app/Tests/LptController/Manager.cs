@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AutOlD2Ch.Pages.LptController;
+using System;
 using System.Windows.Controls;
-using AutOlD2Ch.Pages.LptController;
 
 namespace AutOlD2Ch.Tests.LptController;
 

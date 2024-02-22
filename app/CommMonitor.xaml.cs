@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AutOlD2Ch.Comm;
+using AutOlD2Ch.Utils;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using AutOlD2Ch.Comm;
-using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch;
 
@@ -32,12 +32,14 @@ public partial class CommMonitor : Window
 
         _mfc.CommandResult += (s, e) => LogResult(LogSource.MFC, e.Result, e.Command, e.Value);
         _mfc.Message += (s, e) => LogMessage(LogSource.MFC, e);
-        _mfc.Closed += (s, e) => {
+        _mfc.Closed += (s, e) =>
+        {
             LogResult(LogSource.MFC, new Result() { Error = Error.Success, Reason = "Stopped" });
         };
 
         _pid.RequestResult += (s, e) => LogResult(LogSource.PID, e);
-        _pid.Closed += (s, e) => {
+        _pid.Closed += (s, e) =>
+        {
             LogResult(LogSource.PID, new Result() { Error = Error.Success, Reason = "Stopped" });
         };
 

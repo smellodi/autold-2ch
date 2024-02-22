@@ -114,7 +114,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
             .BindContentToZoomLevel(lblZoom)
             .BindVisibilityToDebug(lblDebug);
 
-        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
+        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2"));
         _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
         _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));
     }
@@ -176,7 +176,7 @@ public partial class Production : Page, IPage<EventArgs>, INotifyPropertyChanged
             Procedure.Stage.InitWait => _settings.InitialPause,
             (Procedure.Stage.Odor1Flow | Procedure.Stage.OdorFlow) or
             (Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) or
-            (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) => 
+            (Procedure.Stage.Odor1Flow | Procedure.Stage.Odor2Flow | Procedure.Stage.OdorFlow) =>
                 _settings.OdorFlowDuration,
             Procedure.Stage.OdorFlow => 0,
             Procedure.Stage.FinalWait => _settings.FinalPause,

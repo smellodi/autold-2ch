@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AutOlD2Ch.Tests.Comparison;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using AutOlD2Ch.Tests.Comparison;
 
 namespace AutOlD2Ch.Pages.Comparison;
 
@@ -22,7 +22,7 @@ public partial class GasPresenter : Page, IPage<EventArgs>, IDisposable
             .BindContentToZoomLevel(lblZoom)
             .BindVisibilityToDebug(lblDebug);
 
-        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
+        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2"));
         _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
         _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => SaveScanResults());
         _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));

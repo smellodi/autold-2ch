@@ -115,7 +115,7 @@ public partial class MsgBox : Window
     private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
     [DllImport("user32.dll")]
     private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-    
+
     private MsgBox(string title, string message, MsgIcon icon, string[]? customButtons, Button[] stdButtons)
     {
         InitializeComponent();

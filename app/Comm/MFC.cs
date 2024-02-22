@@ -118,7 +118,7 @@ public class MFC : CommPort<MFCSample>
     /// </summary>
     [Flags]
     public enum ValvesOpened
-    { 
+    {
         None = 0,
         Valve1 = 10,
         Valve2 = 1,
@@ -325,7 +325,8 @@ public class MFC : CommPort<MFCSample>
             _error = null;
         }
 
-        return new Result() {
+        return new Result()
+        {
             Error = error,
             Reason = reason
         };
@@ -458,7 +459,7 @@ public class MFC : CommPort<MFCSample>
                     | (isValve1Opened ? OdorFlowsTo.System : OdorFlowsTo.Waste)
                     | (isValve2Opened ? OdorFlowsTo.User : OdorFlowsTo.Waste);
             }*/
-            }
+        }
         catch (Exception ex)
         {
             Stop();

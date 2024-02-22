@@ -1,8 +1,8 @@
 ﻿using AutOlD2Ch.Tests.Comparison;
 using System;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace AutOlD2Ch.Pages.ThresholdTest;
 

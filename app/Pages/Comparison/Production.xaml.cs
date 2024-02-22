@@ -1,8 +1,8 @@
-﻿using System;
+﻿using AutOlD2Ch.Tests.Comparison;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using AutOlD2Ch.Tests.Comparison;
 
 namespace AutOlD2Ch.Pages.Comparison;
 
@@ -14,7 +14,7 @@ public partial class Production : Page, IPage<EventArgs>
 
     public Tests.ITestEmulator Emulator => _procedure;
 
-    public (MixturePair,Procedure.Answer)[] Results => _procedure.Results.ToArray();
+    public (MixturePair, Procedure.Answer)[] Results => _procedure.Results.ToArray();
 
     public Production(Stage stage)
     {
@@ -29,7 +29,7 @@ public partial class Production : Page, IPage<EventArgs>
 
         Stage = stage;
 
-        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2") );
+        _procedure.Data += (s, pid) => Dispatcher.Invoke(() => lblPID.Content = pid.ToString("F2"));
         _procedure.StageChanged += (s, stage) => Dispatcher.Invoke(() => SetStage(stage));
         _procedure.RequestAnswer += (s, _) => Dispatcher.Invoke(() => RequestAnswer());
         _procedure.Finished += (s, noMoreTrials) => Dispatcher.Invoke(() => FinalizeTrial(noMoreTrials));

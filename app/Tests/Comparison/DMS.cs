@@ -26,7 +26,7 @@ internal class DMS : IDisposable
     private DMS()
     {
         var logFolder = Properties.Settings.Default.Logger_Folder;
-        _folder = string.IsNullOrEmpty(logFolder) 
+        _folder = string.IsNullOrEmpty(logFolder)
             ? Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             : logFolder;
         _folder = Path.Combine(_folder, "dms");
@@ -113,7 +113,7 @@ internal class DMS : IDisposable
             return result.Value ?? Array.Empty<string>();
         }
         catch (Exception ex)
-        { 
+        {
             Debug.WriteLine($"[DMS] get projects error: {ex}");
             return Array.Empty<string>();
         }

@@ -44,7 +44,7 @@ public partial class LiveData : UserControl
     public void Empty()
     {
         _data.Clear();
-        
+
         _scatter.Update(new double[] { 0 }, new double[] { 0 });
 
         chart.Plot.AxisAuto();

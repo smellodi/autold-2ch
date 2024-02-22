@@ -1,12 +1,12 @@
-﻿using System;
+﻿using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Common;
+using AutOlD2Ch.Utils;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using AutOlD2Ch.Comm;
-using AutOlD2Ch.Tests.Common;
-using AutOlD2Ch.Utils;
 
 namespace AutOlD2Ch.Tests.Comparison;
 
@@ -52,7 +52,7 @@ public class Procedure : ITestEmulator, IDisposable
     public event EventHandler<Stage>? StageChanged;
     public event EventHandler? RequestAnswer;
     public event EventHandler<string>? DNSError;
-    
+
     /// <summary>
     /// Fires when a trial is finished. Provides 'true' if there is no more trials to run, 'false' is more trials to run
     /// </summary>
@@ -177,7 +177,7 @@ public class Procedure : ITestEmulator, IDisposable
             .Do(0.1, () => StageChanged?.Invoke(this, new Stage(OutputValveStage.Closed, MixtureID.First)))?
             .Then(0.1, () => PrepareOdors(0))
             .Then(_settings.InitialPause, () => StartOdorFlow(0));
-        
+
         if (_settings.WaitForPID)
         {
             _runner?.ThenWait();

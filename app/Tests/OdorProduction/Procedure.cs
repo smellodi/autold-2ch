@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Threading;
-using AutOlD2Ch.Comm;
+﻿using AutOlD2Ch.Comm;
 using AutOlD2Ch.Tests.Common;
 using AutOlD2Ch.Utils;
+using System;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace AutOlD2Ch.Tests.OdorProduction;
 

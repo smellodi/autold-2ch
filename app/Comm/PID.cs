@@ -268,7 +268,7 @@ public class PID : CommPort<PIDSample>
         public byte CRCLo;                                                  // CRC low byte
     }
 
-    [StructLayout(LayoutKind.Sequential, Pack=1)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct ModResponseRead12Regs                                   // ModBus "read input regs" response for TWELVE registers
     {
         public byte SlaveAddr;                                              // Slave address, echoing the query address
@@ -276,7 +276,7 @@ public class PID : CommPort<PIDSample>
         public byte ByteCount;                                              // Number of bytes in response
 
         // Each value in MODBUSREG_ADCMVGRP and MODBUSREG_SIGNALGRP is 2x16b = 32b
-                                                                            // ADCM (mcV)     SIGNAL
+        // ADCM (mcV)     SIGNAL
         public BtoD RegsRTD;                                                // RTD            Temp (C/F)
         public BtoD Regs10VRef;                                             // 10V ref        scaled input
         public BtoD RegsPID;                                                // PID            ppm
@@ -441,7 +441,7 @@ public class PID : CommPort<PIDSample>
 
         return Error.Success;
     }
-    
+
     /// <summary>
     /// Send a query to the PID SDK board.
     /// 
@@ -528,7 +528,7 @@ public class PID : CommPort<PIDSample>
                 Thread.Sleep(POLL_PERIOD);
             }
         }
-        
+
         if (bytesRemaining > 0)
         {
             return Error.Timeout;                    // Some data still missing -> operation timed out

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using AutOlD2Ch.Comm;
+using AutOlD2Ch.Tests.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
-using AutOlD2Ch.Comm;
-using AutOlD2Ch.Tests.Common;
 
 namespace AutOlD2Ch.Tests.Comparison;
 

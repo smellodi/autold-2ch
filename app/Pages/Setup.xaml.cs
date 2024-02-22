@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutOlD2Ch.Comm;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
@@ -7,7 +8,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
-using AutOlD2Ch.Comm;
 using IndicatorDataSource = AutOlD2Ch.Controls.ChannelIndicator.DataSource;
 
 namespace AutOlD2Ch.Pages;
@@ -493,7 +493,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
 
     private void SetFreshAir_Click(object sender, RoutedEventArgs e)
     {
-        Utils.Validation.Do(txbFreshAir, 0, 10, (object? s, double value) => _mfc.FreshAirSpeed = value );
+        Utils.Validation.Do(txbFreshAir, 0, 10, (object? s, double value) => _mfc.FreshAirSpeed = value);
     }
 
     private void Odor1_KeyUp(object sender, KeyEventArgs e)
@@ -514,7 +514,7 @@ public partial class Setup : Page, IPage<Tests.Test>, INotifyPropertyChanged, ID
 
     private void SetOdor1_Click(object sender, RoutedEventArgs e)
     {
-        Utils.Validation.Do(txbOdor1, 0, 500, (object? s, double value) => _mfc.Odor1Speed = value );
+        Utils.Validation.Do(txbOdor1, 0, 500, (object? s, double value) => _mfc.Odor1Speed = value);
     }
 
     private void SetOdor2_Click(object sender, RoutedEventArgs e)

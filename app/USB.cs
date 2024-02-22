@@ -26,7 +26,7 @@ internal class USB
     {
         var query = new WqlEventQuery($"SELECT * FROM {evt} WITHIN 2 WHERE TargetInstance ISA '{target}'");
         var watcher = new ManagementEventWatcher(query);
-        
+
         watcher.EventArrived += (s, e) =>
         {
             string portName = "";
@@ -48,7 +48,7 @@ internal class USB
                     break;
             }
         };
-        
+
         watcher.Start();
     }
 

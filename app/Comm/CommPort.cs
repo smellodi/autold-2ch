@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.IO.Ports;
+using System.Runtime.InteropServices;
 
 namespace AutOlD2Ch.Comm;
 

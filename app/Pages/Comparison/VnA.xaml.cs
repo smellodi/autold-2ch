@@ -46,7 +46,7 @@ public partial class VnA : Page, IPage<EventArgs>
     {
         UpdateUI();
     }
-    
+
     // UI
 
     private void Page_KeyDown(object sender, KeyEventArgs e)
