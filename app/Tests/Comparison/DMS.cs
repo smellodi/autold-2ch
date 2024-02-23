@@ -1,5 +1,6 @@
 ﻿using AutOlD2Ch.Utils;
 using Smop.IonVision;
+using Smop.IonVision.Defs;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -297,7 +298,7 @@ internal class DMS : IDisposable
             try
             {
                 // Wait, if neeeded, until the scanning is finished
-                API.Response<ScanProgress> res;
+                Response<ScanProgress> res;
                 while ((res = await _comunicator.GetScanProgress()).Success)
                 {
                     PrintResponse("scan progress", res);
@@ -312,7 +313,7 @@ internal class DMS : IDisposable
             }
 
             // Get the scan result
-            API.Response<ScanResult>? dataRetrievalResult = null;
+            Response<Smop.IonVision.Scan.ScanResult>? dataRetrievalResult = null;
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
@@ -371,7 +372,7 @@ internal class DMS : IDisposable
     bool _isActive;
     string? _scanStartError = null;
 
-    private static void PrintResponse<T>(string request, API.Response<T> response)
+    private static void PrintResponse<T>(string request, Response<T> response)
     {
         if (response.Value is Confirm confirm)
         {
@@ -383,7 +384,7 @@ internal class DMS : IDisposable
             var result = response.Success ? progress.Progress.ToString() : response.Error;
             Debug.WriteLine($"[DMS] {request}: {result} ");
         }
-        else if (response.Value is ScanResult scan)
+        else if (response.Value is Smop.IonVision.Scan.ScanResult scan)
         {
             var result = response.Success ? scan.ToString().Max(100) : response.Error;
             Debug.WriteLine($"[DMS] {request}: {result} ");
@@ -391,7 +392,7 @@ internal class DMS : IDisposable
     }
 }
 
-public static class StringExtension
+static class StringExtension
 {
     public static string Max(this string self, int maxLength, bool printSkippedCharsCount = true)
     {

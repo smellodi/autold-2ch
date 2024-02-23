@@ -1,7 +1,6 @@
 ﻿using AutOlD2Ch.Comm;
 using AutOlD2Ch.Tests.Comparison;
 using AutOlD2Ch.Utils;
-using Smop.IonVision;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,7 +56,7 @@ public partial class Setup : Page, IPage<Tests.Comparison.Settings?>, Tests.ITes
     {
         public string Name { get; }
         public string Id { get; }
-        public DMSProjectParam(Parameter parameter)
+        public DMSProjectParam(Smop.IonVision.Defs.Parameter parameter)
         {
             Name = parameter.Name;
             Id = parameter.Id;
