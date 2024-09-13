@@ -1,5 +1,4 @@
 ﻿using AutOlD2Ch.Comm;
-using AutOlD2Ch.Tests.Common;
 using AutOlD2Ch.Utils;
 using System;
 using System.Collections.Generic;
@@ -240,8 +239,6 @@ public class Procedure : ITestEmulator, IDisposable
     readonly System.Timers.Timer _timer = new();
     readonly Dispatcher _dispatcher;
 
-    readonly PulsesController? _pulseController;
-
     Settings? _settings;
     Comparison.Stage _stage;
     DMS? _dms = null;
@@ -282,9 +279,6 @@ public class Procedure : ITestEmulator, IDisposable
 
         Debug.WriteLine($"[PULSE] {pulse}");
         //_dataLogger.Add("V" + ((int)valves).ToString("D2"));
-        /*
-        _pulseController = new PulsesController(pulse, _settings.OdorFlowDurationMs);
-        _pulseController.PulseStateChanged += PulseStateChanged;*/
 
         if (_settings.WaitForPID)
         {
@@ -365,8 +359,6 @@ public class Procedure : ITestEmulator, IDisposable
     {
         _runner?.Stop();
         _timer.Stop();
-        _pulseController?.Terminate();
-        //_pulseFinisher?.Stop();
     }
 
     private void CheckPID(double pid)
@@ -377,7 +369,6 @@ public class Procedure : ITestEmulator, IDisposable
         if (_PIDThreshold != 0 && pid > _PIDThreshold)
         {
             _PIDThreshold = 0;
-            _pulseController?.Run();
 
             var pair = _pairsOfMixtures[_step];
             Task.Delay((int)(_settings.DMSSniffingDelay * 1000)).ContinueWith((t) => _dms?.StartScan(pair, _mixtureID));
@@ -393,24 +384,6 @@ public class Procedure : ITestEmulator, IDisposable
     }
 
     // Event handlers
-    /*
-    private void PulseStateChanged(object sender, PulsesController.PulseStateChangedEventArgs e)
-    {
-        if (e.IsLast)
-        {
-            _pulseController = null;
-            return;
-        }
-
-        if (_settings.WaitForPID)
-        {
-            _runner.Resume();
-        }
-        else
-        {
-            StageChanged?.Invoke(this, new Stage(OutputValveStage.Opened, _mixtureID));
-        }
-    }*/
 
     private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
     {

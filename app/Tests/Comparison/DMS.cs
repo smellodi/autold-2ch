@@ -313,7 +313,7 @@ internal class DMS : IDisposable
             }
 
             // Get the scan result
-            Response<Smop.IonVision.Scan.ScanResult>? dataRetrievalResult = null;
+            Response<ScanResult>? dataRetrievalResult = null;
             try
             {
                 await Task.Delay(INTER_REQUEST_PAUSE);
@@ -384,7 +384,7 @@ internal class DMS : IDisposable
             var result = response.Success ? progress.Progress.ToString() : response.Error;
             Debug.WriteLine($"[DMS] {request}: {result} ");
         }
-        else if (response.Value is Smop.IonVision.Scan.ScanResult scan)
+        else if (response.Value is ScanResult scan)
         {
             var result = response.Success ? scan.ToString().Max(100) : response.Error;
             Debug.WriteLine($"[DMS] {request}: {result} ");
