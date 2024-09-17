@@ -505,7 +505,7 @@
 		<value>Loading the parameter...</value>
 	</data>
 	<data name="WaitingSystemReady" xml:space="preserve">
-		<value>Waiting for the system to the ready...</value>
+		<value>Waiting for the system to be ready...</value>
 	</data>
 	<data name="DMSReady" xml:space="preserve">
 		<value>DMS is ready now</value>
