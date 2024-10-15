@@ -52,25 +52,27 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
 
         var validations = new List<Utils.Validation>
         {
-            new(txbFreshAir, 1, 10, Utils.Validation.ValueFormat.Float),
+            new(txbFreshAir, 0, 10, Utils.Validation.ValueFormat.Float),
             new(txbInitialPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
             new(txbOdorFlowDuration, 0.1, maxPulseDurationSec, Utils.Validation.ValueFormat.Float),
             new(txbFinalPause, 0, 10000, Utils.Validation.ValueFormat.Integer),
             new(txbPIDSamplingInterval, 100, 5000, Utils.Validation.ValueFormat.Integer),
         };
 
+        var useValveTimer = chkUseValveControllerTimer.IsChecked ?? false;
+        var maxPulseDuration = useValveTimer ? Comm.MFC.MAX_SHORT_PULSE_DURATION : 24 * 60 * 60 * 1000; // one day
         foreach (var pulse in pulses)
         {
             if (pulse.Channel1 != null)
             {
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
-                validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.GetDuration(0).ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.GetDuration(0).ToString(), 0, maxPulseDuration, Utils.Validation.ValueFormat.Integer));
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
             }
             if (pulse.Channel2 != null)
             {
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
-                validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.GetDuration(0).ToString(), 0, Comm.MFC.MAX_SHORT_PULSE_DURATION, Utils.Validation.ValueFormat.Integer));
+                validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.GetDuration(0).ToString(), 0, maxPulseDuration, Utils.Validation.ValueFormat.Integer));
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
             }
         }

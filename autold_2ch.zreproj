@@ -10,7 +10,7 @@
   &lt;property name="#LayoutVersion" /&gt;
   &lt;property name="#LayoutScaleFactor"&gt;@1,Width=1@1,Height=1&lt;/property&gt;
 &lt;/XtraSerializer&gt;</globalSetting>
-    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="1297035761" /&gt;&lt;/items&gt;</globalSetting>
+    <globalSetting name="projectMruItems">&lt;?xml version='1.0' encoding='utf-8'?&gt;&lt;items&gt;&lt;item type="2" checksum="597855130" /&gt;&lt;/items&gt;</globalSetting>
     <globalSetting name="sendFileToTranslator.fileGroupsListBox">app\Properties\Resources</globalSetting>
     <globalSetting name="receiveFileFromTranslator.sourceFilePathTextEdit.Text">
     </globalSetting>

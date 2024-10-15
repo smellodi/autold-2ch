@@ -45,7 +45,7 @@
                         <UserControl Style="{StaticResource ValueWithUnit}" Tag="{lex:Loc LMin}">
                             <TextBox x:Name="txbFreshAir"
                                      Text="5"
-                                     ToolTip="{lex:Loc NumPos}"/>
+                                     ToolTip="{lex:Loc NumNotNeg}"/>
                         </UserControl>
                     </UserControl>
 
