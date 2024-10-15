@@ -67,13 +67,13 @@ public partial class Setup : Page, IPage<Settings?>, Tests.ITestEmulator
             {
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.GetDuration(0).ToString(), 0, maxPulseDuration, Utils.Validation.ValueFormat.Integer));
-                validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
+                validations.Add(new Utils.Validation(txbPulses, pulse.Channel1.Flow.ToString(), 0, 500, Utils.Validation.ValueFormat.Float));
             }
             if (pulse.Channel2 != null)
             {
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Delay.ToString(), 0, 65000, Utils.Validation.ValueFormat.Integer));
                 validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.GetDuration(0).ToString(), 0, maxPulseDuration, Utils.Validation.ValueFormat.Integer));
-                validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Flow.ToString(), 0, 250, Utils.Validation.ValueFormat.Float));
+                validations.Add(new Utils.Validation(txbPulses, pulse.Channel2.Flow.ToString(), 0, 500, Utils.Validation.ValueFormat.Float));
             }
         }
 
